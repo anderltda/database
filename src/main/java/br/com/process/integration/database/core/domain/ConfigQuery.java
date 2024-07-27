@@ -2,14 +2,11 @@ package br.com.process.integration.database.core.domain;
 
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -27,10 +24,8 @@ import br.com.process.integration.database.core.util.Constants;
 
 @Configuration
 @EnableConfigurationProperties
-@ConfigurationProperties("api-rest-database")
+@ConfigurationProperties("database")
 public class ConfigQuery {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(ConfigQuery.class);
 
 	@Autowired
 	private ResourceLoader resourceLoader;
@@ -49,23 +44,15 @@ public class ConfigQuery {
 		OPERADORES.put(Constants.HTML_BETWEEN, Constants.BETWEEN);
 	}
 
-	public String executeSQL(LinkedHashMap<String, Object> filters, String fileQuery, String invokerQuery, MapSqlParameterSource mapSqlParameterSource) throws ServiceException {
-
-		String sql = executeQuery(filters, fileQuery, invokerQuery, mapSqlParameterSource, false);
-
-		return sql;
-
+	public String executeSQL(Map<String, Object> filters, String fileQuery, String invokerQuery, MapSqlParameterSource mapSqlParameterSource) throws ServiceException {
+		return executeQuery(filters, fileQuery, invokerQuery, mapSqlParameterSource, false);
 	}
 
-	public String executeCountSQL(LinkedHashMap<String, Object> filters, String fileQuery, String invokerQuery, MapSqlParameterSource mapSqlParameterSource) throws ServiceException {
-
-		String sql = executeQuery(filters, fileQuery, invokerQuery, mapSqlParameterSource, true);
-
-		return sql;
-
+	public String executeCountSQL(Map<String, Object> filters, String fileQuery, String invokerQuery, MapSqlParameterSource mapSqlParameterSource) throws ServiceException {
+		return executeQuery(filters, fileQuery, invokerQuery, mapSqlParameterSource, true);
 	}
 
-	private String executeQuery(LinkedHashMap<String, Object> filters, String fileQuery, String invokerQuery, MapSqlParameterSource mapSqlParameterSource, Boolean isCount) throws ServiceException {
+	private String executeQuery(Map<String, Object> filters, String fileQuery, String invokerQuery, MapSqlParameterSource mapSqlParameterSource, boolean isCount) throws ServiceException {
 
 		StringBuilder sql = new StringBuilder();
 
@@ -98,9 +85,9 @@ public class ConfigQuery {
 
 		// JOIN
 		if (query.getJoin() != null) {
-			query.getJoin().forEach(join -> {
-				sql.append(join + Constants.WRITERSPACE);
-			});			
+			query.getJoin().forEach(join -> 
+				sql.append(join + Constants.WRITERSPACE)
+			);			
 		}
 
 		// WHERE
@@ -138,9 +125,9 @@ public class ConfigQuery {
 
 		// SET KEY VALUE
 		if(filters != null) {
-			filters.forEach((key, value) -> {
-				mapSqlParameterSource.addValue(key, value.toString().contains("*") ? value.toString().replace("*", "%") : value);
-			});
+			filters.forEach((key, value) -> 
+				mapSqlParameterSource.addValue(key, value.toString().contains("*") ? value.toString().replace("*", "%") : value)
+			);
 		}
 
 		// GROUP BY
@@ -156,9 +143,9 @@ public class ConfigQuery {
 				sql.append(Constants.ORDER_BY + Constants.WRITERSPACE);
 				sql.append(query.getOrderby()
 						.replace(Constants.DOIS_PONTOS + Constants.SORT_LIST,
-								filters.get(Constants.SORT_LIST) != null ? filters.get(Constants.SORT_LIST).toString().replaceAll("[\\[\\]]", "") : "")
+								filters != null && filters.get(Constants.SORT_LIST) != null ? filters.get(Constants.SORT_LIST).toString().replaceAll("[\\[\\]]", "") : "")
 						.replace(Constants.DOIS_PONTOS + Constants.SORT_ORDER, 
-								filters.get(Constants.SORT_ORDER) != null ? filters.get(Constants.SORT_ORDER).toString() : "")
+								filters != null && filters.get(Constants.SORT_ORDER) != null ? filters.get(Constants.SORT_ORDER).toString() : "")
 						+ Constants.WRITERSPACE);
 			}
 		}
@@ -185,7 +172,6 @@ public class ConfigQuery {
 			return objectMapper.readValue(inputStream, new TypeReference<List<Query>>() {});
 
 		} catch (Exception ex) {
-			LOGGER.error("Nao foi encontrado ou ocorreu um erro ao carregar o arquivo do classpath:/querys/{}.json", value, ex);
 			throw new ServiceException( "Nao foi encontrado ou ocorreu um erro ao carregar o arquivo do classpath:/querys/" + value + ".json", ex);
 		}
 	}
@@ -199,20 +185,18 @@ public class ConfigQuery {
 			Query query = null;
 			
 			for (Query query_ : querys) {
-				if (query_.getName().toUpperCase().equals(invokerQuery.toUpperCase())) {
+				if (query_.getName().equalsIgnoreCase(invokerQuery)) {
 					query = query_;
 				}
 			}
 			
 			if(query == null) {
-				LOGGER.error("Nao foi encontrado a query com o nome: {} no arquivo {}.json", invokerQuery, fileQuery);
 				throw new ServiceException("Nao foi encontrado a query com o nome: "+ invokerQuery +" no arquivo "+ fileQuery +".json");
 			}
 			
 			return query;
 			
 		} catch (Exception ex) {
-			LOGGER.error("Erro ao procurar a query nome: {} no arquivo {}.json", invokerQuery, fileQuery, ex);
 			throw new ServiceException(ex);
 		}
 		

@@ -1,8 +1,8 @@
 package br.com.process.integration.database.core.application;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +23,13 @@ import br.com.process.integration.database.core.reflection.MethodReflection;
 
 @Service
 @Transactional
-public abstract class AbstractJpaService<E extends Entity<?>, ID> extends AbstractJpaRepository<E, JpaRepository<E, ID>> implements JpaService<ID, E> {
+public abstract class AbstractJpaService<E extends Entity<?>, T> extends AbstractJpaRepository<E, JpaRepository<E, T>> implements JpaService<T, E> {
 
-	protected ID id;
+	protected T id;
 	protected Page<E> pages;
 	protected PagedModel<E> pagedModel;
 
-	public abstract void setId(ID id);
+	public abstract void setId(T id);
 	public abstract void setEntity(E entity);
 	public abstract void setPagedModel();
 
@@ -37,22 +37,21 @@ public abstract class AbstractJpaService<E extends Entity<?>, ID> extends Abstra
 	protected MethodInvoker methodInvoker;
 	
 	@Override
-	public Long count(LinkedHashMap<String, Object> filter) {
-		Long count = (Long) super.count(filter);
-		return count;
+	public Long count(Map<String, Object> filter) {
+		return super.count(filter);
 	}
 	
 	@Override
-	public List<E> findAll(LinkedHashMap<String, Object> filter, ArrayList<String> sortList, String sortOrder) {
+	public List<E> findAll(Map<String, Object> filter, List<String> sortList, String sortOrder) {
 		return super.findAll(filter, sortList, sortOrder);
 	}
 	
 	@Override
-	public PagedModel<E> findAll(LinkedHashMap<String, Object> filter, Integer page, Integer size, ArrayList<String> sortList, String sortOrder) throws ServiceException {
+	public PagedModel<E> findAll(Map<String, Object> filter, Integer page, Integer size, List<String> sortList, String sortOrder) throws ServiceException {
 
 		Pageable pageable = PageRequest.of(page, size, Sort.by(createSortOrder(sortList, sortOrder)));
 
-		pages = (Page<E>) super.findAll(filter, pageable);
+		pages = super.findAll(filter, pageable);
 
 		setPagedModel();
 
@@ -61,20 +60,18 @@ public abstract class AbstractJpaService<E extends Entity<?>, ID> extends Abstra
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<E> findAll(LinkedHashMap<String, Object> filter, String methodQueryJPQL) throws ServiceException {
+	public List<E> findAll(Map<String, Object> filter, String methodQueryJPQL) throws ServiceException {
 		
 		Object[] methodArgs = MethodReflection.getMethodArgs(getRepository().getClass(), methodQueryJPQL, filter);
 		
-		List<E> list = (List<E>) methodInvoker.invokeMethodReturnObjectWithParameters(
+		return (List<E>) methodInvoker.invokeMethodReturnObjectWithParameters(
 				MethodReflection.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
-		
-		return list;
 	}
 	
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public PagedModel<E> findAll(LinkedHashMap<String, Object> filter, String methodQueryJPQL, Integer page, Integer size, ArrayList<String> sortList, String sortOrder) throws ServiceException {
+	public PagedModel<E> findAll(Map<String, Object> filter, String methodQueryJPQL, Integer page, Integer size, List<String> sortList, String sortOrder) throws ServiceException {
 
 		Pageable pageable = PageRequest.of(page, size, Sort.by(createSortOrder(sortList, sortOrder)));
 		
@@ -93,31 +90,26 @@ public abstract class AbstractJpaService<E extends Entity<?>, ID> extends Abstra
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public E findBySingle(LinkedHashMap<String, Object> filter, String methodQueryJPQL) throws ServiceException {
-		
-		Object[] methodArgs = MethodReflection.getMethodArgs(getRepository().getClass(), methodQueryJPQL, filter);
-		
-		E e = (E) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
+	public E findBySingle(Map<String, Object> filter, String methodQueryJPQL) throws ServiceException {
 
-		return e;
+		Object[] methodArgs = MethodReflection.getMethodArgs(getRepository().getClass(), methodQueryJPQL, filter);
+
+		return (E) methodInvoker.invokeMethodReturnObjectWithParameters(
+				MethodReflection.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
 	}
 
 	@Override
-	public Long count(LinkedHashMap<String, Object> filter, String methodQueryJPQL) throws ServiceException {
+	public Long count(Map<String, Object> filter, String methodQueryJPQL) throws ServiceException {
 		
 		Object[] methodArgs = MethodReflection.getMethodArgs(getRepository().getClass(), methodQueryJPQL, filter);
 		
-		Long count = (Long) methodInvoker.invokeMethodReturnObjectWithParameters(
+		return (Long) methodInvoker.invokeMethodReturnObjectWithParameters(
 				MethodReflection.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
-
-		return count;
 	}
 	
 	@Override
-	public List<E> findAllById(ArrayList<ID> ids) {
-		List<E> list = (List<E>) getRepository().findAllById(ids);
-		return list;
+	public List<E> findAllById(List<T> ids) {
+		return getRepository().findAllById(ids);
 	}
 
 	@Override
@@ -142,7 +134,7 @@ public abstract class AbstractJpaService<E extends Entity<?>, ID> extends Abstra
 	}
 
 	@Override
-	public void deleteAllById(ArrayList<ID> ids) {
+	public void deleteAllById(List<T> ids) {
 		getRepository().deleteAllById(ids);
 	}
 
@@ -167,12 +159,12 @@ public abstract class AbstractJpaService<E extends Entity<?>, ID> extends Abstra
 	}
 
 	@Override
-	public void saveAll(ArrayList<E> entitys) {
+	public void saveAll(List<E> entitys) {
 		getRepository().saveAll(entitys);
 	}
 
 	@Override
-	public void saveAllAndFlush(ArrayList<E> entitys) {
+	public void saveAllAndFlush(List<E> entitys) {
 		getRepository().saveAllAndFlush(entitys);
 	}
 	

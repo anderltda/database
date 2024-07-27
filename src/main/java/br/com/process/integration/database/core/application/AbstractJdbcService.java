@@ -1,8 +1,7 @@
 package br.com.process.integration.database.core.application;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,30 +25,22 @@ public abstract class AbstractJdbcService<M extends Model<?>> extends AbstractJd
 	public abstract void setPagedModel();
 
 	@Override
-	public M executeQueryNativeFindBySingle(LinkedHashMap<String, Object> filter, String invokerQuery) throws ServiceException {
-		
-		M model = (M) findBySingle(filter, this.getClass().getSimpleName(), invokerQuery);
-		
-		return model;
-		
+	public M executeQueryNativeFindBySingle(Map<String, Object> filter, String invokerQuery) throws ServiceException {
+		return findBySingle(filter, this.getClass().getSimpleName(), invokerQuery);
 	}
 	
 	@Override
-	public List<M> executeQueryNative(LinkedHashMap<String, Object> search, String invokerQuery) throws ServiceException {
-
-		List<M> models = (List<M>) findAll(search, this.getClass().getSimpleName(), invokerQuery);
-
-		return models;
-
+	public List<M> executeQueryNative(Map<String, Object> search, String invokerQuery) throws ServiceException {
+		return findAll(search, this.getClass().getSimpleName(), invokerQuery);
 	}
 
 	@Override
-	public PagedModel<M> executeQueryNative(LinkedHashMap<String, Object> filter, String invokerQuery, Integer page, Integer size, ArrayList<String> sortList, String sortOrder) throws ServiceException {
+	public PagedModel<M> executeQueryNative(Map<String, Object> filter, String invokerQuery, Integer page, Integer size, List<String> sortList, String sortOrder) throws ServiceException {
 
-		List<M> models = (List<M>) findAll(filter, this.getClass().getSimpleName(), invokerQuery, page, size);
+		List<M> models = findAll(filter, this.getClass().getSimpleName(), invokerQuery, page, size);
 		int totalElements = count(filter, this.getClass().getSimpleName(), invokerQuery);
 		Pageable pageable = PageRequest.of(page, size);
-		pages = new PageImpl<M>(models, pageable, totalElements);
+		pages = new PageImpl<>(models, pageable, totalElements);
 
 		setPagedModel();
 

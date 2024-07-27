@@ -2,7 +2,6 @@ package br.com.process.integration.database.core.infrastructure;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -63,7 +62,7 @@ public abstract class AbstractJpaRepository<E extends Entity<?>, R extends JpaRe
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<E> findAll(LinkedHashMap<String, Object> filter, ArrayList<String> sortList, String sortOrder) {
+	public List<E> findAll(Map<String, Object> filter, List<String> sortList, String sortOrder) {
 
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 
@@ -94,7 +93,7 @@ public abstract class AbstractJpaRepository<E extends Entity<?>, R extends JpaRe
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Page<E> findAll(LinkedHashMap<String, Object> filter, Pageable pageable) throws ServiceException {
+	public Page<E> findAll(Map<String, Object> filter, Pageable pageable) throws ServiceException {
 
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 
@@ -121,7 +120,7 @@ public abstract class AbstractJpaRepository<E extends Entity<?>, R extends JpaRe
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Long count(LinkedHashMap<String, Object> filter) {
+	public Long count(Map<String, Object> filter) {
 		
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		
@@ -136,7 +135,7 @@ public abstract class AbstractJpaRepository<E extends Entity<?>, R extends JpaRe
 		return entityManager.createQuery(query).getSingleResult();
 	}
 
-	private List<Predicate> buildPredicates(LinkedHashMap<String, Object> filter, CriteriaBuilder criteriaBuilder, Path<E> path) {
+	private List<Predicate> buildPredicates(Map<String, Object> filter, CriteriaBuilder criteriaBuilder, Path<E> path) {
 
 		List<Predicate> predicates = new ArrayList<>();
 
@@ -153,7 +152,7 @@ public abstract class AbstractJpaRepository<E extends Entity<?>, R extends JpaRe
 					method = "join";
 				}
 
-				MethodReflection.executeMethod(methodPredicate, method, criteriaBuilder, predicates, path, key, value);
+				MethodReflection.executeMethod(methodPredicate, method + "Criteria", criteriaBuilder, predicates, path, key, value);
 			} catch (ServiceException e) {
 				e.printStackTrace();
 			}

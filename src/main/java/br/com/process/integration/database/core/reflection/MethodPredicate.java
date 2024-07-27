@@ -24,7 +24,7 @@ public class MethodPredicate {
 	}
 
 	@Transactional
-	public void join(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
+	public void joinCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
 
 		try {
 
@@ -37,10 +37,10 @@ public class MethodPredicate {
 					MethodReflection.executeMethod(this, operatorJoin, criteriaBuilder, predicates, root, part, value);
 					return;
 				} else {
-					if (join == null) {
+					if (join == null && root != null) {
 						join = ((From<?, ?>) root).join(part);
 						root = join;
-					} else {
+					} else if (join != null) {
 						join = join.join(part);
 						root = join;
 					}
@@ -53,7 +53,7 @@ public class MethodPredicate {
 	}
 	
 	@Transactional
-	public void equal(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
+	public void equalCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
 		
 		try {
 
@@ -67,7 +67,7 @@ public class MethodPredicate {
 	}
 	
 	@Transactional
-	public void between(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, Object value) {
+	public void betweenCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, Object value) {
 		
 		try {
 			
@@ -83,7 +83,7 @@ public class MethodPredicate {
 	
 	
 	@Transactional
-	public void greaterThanOrEqualTo(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
+	public void greaterThanOrEqualToCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
 		
 		try {
 			
@@ -97,7 +97,7 @@ public class MethodPredicate {
 	}
 	
 	@Transactional
-	public void lessThanOrEqualTo(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
+	public void lessThanOrEqualToCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
 		
 		try {
 			
@@ -112,7 +112,7 @@ public class MethodPredicate {
 	
 	
 	@Transactional
-	public void greaterThan(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
+	public void greaterThanCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
 		
 		try {
 			
@@ -126,7 +126,7 @@ public class MethodPredicate {
 	}
 	
 	@Transactional
-	public void lessThan(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
+	public void lessThanCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
 		
 		try {
 			
@@ -140,7 +140,7 @@ public class MethodPredicate {
 	}
 
 	@Transactional
-	public void like(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
+	public void likeCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
 		
 		try {
 
@@ -154,7 +154,7 @@ public class MethodPredicate {
 	}
 	
 	@Transactional
-	public void notEqual(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
+	public void notEqualCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
 		
 		try {
 
@@ -168,7 +168,7 @@ public class MethodPredicate {
 	}
 	
 	@Transactional
-	public void in(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
+	public void inCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
 		
 		try {
 

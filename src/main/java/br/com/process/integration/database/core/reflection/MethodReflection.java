@@ -16,8 +16,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -27,12 +25,9 @@ import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.core.util.DynamicTypeConverter;
 import jakarta.persistence.JoinColumn;
 
-
 @Service
 public class MethodReflection {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(MethodReflection.class);
-
 	public static void transformsJsonModel(JsonNode jsonNode, Object object) throws ServiceException {
 
 		try {
@@ -62,7 +57,6 @@ public class MethodReflection {
 			}
 			
 		} catch (Exception ex) {
-			LOGGER.error("Ocorreu um erro ao transformar o objeto (jsonNode) em Entity! classe: {} - metodo: {}", "MethodReflection", "transformsJsonModel");
 			throw new ServiceException("Ocorreu um erro ao transformar o objeto (jsonNode) em Entity!", ex);
 		}
 		
@@ -95,7 +89,6 @@ public class MethodReflection {
 			}
 						
 		} catch (Exception ex) {
-			LOGGER.error("Ocorreu um erro ao transformar o objeto (jsonNode) em IDs! classe: {} - metodo: {}", "MethodReflection", "transformsJsonIds");
 			throw new ServiceException("Ocorreu um erro ao transformar o objeto (jsonNode) em IDs!", ex);
 		}
 
@@ -182,12 +175,24 @@ public class MethodReflection {
 
 		Class<?>[] paramTypes = new Class[params.length];
 		for (int i = 0; i < params.length; i++) {
-			paramTypes[i] = params[i].getClass();
+			paramTypes[i] = getParameterType(params[i]);
 		}
 
 		return paramTypes;
 	}
 	
+	private static Class<?> getParameterType(Object param) {
+		
+		if (param instanceof Map) {
+			return Map.class;
+		}
+
+		if (param instanceof List) {
+			return List.class;
+		}
+
+		return param.getClass();
+	}
 	
 	public static Object findDtoUsingClassLoader(String class_) throws ServiceException {
 		String packagePath = (Constants.DIRECTORY_APPLICATION + Constants.PACKAGE_NAME_MODEL).replaceAll("[.]", "/");
@@ -235,7 +240,6 @@ public class MethodReflection {
 			}
 			
 		} catch (Exception ex) {
-			LOGGER.error("Erro: {} classe: {} - metodo: {}", ex.getMessage(), "MethodReflection", "findClassUsingClassLoader");
 			throw new ServiceException(ex.getMessage(), ex);
 		}
 
@@ -278,8 +282,6 @@ public class MethodReflection {
 				}
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			LOGGER.error("Ocorreu um erro ao criar a entity no momento de processar os parametros (params)! classe: {} - metodo: {}", "MethodReflection", "queryParams");
 			throw new ServiceException("Ocorreu um erro ao criar a entity no momento de processar os parametros (params)!", ex);
 		}
 	}
@@ -325,10 +327,8 @@ public class MethodReflection {
 				methodArgs[index++] = DynamicTypeConverter.convert(class1, value);
 			}
 			
-			LOGGER.info("Sequencia dos argumentos: {}", log.toString());
 
 		} catch (Exception ex) {
-			LOGGER.error(ex.getMessage());
 			throw new ServiceException(ex);
 		}
 		

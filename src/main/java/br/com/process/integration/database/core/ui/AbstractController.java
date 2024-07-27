@@ -65,9 +65,9 @@ public abstract class AbstractController {
 				String value_ = params.get(key.replace(Constants.IDENTITY_OPERATOR, "")).toString();
 				String[] split = value_.replaceAll("[\\[\\]]", "").split(",");
 				params_.put(key.replace(Constants.IDENTITY_OPERATOR, Constants.BETWEEN_START),
-						split[0].replaceAll("^\\s+|\\s+$", ""));
+						split[0].replaceAll("^\\s+", "").replaceAll("\\s+$", "").trim());
 				params_.put(key.replace(Constants.IDENTITY_OPERATOR, Constants.BETWEEN_END),
-						split[1].replaceAll("^\\s+|\\s+$", ""));
+						split[1].replaceAll("^\\s+", "").replaceAll("\\s+$", "").trim());
 			} else {
 				params.put(key, value.toString().contains(",") ? Arrays.asList(value.toString().split(",")) : value);
 			}

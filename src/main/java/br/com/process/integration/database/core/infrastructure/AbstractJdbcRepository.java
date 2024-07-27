@@ -1,10 +1,8 @@
 package br.com.process.integration.database.core.infrastructure;
 
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
@@ -21,8 +19,6 @@ import br.com.process.integration.database.core.util.Constants;
 @Repository
 public abstract class AbstractJdbcRepository<M extends Model<?>> implements ModelRepository<M> {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractJdbcRepository.class);
-
 	@Autowired
 	private ConfigQuery configQuery;
 
@@ -37,45 +33,37 @@ public abstract class AbstractJdbcRepository<M extends Model<?>> implements Mode
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public M findBySingle(LinkedHashMap<String, Object> filters, String fileQuery, String invokerQuery) throws ServiceException {
+	public M findBySingle(Map<String, Object> filters, String fileQuery, String invokerQuery) throws ServiceException {
 		
 		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 
-		rowMapper = new BeanPropertyRowMapper<M>((Class<M>) model.getClass());
+		rowMapper = new BeanPropertyRowMapper<>((Class<M>) model.getClass());
 		
 		String sql = configQuery.executeSQL(filters, fileQuery, invokerQuery, mapSqlParameterSource);
 		
-		LOGGER.info("FILE: {}.json - QUERY NAME: {} - QUERY: {}", fileQuery, invokerQuery, sql);
-		
-		M model = (M) namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, rowMapper);
-				
-		return model;
+		return namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, rowMapper);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<M> findAll(LinkedHashMap<String, Object> filter, String fileQuery, String invokerQuery) throws ServiceException {
+	public List<M> findAll(Map<String, Object> filter, String fileQuery, String invokerQuery) throws ServiceException {
 
 		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 
-		rowMapper = new BeanPropertyRowMapper<M>((Class<M>) model.getClass());
+		rowMapper = new BeanPropertyRowMapper<>((Class<M>) model.getClass());
 		
 		String sql = configQuery.executeSQL(filter, fileQuery, invokerQuery, mapSqlParameterSource);
 		
-		LOGGER.info("FILE: {}.json - QUERY NAME: {} - QUERY: {}", fileQuery, invokerQuery, sql);
-
-		List<M> models = namedParameterJdbcTemplate.query(sql.toString(), mapSqlParameterSource, rowMapper);
-		
-		return models;
+		return namedParameterJdbcTemplate.query(sql, mapSqlParameterSource, rowMapper);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<M> findAll(LinkedHashMap<String, Object> filter, String fileQuery, String invokerQuery, Integer page, Integer size) throws ServiceException {
+	public List<M> findAll(Map<String, Object> filter, String fileQuery, String invokerQuery, Integer page, Integer size) throws ServiceException {
 
 		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 
-		rowMapper = new BeanPropertyRowMapper<M>((Class<M>) model.getClass());
+		rowMapper = new BeanPropertyRowMapper<>((Class<M>) model.getClass());
 		
 		StringBuilder sql = new StringBuilder(); 
 				
@@ -88,25 +76,16 @@ public abstract class AbstractJdbcRepository<M extends Model<?>> implements Mode
 		mapSqlParameterSource.addValue("size", size);
 		mapSqlParameterSource.addValue("offset", page * size);
 
-		LOGGER.info("FILE: {}.json - QUERY NAME: {} - QUERY: {}", fileQuery, invokerQuery, sql);
-
-		List<M> models = namedParameterJdbcTemplate.query(sql.toString(), mapSqlParameterSource, rowMapper);
-		
-		return models;
+		return namedParameterJdbcTemplate.query(sql.toString(), mapSqlParameterSource, rowMapper);
 	}
 	
 	@Override
-	public int count(LinkedHashMap<String, Object> filter, String fileQuery, String invokerQuery) throws ServiceException {
+	public int count(Map<String, Object> filter, String fileQuery, String invokerQuery) throws ServiceException {
 
 		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 
 		String sql = configQuery.executeCountSQL(filter, fileQuery, invokerQuery, mapSqlParameterSource);
 
-		LOGGER.info("FILE: {}.json - QUERY NAME: {} - QUERY: {}", fileQuery, invokerQuery, sql);
-
-		int count = namedParameterJdbcTemplate.queryForObject(sql.toString(), mapSqlParameterSource, Integer.class);
-		
-		return count;
+		return namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, Integer.class);
 	}
-
 }

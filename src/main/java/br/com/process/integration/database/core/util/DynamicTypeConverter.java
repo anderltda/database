@@ -101,25 +101,24 @@ public class DynamicTypeConverter {
 
 		try {
 			
-			
-			if (field.getType().getName().equals(Integer.class.getName())) {
+			if (field.getType().getClass().isAssignableFrom(Integer.class)) {
 				return Integer.parseInt(value.toString());
-			} else if (field.getType().getName().equals(Long.class.getName())) {
+			} else if (field.getType().getClass().isAssignableFrom(Long.class)) {
 				return Long.parseLong(value.toString());
-			} else if (field.getType().getName().equals(Short.class.getName())) {
+			} else if (field.getType().getClass().isAssignableFrom(Short.class)) {
 				return Short.parseShort(value.toString());
-			} else if (field.getType().getName().equals(Double.class.getName())) {
+			} else if (field.getType().getClass().isAssignableFrom(Double.class)) {
 				return Double.parseDouble(value.toString());
-			} else if (field.getType().getName().equals(Float.class.getName())) {
+			} else if (field.getType().getClass().isAssignableFrom(Float.class)) {
 				return Float.parseFloat(value.toString());
-			} else if (field.getType().getName().equals(Byte.class.getName())) {
+			} else if (field.getType().getClass().isAssignableFrom(Byte.class)) {
 				return Byte.parseByte(value.toString());
-			} else if (field.getType().getName().equals(PageRequest.class.getName())) {
+			} else if (field.getType().getClass().isAssignableFrom(PageRequest.class)) {
 				return (Pageable)value;
-			} else if (field.getType().getName().equals(LocalDate.class.getName())) {
+			} else if (field.getType().getClass().isAssignableFrom(LocalDate.class)) {
 				LocalDate date = LocalDate.parse(value.toString(), DateTimeFormatter.ISO_LOCAL_DATE);
 				return (LocalDate) date;
-			} else if (field.getType().getName().equals(LocalDateTime.class.getName())) {
+			} else if (field.getType().getClass().isAssignableFrom(LocalDateTime.class)) {
 				LocalDateTime date = LocalDateTime.parse(value.toString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 				return (LocalDateTime) date;				
 			} else {
