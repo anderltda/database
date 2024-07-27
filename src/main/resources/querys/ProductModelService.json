@@ -1,0 +1,111 @@
+[
+	{
+		"name": "PASSAGEM_DE_PARAMETROS",
+		"select": "SELECT p.*, pc.*, po.* FROM product p",
+		"join": [
+			"INNER JOIN product_category pc ON pc.product_category_id = p.product_category_id",
+			"INNER JOIN product_option po ON po.product_option_id     = p.product_option_id"
+		],
+		"where": [
+			"AND p.id = :id",
+			"AND p.title = :title",
+			"AND p.type  = :type"
+		],
+		"orderby": "p.id ASC"
+	},
+	
+
+	{
+		"name": "BUSCA_POR_ID",
+		"select": "SELECT p.* FROM product p",
+		"join": [
+			"INNER JOIN product_category pc ON pc.product_category_id = p.product_category_id",
+			"INNER JOIN product_option po ON po.product_option_id     = p.product_option_id"
+		],
+		"where": [
+			"AND p.id = :id"
+		],
+		"orderby": "p.id ASC"
+	},	
+	
+	
+	{
+		"name": "PASSAGEM_DE_PARAMETROS_UTILIZANDO_DATAS",
+		"select": "SELECT p.*, pc.*, po.* FROM product p",
+		"join": [
+			"INNER JOIN product_category pc ON pc.product_category_id = p.product_category_id",
+			"INNER JOIN product_option po ON po.product_option_id     = p.product_option_id"
+		],
+		"where": [
+			"AND p.schedule_date {schedule_op} :schedule",
+			"AND p.end_date {endDate_op} :endDate"
+		],
+		"orderby": ":sortList :sortOrder"
+	},
+	
+	
+	
+	
+	{
+		"name": "UTILIZACAO_GROUP_BY",
+		"select": "SELECT p.brand, count(*) AS stock FROM product p",
+		"join": [
+			"INNER JOIN product_category pc ON pc.product_category_id = p.product_category_id",
+			"INNER JOIN product_option po ON po.product_option_id     = p.product_option_id"
+		],
+		"where": [
+			"AND p.brand {brand_op} :brand"
+		],
+		"groupby": "p.brand",
+		"orderby": "p.brand ASC"
+	},
+	
+	
+	
+	
+	{
+		"name": "PASSAGEM_DE_PARAMETROS_LIKE",
+		"select": "SELECT p.* FROM product p",
+		"join": [
+			"INNER JOIN product_category pc ON pc.product_category_id = p.product_category_id",
+			"INNER JOIN product_option po ON po.product_option_id     = p.product_option_id"
+		],
+		"where": [
+			"AND p.title {title_op} :title"
+		],
+		"orderby": ":sortList :sortOrder"
+	},
+	
+	
+	
+	
+	
+	{
+		"name": "PASSAGEM_DE_PARAMETROS_UTILIZANDO_IN",
+		"select": "SELECT p.* FROM product p",
+		"join": [
+			"INNER JOIN product_category pc ON pc.product_category_id = p.product_category_id",
+			"INNER JOIN product_option po ON po.product_option_id     = p.product_option_id"
+		],
+		"where": [
+			"AND p.id IN (:id)"
+		],
+		"orderby": "p.id ASC"
+	},
+	
+	
+	
+	
+	{
+		"name": "PASSAGEM_DE_PARAMETROS_UTILIZANDO_BETWEEN",
+		"select": "SELECT p.* FROM product p",
+		"join": [
+			"INNER JOIN product_category pc ON pc.product_category_id = p.product_category_id",
+			"INNER JOIN product_option po ON po.product_option_id     = p.product_option_id"
+		],
+		"where": [
+			"AND p.discout {discout_op} :discout"
+		],
+		"orderby": "p.id ASC"
+	}
+]

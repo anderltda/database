@@ -1,0 +1,22 @@
+server:
+  port: 8080
+spring:
+  hateoas:
+    use-hal-as-default-json-media-type: false
+  data:
+    rest:
+      defaultMediaType: application/json       
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/root-database?allowPublicKeyRetrieval=true&useSSL=false
+    username: anderson
+    password: admin
+  jpa:
+    hibernate:
+      ddl-auto: update
+    generate-ddl: false
+    show-sql: true
+    open-in-view: false
+
+query:
+  path: "select p from Product p where p.title like CONCAT('%',(?1),'%')"
