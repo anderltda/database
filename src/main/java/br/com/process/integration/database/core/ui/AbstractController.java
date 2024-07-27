@@ -9,8 +9,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -23,8 +21,6 @@ import br.com.process.integration.database.core.ui.adapter.LocalDateAdapter;
 import br.com.process.integration.database.core.ui.adapter.LocalDateTimeAdapter;
 import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.core.util.DynamicTypeConverter;
-import br.com.process.integration.database.domain.entity.ProductCategory;
-import br.com.process.integration.database.domain.entity.ProductOption;
 
 @Component
 public abstract class AbstractController {
@@ -34,8 +30,8 @@ public abstract class AbstractController {
 
 	protected Gson gson = null;
 	
-	public AbstractController() {
-		gson = new GsonBuilder().addSerializationExclusionStrategy(strategy)
+	protected AbstractController() {
+		gson = new GsonBuilder()
 				.registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
 				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
 	}
@@ -58,22 +54,22 @@ public abstract class AbstractController {
 	 */
 	protected void addParam(Map<String, Object> params) {
 
-		Map<String, Object> params_ = new HashMap<String, Object>();
+		Map<String, Object> paramsRefactory = new HashMap<>();
 
 		params.forEach((key, value) -> {
 			if (value.toString().equals(Constants.HTML_BETWEEN)) {
-				String value_ = params.get(key.replace(Constants.IDENTITY_OPERATOR, "")).toString();
-				String[] split = value_.replaceAll("[\\[\\]]", "").split(",");
-				params_.put(key.replace(Constants.IDENTITY_OPERATOR, Constants.BETWEEN_START),
+				String valueRefactory = params.get(key.replace(Constants.IDENTITY_OPERATOR, "")).toString();
+				String[] split = valueRefactory.replaceAll("[\\[\\]]", "").split(",");
+				paramsRefactory.put(key.replace(Constants.IDENTITY_OPERATOR, Constants.BETWEEN_START),
 						split[0].replaceAll("^\\s+", "").replaceAll("\\s+$", "").trim());
-				params_.put(key.replace(Constants.IDENTITY_OPERATOR, Constants.BETWEEN_END),
+				paramsRefactory.put(key.replace(Constants.IDENTITY_OPERATOR, Constants.BETWEEN_END),
 						split[1].replaceAll("^\\s+", "").replaceAll("\\s+$", "").trim());
 			} else {
 				params.put(key, value.toString().contains(",") ? Arrays.asList(value.toString().split(",")) : value);
 			}
 		});
 
-		params.putAll(params_);
+		params.putAll(paramsRefactory);
 	}
 	
 	/**
@@ -116,27 +112,4 @@ public abstract class AbstractController {
 		Model<?> model = (Model<?>) MethodReflection.findDtoUsingClassLoader(nameModel);
 		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameModel), "setModel", model);
 	}
-	
-	private ExclusionStrategy strategy = new ExclusionStrategy() {
-		@Override
-		public boolean shouldSkipField(FieldAttributes field) {
-			if (field.getName().contains("links")) {
-				return true;
-			}
-			if (field.getDeclaringClass() == ProductCategory.class && field.getName().equals("id")) {
-				return false;
-			}
-			if (field.getDeclaringClass() == ProductOption.class && field.getName().equals("id")) {
-				return false;
-			}
-
-			return false;
-		}
-
-		@Override
-		public boolean shouldSkipClass(Class<?> clazz) {
-			return false;
-		}
-	};
-
 }

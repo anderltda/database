@@ -28,6 +28,8 @@ import jakarta.persistence.JoinColumn;
 @Service
 public class MethodReflection {
 	
+	private MethodReflection() {}
+	
 	public static void transformsJsonModel(JsonNode jsonNode, Object object) throws ServiceException {
 
 		try {
@@ -36,17 +38,17 @@ public class MethodReflection {
 
 			for (Field field : fields) {
 
-				Object object_ = null;
+				Object objectTemp = null;
 
 				if (jsonNode.has(field.getName())) {
 
 					if (field.getAnnotation(JoinColumn.class) instanceof JoinColumn) {
 
-						object_ = identificarClasse(field.getType().getName());
+						objectTemp = identificarClasse(field.getType().getName());
 
-						transformsJsonModel(jsonNode.get(field.getName()), object_);
+						transformsJsonModel(jsonNode.get(field.getName()), objectTemp);
 
-						executeMethod(object, setMethod(field.getName()), object_);
+						executeMethod(object, setMethod(field.getName()), objectTemp);
 						
 					} else {
 
@@ -62,7 +64,7 @@ public class MethodReflection {
 		
 	}
 	
-	public static Class<?> getTypeById(Object object) throws ServiceException {
+	public static Class<?> getTypeById(Object object) {
 
 		List<Field> fields = MethodReflection.getFields(object.getClass(), Object.class);
 		
@@ -78,9 +80,9 @@ public class MethodReflection {
 		return type;
 	}
 
-	public static List<Object> transformsJsonIds(JsonNode jsonNode, Object object) throws ServiceException {
+	public static List<Object> transformsJsonIds(JsonNode jsonNode) throws ServiceException {
 
-		List<Object> list = new ArrayList<Object>();
+		List<Object> list = new ArrayList<>();
 		
 		try {
 			
@@ -95,14 +97,22 @@ public class MethodReflection {
 		return list;
 	}
 
-	public static String getNameRepository(String class_) {
-		String repository = class_.substring(0, 1).toLowerCase() + class_.substring(1) + "Repository";
-		return repository;
+	public static String getNameRepository(String className) {
+		return className.substring(0, 1).toLowerCase() + className.substring(1) + "Repository";
 	}
 
-	public static String getNameService(String class_) {
-		String repository = class_.substring(0, 1).toLowerCase() + class_.substring(1) + "Service";
-		return repository;
+	public static String getNameService(String className) {
+		return className.substring(0, 1).toLowerCase() + className.substring(1) + "Service";
+	}
+	
+	public static Object findDtoUsingClassLoader(String className) throws ServiceException {
+		String packagePath = (Constants.DIRECTORY_APPLICATION + Constants.PACKAGE_NAME_MODEL).replaceAll("[.]", "/");
+		return findClassUsingClassLoader(className, packagePath);
+	}
+	
+	public static Object findEntityUsingClassLoader(String className) throws ServiceException {
+		String packagePath = (Constants.DIRECTORY_APPLICATION + Constants.PACKAGE_NAME_ENTITY).replaceAll("[.]", "/");
+		return findClassUsingClassLoader(className, packagePath);
 	}
 
 	public static Object identificarClasse(String instance) {
@@ -152,7 +162,7 @@ public class MethodReflection {
 	}
 
 	private static List<Field> getFields(Class<?> clazz, Class<?> classLimit) {
-		ArrayList<Field> ret = new ArrayList<Field>();
+		ArrayList<Field> ret = new ArrayList<>();
 		listFields(clazz, classLimit, ret, ".*");
 		return ret;
 	}
@@ -194,30 +204,19 @@ public class MethodReflection {
 		return param.getClass();
 	}
 	
-	public static Object findDtoUsingClassLoader(String class_) throws ServiceException {
-		String packagePath = (Constants.DIRECTORY_APPLICATION + Constants.PACKAGE_NAME_MODEL).replaceAll("[.]", "/");
-		return findClassUsingClassLoader(class_, packagePath);
-	}
-	
-	public static Object findEntityUsingClassLoader(String class_) throws ServiceException {
-		String packagePath = (Constants.DIRECTORY_APPLICATION + Constants.PACKAGE_NAME_ENTITY).replaceAll("[.]", "/");
-		return findClassUsingClassLoader(class_, packagePath);
-	}
-	
 
 	@SuppressWarnings("resource")
-	private static Object findClassUsingClassLoader(String class_, String packagePath) throws ServiceException {
+	private static Object findClassUsingClassLoader(String className, String packagePath) throws ServiceException {
 
 		try {
 			
-			boolean notFound = true;
-
-			List<Path> dirs = Files.walk(Paths.get(packagePath), 1).filter(Files::isDirectory)
-					.collect(Collectors.toList());
+			List<Path> dirs = Files.walk(Paths.get(packagePath), 1)
+				    .filter(Files::isDirectory)
+				    .toList();
 
 			for (Path path : dirs) {
 
-				String packageName = (path.toString().replaceAll("[/]", ".").replace(Constants.DIRECTORY_APPLICATION, ""));
+				String packageName = (path.toString().replace("/", ".").replace(Constants.DIRECTORY_APPLICATION, ""));
 
 				InputStream stream = ClassLoader.getSystemClassLoader()
 						.getResourceAsStream(packageName.replaceAll("[.]", "/"));
@@ -228,22 +227,17 @@ public class MethodReflection {
 						.map(line -> getClass(line, packageName)).collect(Collectors.toSet());
 
 				for (Class<?> classFind : values) {
-					if (classFind.getSimpleName().equals(class_)) {
-						notFound = false;
+					if (classFind.getSimpleName().equals(className)) {
 						return classFind.getDeclaredConstructor().newInstance();
 					}
 				}
-			}
-			
-			if(notFound) {
-				throw new ServiceException("Entity ou Model nao encontrada, verifique o nome correto da entity ou do model!!");
 			}
 			
 		} catch (Exception ex) {
 			throw new ServiceException(ex.getMessage(), ex);
 		}
 
-		return null;
+		return false;
 	}
 
 	private static Class<?> getClass(String className, String packageName) {

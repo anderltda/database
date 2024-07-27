@@ -11,9 +11,9 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,7 +40,7 @@ public class QueryJpaController extends AbstractController {
 	 * @obs é uma lista (nao paginado)
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/find/all/{entity}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/find/all/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> findAll(@PathVariable String entity, 
 			@RequestParam(defaultValue = "") Map<String, Object> params,
 			@RequestParam(defaultValue = "") ArrayList<String> sortList,
@@ -48,9 +48,9 @@ public class QueryJpaController extends AbstractController {
 		
 		removeParams(params);
 		
-		Entity<?> entity_ = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
+		Entity<?> entityFound = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
-		setEntity(entity, entity_);
+		setEntity(entity, entityFound);
 
 		List<Entity<?>> list = (List<Entity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
 				MethodReflection.getNameService(entity), "findAll", params, sortList, sortOrder);
@@ -61,10 +61,10 @@ public class QueryJpaController extends AbstractController {
 
 			LOGGER.info("#### service total: {} findAll {}", list.size(), body);
 
-			return new ResponseEntity<String>(body, HttpStatus.OK);
+			return new ResponseEntity<>(body, HttpStatus.OK);
 		}
 
-		return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
 	/**
@@ -82,7 +82,7 @@ public class QueryJpaController extends AbstractController {
 	 * @obs é paginado
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/find/all/page/{entity}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/find/all/page/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public PagedModel<Entity<?>> findAll(@PathVariable String entity,
 			@RequestParam(defaultValue = "") Map<String, Object> params, 
 			@RequestParam(defaultValue = "0") Integer page,
@@ -92,9 +92,9 @@ public class QueryJpaController extends AbstractController {
 		
 		removeParams(params);
 
-		Entity<?> entity_ = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
+		Entity<?> entityFound = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
-		setEntity(entity, entity_);
+		setEntity(entity, entityFound);
 
 		PagedModel<Entity<?>> pagedModel = (PagedModel<Entity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
 				MethodReflection.getNameService(entity), "findAll", params, page, size, sortList, sortOrder);
@@ -115,14 +115,14 @@ public class QueryJpaController extends AbstractController {
 	 * @obs é uma lista(nao paginado)
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/find/all/jpql/{entity}/{methodQueryJPQL}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/find/all/jpql/{entity}/{methodQueryJPQL}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> findAll(@PathVariable String entity, 
 			@RequestParam(defaultValue = "") Map<String, Object> params, 
 			@PathVariable String methodQueryJPQL) throws ServiceException {
 
-		Entity<?> entity_ = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
+		Entity<?> entityFound = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
-		setEntity(entity, entity_);
+		setEntity(entity, entityFound);
 
 		List<Entity<?>> list = (List<Entity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
 				MethodReflection.getNameService(entity), "findAll", params, methodQueryJPQL);
@@ -156,7 +156,7 @@ public class QueryJpaController extends AbstractController {
 	 * @obs é paginado
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/find/all/jpql/page/{entity}/{methodQueryJPQL}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/find/all/jpql/page/{entity}/{methodQueryJPQL}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public PagedModel<Entity<?>> findAll(@PathVariable String entity, 
 			@RequestParam(defaultValue = "") Map<String, Object> params, 
 			@PathVariable String methodQueryJPQL,
@@ -167,12 +167,12 @@ public class QueryJpaController extends AbstractController {
 
 		removeParams(params);
 
-		Entity<?> entity_ = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
+		Entity<?> entityFound = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
-		setEntity(entity, entity_);
+		setEntity(entity, entityFound);
 
 		PagedModel<Entity<?>> pagedModel = (PagedModel<Entity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(entity_.getClass().getSimpleName()), "findAll", params, methodQueryJPQL, page, size, sortList, sortOrder.toString());
+				MethodReflection.getNameService(entityFound.getClass().getSimpleName()), "findAll", params, methodQueryJPQL, page, size, sortList, sortOrder.toString());
 
 		return pagedModel;
 	}
@@ -187,28 +187,28 @@ public class QueryJpaController extends AbstractController {
 	 * @throws ServiceException
 	 * @obs caso a query retorne mais de um registro ocorrerá uma exception do tipo ServiceException
 	 */
-	@RequestMapping(value = "/find/single/jpql/{entity}/{methodQueryJPQL}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/find/single/jpql/{entity}/{methodQueryJPQL}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> findBySingle(@PathVariable String entity, 
 			@RequestParam(defaultValue = "") Map<String, Object> params, 
 			@PathVariable String methodQueryJPQL) throws ServiceException {
 
-		Entity<?> entity_ = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
+		Entity<?> entityFound = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
-		setEntity(entity, entity_);
+		setEntity(entity, entityFound);
 
-		entity_ = (Entity<?>) methodInvoker.invokeMethodReturnObjectWithParameters(
+		entityFound = (Entity<?>) methodInvoker.invokeMethodReturnObjectWithParameters(
 				MethodReflection.getNameService(entity), "findBySingle", params, methodQueryJPQL);
 
-		if (entity_ != null && entity_.getId() != null) {
+		if (entityFound != null && entityFound.getId() != null) {
 
-			final String body = gson.toJson(entity_, entity_.getClass());
+			final String body = gson.toJson(entityFound, entityFound.getClass());
 
 			LOGGER.info("#### findBySingle {}", body);
 
-			return new ResponseEntity<String>(body, HttpStatus.OK);
+			return new ResponseEntity<>(body, HttpStatus.OK);
 		}
 
-		return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
 	/**
@@ -220,7 +220,7 @@ public class QueryJpaController extends AbstractController {
 	 * @throws ServiceException
 	 * @obs retorna apenas a quantidade de registros da Entidade (Tabela)
 	 */
-	@RequestMapping(value = "/count/jpql/{entity}/{methodQueryJPQL}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/count/jpql/{entity}/{methodQueryJPQL}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> count(@PathVariable String entity, 
 			@RequestParam(defaultValue = "") Map<String, Object> params,
 			@PathVariable String methodQueryJPQL) throws ServiceException {
@@ -236,7 +236,7 @@ public class QueryJpaController extends AbstractController {
 
 		LOGGER.info("#### service count {} total de registro(s) na tabela {} ", count, entity);
 
-		return new ResponseEntity<String>(body, HttpStatus.OK);
+		return new ResponseEntity<>(body, HttpStatus.OK);
 
 	}
 	
@@ -250,7 +250,7 @@ public class QueryJpaController extends AbstractController {
 	 * @obs é uma lista(nao paginado)
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/find/all/ids/{entity}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/find/all/ids/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> findAllIds(@PathVariable String entity, @RequestParam ArrayList<String> id) throws ServiceException {
 
 		List<Entity<?>> list = (List<Entity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
@@ -262,10 +262,10 @@ public class QueryJpaController extends AbstractController {
 
 			LOGGER.info("#### service findAllById {}", body);
 
-			return new ResponseEntity<String>(body, HttpStatus.OK);
+			return new ResponseEntity<>(body, HttpStatus.OK);
 		}
 
-		return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
 	/**
@@ -277,24 +277,24 @@ public class QueryJpaController extends AbstractController {
 	 * @throws ServiceException
 	 * @obs retorna apenas um objeto da Entidade (Tabela)
 	 */
-	@RequestMapping(value = "/find/{entity}/{id}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/find/{entity}/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> findById(@PathVariable String entity, @PathVariable String id) throws ServiceException {
 
 		setId(entity, id);
 
-		Entity<?> entity_ = (Entity<?>) methodInvoker.invokeMethodReturnObjectWithParameters(
+		Entity<?> entityFound = (Entity<?>) methodInvoker.invokeMethodReturnObjectWithParameters(
 				MethodReflection.getNameService(entity), "findById");
 
-		if (entity_ != null && entity_.getId() != null) {
+		if (entityFound != null && entityFound.getId() != null) {
 
-			final String body = gson.toJson(entity_, entity_.getClass());
+			final String body = gson.toJson(entityFound, entityFound.getClass());
 
 			LOGGER.info("#### findById {}", body);
 
-			return new ResponseEntity<String>(body, HttpStatus.OK);
+			return new ResponseEntity<>(body, HttpStatus.OK);
 		}
 
-		return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 	/**
@@ -305,12 +305,12 @@ public class QueryJpaController extends AbstractController {
 	 * @throws ServiceException
 	 * @obs retorna apenas a quantidade de registros da Entidade (Tabela)
 	 */
-	@RequestMapping(value = "/count/{entity}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/count/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> count(@PathVariable String entity, @RequestParam(defaultValue = "") Map<String, Object> params) throws ServiceException {
 
-		Entity<?> entity_ = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
+		Entity<?> entityFound = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
-		setEntity(entity, entity_);
+		setEntity(entity, entityFound);
 
 		Long count = (Long) methodInvoker.invokeMethodReturnObjectWithParameters(
 				MethodReflection.getNameService(entity), "count", params);
@@ -319,7 +319,7 @@ public class QueryJpaController extends AbstractController {
 
 		LOGGER.info("#### service count {} total de registro(s) na tabela {} ", count, entity);
 
-		return new ResponseEntity<String>(body, HttpStatus.OK);
+		return new ResponseEntity<>(body, HttpStatus.OK);
 
 	}
 
@@ -331,7 +331,7 @@ public class QueryJpaController extends AbstractController {
 	 * @throws ServiceException
 	 * @obs retorna apenas um TRUE|FALSE
 	 */
-	@RequestMapping(value = "/exist/id/{entity}/{id}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/exist/id/{entity}/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> existsById(@PathVariable String entity, @PathVariable String id) throws ServiceException {
 
 		setId(entity, id);
@@ -343,7 +343,7 @@ public class QueryJpaController extends AbstractController {
 
 		LOGGER.info("#### ID {} service existsById {} na tabela {}", id, existsById, entity);
 
-		return new ResponseEntity<String>(body, HttpStatus.OK);
+		return new ResponseEntity<>(body, HttpStatus.OK);
 
 	}
 }

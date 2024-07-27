@@ -2,8 +2,6 @@ package br.com.process.integration.database.core.reflection;
 
 import java.lang.reflect.Method;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -13,8 +11,6 @@ import br.com.process.integration.database.core.exception.ServiceException;
 
 @Service
 public class MethodInvoker {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(MethodReflection.class);
 
 	@Autowired
 	private ApplicationContext applicationContext;
@@ -27,7 +23,6 @@ public class MethodInvoker {
 			Method method = bean.getClass().getMethod(methodName, paramTypes);
 			method.invoke(bean, params);
 		} catch (Exception ex) {
-			LOGGER.error("Ocorreu um erro executar o metodo: ({}) via reflection, veja se o metodo existe, ou os parametros estao incorretos! classe: {} - metodo: {}", methodName, "MethodInvoker", "invokeMethodWithParameters");
 			throw new ServiceException("Ocorreu um erro executar o metodo: (" + methodName + ") via reflection, veja se o metodo existe, ou os parametros estao incorretos!", ex);
 		}
 	}
@@ -40,7 +35,6 @@ public class MethodInvoker {
 			Method method = bean.getClass().getMethod(methodName, paramTypes);
 			return method.invoke(bean, params);
 		} catch (Exception ex) {
-			LOGGER.error("Ocorreu um erro executar o metodo: ({}) via reflection, veja se o metodo existe, ou os parametros estao incorretos! classe: {} - metodo: {}", methodName, "MethodInvoker", "invokeMethodReturnObjectWithParameters");
 			throw new ServiceException("Ocorreu um erro executar o metodo: (" + methodName + ") via reflection, veja se o metodo existe, ou os parametros estao incorretos!", ex);
 		}
 	}

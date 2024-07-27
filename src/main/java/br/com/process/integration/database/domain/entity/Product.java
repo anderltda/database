@@ -4,9 +4,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import br.com.process.integration.database.core.infrastructure.AbstractEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,8 +21,8 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "PRODUCT")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Product extends AbstractEntity<Long, Product> {
-
+public class Product extends RepresentationModel<Product> implements br.com.process.integration.database.core.domain.Entity<Long> {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id")

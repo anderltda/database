@@ -11,9 +11,9 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,7 +27,7 @@ public class QueryNativeController extends AbstractController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(QueryNativeController.class);
 
-	@RequestMapping(value = "/execute/query/find/single/{instance}/{methodInvokerQuery}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/execute/query/find/single/{instance}/{methodInvokerQuery}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> findBySingle(@PathVariable String instance, 
 			@RequestParam(defaultValue = "") Map<String, Object> params, 
 			@PathVariable String methodInvokerQuery) throws ServiceException {
@@ -49,7 +49,7 @@ public class QueryNativeController extends AbstractController {
 	}
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/execute/query/find/all/{instance}/{methodInvokerQuery}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/execute/query/find/all/{instance}/{methodInvokerQuery}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> findAll(@PathVariable String instance, 
 			@RequestParam(defaultValue = "") Map<String, Object> params, 
 			@PathVariable String methodInvokerQuery) throws ServiceException {
@@ -64,14 +64,14 @@ public class QueryNativeController extends AbstractController {
 
 			LOGGER.info("#### service findAll {}", body);
 
-			return new ResponseEntity<String>(body, HttpStatus.OK);
+			return new ResponseEntity<>(body, HttpStatus.OK);
 		}
 
-		return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/execute/query/page/{instance}/{methodInvokerQuery}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/execute/query/page/{instance}/{methodInvokerQuery}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public PagedModel<Model<?>> executeQuery(@PathVariable String instance,
 			@RequestParam(defaultValue = "") Map<String, Object> params, 
 			@PathVariable String methodInvokerQuery,
