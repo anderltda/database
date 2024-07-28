@@ -2,6 +2,8 @@ package br.com.process.integration.database.core.util;
 
 public class Constants {
 	
+	private Constants() {}
+	
 	/**
 	 *  Inicio do nome do diretorio
 	 */
@@ -18,15 +20,38 @@ public class Constants {
 	public static final String PACKAGE_NAME_ENTITY = "br.com.process.integration.database.domain.entity";
 	
 	/**
-	 *  Nome do pacote onde estao as classes dos dtos
+	 *  Nome do pacote onde estao as classes dos views
 	 */
-	public static final String PACKAGE_NAME_MODEL = "br.com.process.integration.database.domain.model";
+	public static final String PACKAGE_NAME_VIEW = "br.com.process.integration.database.domain.view";
 	
 	/**
 	 * Referencia ao identificador da operacao
 	 */
 	public static final String IDENTITY_OPERATOR = "_op";
-
+	
+	/**
+	 * Nome do metodo do Service
+	 */
+	public static final String METHOD_FIND_ALL = "findAll";
+	public static final String METHOD_FIND_BY_SINGLE = "findBySingle";
+	public static final String METHOD_COUNT = "count";
+	public static final String METHOD_FIND_ALL_BY_ID = "findAllById";
+	public static final String METHOD_FIND_BY_ID = "findById";
+	public static final String METHOD_EXISTS_BY_ID = "existsById"; 
+	
+	public static final String METHOD_DELETE_ALL = "deleteAll"; 
+	public static final String METHOD_DELETE_ALL_BY_ID = "deleteAllById"; 
+	public static final String METHOD_DELETE_BY_ID = "deleteById"; 
+	public static final String METHOD_DELETE = "delete"; 
+	
+	public static final String METHOD_SAVE = "save"; 
+	public static final String METHOD_SAVE_AND_FLUSH = "saveAndFlush"; 
+	public static final String METHOD_SAVE_ALL = "saveAll"; 
+	public static final String METHOD_SAVE_ALL_AND_FLUSH = "saveAllAndFlush"; 
+	
+	public static final String METHOD_EXECUTE_QUERY_NATIVE = "executeQueryNative"; 
+	public static final String METHOD_EXECUTE_QUERY_NATIVE_FIND_BY_SINGLE = "executeQueryNativeFindBySingle"; 
+	
 	/**
 	 * Operadores Lógicos
 	 */

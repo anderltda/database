@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import br.com.process.integration.database.core.exception.ServiceException;
 import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.core.util.DynamicTypeConverter;
 import jakarta.persistence.JoinColumn;
@@ -30,38 +29,32 @@ public class MethodReflection {
 	
 	private MethodReflection() {}
 	
-	public static void transformsJsonModel(JsonNode jsonNode, Object object) throws ServiceException {
+	public static void transformsJsonModel(JsonNode jsonNode, Object object) throws Exception {
 
-		try {
-			
-			List<Field> fields = MethodReflection.getFields(object.getClass(), Object.class);
+		List<Field> fields = MethodReflection.getFields(object.getClass(), Object.class);
 
-			for (Field field : fields) {
+		for (Field field : fields) {
 
-				Object objectTemp = null;
+			Object objectTemp = null;
 
-				if (jsonNode.has(field.getName())) {
+			if (jsonNode.has(field.getName())) {
 
-					if (field.getAnnotation(JoinColumn.class) instanceof JoinColumn) {
+				if (field.getAnnotation(JoinColumn.class) instanceof JoinColumn) {
 
-						objectTemp = identificarClasse(field.getType().getName());
+					objectTemp = identificarClasse(field.getType().getName());
 
-						transformsJsonModel(jsonNode.get(field.getName()), objectTemp);
+					transformsJsonModel(jsonNode.get(field.getName()), objectTemp);
 
-						executeMethod(object, setMethod(field.getName()), objectTemp);
-						
-					} else {
+					executeMethod(object, setMethod(field.getName()), objectTemp);
 
-						executeMethod(object, setMethod(field.getName()), DynamicTypeConverter.convert(field, jsonNode));
-					}
+				} else {
 
+					executeMethod(object, setMethod(field.getName()), DynamicTypeConverter.convert(field, jsonNode));
 				}
+
 			}
-			
-		} catch (Exception ex) {
-			throw new ServiceException("Ocorreu um erro ao transformar o objeto (jsonNode) em Entity!", ex);
 		}
-		
+
 	}
 	
 	public static Class<?> getTypeById(Object object) {
@@ -80,18 +73,12 @@ public class MethodReflection {
 		return type;
 	}
 
-	public static List<Object> transformsJsonIds(JsonNode jsonNode) throws ServiceException {
+	public static List<Object> transformsJsonIds(JsonNode jsonNode) {
 
 		List<Object> list = new ArrayList<>();
-		
-		try {
-			
-			for (Iterator<JsonNode> iterator = jsonNode.elements(); iterator.hasNext();) {
-				list.add(iterator.next().get("id").asText());
-			}
-						
-		} catch (Exception ex) {
-			throw new ServiceException("Ocorreu um erro ao transformar o objeto (jsonNode) em IDs!", ex);
+
+		for (Iterator<JsonNode> iterator = jsonNode.elements(); iterator.hasNext();) {
+			list.add(iterator.next().get("id").asText());
 		}
 
 		return list;
@@ -105,12 +92,12 @@ public class MethodReflection {
 		return className.substring(0, 1).toLowerCase() + className.substring(1) + "Service";
 	}
 	
-	public static Object findDtoUsingClassLoader(String className) throws ServiceException {
-		String packagePath = (Constants.DIRECTORY_APPLICATION + Constants.PACKAGE_NAME_MODEL).replaceAll("[.]", "/");
+	public static Object findDtoUsingClassLoader(String className) {
+		String packagePath = (Constants.DIRECTORY_APPLICATION + Constants.PACKAGE_NAME_VIEW).replaceAll("[.]", "/");
 		return findClassUsingClassLoader(className, packagePath);
 	}
 	
-	public static Object findEntityUsingClassLoader(String className) throws ServiceException {
+	public static Object findEntityUsingClassLoader(String className) {
 		String packagePath = (Constants.DIRECTORY_APPLICATION + Constants.PACKAGE_NAME_ENTITY).replaceAll("[.]", "/");
 		return findClassUsingClassLoader(className, packagePath);
 	}
@@ -127,15 +114,15 @@ public class MethodReflection {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static Object executeMethod(Object object, String methodName, Object... paramValue) throws ServiceException {
-		Class[] paramTypes = MethodReflection.transformParametersTypes(paramValue);
-		Method method = getMethod(object.getClass(), methodName, paramTypes);
-		if (method != null) {
-			try {
+	public static Object executeMethod(Object object, String methodName, Object... paramValue) {
+		try {
+			Class[] paramTypes = MethodReflection.transformParametersTypes(paramValue);
+			Method method = getMethod(object.getClass(), methodName, paramTypes);
+			if (method != null) {
 				return method.invoke(object, paramValue);
-			} catch (Exception ex) {
-				throw new ServiceException(ex);
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
@@ -206,7 +193,7 @@ public class MethodReflection {
 	
 
 	@SuppressWarnings("resource")
-	private static Object findClassUsingClassLoader(String className, String packagePath) throws ServiceException {
+	private static Object findClassUsingClassLoader(String className, String packagePath) {
 
 		try {
 			
@@ -233,11 +220,11 @@ public class MethodReflection {
 				}
 			}
 			
-		} catch (Exception ex) {
-			throw new ServiceException(ex.getMessage(), ex);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
-		return false;
+		return null;
 	}
 
 	private static Class<?> getClass(String className, String packageName) {
@@ -265,22 +252,22 @@ public class MethodReflection {
 	 * Receber os paramentros e popula a entidade de acordo com as keys
 	 * @param entity - Entidade a ser populada
 	 * @param params - Paramentros recebidos com key e value
-	 * @throws ServiceException
 	 */
-	public static void queryParams(Object entity, Map<String, Object> params) throws ServiceException {
+	public static void queryParams(Object entity, Map<String, Object> params) {
 		try {
 			List<Field> fields = MethodReflection.getFields(entity.getClass(), Object.class);
 			for (Field field : fields) {
 				if (params.get(field.getName()) != null) {
-					executeMethod(entity, setMethod(field.getName()), DynamicTypeConverter.convert(field, params.get(field.getName())));
+					executeMethod(entity, setMethod(field.getName()),
+							DynamicTypeConverter.convert(field, params.get(field.getName())));
 				}
 			}
-		} catch (Exception ex) {
-			throw new ServiceException("Ocorreu um erro ao criar a entity no momento de processar os parametros (params)!", ex);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
-	public static Object[] getMethodArgs(Class<?> clazz, String methodName, Map<String, Object> param) throws ServiceException {
+	public static Object[] getMethodArgs(Class<?> clazz, String methodName, Map<String, Object> param) {
 
 		Object[] methodArgs = null;
 		
@@ -297,36 +284,28 @@ public class MethodReflection {
 				}
 			}
 
-			if (targetMethod == null) {
-				throw new ServiceException("Método não encontrado: " + methodName);
+			if (targetMethod != null) {
+				Class<?>[] parameterTypes = targetMethod.getParameterTypes();
+				if(param.size() == parameterTypes.length) {
+					methodArgs = new Object[parameterTypes.length];
+					int index = 0;
+					for (Entry<String, Object> entry : param.entrySet()) {
+						Object value = entry.getValue();
+						Class<?> class1 = parameterTypes[index];
+						log.append(parameterTypes[index].getSimpleName());
+						log.append("(");
+						log.append(value);
+						log.append(")");
+						log.append(", ");
+						methodArgs[index++] = DynamicTypeConverter.convert(class1, value);
+					}
+				}
 			}
 
-			Class<?>[] parameterTypes = targetMethod.getParameterTypes();
-			
-			if(param.size() != parameterTypes.length) {
-				throw new ServiceException("Número de argumentos(param) fornecidos não correspondem ao número de parametros do método: " + methodName);
-			}
-
-			methodArgs = new Object[parameterTypes.length];
-			int index = 0;
-
-			for (Entry<String, Object> entry : param.entrySet()) {
-				Object value = entry.getValue();
-				Class<?> class1 = parameterTypes[index];
-				log.append(parameterTypes[index].getSimpleName());
-				log.append("(");
-				log.append(value);
-				log.append(")");
-				log.append(", ");
-				methodArgs[index++] = DynamicTypeConverter.convert(class1, value);
-			}
-			
-
-		} catch (Exception ex) {
-			throw new ServiceException(ex);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		return methodArgs;
-
 	}
 }

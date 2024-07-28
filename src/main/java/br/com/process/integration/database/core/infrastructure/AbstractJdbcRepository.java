@@ -1,5 +1,6 @@
 package br.com.process.integration.database.core.infrastructure;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,13 +12,11 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import br.com.process.integration.database.core.domain.ConfigQuery;
-import br.com.process.integration.database.core.domain.Model;
-import br.com.process.integration.database.core.domain.ModelRepository;
-import br.com.process.integration.database.core.exception.ServiceException;
+import br.com.process.integration.database.core.domain.ViewRepository;
 import br.com.process.integration.database.core.util.Constants;
 
 @Repository
-public abstract class AbstractJdbcRepository<M extends Model<?>> implements ModelRepository<M> {
+public abstract class AbstractJdbcRepository<V> implements ViewRepository<V> {
 
 	@Autowired
 	private ConfigQuery configQuery;
@@ -25,67 +24,95 @@ public abstract class AbstractJdbcRepository<M extends Model<?>> implements Mode
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	protected M model;
-
-	protected abstract void setModel(M model);
-
-	private RowMapper<M> rowMapper = null;
+	private RowMapper<V> rowMapper = null;
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public M findBySingle(Map<String, Object> filters, String fileQuery, String invokerQuery) throws ServiceException {
+	public V findBySingle(V view, Map<String, Object> filters, String fileQuery, String invokerQuery) {
 		
-		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+		try {
 
-		rowMapper = new BeanPropertyRowMapper<>((Class<M>) model.getClass());
-		
-		String sql = configQuery.executeSQL(filters, fileQuery, invokerQuery, mapSqlParameterSource);
-		
-		return namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, rowMapper);
+			MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+
+			rowMapper = new BeanPropertyRowMapper<>((Class<V>) view.getClass());
+
+			String sql = configQuery.executeSQL(filters, fileQuery, invokerQuery, mapSqlParameterSource);
+
+			return namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, rowMapper);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<M> findAll(Map<String, Object> filter, String fileQuery, String invokerQuery) throws ServiceException {
-
-		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-
-		rowMapper = new BeanPropertyRowMapper<>((Class<M>) model.getClass());
+	public List<V> findAll(V view, Map<String, Object> filter, String fileQuery, String invokerQuery) {
 		
-		String sql = configQuery.executeSQL(filter, fileQuery, invokerQuery, mapSqlParameterSource);
-		
-		return namedParameterJdbcTemplate.query(sql, mapSqlParameterSource, rowMapper);
+		try {
+
+			MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+
+			rowMapper = new BeanPropertyRowMapper<>((Class<V>) view.getClass());
+
+			String sql = configQuery.executeSQL(filter, fileQuery, invokerQuery, mapSqlParameterSource);
+
+			return namedParameterJdbcTemplate.query(sql, mapSqlParameterSource, rowMapper);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new ArrayList<>();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<M> findAll(Map<String, Object> filter, String fileQuery, String invokerQuery, Integer page, Integer size) throws ServiceException {
+	public List<V> findAll(V view, Map<String, Object> filter, String fileQuery, String invokerQuery, Integer page, Integer size) {
 
-		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+		try {
+			
+			MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 
-		rowMapper = new BeanPropertyRowMapper<>((Class<M>) model.getClass());
-		
-		StringBuilder sql = new StringBuilder(); 
-				
-		sql.append(configQuery.executeSQL(filter, fileQuery, invokerQuery, mapSqlParameterSource));
-		
-		sql.append(Constants.LIMIT);
-		sql.append(Constants.WRITERSPACE);
-		sql.append(Constants.OFFSET);
-		
-		mapSqlParameterSource.addValue("size", size);
-		mapSqlParameterSource.addValue("offset", page * size);
+			rowMapper = new BeanPropertyRowMapper<>((Class<V>) view.getClass());
+			
+			StringBuilder sql = new StringBuilder(); 
+					
+			sql.append(configQuery.executeSQL(filter, fileQuery, invokerQuery, mapSqlParameterSource));
+			
+			sql.append(Constants.LIMIT);
+			sql.append(Constants.WRITERSPACE);
+			sql.append(Constants.OFFSET);
+			
+			mapSqlParameterSource.addValue("size", size);
+			mapSqlParameterSource.addValue("offset", page * size);
 
-		return namedParameterJdbcTemplate.query(sql.toString(), mapSqlParameterSource, rowMapper);
+			return namedParameterJdbcTemplate.query(sql.toString(), mapSqlParameterSource, rowMapper);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ArrayList<>();
 	}
 	
 	@Override
-	public int count(Map<String, Object> filter, String fileQuery, String invokerQuery) throws ServiceException {
+	public int count(Map<String, Object> filter, String fileQuery, String invokerQuery) {
 
-		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
+		try {
 
-		String sql = configQuery.executeCountSQL(filter, fileQuery, invokerQuery, mapSqlParameterSource);
+			MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 
-		return namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, Integer.class);
+			String sql = configQuery.executeCountSQL(filter, fileQuery, invokerQuery, mapSqlParameterSource);
+
+			return namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, Integer.class);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return 0;
 	}
 }

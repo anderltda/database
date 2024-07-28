@@ -1,5 +1,6 @@
 package br.com.process.integration.database.core.application;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,39 +12,57 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.process.integration.database.core.domain.Model;
-import br.com.process.integration.database.core.exception.ServiceException;
 import br.com.process.integration.database.core.infrastructure.AbstractJdbcRepository;
 
 @Service
 @Transactional
-public abstract class AbstractJdbcService<M extends Model<?>> extends AbstractJdbcRepository<M> implements JdbcService<M> {
+public abstract class AbstractJdbcService<V> extends AbstractJdbcRepository<V> implements JdbcService<V> {
 
-	protected Page<M> pages;
-	protected PagedModel<M> pagedModel;
-
+	protected V view;
+	protected abstract void setView(V view);
+	
+	protected Page<V> pages;
+	protected PagedModel<V> pagedModel;
 	public abstract void setPagedModel();
-
+	
 	@Override
-	public M executeQueryNativeFindBySingle(Map<String, Object> filter, String invokerQuery) throws ServiceException {
-		return findBySingle(filter, this.getClass().getSimpleName(), invokerQuery);
+	public V executeQueryNativeFindBySingle(Map<String, Object> filter, String invokerQuery) {
+		try {
+			return findBySingle(view, filter, this.getClass().getSimpleName(), invokerQuery);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	@Override
-	public List<M> executeQueryNative(Map<String, Object> search, String invokerQuery) throws ServiceException {
-		return findAll(search, this.getClass().getSimpleName(), invokerQuery);
+	public List<V> executeQueryNative(Map<String, Object> filter, String invokerQuery) {
+		try {
+			return findAll(view, filter, this.getClass().getSimpleName(), invokerQuery);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ArrayList<>();
 	}
 
 	@Override
-	public PagedModel<M> executeQueryNative(Map<String, Object> filter, String invokerQuery, Integer page, Integer size, List<String> sortList, String sortOrder) throws ServiceException {
+	public PagedModel<V> executeQueryNative(Map<String, Object> filter, String invokerQuery, Integer page, Integer size, List<String> sortList, String sortOrder) {
 
-		List<M> models = findAll(filter, this.getClass().getSimpleName(), invokerQuery, page, size);
-		int totalElements = count(filter, this.getClass().getSimpleName(), invokerQuery);
-		Pageable pageable = PageRequest.of(page, size);
-		pages = new PageImpl<>(models, pageable, totalElements);
+		try {
+			
+			List<V> models = findAll(view, filter, this.getClass().getSimpleName(), invokerQuery, page, size);
+			int totalElements = count(filter, this.getClass().getSimpleName(), invokerQuery);
+			Pageable pageable = PageRequest.of(page, size);
+			pages = new PageImpl<>(models, pageable, totalElements);
 
-		setPagedModel();
+			setPagedModel();
 
-		return pagedModel;
+			return pagedModel;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 }

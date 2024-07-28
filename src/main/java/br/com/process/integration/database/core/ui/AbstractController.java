@@ -13,8 +13,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import br.com.process.integration.database.core.domain.Entity;
-import br.com.process.integration.database.core.domain.Model;
-import br.com.process.integration.database.core.exception.ServiceException;
 import br.com.process.integration.database.core.reflection.MethodInvoker;
 import br.com.process.integration.database.core.reflection.MethodReflection;
 import br.com.process.integration.database.core.ui.adapter.LocalDateAdapter;
@@ -73,43 +71,38 @@ public abstract class AbstractController {
 	}
 	
 	/**
-	 * Informar (Setando) a Entidade (Tabela) com apenas o ID, que a classe <EntityManager> irá trabalhar passando o nome da entidade e ID
+	 * Informar (Setando) a Entidade (Tabela) com apenas o ID, que a classe <EntityService> irá trabalhar passando o nome da entidade e ID
 	 * @param nameEntity - Nome da Entidade (Tabela)
 	 * @param id - ID da Entidade (Tabela)
-	 * @throws ServiceException
 	 */
-	protected void setId(String nameEntity, String id) throws ServiceException {
+	protected void setId(String nameEntity, String id) {
 		Entity<?> entity = (Entity<?>) MethodReflection.findEntityUsingClassLoader(nameEntity);
 		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameEntity), "setId", DynamicTypeConverter.convert(entity, id));
 	}
 	
 	/**
-	 * Informar (Setando) a Entidade (Tabela) que a classe <EntityManager> irá trabalhar passando o nome da entidade
+	 * Informar (Setando) a Entidade (Tabela) que a classe <EntityService> irá trabalhar passando o nome da entidade
 	 * @param nameEntity - Nome da Entidade (Tabela)
-	 * @throws ServiceException
 	 */
-	protected void setEntity(String nameEntity) throws ServiceException {
+	protected void setEntity(String nameEntity) {
 		Entity<?> entity = (Entity<?>) MethodReflection.findEntityUsingClassLoader(nameEntity);
 		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameEntity), "setEntity", entity);
 	}
 	
 	/**
-	 * Informar (Setando) a Entidade (Tabela) que a classe <EntityManager> irá trabalhar passando o nome da entidade e a instancia da entity
+	 * Informar (Setando) a Entidade (Tabela) que a classe <EntityService> irá trabalhar passando o nome da entidade e a instancia da entity
 	 * @param nameEntity - Nome da Entidade (Tabela)
 	 * @param entity - Object Entity - Entidade (Tabela)
-	 * @throws ServiceException
 	 */
-	protected void setEntity(String nameEntity, Entity<?> entity) throws ServiceException {
+	protected void setEntity(String nameEntity, Entity<?> entity) {
 		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameEntity), "setEntity", entity);
 	}
 	
 	/**
-	 * Informar (Setando) o Model (QUERY NATIVE) que a classe <ModelManager> irá trabalhar passando o nome do Model
-	 * @param nameModel - Nome do Model (QUERY NATIVE)
-	 * @throws ServiceException
+	 * Informar (Setando) o Model (QUERY NATIVE) que a classe <ViewService> irá trabalhar passando o nome do Model
+	 * @param nameView - Nome do Model (QUERY NATIVE)
 	 */
-	protected void setModel(String nameModel) throws ServiceException {
-		Model<?> model = (Model<?>) MethodReflection.findDtoUsingClassLoader(nameModel);
-		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameModel), "setModel", model);
+	protected void setView(String nameView) {
+		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameView), "setView", MethodReflection.findDtoUsingClassLoader(nameView));
 	}
 }

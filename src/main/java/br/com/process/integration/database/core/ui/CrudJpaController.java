@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import br.com.process.integration.database.core.domain.Entity;
-import br.com.process.integration.database.core.exception.ServiceException;
 import br.com.process.integration.database.core.reflection.MethodReflection;
+import br.com.process.integration.database.core.util.Constants;
 
 @RestController
 @RequestMapping("/v1/api-rest-database")
@@ -26,50 +26,50 @@ public class CrudJpaController extends AbstractController {
 
 
 	@DeleteMapping(value = "/delete/all/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> deleteAll(@PathVariable String entity) throws ServiceException {
+	public ResponseEntity<String> deleteAll(@PathVariable String entity) {
 
-		methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity), "deleteAll");
+		methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_DELETE_ALL);
 
 		return new ResponseEntity<>(HttpStatus.OK);
 
 	}
 	
 	@DeleteMapping(value = "/delete/all/id/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> deleteAllById(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws ServiceException {
+	public ResponseEntity<String> deleteAllById(@PathVariable String entity, @RequestBody JsonNode jsonNode) {
 		
 		List<Object> ids = MethodReflection.transformsJsonIds(jsonNode);
 
-		methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity), "deleteAllById", ids);
+		methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_DELETE_ALL_BY_ID, ids);
 
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@DeleteMapping(value = "/delete/id/{entity}/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> deleteById(@PathVariable String entity, @PathVariable String id) throws ServiceException {
+	public ResponseEntity<String> deleteById(@PathVariable String entity, @PathVariable String id) {
 
 		setId(entity, id);
 		
-		methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity), "deleteById");
+		methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_DELETE_BY_ID);
 
 		return new ResponseEntity<>(HttpStatus.OK);
 
 	}
 	
 	@DeleteMapping(value = "/delete/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> delete(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws ServiceException {
+	public ResponseEntity<String> delete(@PathVariable String entity, @RequestBody JsonNode jsonNode) {
 
-		methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity), "delete");
+		methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_DELETE);
 
 		return new ResponseEntity<>(HttpStatus.OK);
 
 	}
 	
 	@PostMapping(value = "/save/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> save(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws ServiceException {
+	public ResponseEntity<String> save(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws Exception {
 
 		Entity<?> entityFound = createEntity(entity, jsonNode);
 
-		methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity), "save");
+		methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_SAVE);
 
 		final String body = gson.toJson(entityFound);
 
@@ -78,11 +78,11 @@ public class CrudJpaController extends AbstractController {
 	}
 	
 	@PostMapping(value = "/save/flush/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> saveAndFlush(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws ServiceException {
+	public ResponseEntity<String> saveAndFlush(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws Exception {
 
 		Entity<?> entityFound = createEntity(entity, jsonNode);
 
-		methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity), "saveAndFlush");
+		methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_SAVE_AND_FLUSH);
 
 		final String body = gson.toJson(entityFound);
 
@@ -91,24 +91,24 @@ public class CrudJpaController extends AbstractController {
 	}
 	
 	@PostMapping(value = "/save/all/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> saveAll(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws ServiceException {
+	public ResponseEntity<String> saveAll(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws Exception {
 
-		String body = persisteAll("saveAll", entity, jsonNode);
+		String body = persisteAll(Constants.METHOD_SAVE_ALL, entity, jsonNode);
 
 		return new ResponseEntity<>(body, HttpStatus.OK);
 
 	}
 	
 	@PostMapping(value = "/save/all/flush/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> saveAllAndFlush(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws ServiceException {
+	public ResponseEntity<String> saveAllAndFlush(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws Exception {
 
-		String body = persisteAll("saveAllAndFlush", entity, jsonNode);
+		String body = persisteAll(Constants.METHOD_SAVE_ALL_AND_FLUSH, entity, jsonNode);
 
 		return new ResponseEntity<>(body, HttpStatus.OK);
 
 	}
 	
-	private Entity<?> createEntity(String entity, JsonNode jsonNode) throws ServiceException {
+	private Entity<?> createEntity(String entity, JsonNode jsonNode) throws Exception {
 		
 		Entity<?> entityFound = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
@@ -119,7 +119,7 @@ public class CrudJpaController extends AbstractController {
 		return entityFound;
 	}
 	
-	private String persisteAll(String method, String entity, JsonNode jsonNode) throws ServiceException {
+	private String persisteAll(String method, String entity, JsonNode jsonNode) throws Exception {
 
 		Entity<?> entityFound = null;
 		

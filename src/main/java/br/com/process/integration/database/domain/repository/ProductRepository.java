@@ -33,7 +33,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
 	Product findByTitleAndType(String title, String type);
 	
 	@Query(QUERY_3)
-	List<Product> findByTitleAndType_(String title, String type);
+	List<Product> findByTitleAndTypeLike(String title, String type);
 	
 	@Query(QUERY_4)
 	List<Product> findBySchedule(LocalDate schedule, LocalDateTime endDate);

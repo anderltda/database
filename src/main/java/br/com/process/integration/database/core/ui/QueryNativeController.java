@@ -1,12 +1,8 @@
 package br.com.process.integration.database.core.ui;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Sort;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,52 +13,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.process.integration.database.core.domain.Model;
-import br.com.process.integration.database.core.exception.ServiceException;
 import br.com.process.integration.database.core.reflection.MethodReflection;
+import br.com.process.integration.database.core.util.Constants;
 
 @RestController
 @RequestMapping("/v1/api-rest-database")
 public class QueryNativeController extends AbstractController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(QueryNativeController.class);
-
 	@GetMapping(value = "/execute/query/find/single/{instance}/{methodInvokerQuery}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> findBySingle(@PathVariable String instance, 
+	public ResponseEntity<String> findBySingle(@PathVariable String instance,
 			@RequestParam(defaultValue = "") Map<String, Object> params, 
-			@PathVariable String methodInvokerQuery) throws ServiceException {
+			@PathVariable String methodInvokerQuery) {
 
-		setModel(instance);
+		setView(instance);
 
-		Model<?> dto = (Model<?>) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(instance), "executeQueryNativeFindBySingle", params, methodInvokerQuery);
+		Object object = methodInvoker.invokeMethodReturnObjectWithParameters(
+				MethodReflection.getNameService(instance), Constants.METHOD_EXECUTE_QUERY_NATIVE_FIND_BY_SINGLE, params, methodInvokerQuery);
 
-		if (dto != null) {
+		if (object != null) {
 
-			final String body = gson.toJson(dto, dto.getClass());
-
-			LOGGER.info("#### findBySingle {}", body);
-
-			return new ResponseEntity<String>(body, HttpStatus.OK);
-		}
-
-		return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
-	}
-
-	@SuppressWarnings("unchecked")
-	@GetMapping(value = "/execute/query/find/all/{instance}/{methodInvokerQuery}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> findAll(@PathVariable String instance, 
-			@RequestParam(defaultValue = "") Map<String, Object> params, 
-			@PathVariable String methodInvokerQuery) throws ServiceException {
-
-		setModel(instance);
-
-		List<Model<?>> list = (List<Model<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(instance), "executeQueryNative", params, methodInvokerQuery);
-
-		if (list != null && !list.isEmpty()) {
-
-			final String body = gson.toJson(list);
-
-			LOGGER.info("#### service findAll {}", body);
+			final String body = gson.toJson(object, MethodReflection.findDtoUsingClassLoader(instance).getClass());
 
 			return new ResponseEntity<>(body, HttpStatus.OK);
 		}
@@ -70,25 +40,42 @@ public class QueryNativeController extends AbstractController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
-	@SuppressWarnings("unchecked")
+	@GetMapping(value = "/execute/query/find/all/{instance}/{methodInvokerQuery}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<String> findAll(@PathVariable String instance, 
+			@RequestParam(defaultValue = "") Map<String, Object> params, 
+			@PathVariable String methodInvokerQuery) {
+
+		setView(instance);
+
+		List<?> list = (List<?>) methodInvoker.invokeMethodReturnObjectWithParameters(
+				MethodReflection.getNameService(instance), Constants.METHOD_EXECUTE_QUERY_NATIVE, params, methodInvokerQuery);
+
+		if (list != null && !list.isEmpty()) {
+
+			final String body = gson.toJson(list);
+
+			return new ResponseEntity<>(body, HttpStatus.OK);
+		}
+
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+
+	@SuppressWarnings({ "rawtypes" })
 	@GetMapping(value = "/execute/query/page/{instance}/{methodInvokerQuery}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public PagedModel<Model<?>> executeQuery(@PathVariable String instance,
+	public PagedModel executeQuery(@PathVariable String instance,
 			@RequestParam(defaultValue = "") Map<String, Object> params, 
 			@PathVariable String methodInvokerQuery,
 			@RequestParam(defaultValue = "0") Integer page, 
 			@RequestParam(defaultValue = "30") Integer size,
-			@RequestParam(defaultValue = "") ArrayList<String> sortList,
-			@RequestParam(defaultValue = "DESC") Sort.Direction sortOrder) throws ServiceException {
-		
-		addParam(params);		
+			@RequestParam(defaultValue = "") List<String> sortList,
+			@RequestParam(defaultValue = "DESC") String sortOrder) {
 
-		setModel(instance);
+		addParam(params);
 
-		Model<?> entity = (Model<?>) MethodReflection.findDtoUsingClassLoader(instance);
+		setView(instance);
 
-		PagedModel<Model<?>> pagedModel = (PagedModel<Model<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(entity.getClass().getSimpleName()), "executeQueryNative", params, methodInvokerQuery, page, size, sortList, sortOrder.toString());
-
-		return pagedModel;
+		return (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(
+				MethodReflection.getNameService(instance), Constants.METHOD_EXECUTE_QUERY_NATIVE, params,
+				methodInvokerQuery, page, size, sortList, sortOrder);
 	}
 }

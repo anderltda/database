@@ -14,7 +14,6 @@ import org.springframework.stereotype.Repository;
 
 import br.com.process.integration.database.core.domain.Entity;
 import br.com.process.integration.database.core.domain.EntityRepository;
-import br.com.process.integration.database.core.exception.ServiceException;
 import br.com.process.integration.database.core.reflection.MethodPredicate;
 import br.com.process.integration.database.core.reflection.MethodReflection;
 import br.com.process.integration.database.core.util.Constants;
@@ -93,29 +92,37 @@ public abstract class AbstractJpaRepository<E extends Entity<?>, R extends JpaRe
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Page<E> findAll(Map<String, Object> filter, Pageable pageable) throws ServiceException {
+	public Page<E> findAll(Map<String, Object> filter, Pageable pageable) {
 
-		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		try {
+			
+			CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 
-		CriteriaQuery<E> query = (CriteriaQuery<E>) criteriaBuilder.createQuery(entity.getClass());
+			CriteriaQuery<E> query = (CriteriaQuery<E>) criteriaBuilder.createQuery(entity.getClass());
 
-		Root<E> root = (Root<E>) query.from(entity.getClass());
+			Root<E> root = (Root<E>) query.from(entity.getClass());
 
-		List<Predicate> predicates = buildPredicates(filter, criteriaBuilder, root);
+			List<Predicate> predicates = buildPredicates(filter, criteriaBuilder, root);
 
-		query.select(root).where(criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()])));
+			query.select(root).where(criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()])));
 
-		TypedQuery<E> typedQuery = entityManager.createQuery(query);
-		
-		typedQuery.setFirstResult((int) pageable.getOffset());
-		
-		typedQuery.setMaxResults(pageable.getPageSize());
+			TypedQuery<E> typedQuery = entityManager.createQuery(query);
+			
+			typedQuery.setFirstResult((int) pageable.getOffset());
+			
+			typedQuery.setMaxResults(pageable.getPageSize());
 
-		List<E> list = typedQuery.getResultList();
-		
-		Long total = count(filter);
+			List<E> list = typedQuery.getResultList();
+			
+			Long total = count(filter);
 
-		return new PageImpl<>(list, pageable, total);
+			return new PageImpl<>(list, pageable, total);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -153,7 +160,7 @@ public abstract class AbstractJpaRepository<E extends Entity<?>, R extends JpaRe
 				}
 
 				MethodReflection.executeMethod(methodPredicate, method + "Criteria", criteriaBuilder, predicates, path, key, value);
-			} catch (ServiceException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			

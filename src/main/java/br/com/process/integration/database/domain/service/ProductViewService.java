@@ -6,23 +6,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.process.integration.database.core.application.AbstractJdbcService;
-import br.com.process.integration.database.domain.model.ProductModel;
-import br.com.process.integration.database.domain.model.assembler.ProductModelAssembler;
+import br.com.process.integration.database.domain.view.ProductView;
+import br.com.process.integration.database.domain.view.assembler.ProductViewAssembler;
 
 @Service
 @Transactional
-public class ProductModelService extends AbstractJdbcService<ProductModel> {
+public class ProductViewService extends AbstractJdbcService<ProductView> {
 	
 	@Autowired
-	private ProductModelAssembler productModelAssembler;
+	private ProductViewAssembler productModelAssembler;
 	
 	@Autowired
-	private PagedResourcesAssembler<ProductModel> pagedResourcesAssembler;
+	private PagedResourcesAssembler<ProductView> pagedResourcesAssembler;
 	
 
 	@Override
-	public void setModel(ProductModel productModel) {
-		this.model = productModel;
+	public void setView(ProductView productModel) {
+		this.view = productModel;
 	}
 	
 	@Override

@@ -1,15 +1,16 @@
-package br.com.process.integration.database.domain.model;
+package br.com.process.integration.database.domain.view;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
+
+import org.springframework.hateoas.RepresentationModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import br.com.process.integration.database.core.infrastructure.AbstractModel;
-
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ProductModel extends AbstractModel<ProductModel> {
+public class ProductView extends RepresentationModel<ProductView> {
 
 	private Long id;
 
@@ -36,14 +37,14 @@ public class ProductModel extends AbstractModel<ProductModel> {
 	private LocalDateTime endDate;
 
 	// Category
-	private Long product_category_id;
+	private Long productCategoryId;
 	private String name;
 	private String vendor;
 	private String message;
 	private String tags;
 
 	// Option
-	private Long product_option_id;
+	private Long productOptionId;
 	private String toppings;
 	private String email;
 
@@ -143,12 +144,20 @@ public class ProductModel extends AbstractModel<ProductModel> {
 		this.endDate = endDate;
 	}
 
-	public Long getProduct_category_id() {
-		return product_category_id;
+	public Long getProductCategoryId() {
+		return productCategoryId;
 	}
 
-	public void setProduct_category_id(Long product_category_id) {
-		this.product_category_id = product_category_id;
+	public void setProductCategoryId(Long productCategoryId) {
+		this.productCategoryId = productCategoryId;
+	}
+
+	public Long getProductOptionId() {
+		return productOptionId;
+	}
+
+	public void setProductOptionId(Long productOptionId) {
+		this.productOptionId = productOptionId;
 	}
 
 	public String getName() {
@@ -183,14 +192,6 @@ public class ProductModel extends AbstractModel<ProductModel> {
 		this.tags = tags;
 	}
 
-	public Long getProduct_option_id() {
-		return product_option_id;
-	}
-
-	public void setProduct_option_id(Long product_option_id) {
-		this.product_option_id = product_option_id;
-	}
-
 	public String getToppings() {
 		return toppings;
 	}
@@ -205,5 +206,36 @@ public class ProductModel extends AbstractModel<ProductModel> {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(availableDate, brand, description, discout, email, endDate, id, message,
+				name, productCategoryId, productOptionId, regular, sale, scheduleDate, stock, tags, title, toppings,
+				type, vendor);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ProductView other = (ProductView) obj;
+		return Objects.equals(availableDate, other.availableDate) && Objects.equals(brand, other.brand)
+				&& Objects.equals(description, other.description) && Objects.equals(discout, other.discout)
+				&& Objects.equals(email, other.email) && Objects.equals(endDate, other.endDate)
+				&& Objects.equals(id, other.id) && Objects.equals(message, other.message)
+				&& Objects.equals(name, other.name) && Objects.equals(productCategoryId, other.productCategoryId)
+				&& Objects.equals(productOptionId, other.productOptionId) && Objects.equals(regular, other.regular)
+				&& Objects.equals(sale, other.sale) && Objects.equals(scheduleDate, other.scheduleDate)
+				&& Objects.equals(stock, other.stock) && Objects.equals(tags, other.tags)
+				&& Objects.equals(title, other.title) && Objects.equals(toppings, other.toppings)
+				&& Objects.equals(type, other.type) && Objects.equals(vendor, other.vendor);
 	}
 }
