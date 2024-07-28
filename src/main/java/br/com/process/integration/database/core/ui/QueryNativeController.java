@@ -25,6 +25,8 @@ public class QueryNativeController extends AbstractController {
 			@RequestParam(defaultValue = "") Map<String, Object> params, 
 			@PathVariable String methodInvokerQuery) {
 
+		addParam(params);
+
 		setView(instance);
 
 		Object object = methodInvoker.invokeMethodReturnObjectWithParameters(
@@ -44,6 +46,8 @@ public class QueryNativeController extends AbstractController {
 	public ResponseEntity<String> findAll(@PathVariable String instance, 
 			@RequestParam(defaultValue = "") Map<String, Object> params, 
 			@PathVariable String methodInvokerQuery) {
+
+		addParam(params);
 
 		setView(instance);
 
