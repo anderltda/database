@@ -44,15 +44,15 @@ public class ConfigQuery {
 		OPERADORES.put(Constants.HTML_BETWEEN, Constants.BETWEEN);
 	}
 
-	public String executeSQL(Map<String, Object> filters, String fileQuery, String invokerQuery, MapSqlParameterSource mapSqlParameterSource) throws Exception {
+	public String executeSQL(Map<String, Object> filters, String fileQuery, String invokerQuery, MapSqlParameterSource mapSqlParameterSource) {
 		return executeQuery(filters, fileQuery, invokerQuery, mapSqlParameterSource, false);
 	}
 
-	public String executeCountSQL(Map<String, Object> filters, String fileQuery, String invokerQuery, MapSqlParameterSource mapSqlParameterSource) throws Exception {
+	public String executeCountSQL(Map<String, Object> filters, String fileQuery, String invokerQuery, MapSqlParameterSource mapSqlParameterSource) {
 		return executeQuery(filters, fileQuery, invokerQuery, mapSqlParameterSource, true);
 	}
 
-	private String executeQuery(Map<String, Object> filters, String fileQuery, String invokerQuery, MapSqlParameterSource mapSqlParameterSource, boolean isCount) throws Exception {
+	private String executeQuery(Map<String, Object> filters, String fileQuery, String invokerQuery, MapSqlParameterSource mapSqlParameterSource, boolean isCount) {
 
 		StringBuilder sql = new StringBuilder();
 
@@ -107,19 +107,17 @@ public class ConfigQuery {
 					}
 					pattern = Pattern.compile(":(?:[^():]*\\([^)]*\\))?([^:()\\s]+)");
 					matcher = pattern.matcher(where);
-					if (matcher.find()) {
-						if (filters.get(matcher.group(1).trim()) != null) {
-							if (where.contains(Constants.IN)) {
-								sql.append(where.replaceAll("[\\(\\)]", "").replace(":" + matcher.group(1).trim(),
-										"(" + Constants.DOIS_PONTOS + matcher.group(1).trim() + ")") + Constants.WRITERSPACE);
-							} else if (where.contains(Constants.BETWEEN)) {
-								sql.append(where.replace(Constants.DOIS_PONTOS + matcher.group(1).trim(), Constants.DOIS_PONTOS + matcher.group(1).trim() + Constants.BETWEEN_START) 
-										+ Constants.AND 
-										+ Constants.DOIS_PONTOS + matcher.group(1).trim() + Constants.BETWEEN_END
-										+ Constants.WRITERSPACE);
-							} else {
-								sql.append(where + Constants.WRITERSPACE);							
-							}
+					if (matcher.find() && filters.get(matcher.group(1).trim()) != null) {
+						if (where.contains(Constants.IN)) {
+							sql.append(where.replaceAll("[\\(\\)]", "").replace(":" + matcher.group(1).trim(), "(" + Constants.DOIS_PONTOS + matcher.group(1).trim() + ")")
+									+ Constants.WRITERSPACE);
+						} else if (where.contains(Constants.BETWEEN)) {
+							sql.append(where.replace(Constants.DOIS_PONTOS + matcher.group(1).trim(),
+									Constants.DOIS_PONTOS + matcher.group(1).trim() + Constants.BETWEEN_START)
+									+ Constants.AND + Constants.DOIS_PONTOS + matcher.group(1).trim()
+									+ Constants.BETWEEN_END + Constants.WRITERSPACE);
+						} else {
+							sql.append(where + Constants.WRITERSPACE);
 						}
 					}
 				});
@@ -139,17 +137,19 @@ public class ConfigQuery {
 			}
 			
 			// CHECK IF DON'T SELECT COUNT
-			if (!isCount) {
-				// ORDER BY
-				if (query.getOrderby() != null) {
-					sql.append(Constants.ORDER_BY + Constants.WRITERSPACE);
-					sql.append(query.getOrderby()
-							.replace(Constants.DOIS_PONTOS + Constants.SORT_LIST,
-									filters != null && filters.get(Constants.SORT_LIST) != null ? filters.get(Constants.SORT_LIST).toString().replaceAll("[\\[\\]]", "") : "")
-							.replace(Constants.DOIS_PONTOS + Constants.SORT_ORDER, 
-									filters != null && filters.get(Constants.SORT_ORDER) != null ? filters.get(Constants.SORT_ORDER).toString() : "")
-							+ Constants.WRITERSPACE);
-				}
+			// ORDER BY
+			if (!isCount && query.getOrderby() != null) {
+				sql.append(Constants.ORDER_BY + Constants.WRITERSPACE);
+				sql.append(query.getOrderby()
+						.replace(Constants.DOIS_PONTOS + Constants.SORT_LIST,
+								filters != null && filters.get(Constants.SORT_LIST) != null
+										? filters.get(Constants.SORT_LIST).toString().replaceAll("[\\[\\]]", "")
+										: "")
+						.replace(Constants.DOIS_PONTOS + Constants.SORT_ORDER,
+								filters != null && filters.get(Constants.SORT_ORDER) != null
+										? filters.get(Constants.SORT_ORDER).toString()
+										: "")
+						+ Constants.WRITERSPACE);
 			}
 			
 			if (isCount && query.getGroupby() != null) {

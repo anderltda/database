@@ -70,7 +70,6 @@ public class QueryJpaController extends AbstractController {
 	 * @param sortList - Lista com atributos para ordenar
 	 * @param sortOrder - ASC: Ascendentes e DESC: decrescentes
 	 * @return - Retorna uma lista de registros da Entidade (Tabela)
-	 * @throws Exception
 	 * @obs é paginado
 	 */
 	@SuppressWarnings({ "rawtypes" })
