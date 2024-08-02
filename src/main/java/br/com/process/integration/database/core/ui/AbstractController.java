@@ -43,6 +43,7 @@ public abstract class AbstractController {
 		params.remove("size");
 		params.remove("sortList");
 		params.remove("sortOrder");
+		params.remove("sortOrders");
 		params.remove("sort");
 	}
 	

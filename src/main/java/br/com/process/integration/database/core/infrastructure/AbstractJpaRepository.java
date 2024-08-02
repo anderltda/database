@@ -61,7 +61,7 @@ public abstract class AbstractJpaRepository<E extends Entity<?>, R extends JpaRe
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<E> findAll(Map<String, Object> filter, List<String> sortList, String sortOrder) {
+	public List<E> findAll(Map<String, Object> filter, List<String> sortList, List<String> sortOrders) {
 
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 
@@ -71,11 +71,11 @@ public abstract class AbstractJpaRepository<E extends Entity<?>, R extends JpaRe
 
 		List<Predicate> predicates = buildPredicates(filter, criteriaBuilder, root);
 
-		if (sortList != null && sortOrder != null) {
+		if (sortList != null && sortOrders != null) {
 			List<Order> orders = new ArrayList<>();
 			for (int i = 0; i < sortList.size(); i++) {
 				String sortField = sortList.get(i);
-				boolean isAscending = sortOrder.equalsIgnoreCase("asc");
+				boolean isAscending = sortOrders.size() > i ? sortOrders.get(i).equalsIgnoreCase("asc") : sortOrders.get(0).equalsIgnoreCase("asc");
 				if (isAscending) {
 					orders.add(criteriaBuilder.asc(root.get(sortField)));
 				} else {

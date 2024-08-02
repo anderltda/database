@@ -34,7 +34,7 @@ public class MethodPredicate {
 			for (int i = 0; i < pathParts.length; i++) {
 				String part = pathParts[i];
 				if (i == pathParts.length - 1) {
-					MethodReflection.executeMethod(this, operatorJoin, criteriaBuilder, predicates, root, part, value);
+					MethodReflection.executeMethod(this, operatorJoin, criteriaBuilder, predicates, root, part, DynamicTypeConverter.convert(value));
 					return;
 				} else {
 					if (join == null && root != null) {
@@ -58,7 +58,7 @@ public class MethodPredicate {
 		try {
 
 			Method invokeMethod = CriteriaBuilder.class.getMethod("equal", Expression.class, Object.class);
-			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), value);
+			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convert(value));
 			predicates.add(predicate);
 
 		} catch (Exception ex) {
@@ -145,7 +145,7 @@ public class MethodPredicate {
 		try {
 
 			Method invokeMethod = CriteriaBuilder.class.getMethod("like", Expression.class, String.class);
-			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), value.replace("*", "%"));
+			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convert(value.replace("*", "%")));
 			predicates.add(predicate);
 
 		} catch (Exception ex) {
@@ -159,7 +159,7 @@ public class MethodPredicate {
 		try {
 
 			Method invokeMethod = CriteriaBuilder.class.getMethod("notEqual", Expression.class, Object.class);
-			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), value);
+			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convert(value));
 			predicates.add(predicate);
 
 		} catch (Exception ex) {

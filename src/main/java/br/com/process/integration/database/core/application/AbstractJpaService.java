@@ -41,8 +41,8 @@ public abstract class AbstractJpaService<E extends Entity<?>, T> extends Abstrac
 	}
 	
 	@Override
-	public List<E> findAll(Map<String, Object> filter, List<String> sortList, String sortOrder) {
-		return super.findAll(filter, sortList, sortOrder);
+	public List<E> findAll(Map<String, Object> filter, List<String> sortList, List<String> sortOrders) {
+		return super.findAll(filter, sortList, sortOrders);
 	}
 	
 	@Override
@@ -175,11 +175,6 @@ public abstract class AbstractJpaService<E extends Entity<?>, T> extends Abstrac
 	@Override
 	public void deleteAllById(List<T> ids) {
 		getRepository().deleteAllById(ids);
-	}
-
-	@Override
-	public void delete() {
-		getRepository().delete(entity);
 	}
 
 	@Override

@@ -106,7 +106,6 @@
 	</dependencies>
 	<build>
 		<plugins>
-
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -148,7 +147,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-			</plugin>
+                <configuration>
+                    <runOrder>alphabetical</runOrder>
+                </configuration>
+			</plugin>					
 			<!-- sonarqube -->
 		</plugins>
 	</build>

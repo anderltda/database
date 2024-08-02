@@ -12,7 +12,7 @@ public interface EntityRepository<E, R> {
 	
 	public Long count(Map<String, Object> filter);
 	
-	public List<E> findAll(Map<String, Object> filter, List<String> sortList, String sortOrder);
+	public List<E> findAll(Map<String, Object> filter, List<String> sortList, List<String> sortOrders);
 	
 	public Page<E> findAll(Map<String, Object> filter, Pageable pageable);
 

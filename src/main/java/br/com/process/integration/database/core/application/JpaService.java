@@ -9,7 +9,7 @@ public interface JpaService<T, E> {
 
 	public Long count(Map<String, Object> filter);
 
-	public List<E> findAll(Map<String, Object> filter, List<String> sortList, String sortOrder);
+	public List<E> findAll(Map<String, Object> filter, List<String> sortList, List<String> sortOrders);
 
 	public PagedModel<E> findAll(Map<String, Object> filter, Integer page, Integer size, List<String> sortList, String sortOrder);
 	
@@ -30,8 +30,6 @@ public interface JpaService<T, E> {
 	public void deleteAll();
 
 	public void deleteAllById(List<T> ids);
-
-	public void delete();
 
 	public void deleteById();
 

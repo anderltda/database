@@ -55,15 +55,6 @@ public class CrudJpaController extends AbstractController {
 
 	}
 	
-	@DeleteMapping(value = "/delete/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> delete(@PathVariable String entity, @RequestBody JsonNode jsonNode) {
-
-		methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_DELETE);
-
-		return new ResponseEntity<>(HttpStatus.OK);
-
-	}
-	
 	@PostMapping(value = "/save/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> save(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws Exception {
 

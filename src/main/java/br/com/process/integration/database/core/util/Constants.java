@@ -4,6 +4,8 @@ public class Constants {
 	
 	private Constants() {}
 	
+	public static final String API_NAME_REQUEST_MAPPING = "/v1/api-rest-database";
+	
 	/**
 	 *  Inicio do nome do diretorio
 	 */
@@ -51,6 +53,9 @@ public class Constants {
 	
 	public static final String METHOD_EXECUTE_QUERY_NATIVE = "executeQueryNative"; 
 	public static final String METHOD_EXECUTE_QUERY_NATIVE_FIND_BY_SINGLE = "executeQueryNativeFindBySingle"; 
+	
+	public static final String SORT_LIST = "sortList";
+	public static final String SORT_ORDER = "sortOrder";
 	
 	/**
 	 * Operadores Lógicos
@@ -118,7 +123,6 @@ public class Constants {
 	public static final String GROUP_BY = "GROUP BY";
 	
 	
-	public static final String SORT_LIST = "sortList";
-	public static final String SORT_ORDER = "sortOrder";
+
 
 }

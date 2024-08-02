@@ -38,7 +38,7 @@ public class QueryJpaController extends AbstractController {
 	public ResponseEntity<String> findAll(@PathVariable String entity, 
 			@RequestParam(defaultValue = "") Map<String, Object> params,
 			@RequestParam(defaultValue = "") List<String> sortList,
-			@RequestParam(defaultValue = "DESC") String sortOrder) {
+			@RequestParam(defaultValue = "DESC") List<String> sortOrders) {
 		
 		removeParams(params);
 		
@@ -47,7 +47,7 @@ public class QueryJpaController extends AbstractController {
 		setEntity(entity, entityFound);
 
 		List<Entity<?>> list = (List<Entity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL, params, sortList, sortOrder);
+				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL, params, sortList, sortOrders);
 
 		if (list != null && !list.isEmpty()) {
 
