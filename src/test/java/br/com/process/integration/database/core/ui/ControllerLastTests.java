@@ -21,7 +21,7 @@ import org.springframework.http.ResponseEntity;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class JpaController5Tests {
+class ControllerLastTests {
 
 	@LocalServerPort
 	private int port;
@@ -44,7 +44,7 @@ class JpaController5Tests {
 
 		String json = "[";
 
-		for (Long id : JpaController1Tests.ids) {
+		for (Long id : Controller1Tests.ids) {
 			json += "{\"id\": " + id + "}";
 			json += ",";
 		}
@@ -63,7 +63,7 @@ class JpaController5Tests {
 	void testDeleteForId() {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/delete/id/EntityTest1/"
-				+ JpaController1Tests.id;
+				+ Controller1Tests.id;
 
 		String statusCode = deleteResource(url);
 

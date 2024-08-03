@@ -26,7 +26,7 @@ import br.com.process.integration.database.domain.entity.EntityTest1;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class JpaController3Tests {
+class Controller3Tests {
 
 	@LocalServerPort
 	private int port;
@@ -56,18 +56,65 @@ class JpaController3Tests {
 		url.append("sortOrders=").append("desc,asc");
 		List<EntityTest1> list = getAll(url.toString());
 
-		assertNotNull(list);
-		assertEquals(2, list.size());
-
 		System.out.println(url.toString());
 		list.forEach(entity -> {
 			System.out.println(entity.getEntityTest2().getDateInclusion());
 		});
 
+		assertNotNull(list);
+		assertEquals(2, list.size());
 		assertEquals("Carlos Alberto", list.get(0).getName());
 		assertEquals("Carlos", list.get(1).getName());
 		assertEquals(234, list.get(0).getEntityTest2().getHex());
 		assertEquals(144, list.get(1).getEntityTest2().getHex());
+	}
+	
+	
+	@Test
+	void teste_busca_com_in_pelo_entityTest3_por_animal() {
+
+		StringBuilder url = new StringBuilder();
+		url.append("http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?");
+		
+		url.append("entityTest2.entityTest3.animal=").append("Cavalo").append(",").append("Gato").append(",")
+				.append("Papagaio").append("&");
+		
+		url.append("entityTest2.entityTest3.animal_op=").append(Constants.HTML_IN).append("&");
+		
+		url.append("page=").append(0).append("&");
+		url.append("size=").append(10).append("&");
+		
+		url.append("sortList=").append("entityTest2.color, entityTest2.entityTest3.animal").append("&");
+		url.append("sortOrders=").append("desc,asc");
+
+		List<EntityTest1> list = getAll(url.toString());
+
+		System.out.println(url.toString());
+		list.forEach(entity -> {
+			System.out.println(entity.getName());
+		});
+		
+		assertNotNull(list);
+		assertEquals(5, list.size());
+		
+		assertEquals("Paulo Henrique", list.get(0).getName());
+		assertEquals("Ricardo", list.get(1).getName());
+		assertEquals("Paulo", list.get(2).getName());
+		assertEquals("Renato", list.get(3).getName());
+		assertEquals("Ariovaldo", list.get(4).getName());
+		
+		assertEquals("Verde", list.get(0).getEntityTest2().getColor());
+		assertEquals("Verde", list.get(1).getEntityTest2().getColor());
+		assertEquals("Roxo", list.get(2).getEntityTest2().getColor());
+		assertEquals("Laranja", list.get(3).getEntityTest2().getColor());
+		assertEquals("Cinza", list.get(4).getEntityTest2().getColor());
+		
+		assertEquals("Cavalo", list.get(0).getEntityTest2().getEntityTest3().getAnimal());
+		assertEquals("Gato", list.get(1).getEntityTest2().getEntityTest3().getAnimal());
+		assertEquals("Cavalo", list.get(2).getEntityTest2().getEntityTest3().getAnimal());
+		assertEquals("Papagaio", list.get(3).getEntityTest2().getEntityTest3().getAnimal());
+		assertEquals("Gato", list.get(4).getEntityTest2().getEntityTest3().getAnimal());
+
 	}
 
 	@Test

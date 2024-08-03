@@ -43,7 +43,7 @@ import br.com.process.integration.database.domain.entity.EntityTest5;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class JpaController1Tests {
+class Controller1Tests {
 
 	@LocalServerPort
 	private int port;

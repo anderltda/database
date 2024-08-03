@@ -26,7 +26,7 @@ import br.com.process.integration.database.core.util.Constants;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class JpaController4Tests {
+class Controller4Tests {
 
 	@LocalServerPort
 	private int port;
@@ -315,7 +315,7 @@ class JpaController4Tests {
 	@Test
 	void teste_busca_por_in_com_ids() {
 
-		List<Long> ids = JpaController1Tests.ids;
+		List<Long> ids = Controller1Tests.ids;
 
 		StringBuilder url = new StringBuilder();
 		url.append("http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?");

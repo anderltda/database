@@ -30,7 +30,7 @@ import br.com.process.integration.database.domain.entity.EntityTest1;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class JpaController2Tests {
+class Controller2Tests {
 
 	@LocalServerPort
 	private int port;
@@ -338,7 +338,7 @@ class JpaController2Tests {
 	@Test
 	void teste_busca_por_in_com_ids() {
 
-		List<Long> ids = JpaController1Tests.ids;
+		List<Long> ids = Controller1Tests.ids;
 		
 		StringBuilder url = new StringBuilder();
 		url.append("http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?");
@@ -614,6 +614,25 @@ class JpaController2Tests {
 			return response.getBody();
 		} else {
 			throw new RuntimeException("Failed to fetch users. Status code: " + response.getStatusCode());
+		}
+	}
+	
+	private EntityTest1 getSingleResult(String url) {
+		// Configura os cabeçalhos HTTP
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", "application/json");
+
+		// Cria a entidade HTTP
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+
+		// Envia a solicitação GET usando exchange
+		ResponseEntity<EntityTest1> response = restTemplate.exchange(url, HttpMethod.GET, entity, EntityTest1.class);
+
+		// Verifica o status da resposta e retorna o corpo
+		if (response.getStatusCode().is2xxSuccessful()) {
+			return response.getBody();
+		} else {
+			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode());
 		}
 	}
 }
