@@ -59,13 +59,11 @@ class JpaController1Tests {
 	
 	@BeforeAll
 	void setupOnce() {
-		// Este método será executado uma vez antes de todos os testes
 		ids = new ArrayList<>();
 	}
 
 	@BeforeEach
 	void setup() {
-		// Este método será executado antes de cada teste
 		id = 0l;
 	}
 
@@ -107,10 +105,10 @@ class JpaController1Tests {
 		localTime[2] = "2024-01-08T17:32:32";
 
 		text[3] = "Banana";
-		inteiro[3] = 25;
-		dobro[3] = 23.1;
-		localDate[3] = "01-09-2024";
-		localTime[3] = "2024-01-09T18:23:21";
+		inteiro[3] = 45;
+		dobro[3] = 103.12;
+		localDate[3] = "10-12-2024";
+		localTime[3] = "2024-03-29T18:23:21";
 
 		text[4] = "Vassoura";
 		dobro[4] = 22.9;
@@ -271,10 +269,10 @@ class JpaController1Tests {
 		localTime[2] = "2024-01-08T17:32:32";
 
 		text[3] = "Pitanga";
-		inteiro[3] = 19;
-		dobro[3] = 3.1;
-		localDate[3] = "06-10-2024";
-		localTime[3] = "2024-01-09T18:23:21";
+		inteiro[3] = 68;
+		dobro[3] = 31.1;
+		localDate[3] = "10-10-2024";
+		localTime[3] = "2024-02-19T18:30:21";
 
 		text[4] = "Copo";
 		dobro[4] = 22.9;
@@ -311,8 +309,8 @@ class JpaController1Tests {
 		text[3] = "Melao";
 		inteiro[3] = 1;
 		dobro[3] = 29.1;
-		localDate[3] = "01-09-2024";
-		localTime[3] = "2024-01-09T18:23:21";
+		localDate[3] = "04-01-2024";
+		localTime[3] = "2024-01-09T23:37:21";
 
 		text[4] = "Caixa";
 		dobro[4] = 22.9;
@@ -320,6 +318,44 @@ class JpaController1Tests {
 		localDate[4] = "01-10-2024";
 		localTime[4] = "2024-01-10T19:14:10";
 
+		list.add(gerarEntity(text, inteiro, dobro, localDate, localTime));
+		
+		text = new String[5];
+		inteiro = new Integer[5];
+		dobro = new Double[5];
+		localDate = new String[5];
+		localTime = new String[5];
+		
+		text[0] = "Renato";
+		inteiro[0] = 38;
+		dobro[0] = 1.85;
+		localDate[0] = "08-31-1992";
+		localTime[0] = "2024-11-01T08:20:10";
+
+		text[1] = "Laranja";
+		inteiro[1] = 8876;
+		dobro[1] = 210.52;
+		localDate[1] = "12-12-2024";
+		localTime[1] = "2024-12-07T16:40:43";
+
+		text[2] = "Papagaio";
+		inteiro[2] = 13;
+		dobro[2] = 564.61;
+		localDate[2] = "12-08-2024";
+		localTime[2] = "2024-12-08T17:44:32";
+
+		text[3] = "Goiaba";
+		inteiro[3] = 14;
+		dobro[3] = 90.21;
+		localDate[3] = "12-21-2024";
+		localTime[3] = "2024-01-10T19:23:21";
+
+		text[4] = "Raquete";
+		dobro[4] = 21.9;
+		inteiro[4] = 24;
+		localDate[4] = "06-10-2024";
+		localTime[4] = "2024-04-10T18:14:10";
+		
 		list.add(gerarEntity(text, inteiro, dobro, localDate, localTime));
 
 		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
@@ -329,20 +365,20 @@ class JpaController1Tests {
 
 		List<String> responses = postJson(url, json);
 
-		Type userListType = new TypeToken<List<EntityTest1>>() {
-		}.getType();
+		Type userListType = new TypeToken<List<EntityTest1>>(){}.getType();
 
 		// Desserializa o JSON para uma lista de User
 		List<EntityTest1> lists = gson.fromJson(responses.get(1), userListType);
-		
 
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
 
-		assertEquals(3, lists.size());
+		assertEquals(4, lists.size());
 
 		assertNotNull(lists.get(0).getId());
 		assertNotNull(lists.get(1).getId());
 		assertNotNull(lists.get(2).getId());
+		assertNotNull(lists.get(3).getId());
+		
 		assertNotNull(lists.get(0).getEntityTest2().getId());
 		assertNotNull(lists.get(0).getEntityTest2().getEntityTest3().getId());
 		assertNotNull(lists.get(0).getEntityTest2().getEntityTest3().getEntityTest4().getId());
@@ -357,6 +393,11 @@ class JpaController1Tests {
 		assertNotNull(lists.get(2).getEntityTest2().getEntityTest3().getId());
 		assertNotNull(lists.get(2).getEntityTest2().getEntityTest3().getEntityTest4().getId());
 		assertNotNull(lists.get(2).getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getId());
+		
+		assertNotNull(lists.get(3).getEntityTest2().getId());
+		assertNotNull(lists.get(3).getEntityTest2().getEntityTest3().getId());
+		assertNotNull(lists.get(3).getEntityTest2().getEntityTest3().getEntityTest4().getId());
+		assertNotNull(lists.get(3).getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getId());
 		
 		ids.add(lists.get(0).getId());
 		ids.add(lists.get(1).getId());
@@ -544,6 +585,7 @@ class JpaController1Tests {
 		assertNotNull(lists.get(1).getId());
 		assertNotNull(lists.get(2).getId());
 		assertNotNull(lists.get(3).getId());
+		
 		assertNotNull(lists.get(0).getEntityTest2().getId());
 		assertNotNull(lists.get(0).getEntityTest2().getEntityTest3().getId());
 		assertNotNull(lists.get(0).getEntityTest2().getEntityTest3().getEntityTest4().getId());
@@ -563,6 +605,7 @@ class JpaController1Tests {
 		assertNotNull(lists.get(3).getEntityTest2().getEntityTest3().getId());
 		assertNotNull(lists.get(3).getEntityTest2().getEntityTest3().getEntityTest4().getId());
 		assertNotNull(lists.get(3).getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getId());
+		
 	}
 
 	public EntityTest1 gerarEntity(String[] text, Integer[] inteiro, Double[] dobro, String[] localDate,

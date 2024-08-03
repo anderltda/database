@@ -24,7 +24,6 @@ import br.com.process.integration.database.core.util.Constants;
 @RequestMapping("/v1/api-rest-database")
 public class CrudJpaController extends AbstractController {
 
-
 	@DeleteMapping(value = "/delete/all/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> deleteAll(@PathVariable String entity) {
 

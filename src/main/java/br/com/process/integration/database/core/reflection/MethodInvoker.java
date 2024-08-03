@@ -2,6 +2,8 @@ package br.com.process.integration.database.core.reflection;
 
 import java.lang.reflect.Method;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -9,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MethodInvoker {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodInvoker.class);
 
 	@Autowired
 	private ApplicationContext applicationContext;
@@ -23,8 +27,8 @@ public class MethodInvoker {
 			Method method = bean.getClass().getMethod(methodName, paramTypes);
 			method.invoke(bean, params);
 			
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			LOGGER.error("[invokeMethodWithParameters]", ex);
 		}
 	}
 
@@ -38,8 +42,8 @@ public class MethodInvoker {
 			Method method = bean.getClass().getMethod(methodName, paramTypes);
 			return method.invoke(bean, params);
 			
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			LOGGER.error("[invokeMethodReturnObjectWithParameters]", ex);
 		}
 		
 		return null;

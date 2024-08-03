@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +27,8 @@ import br.com.process.integration.database.core.reflection.MethodReflection;
 @Transactional
 public abstract class AbstractJpaService<E extends Entity<?>, T> extends AbstractJpaRepository<E, JpaRepository<E, T>> implements JpaService<T, E> {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractJpaService.class);
+	
 	protected T id;
 	protected Page<E> pages;
 	protected PagedModel<E> pagedModel;
@@ -46,11 +51,11 @@ public abstract class AbstractJpaService<E extends Entity<?>, T> extends Abstrac
 	}
 	
 	@Override
-	public PagedModel<E> findAll(Map<String, Object> filter, Integer page, Integer size, List<String> sortList, String sortOrder) {
+	public PagedModel<E> findAll(Map<String, Object> filter, Integer page, Integer size, List<String> sortList, List<String> sortOrders) {
 
 		try {
 
-			Pageable pageable = PageRequest.of(page, size, Sort.by(createSortOrder(sortList, sortOrder)));
+			Pageable pageable = PageRequest.of(page, size, createSortOrder(sortList, sortOrders));
 
 			pages = super.findAll(filter, pageable);
 
@@ -58,8 +63,8 @@ public abstract class AbstractJpaService<E extends Entity<?>, T> extends Abstrac
 
 			return pagedModel;
 			
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			LOGGER.error("[findAll(Map filter, Integer page, Integer size, List sortList, List sortOrders)]", ex);
 		}
 		
 		return null;
@@ -76,8 +81,8 @@ public abstract class AbstractJpaService<E extends Entity<?>, T> extends Abstrac
 			return (List<E>) methodInvoker.invokeMethodReturnObjectWithParameters(
 					MethodReflection.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
 			
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			LOGGER.error("[findAll(Map filter, String methodQueryJPQL)]", ex);
 		}
 		
 		return new ArrayList<>();
@@ -86,11 +91,12 @@ public abstract class AbstractJpaService<E extends Entity<?>, T> extends Abstrac
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public PagedModel<E> findAll(Map<String, Object> filter, String methodQueryJPQL, Integer page, Integer size, List<String> sortList, String sortOrder) {
+	public PagedModel<E> findAll(Map<String, Object> filter, String methodQueryJPQL, Integer page, Integer size,
+			List<String> sortList, List<String> sortOrders) {
 
 		try {
 
-			Pageable pageable = PageRequest.of(page, size, Sort.by(createSortOrder(sortList, sortOrder)));
+			Pageable pageable = PageRequest.of(page, size, createSortOrder(sortList, sortOrders));
 
 			filter.put("page", pageable);
 
@@ -103,8 +109,8 @@ public abstract class AbstractJpaService<E extends Entity<?>, T> extends Abstrac
 
 			return pagedModel;
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			LOGGER.error("[findAll]", ex);
 		}
 
 		return null;
@@ -122,8 +128,8 @@ public abstract class AbstractJpaService<E extends Entity<?>, T> extends Abstrac
 			return (E) methodInvoker.invokeMethodReturnObjectWithParameters(
 					MethodReflection.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
 			
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			LOGGER.error("[findBySingle]", ex);
 		}
 
 		return null;
@@ -139,8 +145,8 @@ public abstract class AbstractJpaService<E extends Entity<?>, T> extends Abstrac
 			return (Long) methodInvoker.invokeMethodReturnObjectWithParameters(
 					MethodReflection.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			LOGGER.error("[count]", ex);
 		}
 
 		return null;
@@ -202,18 +208,12 @@ public abstract class AbstractJpaService<E extends Entity<?>, T> extends Abstrac
 		getRepository().saveAllAndFlush(entitys);
 	}
 	
-	private List<Sort.Order> createSortOrder(List<String> sortList, String sortOrders) {
-		
-	    List<Sort.Order> sorts = new ArrayList<>();
-	    Sort.Direction direction;
-	    for (String sort : sortList) {
-	        if (sortOrders != null) {
-	            direction = Sort.Direction.fromString(sortOrders);
-	        } else {
-	            direction = Sort.Direction.DESC;
-	        }
-	        sorts.add(new Sort.Order(direction, sort));
-	    }
-	    return sorts;
+	public static Sort createSortOrder(List<String> sortList, List<String> sortOrders) {
+
+		List<Sort.Order> orders = IntStream.range(0, sortList.size())
+				.mapToObj(i -> new Sort.Order(Sort.Direction.fromString(sortOrders.get(i)), sortList.get(i)))
+				.toList();
+
+		return Sort.by(orders);
 	}
 }

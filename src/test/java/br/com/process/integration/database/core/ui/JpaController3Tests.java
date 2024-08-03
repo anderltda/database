@@ -3,6 +3,8 @@ package br.com.process.integration.database.core.ui;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.List;
+
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -12,11 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import br.com.process.integration.database.core.util.Constants;
+import br.com.process.integration.database.domain.entity.EntityTest1;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -30,93 +35,140 @@ class JpaController3Tests {
 	private TestRestTemplate restTemplate;
 
 	@Autowired
-	private CrudJpaController crudJpaController;
+	private QueryJpaController queryJpaController;
 
 	@Test
 	@Order(1)
 	void contextLoads() {
-		assertNotNull(crudJpaController);
+		assertNotNull(queryJpaController);
+	};
+
+	@Test
+	void teste_busca_com_equal_pelo_entityTest2_por_color_por_ordernacao_entityTest2() {
+
+		StringBuilder url = new StringBuilder();
+		url.append("http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?");
+
+		url.append("entityTest2.color=").append("Preto").append("&");
+		url.append("entityTest2.color_op=").append(Constants.HTML_IGUAL).append("&");
+
+		url.append("sortList=").append("entityTest2.dateInclusion, entityTest2.hex").append("&");
+		url.append("sortOrders=").append("desc,asc");
+		List<EntityTest1> list = getAll(url.toString());
+
+		assertNotNull(list);
+		assertEquals(2, list.size());
+
+		System.out.println(url.toString());
+		list.forEach(entity -> {
+			System.out.println(entity.getEntityTest2().getDateInclusion());
+		});
+
+		assertEquals("Carlos Alberto", list.get(0).getName());
+		assertEquals("Carlos", list.get(1).getName());
+		assertEquals(234, list.get(0).getEntityTest2().getHex());
+		assertEquals(144, list.get(1).getEntityTest2().getHex());
 	}
 
 	@Test
-	@Order(2)
-	void testDeleteForAllId() {
+	void teste_busca_com_equal_pelo_entityTest3_por_animal() {
 
-		String json = "[";
+		StringBuilder url = new StringBuilder();
+		url.append("http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?");
 
-		for (Long id : JpaController1Tests.ids) {
-			json += "{\"id\": " + id + "}";
-			json += ",";
-		}
+		url.append("entityTest2.entityTest3.animal=").append("Capivara").append("&");
+		url.append("entityTest2.entityTest3.animal_op=").append(Constants.HTML_IGUAL);
 
-		json = json.substring(0, json.length() - 1) + "]";
+		List<EntityTest1> list = getAll(url.toString());
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/delete/all/id/EntityTest1";
+		assertNotNull(list);
+		assertEquals(1, list.size());
 
-		String statusCode = deleteResource(url, json);
+		System.out.println(url.toString());
+		list.forEach(entity -> {
+			System.out.println(entity.getName());
+			assertEquals("Carlos Alberto", entity.getName());
+		});
 
-		assertEquals(statusCode, HttpStatus.OK.toString());
 	}
-
+	
 	@Test
-	@Order(3)
-	void testDeleteForId() {
+	void teste_busca_com_equal_pelo_entityTest4_por_fruit() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/delete/id/EntityTest1/"
-				+ JpaController1Tests.id;
+		StringBuilder url = new StringBuilder();
+		url.append("http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?");
 
-		String statusCode = deleteResource(url);
+		url.append("entityTest2.entityTest3.entityTest4.fruit=").append("Pitanga").append("&");
+		url.append("entityTest2.entityTest3.entityTest4.fruit_op=").append(Constants.HTML_IGUAL);
 
-		assertEquals(statusCode, HttpStatus.OK.toString());
+		List<EntityTest1> list = getAll(url.toString());
+
+		System.out.println(url.toString());
+		list.forEach(entity -> {
+			System.out.println(entity.getName());
+		});
+
+		assertNotNull(list);
+		assertEquals(2, list.size());
 	}
-
+	
+	
 	@Test
-	@Order(4)
-	void testDeleteForAll() {
+	void teste_busca_com_equal_pelo_entityTest5_por_fruit() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/delete/all/EntityTest1";
+		StringBuilder url = new StringBuilder();
+		url.append("http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?");
 
-		String statusCode = deleteResource(url);
+		url.append("entityTest2.entityTest3.entityTest4.entityTest5.object=").append("Cama").append("&");
+		url.append("entityTest2.entityTest3.entityTest4.entityTest5.object_op=").append(Constants.HTML_IGUAL);
 
-		assertEquals(statusCode, HttpStatus.OK.toString());
+		List<EntityTest1> list = getAll(url.toString());
+
+		System.out.println(url.toString());
+		list.forEach(entity -> {
+			System.out.println(entity.getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getObject());
+			assertEquals("Cama", entity.getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getObject());
+		});
+
+		assertNotNull(list);
+		assertEquals(1, list.size());
+	}
+	
+	
+	@Test
+	void teste_busca_com_like_pelo_entityTest5_por_fruit() {
+
+		StringBuilder url = new StringBuilder();
+		url.append("http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?");
+
+		url.append("entityTest2.entityTest3.entityTest4.entityTest5.object=").append("c*").append("&");
+		url.append("entityTest2.entityTest3.entityTest4.entityTest5.object_op=").append(Constants.HTML_LIKE);
+
+		List<EntityTest1> list = getAll(url.toString());
+
+		System.out.println(url.toString());
+		list.forEach(entity -> {
+			System.out.println(entity.getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getObject());
+		});
+
+		assertNotNull(list);
+		assertEquals(4, list.size());
 	}
 
-	public String deleteResource(String url) {
+	private List<EntityTest1> getAll(String url) {
 		HttpHeaders headers = new HttpHeaders();
-		headers.set("Content-Type", "application/json");
+		headers.set("Accept", "application/json");
 
-		// Cria a entidade HTTP sem corpo (DELETE não precisa de um corpo)
-		HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
+		HttpEntity<String> entity = new HttpEntity<>(headers);
 
-		// Envia a solicitação DELETE usando exchange
-		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, String.class);
+		ResponseEntity<List<EntityTest1>> response = restTemplate.exchange(url, HttpMethod.GET, entity,
+				new ParameterizedTypeReference<List<EntityTest1>>() {
+				});
 
-		// Verifica o status da resposta
 		if (response.getStatusCode().is2xxSuccessful()) {
-			System.out.println("Resource deleted successfully. Response: " + response.getBody());
+			return response.getBody();
 		} else {
-			System.err.println("Failed to delete resource. Status code: " + response.getStatusCode());
+			throw new RuntimeException("Failed to fetch users. Status code: " + response.getStatusCode());
 		}
-
-		return response.getStatusCode().toString();
-	}
-
-	public String deleteResource(String url, String json) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Content-Type", "application/json");
-
-		HttpEntity<String> requestEntity = new HttpEntity<>(json, headers);
-
-		// Envia a solicitação DELETE usando exchange
-		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, String.class);
-
-		// Verifica o status da resposta
-		if (response.getStatusCode().is2xxSuccessful()) {
-			System.out.println("Resource deleted successfully. Response: " + response.getBody());
-		} else {
-			System.err.println("Failed to delete resource. Status code: " + response.getStatusCode());
-		}
-
-		return response.getStatusCode().toString();
 	}
 }

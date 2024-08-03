@@ -59,10 +59,8 @@ public abstract class AbstractController {
 			if (value.toString().equals(Constants.HTML_BETWEEN)) {
 				String valueRefactory = params.get(key.replace(Constants.IDENTITY_OPERATOR, "")).toString();
 				String[] split = valueRefactory.replaceAll("[\\[\\]]", "").split(",");
-				paramsRefactory.put(key.replace(Constants.IDENTITY_OPERATOR, Constants.BETWEEN_START),
-						split[0].replaceAll("^\\s+", "").replaceAll("\\s+$", "").trim());
-				paramsRefactory.put(key.replace(Constants.IDENTITY_OPERATOR, Constants.BETWEEN_END),
-						split[1].replaceAll("^\\s+", "").replaceAll("\\s+$", "").trim());
+				paramsRefactory.put(key.replace(Constants.IDENTITY_OPERATOR, Constants.BETWEEN_START), split[0].trim());
+				paramsRefactory.put(key.replace(Constants.IDENTITY_OPERATOR, Constants.BETWEEN_END), split[1].trim());
 			} else {
 				params.put(key, value.toString().contains(",") ? Arrays.asList(value.toString().split(",")) : value);
 			}

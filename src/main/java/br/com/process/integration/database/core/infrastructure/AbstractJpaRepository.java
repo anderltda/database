@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,7 +32,10 @@ import jakarta.persistence.criteria.Root;
 @Repository
 public abstract class AbstractJpaRepository<E extends Entity<?>, R extends JpaRepository<?, ?>> implements EntityRepository<E, R> {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractJpaRepository.class);
+	
 	protected static final Map<String, String> OPERADORES = new HashMap<>();
+	
 	static {
 		OPERADORES.put(Constants.HTML_IGUAL, Constants.PREDICATE_EQUAL);
 		OPERADORES.put(Constants.HTML_MAIOR_OU_IGUAL, Constants.PREDICATE_GREATER_THAN_OR_EQUAL_TO);
@@ -72,16 +77,19 @@ public abstract class AbstractJpaRepository<E extends Entity<?>, R extends JpaRe
 		List<Predicate> predicates = buildPredicates(filter, criteriaBuilder, root);
 
 		if (sortList != null && sortOrders != null) {
+			
 			List<Order> orders = new ArrayList<>();
+			
 			for (int i = 0; i < sortList.size(); i++) {
+				
 				String sortField = sortList.get(i);
+				
 				boolean isAscending = sortOrders.size() > i ? sortOrders.get(i).equalsIgnoreCase("asc") : sortOrders.get(0).equalsIgnoreCase("asc");
-				if (isAscending) {
-					orders.add(criteriaBuilder.asc(root.get(sortField)));
-				} else {
-					orders.add(criteriaBuilder.desc(root.get(sortField)));
-				}
+				
+				orders.add(methodPredicate.buildOrder(sortField, criteriaBuilder, root, isAscending));
+				
 			}
+			
 			query.orderBy(orders);
 		}
 
@@ -105,6 +113,18 @@ public abstract class AbstractJpaRepository<E extends Entity<?>, R extends JpaRe
 			List<Predicate> predicates = buildPredicates(filter, criteriaBuilder, root);
 
 			query.select(root).where(criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()])));
+			
+			List<Order> orders = new ArrayList<>();
+
+			pageable.getSort().forEach(order -> {
+
+				boolean isAscending = order.isAscending();
+
+				orders.add(methodPredicate.buildOrder(order.getProperty(), criteriaBuilder, root, isAscending));
+
+			});
+
+			query.orderBy(orders);
 
 			TypedQuery<E> typedQuery = entityManager.createQuery(query);
 			
@@ -118,8 +138,8 @@ public abstract class AbstractJpaRepository<E extends Entity<?>, R extends JpaRe
 
 			return new PageImpl<>(list, pageable, total);
 			
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			LOGGER.error("[findAll]", ex);
 		}
 
 		return null;
@@ -155,13 +175,14 @@ public abstract class AbstractJpaRepository<E extends Entity<?>, R extends JpaRe
 			try {
 
 				if (key.contains(".")) {
-					MethodReflection.executeMethod(methodPredicate, "setOperatorJoin", method);
+					MethodReflection.executeMethod(methodPredicate, "setOperatorJoin", method + "Criteria");
 					method = "join";
 				}
 
 				MethodReflection.executeMethod(methodPredicate, method + "Criteria", criteriaBuilder, predicates, path, key, value);
-			} catch (Exception e) {
-				e.printStackTrace();
+				
+			} catch (Exception ex) {
+				LOGGER.error("[buildPredicates]", ex);
 			}
 			
 		});

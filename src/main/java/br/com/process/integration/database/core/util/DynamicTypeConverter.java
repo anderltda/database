@@ -141,15 +141,19 @@ public class DynamicTypeConverter {
 	public static Object convert(Object value) {
 
 		try {
-			return Integer.parseInt(value.toString());
-		} catch (Exception ix) {
+			return Double.parseDouble(value.toString());
+		} catch (Exception doubleEx) {
 			try {
-				return LocalDate.parse(value.toString(), DateTimeFormatter.ISO_LOCAL_DATE);
-			} catch (Exception localDateEx) {
+				return Integer.parseInt(value.toString());
+			} catch (Exception ix) {
 				try {
-					return LocalDateTime.parse(value.toString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-				} catch (Exception localDateTimeEx) {
-					return value;
+					return LocalDate.parse(value.toString(), DateTimeFormatter.ISO_LOCAL_DATE);
+				} catch (Exception localDateEx) {
+					try {
+						return LocalDateTime.parse(value.toString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+					} catch (Exception localDateTimeEx) {
+						return value;
+					}
 				}
 			}
 		}

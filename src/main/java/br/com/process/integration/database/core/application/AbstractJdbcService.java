@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +19,8 @@ import br.com.process.integration.database.core.infrastructure.AbstractJdbcRepos
 @Service
 @Transactional
 public abstract class AbstractJdbcService<V> extends AbstractJdbcRepository<V> implements JdbcService<V> {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractJdbcService.class);
 
 	protected V view;
 	protected abstract void setView(V view);
@@ -29,8 +33,8 @@ public abstract class AbstractJdbcService<V> extends AbstractJdbcRepository<V> i
 	public V executeQueryNativeFindBySingle(Map<String, Object> filter, String invokerQuery) {
 		try {
 			return findBySingle(view, filter, this.getClass().getSimpleName(), invokerQuery);
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			LOGGER.error("[executeQueryNativeFindBySingle]", ex);
 		}
 		return null;
 	}
@@ -39,8 +43,8 @@ public abstract class AbstractJdbcService<V> extends AbstractJdbcRepository<V> i
 	public List<V> executeQueryNative(Map<String, Object> filter, String invokerQuery) {
 		try {
 			return findAll(view, filter, this.getClass().getSimpleName(), invokerQuery);
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			LOGGER.error("[executeQueryNative]", ex);
 		}
 		return new ArrayList<>();
 	}
@@ -59,8 +63,8 @@ public abstract class AbstractJdbcService<V> extends AbstractJdbcRepository<V> i
 
 			return pagedModel;
 			
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			LOGGER.error("[executeQueryNative]", ex);
 		}
 		
 		return null;

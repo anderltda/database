@@ -16,6 +16,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -26,6 +28,8 @@ import jakarta.persistence.JoinColumn;
 
 @Service
 public class MethodReflection {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodReflection.class);
 	
 	private MethodReflection() {}
 	
@@ -108,7 +112,7 @@ public class MethodReflection {
 			Class<?> main = classLoader.loadClass(instance);
 			return main.getDeclaredConstructor().newInstance();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			LOGGER.error("[identificarClasse]", ex);
 		}
 		return null;
 	}
@@ -121,8 +125,8 @@ public class MethodReflection {
 			if (method != null) {
 				return method.invoke(object, paramValue);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			LOGGER.error("[executeMethod]", ex);
 		}
 		return null;
 	}
@@ -220,8 +224,8 @@ public class MethodReflection {
 				}
 			}
 			
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			LOGGER.error("[findClassUsingClassLoader]", ex);
 		}
 
 		return null;
@@ -231,7 +235,7 @@ public class MethodReflection {
 		try {
 			return Class.forName(packageName + "." + className.substring(0, className.lastIndexOf('.')));
 		} catch (ClassNotFoundException cnfe) {
-			cnfe.printStackTrace();
+			LOGGER.error("[getClass]", cnfe);
 		}
 		return null;
 	}
@@ -262,8 +266,8 @@ public class MethodReflection {
 							DynamicTypeConverter.convert(field, params.get(field.getName())));
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			LOGGER.error("[queryParams]", ex);
 		}
 	}
 	
@@ -302,8 +306,8 @@ public class MethodReflection {
 				}
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			LOGGER.error("[getMethodArgs]", ex);
 		}
 		
 		return methodArgs;

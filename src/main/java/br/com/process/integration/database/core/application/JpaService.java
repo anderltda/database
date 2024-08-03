@@ -11,11 +11,11 @@ public interface JpaService<T, E> {
 
 	public List<E> findAll(Map<String, Object> filter, List<String> sortList, List<String> sortOrders);
 
-	public PagedModel<E> findAll(Map<String, Object> filter, Integer page, Integer size, List<String> sortList, String sortOrder);
+	public PagedModel<E> findAll(Map<String, Object> filter, Integer page, Integer size, List<String> sortList, List<String> sortOrders);
 	
 	public List<E> findAll(Map<String, Object> filter, String methodQueryJPQL);
 	
-	public PagedModel<E> findAll(Map<String, Object> filter, String methodQueryJPQL, Integer page, Integer size, List<String> sortList, String sortOrder);
+	public PagedModel<E> findAll(Map<String, Object> filter, String methodQueryJPQL, Integer page, Integer size, List<String> sortList, List<String> sortOrders);
 
 	public E findBySingle(Map<String, Object> filter, String methodQueryJPQL); 
 	

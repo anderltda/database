@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -26,6 +28,8 @@ import br.com.process.integration.database.core.util.Constants;
 @EnableConfigurationProperties
 @ConfigurationProperties("database")
 public class ConfigQuery {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ConfigQuery.class);
 
 	@Autowired
 	private ResourceLoader resourceLoader;
@@ -208,8 +212,8 @@ public class ConfigQuery {
 
 			return objectMapper.readValue(inputStream, new TypeReference<List<Query>>() {});
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			LOGGER.error("[loadConfig]", ex);
 		}
 		
 		return new ArrayList<>();
@@ -232,8 +236,8 @@ public class ConfigQuery {
 
 			return query;
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			LOGGER.error("[getQuery]", ex);
 		}
 
 		return null;

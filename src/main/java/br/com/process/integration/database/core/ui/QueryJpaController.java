@@ -29,7 +29,7 @@ public class QueryJpaController extends AbstractController {
 	 * @param entity - Entidade (Tabela)
 	 * @param params - Map<String, Object> de parametros com key é o atributo da entidade e value é o valor do atributo
 	 * @param sortList - Lista com atributos para ordenar
-	 * @param sortOrder - ASC: Ascendentes e DESC: decrescentes
+	 * @param sortOrders - ASC: Ascendentes e DESC: decrescentes
 	 * @return - Retorna uma lista de registros da Entidade (Tabela)
 	 * @obs é uma lista (nao paginado)
 	 */
@@ -68,7 +68,7 @@ public class QueryJpaController extends AbstractController {
 	 * @param page - Valor inicial da pagina
 	 * @param size - Quantidade de registros por pagina
 	 * @param sortList - Lista com atributos para ordenar
-	 * @param sortOrder - ASC: Ascendentes e DESC: decrescentes
+	 * @param sortOrders - ASC: Ascendentes e DESC: decrescentes
 	 * @return - Retorna uma lista de registros da Entidade (Tabela)
 	 * @obs é paginado
 	 */
@@ -79,7 +79,7 @@ public class QueryJpaController extends AbstractController {
 			@RequestParam(defaultValue = "0") Integer page,
 			@RequestParam(defaultValue = "5") Integer size,
 			@RequestParam(defaultValue = "") List<String> sortList,
-			@RequestParam(defaultValue = "DESC") String sortOrder) {
+			@RequestParam(defaultValue = "DESC") List<String> sortOrders) {
 		
 		removeParams(params);
 
@@ -88,7 +88,7 @@ public class QueryJpaController extends AbstractController {
 		setEntity(entity, entityFound);
 
 		return (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL, params, page, size, sortList, sortOrder);
+				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL, params, page, size, sortList, sortOrders);
 	}
 	
 	
@@ -136,7 +136,7 @@ public class QueryJpaController extends AbstractController {
 	 * @param page - Valor inicial da pagina
 	 * @param size - Quantidade de registros por pagina
 	 * @param sortList - Lista com atributos para ordenar
-	 * @param sortOrder - ASC: Ascendentes e DESC: decrescentes
+	 * @param sortOrders - ASC: Ascendentes e DESC: decrescentes
 	 * @return - Retorna uma lista de registros da Entidade (Tabela)
 	 * @obs é paginado
 	 */
@@ -148,7 +148,7 @@ public class QueryJpaController extends AbstractController {
 			@RequestParam(defaultValue = "0") Integer page,
 			@RequestParam(defaultValue = "30") Integer size,
 			@RequestParam(defaultValue = "") List<String> sortList,
-			@RequestParam(defaultValue = "DESC") String sortOrder) {
+			@RequestParam(defaultValue = "DESC") String sortOrders) {
 
 		removeParams(params);
 
@@ -158,7 +158,7 @@ public class QueryJpaController extends AbstractController {
 
 		return (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(
 				MethodReflection.getNameService(entityFound.getClass().getSimpleName()), Constants.METHOD_FIND_ALL, 
-				params, methodQueryJPQL, page, size, sortList, sortOrder);
+				params, methodQueryJPQL, page, size, sortList, sortOrders);
 	}
 
 	/**

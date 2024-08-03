@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
@@ -17,6 +19,8 @@ import br.com.process.integration.database.core.util.Constants;
 
 @Repository
 public abstract class AbstractJdbcRepository<V> implements ViewRepository<V> {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractJdbcRepository.class);
 
 	@Autowired
 	private ConfigQuery configQuery;
@@ -40,8 +44,8 @@ public abstract class AbstractJdbcRepository<V> implements ViewRepository<V> {
 
 			return namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, rowMapper);
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			LOGGER.error("[findBySingle]", ex);
 		}
 
 		return null;
@@ -61,8 +65,8 @@ public abstract class AbstractJdbcRepository<V> implements ViewRepository<V> {
 
 			return namedParameterJdbcTemplate.query(sql, mapSqlParameterSource, rowMapper);
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			LOGGER.error("[findAll]", ex);
 		}
 
 		return new ArrayList<>();
@@ -91,8 +95,8 @@ public abstract class AbstractJdbcRepository<V> implements ViewRepository<V> {
 
 			return namedParameterJdbcTemplate.query(sql.toString(), mapSqlParameterSource, rowMapper);
 			
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			LOGGER.error("[findAll]", ex);
 		}
 		
 		return new ArrayList<>();
@@ -109,8 +113,8 @@ public abstract class AbstractJdbcRepository<V> implements ViewRepository<V> {
 
 			return namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, Integer.class);
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			LOGGER.error("[count]", ex);
 		}
 
 		return 0;
