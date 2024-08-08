@@ -8,6 +8,8 @@ import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -274,42 +276,94 @@ public class MethodReflection {
 	public static Object[] getMethodArgs(Class<?> clazz, String methodName, Map<String, Object> param) {
 
 		Object[] methodArgs = null;
-		
+
 		try {
-			
-			StringBuilder log = new StringBuilder();
+
 			Method[] methods = clazz.getDeclaredMethods();
 			Method targetMethod = null;
+			Class<?>[] parameterTypes = null;
 
 			for (Method method : methods) {
 				if (method.getName().equals(methodName)) {
-					targetMethod = method;
-					break;
+					Class<?>[] methodParameterTypes = method.getParameterTypes();
+					if (param.size() == methodParameterTypes.length) {
+						boolean match = true;
+						int index = 0;
+						for (Entry<String, Object> entry : param.entrySet()) {
+							Object value = entry.getValue();
+							Class<?> paramType = methodParameterTypes[index++];
+							if (!isCompatibleType(paramType, value)) {
+								match = false;
+								break;
+							}
+						}
+						if (match) {
+							targetMethod = method;
+							parameterTypes = methodParameterTypes;
+							break;
+						}
+					}
 				}
 			}
 
 			if (targetMethod != null) {
-				Class<?>[] parameterTypes = targetMethod.getParameterTypes();
-				if(param.size() == parameterTypes.length) {
-					methodArgs = new Object[parameterTypes.length];
-					int index = 0;
-					for (Entry<String, Object> entry : param.entrySet()) {
-						Object value = entry.getValue();
-						Class<?> class1 = parameterTypes[index];
-						log.append(parameterTypes[index].getSimpleName());
-						log.append("(");
-						log.append(value);
-						log.append(")");
-						log.append(", ");
-						methodArgs[index++] = DynamicTypeConverter.convert(class1, value);
-					}
+				methodArgs = new Object[parameterTypes.length];
+				int index = 0;
+				for (Entry<String, Object> entry : param.entrySet()) {
+					Object value = entry.getValue();
+					Class<?> paramType = parameterTypes[index];
+					methodArgs[index++] = DynamicTypeConverter.convert(paramType, value);
 				}
 			}
 
 		} catch (Exception ex) {
 			LOGGER.error("[getMethodArgs]", ex);
 		}
-		
+
 		return methodArgs;
+	}
+	
+	private static boolean isCompatibleType(Class<?> paramType, Object value) {
+
+		if (paramType.isInstance(value)) {
+			return true;
+		}
+
+		if (paramType.isPrimitive()) {
+			return isPrimitiveMatch(paramType, value);
+		}
+
+		if (paramType == LocalDateTime.class && value instanceof String) {
+			try {
+				LocalDateTime.parse((String) value, DateTimeFormatter.ISO_DATE_TIME);
+				return true;
+			} catch (Exception e) {
+				return false;
+			}
+		}
+
+		return false;
+	}
+
+	private static boolean isPrimitiveMatch(Class<?> paramType, Object value) {
+		if (paramType.isPrimitive()) {
+			if (paramType == int.class && value instanceof Integer)
+				return true;
+			if (paramType == long.class && value instanceof Long)
+				return true;
+			if (paramType == double.class && value instanceof Double)
+				return true;
+			if (paramType == float.class && value instanceof Float)
+				return true;
+			if (paramType == boolean.class && value instanceof Boolean)
+				return true;
+			if (paramType == char.class && value instanceof Character)
+				return true;
+			if (paramType == byte.class && value instanceof Byte)
+				return true;
+			if (paramType == short.class && value instanceof Short)
+				return true;
+		}
+		return false;
 	}
 }

@@ -3,6 +3,7 @@ package br.com.process.integration.database.core.ui;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ import org.springframework.http.ResponseEntity;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class ControllerLastTests {
+class QueryJpaControllerDeleteTests {
 
 	@LocalServerPort
 	private int port;
@@ -31,6 +32,13 @@ class ControllerLastTests {
 
 	@Autowired
 	private CrudJpaController crudJpaController;
+	
+	static String endpoint;
+	
+	@BeforeAll
+	void setupOnce() {
+		endpoint = "http://localhost:" + port + "/v1/api-rest-database/delete";
+	}
 
 	@Test
 	@Order(1)
@@ -44,14 +52,14 @@ class ControllerLastTests {
 
 		String json = "[";
 
-		for (Long id : Controller1Tests.ids) {
+		for (Long id : QueryJpaControllerSaveTests.ids) {
 			json += "{\"id\": " + id + "}";
 			json += ",";
 		}
 
 		json = json.substring(0, json.length() - 1) + "]";
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/delete/all/id/EntityTest1";
+		String url = endpoint + "/all/id/EntityTest1";
 
 		String statusCode = deleteResource(url, json);
 
@@ -62,8 +70,7 @@ class ControllerLastTests {
 	@Order(3)
 	void testDeleteForId() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/delete/id/EntityTest1/"
-				+ Controller1Tests.id;
+		String url = endpoint + "/id/EntityTest1/" + QueryJpaControllerSaveTests.id;
 
 		String statusCode = deleteResource(url);
 
@@ -74,7 +81,7 @@ class ControllerLastTests {
 	@Order(4)
 	void testDeleteForAll() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/delete/all/EntityTest1";
+		String url = endpoint + "/all/EntityTest1";
 
 		String statusCode = deleteResource(url);
 
@@ -82,16 +89,15 @@ class ControllerLastTests {
 	}
 
 	public String deleteResource(String url) {
+		
 		HttpHeaders headers = new HttpHeaders();
+		
 		headers.set("Content-Type", "application/json");
 
-		// Cria a entidade HTTP sem corpo (DELETE não precisa de um corpo)
 		HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
 
-		// Envia a solicitação DELETE usando exchange
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, String.class);
 
-		// Verifica o status da resposta
 		if (response.getStatusCode().is2xxSuccessful()) {
 			System.out.println("Resource deleted successfully. Response: " + response.getBody());
 		} else {
@@ -102,15 +108,15 @@ class ControllerLastTests {
 	}
 
 	public String deleteResource(String url, String json) {
+		
 		HttpHeaders headers = new HttpHeaders();
+		
 		headers.set("Content-Type", "application/json");
 
 		HttpEntity<String> requestEntity = new HttpEntity<>(json, headers);
 
-		// Envia a solicitação DELETE usando exchange
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, String.class);
 
-		// Verifica o status da resposta
 		if (response.getStatusCode().is2xxSuccessful()) {
 			System.out.println("Resource deleted successfully. Response: " + response.getBody());
 		} else {

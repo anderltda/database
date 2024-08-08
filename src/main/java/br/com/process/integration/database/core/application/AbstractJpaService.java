@@ -72,9 +72,13 @@ public abstract class AbstractJpaService<E extends Entity<?>, T> extends Abstrac
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<E> findAll(Map<String, Object> filter, String methodQueryJPQL) {
+	public List<E> findAll(Map<String, Object> filter, String methodQueryJPQL, List<String> sortList, List<String> sortOrders) {
 		
 		try {
+			
+			Sort sort = createSortOrder(sortList, sortOrders);
+			
+			filter.put("sort", sort);
 			
 			Object[] methodArgs = MethodReflection.getMethodArgs(getRepository().getClass(), methodQueryJPQL, filter);
 			
@@ -91,8 +95,7 @@ public abstract class AbstractJpaService<E extends Entity<?>, T> extends Abstrac
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public PagedModel<E> findAll(Map<String, Object> filter, String methodQueryJPQL, Integer page, Integer size,
-			List<String> sortList, List<String> sortOrders) {
+	public PagedModel<E> findAll(Map<String, Object> filter, String methodQueryJPQL, Integer page, Integer size, List<String> sortList, List<String> sortOrders) {
 
 		try {
 

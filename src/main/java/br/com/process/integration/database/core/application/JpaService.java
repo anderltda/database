@@ -13,7 +13,7 @@ public interface JpaService<T, E> {
 
 	public PagedModel<E> findAll(Map<String, Object> filter, Integer page, Integer size, List<String> sortList, List<String> sortOrders);
 	
-	public List<E> findAll(Map<String, Object> filter, String methodQueryJPQL);
+	public List<E> findAll(Map<String, Object> filter, String methodQueryJPQL, List<String> sortList, List<String> sortOrders);
 	
 	public PagedModel<E> findAll(Map<String, Object> filter, String methodQueryJPQL, Integer page, Integer size, List<String> sortList, List<String> sortOrders);
 

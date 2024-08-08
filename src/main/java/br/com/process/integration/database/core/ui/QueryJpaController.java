@@ -106,14 +106,18 @@ public class QueryJpaController extends AbstractController {
 	@GetMapping(value = "/find/all/jpql/{entity}/{methodQueryJPQL}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> findAll(@PathVariable String entity, 
 			@RequestParam(defaultValue = "") Map<String, Object> params, 
-			@PathVariable String methodQueryJPQL) {
+			@PathVariable String methodQueryJPQL,
+			@RequestParam(defaultValue = "") List<String> sortList,
+			@RequestParam(defaultValue = "DESC") List<String> sortOrders) {
+		
+		removeParams(params);
 
 		Entity<?> entityFound = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
 		setEntity(entity, entityFound);
 
 		List<Entity<?>> list = (List<Entity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL, params, methodQueryJPQL);
+				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL, params, methodQueryJPQL, sortList, sortOrders);
 
 		if (list != null && !list.isEmpty()) {
 
@@ -148,7 +152,7 @@ public class QueryJpaController extends AbstractController {
 			@RequestParam(defaultValue = "0") Integer page,
 			@RequestParam(defaultValue = "30") Integer size,
 			@RequestParam(defaultValue = "") List<String> sortList,
-			@RequestParam(defaultValue = "DESC") String sortOrders) {
+			@RequestParam(defaultValue = "DESC") List<String> sortOrders) {
 
 		removeParams(params);
 
@@ -228,10 +232,10 @@ public class QueryJpaController extends AbstractController {
 	 */
 	@SuppressWarnings("unchecked")
 	@GetMapping(value = "/find/all/ids/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> findAllIds(@PathVariable String entity, @RequestParam List<String> id) {
+	public ResponseEntity<String> findAllIds(@PathVariable String entity, @RequestParam List<String> ids) {
 
 		List<Entity<?>> list = (List<Entity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL_BY_ID, id);
+				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL_BY_ID, ids);
 
 		if (list != null && !list.isEmpty()) {
 
@@ -299,7 +303,7 @@ public class QueryJpaController extends AbstractController {
 	 * @return - Retorna um boolean TRUE se existir o ID o registro na Entidade (Tabela) FALSE se nao existir
 	 * @obs retorna apenas um TRUE|FALSE
 	 */
-	@GetMapping(value = "/exist/id/{entity}/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/exist/{entity}/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> existsById(@PathVariable String entity, @PathVariable String id) {
 
 		setId(entity, id);

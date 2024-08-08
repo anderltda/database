@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -127,6 +128,8 @@ public class DynamicTypeConverter {
 		} else if (clazz.getTypeName().equals(Byte.class.getName())) {
 			return Byte.parseByte(value.toString());
 		} else if (clazz.getTypeName().equals(PageRequest.class.getName())) {
+			return value;			
+		} else if (clazz.getTypeName().equals(Sort.class.getName())) {
 			return value;
 		} else if (clazz.getTypeName().equals(LocalDate.class.getName())) {
 			return LocalDate.parse(value.toString(), DateTimeFormatter.ISO_LOCAL_DATE);

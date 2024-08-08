@@ -43,7 +43,7 @@ import br.com.process.integration.database.domain.entity.EntityTest5;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class Controller1Tests {
+class QueryJpaControllerSaveTests {
 
 	@LocalServerPort
 	private int port;
@@ -54,12 +54,14 @@ class Controller1Tests {
 	@Autowired
 	private CrudJpaController crudJpaController;
 
-	public static Long id;
-	public static List<Long> ids;
+	static Long id;
+	static List<Long> ids;
+	static String endpoint;
 	
 	@BeforeAll
 	void setupOnce() {
 		ids = new ArrayList<>();
+		endpoint = "http://localhost:" + port + "/v1/api-rest-database/save";
 	}
 
 	@BeforeEach
@@ -73,12 +75,11 @@ class Controller1Tests {
 		assertNotNull(crudJpaController);
 	}
 	
-	
 	@Test
 	@Order(2)
 	void testSave() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/save/EntityTest1";
+		String url = endpoint + "/EntityTest1";
 
 		String[] text = new String[5];
 		Integer[] inteiro = new Integer[5];
@@ -137,72 +138,12 @@ class Controller1Tests {
 		assertNotNull(entity.getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getId());
 	}
 
-	@Test
-	@Order(3)
-	void testSaveFlush() {
-
-		String url = "http://localhost:" + port + "/v1/api-rest-database/save/flush/EntityTest1";
-
-		String[] text = new String[5];
-		Integer[] inteiro = new Integer[5];
-		Double[] dobro = new Double[5];
-		String[] localDate = new String[5];
-		String[] localTime = new String[5];
-
-		text[0] = "Anderson";
-		inteiro[0] = 41;
-		dobro[0] = 1.93;
-		localDate[0] = "03-29-1983";
-		localTime[0] = "2024-02-01T02:52:54";
-
-		text[1] = "Azul";
-		inteiro[1] = 2596;
-		dobro[1] = 13.25;
-		localDate[1] = "03-07-2024";
-		localTime[1] = "2024-01-01T16:41:43";
-
-		text[2] = "Avestruz";
-		inteiro[2] = 5;
-		dobro[2] = 55.6;
-		localDate[2] = "10-09-2024";
-		localTime[2] = "2024-10-18T13:32:32";
-
-		text[3] = "Laranja";
-		inteiro[3] = 11;
-		dobro[3] = 21.1;
-		localDate[3] = "12-10-2024";
-		localTime[3] = "2024-12-09T14:00:21";
-
-		text[4] = "Cadeira";
-		dobro[4] = 44.9;
-		inteiro[4] = 26;
-		localDate[4] = "01-10-2024";
-		localTime[4] = "2024-01-10T19:14:10";
-
-		EntityTest1 entity1 = gerarEntity(text, inteiro, dobro, localDate, localTime);
-
-		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
-
-		String json = gson.toJson(entity1);
-
-		List<String> responses = postJson(url, json);
-
-		EntityTest1 entity = gson.fromJson(responses.get(1), EntityTest1.class);
-
-		assertEquals(responses.get(0), HttpStatus.OK.toString());
-		assertNotNull(entity.getId());
-		assertNotNull(entity.getEntityTest2().getId());
-		assertNotNull(entity.getEntityTest2().getEntityTest3().getId());
-		assertNotNull(entity.getEntityTest2().getEntityTest3().getEntityTest4().getId());
-		assertNotNull(entity.getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getId());
-	}
 
 	@Test
-	@Order(4)
+	@Order(2)
 	void testSaveAll() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/save/all/EntityTest1";
+		String url = endpoint + "/all/EntityTest1";
 
 		List<EntityTest1> list = new ArrayList<>();
 
@@ -402,210 +343,6 @@ class Controller1Tests {
 		ids.add(lists.get(0).getId());
 		ids.add(lists.get(1).getId());
 		ids.add(lists.get(2).getId());
-	}
-
-	@Test
-	@Order(5)
-	void testSaveAllFlush() {
-
-		String url = "http://localhost:" + port + "/v1/api-rest-database/save/all/flush/EntityTest1";
-
-		List<EntityTest1> list = new ArrayList<>();
-
-		String[] text = new String[5];
-		Integer[] inteiro = new Integer[5];
-		Double[] dobro = new Double[5];
-		String[] localDate = new String[5];
-		String[] localTime = new String[5];
-
-		text[0] = "Carlos";
-		inteiro[0] = 34;
-		dobro[0] = 1.70;
-		localDate[0] = "08-30-1956";
-		localTime[0] = "2024-04-01T08:50:54";
-
-		text[1] = "Preto";
-		inteiro[1] = 144;
-		dobro[1] = 25.5;
-		localDate[1] = "01-07-2024";
-		localTime[1] = "2024-01-07T16:41:43";
-
-		text[2] = "Porco";
-		inteiro[2] = 72;
-		dobro[2] = 20.6;
-		localDate[2] = "01-08-2024";
-		localTime[2] = "2024-01-08T17:32:32";
-
-		text[3] = "Caju";
-		inteiro[3] = 21;
-		dobro[3] = 3.1;
-		localDate[3] = "01-02-2024";
-		localTime[3] = "2024-02-09T18:23:21";
-
-		text[4] = "Porta";
-		dobro[4] = 22.0;
-		inteiro[4] = 21;
-		localDate[4] = "01-10-2024";
-		localTime[4] = "2024-01-10T19:14:10";
-
-		list.add(gerarEntity(text, inteiro, dobro, localDate, localTime));
-
-		text = new String[5];
-		inteiro = new Integer[5];
-		dobro = new Double[5];
-		localDate = new String[5];
-		localTime = new String[5];
-
-		text[0] = "Paulo Henrique";
-		inteiro[0] = 38;
-		dobro[0] = 1.87;
-		localDate[0] = "09-09-1986";
-		localTime[0] = "2024-02-01T08:50:54";
-
-		text[1] = "Verde";
-		inteiro[1] = 3131;
-		dobro[1] = 25.5;
-		localDate[1] = "01-07-2024";
-		localTime[1] = "2024-01-07T16:41:43";
-
-		text[2] = "Cavalo";
-		inteiro[2] = 44;
-		dobro[2] = 24.6;
-		localDate[2] = "01-08-2024";
-		localTime[2] = "2024-01-08T17:32:32";
-
-		text[3] = "Pitanga";
-		inteiro[3] = 19;
-		dobro[3] = 3.1;
-		localDate[3] = "06-10-2024";
-		localTime[3] = "2024-01-09T18:23:21";
-
-		text[4] = "Tennis";
-		dobro[4] = 12.9;
-		inteiro[4] = 11;
-		localDate[4] = "01-10-2024";
-		localTime[4] = "2024-01-10T19:14:10";
-
-		list.add(gerarEntity(text, inteiro, dobro, localDate, localTime));
-
-		text = new String[5];
-		inteiro = new Integer[5];
-		dobro = new Double[5];
-		localDate = new String[5];
-		localTime = new String[5];
-
-		text[0] = "Joana";
-		inteiro[0] = 32;
-		dobro[0] = 1.80;
-		localDate[0] = "01-01-1992";
-		localTime[0] = "2024-11-01T08:00:00";
-
-		text[1] = "Amarelo";
-		inteiro[1] = 524;
-		dobro[1] = 25.5;
-		localDate[1] = "01-07-2024";
-		localTime[1] = "2024-01-07T16:41:43";
-
-		text[2] = "Macado";
-		inteiro[2] = 87;
-		dobro[2] = 14.6;
-		localDate[2] = "01-08-2024";
-		localTime[2] = "2024-01-08T17:32:32";
-
-		text[3] = "Mamao";
-		inteiro[3] = 1;
-		dobro[3] = 29.1;
-		localDate[3] = "01-09-2024";
-		localTime[3] = "2024-01-09T18:23:21";
-
-		text[4] = "Balde";
-		dobro[4] = 22.9;
-		inteiro[4] = 10;
-		localDate[4] = "01-10-2024";
-		localTime[4] = "2024-01-10T19:14:10";
-
-		list.add(gerarEntity(text, inteiro, dobro, localDate, localTime));
-		
-		text = new String[5];
-		inteiro = new Integer[5];
-		dobro = new Double[5];
-		localDate = new String[5];
-		localTime = new String[5];
-		
-		text[0] = "Ariovaldo";
-		inteiro[0] = 22;
-		dobro[0] = 1.90;
-		localDate[0] = "01-01-1990";
-		localTime[0] = "2024-11-01T08:00:00";
-
-		text[1] = "Cinza";
-		inteiro[1] = 37890;
-		dobro[1] = 21.5;
-		localDate[1] = "01-07-2024";
-		localTime[1] = "2024-01-07T16:41:43";
-
-		text[2] = "Gato";
-		inteiro[2] = 24;
-		dobro[2] = 24.6;
-		localDate[2] = "01-08-2024";
-		localTime[2] = "2024-01-08T17:32:32";
-
-		text[3] = "Banana";
-		inteiro[3] = 25;
-		dobro[3] = 23.1;
-		localDate[3] = "01-09-2024";
-		localTime[3] = "2024-01-09T18:23:21";
-
-		text[4] = "Vassoura";
-		dobro[4] = 22.9;
-		inteiro[4] = 26;
-		localDate[4] = "01-10-2024";
-		localTime[4] = "2024-01-10T19:14:10";
-		
-		list.add(gerarEntity(text, inteiro, dobro, localDate, localTime));
-
-		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
-
-		String json = gson.toJson(list);
-
-		List<String> responses = postJson(url, json);
-
-		Type userListType = new TypeToken<List<EntityTest1>>() {
-		}.getType();
-
-		// Desserializa o JSON para uma lista de User
-		List<EntityTest1> lists = gson.fromJson(responses.get(1), userListType);
-
-		assertEquals(responses.get(0), HttpStatus.OK.toString());
-
-		assertEquals(4, lists.size());
-
-		assertNotNull(lists.get(0).getId());
-		assertNotNull(lists.get(1).getId());
-		assertNotNull(lists.get(2).getId());
-		assertNotNull(lists.get(3).getId());
-		
-		assertNotNull(lists.get(0).getEntityTest2().getId());
-		assertNotNull(lists.get(0).getEntityTest2().getEntityTest3().getId());
-		assertNotNull(lists.get(0).getEntityTest2().getEntityTest3().getEntityTest4().getId());
-		assertNotNull(lists.get(0).getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getId());
-
-		assertNotNull(lists.get(1).getEntityTest2().getId());
-		assertNotNull(lists.get(1).getEntityTest2().getEntityTest3().getId());
-		assertNotNull(lists.get(1).getEntityTest2().getEntityTest3().getEntityTest4().getId());
-		assertNotNull(lists.get(1).getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getId());
-
-		assertNotNull(lists.get(2).getEntityTest2().getId());
-		assertNotNull(lists.get(2).getEntityTest2().getEntityTest3().getId());
-		assertNotNull(lists.get(2).getEntityTest2().getEntityTest3().getEntityTest4().getId());
-		assertNotNull(lists.get(2).getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getId());
-		
-		assertNotNull(lists.get(3).getEntityTest2().getId());
-		assertNotNull(lists.get(3).getEntityTest2().getEntityTest3().getId());
-		assertNotNull(lists.get(3).getEntityTest2().getEntityTest3().getEntityTest4().getId());
-		assertNotNull(lists.get(3).getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getId());
-		
 	}
 
 	public EntityTest1 gerarEntity(String[] text, Integer[] inteiro, Double[] dobro, String[] localDate,
