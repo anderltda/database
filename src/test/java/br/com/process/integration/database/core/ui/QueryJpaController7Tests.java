@@ -60,7 +60,7 @@ class QueryJpaController7Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest1/buscaAll?page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
 
-		List<EntityTest1> list = getAll(url.toString());
+		List<EntityTest1> list = getAll(url);
 
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -81,7 +81,7 @@ class QueryJpaController7Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest1/buscaComLikePeloName?name=ar&page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
 
-		List<EntityTest1> list = getAll(url.toString());
+		List<EntityTest1> list = getAll(url);
 
 		assertNotNull(list);
 		assertEquals(5, list.size());
@@ -97,7 +97,7 @@ class QueryJpaController7Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest1/buscaComLikePeloName?name=Silva&page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
 
-		List<EntityTest1> list = getAll(url.toString());
+		List<EntityTest1> list = getAll(url);
 
 		assertNotNull(list);
 		assertEquals(0, list.size());
@@ -108,7 +108,7 @@ class QueryJpaController7Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest1/buscaAll?page=0&size=20&sortList=birthDate,name&sortOrders=desc,asc";
 
-		List<EntityTest1> list = getAll(url.toString());
+		List<EntityTest1> list = getAll(url);
 
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -129,7 +129,7 @@ class QueryJpaController7Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest1/buscaAll?page=0&size=20&sortList=name,birthDate&sortOrders=asc,desc";
 
-		List<EntityTest1> list = getAll(url.toString());
+		List<EntityTest1> list = getAll(url);
 		
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -151,7 +151,7 @@ class QueryJpaController7Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest1/buscaAll?page=0&size=20&sortList=name,birthDate&sortOrders=desc,asc";
 
-		List<EntityTest1> list = getAll(url.toString());
+		List<EntityTest1> list = getAll(url);
 		
 		assertNotNull(list);
 		assertEquals(10, list.size());

@@ -11,7 +11,7 @@
 			"AND p.title = :title",
 			"AND p.type  = :type"
 		],
-		"orderby": "p.id ASC"
+		"orderby": "p.name ASC"
 	},
 	
 

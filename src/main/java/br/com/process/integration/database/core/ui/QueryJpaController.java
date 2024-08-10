@@ -242,8 +242,6 @@ public class QueryJpaController extends AbstractController {
 				MethodReflection.getNameService(entityFound.getClass().getSimpleName()), Constants.METHOD_FIND_ALL, 
 				params, methodQueryJPQL, page, size, sortList, sortOrders);
 	}
-
-
 	
 	 /*****************************************************************************************************************************************************************
 	 *																																								  *

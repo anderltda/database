@@ -40,6 +40,14 @@ public abstract class AbstractJpaService<E extends Entity<?>, T> extends Abstrac
 	@Autowired
 	protected MethodInvoker methodInvoker;
 	
+	 /*****************************************************************************************************************************************************************
+	 *																																								  *
+	 * SERVICES UTILIZANDO CRITERIA																														        	  *	
+	 * 																																								  *
+	 * INICIAL																																						  *
+	 *  																																							  *
+	 *****************************************************************************************************************************************************************/	
+	
 	@Override
 	public Long count(Map<String, Object> filter) {
 		return super.count(filter);
@@ -67,6 +75,28 @@ public abstract class AbstractJpaService<E extends Entity<?>, T> extends Abstrac
 		}
 		return null;
 	}
+	
+	 /*****************************************************************************************************************************************************************
+	 *																																								  *
+	 * SERVICES UTILIZANDO CRITERIA																														        	  *	
+	 * 																																								  *
+	 * FINAL																																						  *
+	 *  																																							  *
+	 *****************************************************************************************************************************************************************/	
+	
+	
+	
+	
+	
+	
+	
+	 /*****************************************************************************************************************************************************************
+	 *																																								  *
+	 * SERVICES UTILIZANDO JPQL																															        	  *	
+	 * 																																								  *
+	 * INICIAL																																						  *
+	 *  																																							  *
+	 *****************************************************************************************************************************************************************/
 	
 	@Override
 	public Long count(Map<String, Object> filter, String methodQueryJPQL) {
@@ -126,6 +156,26 @@ public abstract class AbstractJpaService<E extends Entity<?>, T> extends Abstrac
 		return null;
 	}
 	
+	 /*****************************************************************************************************************************************************************
+	 *																																								  *
+	 * SERVICES UTILIZANDO JPQL																															        	  *	
+	 * 																																								  *
+	 * FINAL																																						  *
+	 *  																																							  *
+	 *****************************************************************************************************************************************************************/
+	
+
+	
+	
+	
+	 /*****************************************************************************************************************************************************************
+	 *																																								  *
+	 * SERVICES UTILIZANDO GENERIC CRUD REPOSITORY																													  *	
+	 * 																																								  *
+	 * INICIAL																																						  *
+	 *  																																							  *
+	 *****************************************************************************************************************************************************************/
+	
 	@Override
 	public E findById() {
 		Optional<E> entity = getRepository().findById(id);
@@ -144,7 +194,7 @@ public abstract class AbstractJpaService<E extends Entity<?>, T> extends Abstrac
 	public boolean existsById() {
 		return getRepository().existsById(id);
 	}
-
+	
 	@Override
 	public void deleteAll() {
 		getRepository().deleteAll();
@@ -179,6 +229,14 @@ public abstract class AbstractJpaService<E extends Entity<?>, T> extends Abstrac
 	public void saveAllAndFlush(List<E> entitys) {
 		getRepository().saveAllAndFlush(entitys);
 	}
+	
+	 /*****************************************************************************************************************************************************************
+	 *																																								  *
+	 * SERVICES UTILIZANDO GENERIC CRUD REPOSITORY																													  *	
+	 * 																																								  *
+	 * FINAL																																						  *
+	 *  																																							  *
+	 *****************************************************************************************************************************************************************/
 	
 	private static Sort createSortOrder(List<String> sortList, List<String> sortOrders) {
 		List<Sort.Order> orders = IntStream.range(0, sortList.size())

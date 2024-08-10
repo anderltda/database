@@ -44,15 +44,15 @@ public class QueryNativeController extends AbstractController {
 
 	@GetMapping(value = "/execute/query/find/all/{instance}/{methodInvokerQuery}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> findAll(@PathVariable String instance, 
-			@RequestParam(defaultValue = "") Map<String, Object> params, 
+			@RequestParam(defaultValue = "") Map<String, Object> filter, 
 			@PathVariable String methodInvokerQuery) {
 
-		addParam(params);
+		addParam(filter);
 
 		setView(instance);
 
 		List<?> list = (List<?>) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(instance), Constants.METHOD_EXECUTE_QUERY_NATIVE, params, methodInvokerQuery);
+				MethodReflection.getNameService(instance), Constants.METHOD_EXECUTE_QUERY_NATIVE, filter, methodInvokerQuery);
 
 		if (list != null && !list.isEmpty()) {
 

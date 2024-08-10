@@ -13,7 +13,8 @@ import org.junit.platform.suite.api.Suite;
 	QueryJpaController4Tests.class,
 	QueryJpaController5Tests.class,
 	QueryJpaController6Tests.class,
-	QueryJpaController7Tests.class
+	QueryJpaController7Tests.class,
+	QueryNativeController1Tests.class
 })
 public class OrderedTestSuite {
 

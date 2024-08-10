@@ -59,12 +59,19 @@ class QueryJpaController1Tests {
 	
 	@BeforeAll
 	void setupOnce() {
-		ids = new ArrayList<>();
+		
+		if(ids == null) {
+			ids = new ArrayList<>();
+		}
 	}
 
 	@BeforeEach
-	void setup() {
-		id = 0l;
+	void setup() { 
+		
+		if(id == null) {
+			id = 0l;
+		}
+		
 	}
 
 	@Test
@@ -367,7 +374,6 @@ class QueryJpaController1Tests {
 
 		Type userListType = new TypeToken<List<EntityTest1>>(){}.getType();
 
-		// Desserializa o JSON para uma lista de User
 		List<EntityTest1> lists = gson.fromJson(responses.get(1), userListType);
 
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
@@ -571,10 +577,8 @@ class QueryJpaController1Tests {
 
 		List<String> responses = postJson(url, json);
 
-		Type userListType = new TypeToken<List<EntityTest1>>() {
-		}.getType();
+		Type userListType = new TypeToken<List<EntityTest1>>() {}.getType();
 
-		// Desserializa o JSON para uma lista de User
 		List<EntityTest1> lists = gson.fromJson(responses.get(1), userListType);
 
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
@@ -673,14 +677,14 @@ class QueryJpaController1Tests {
 		}
 	}
 
-	public LocalDateTime geraDataLocalTime(String dateTimeString) {
-		LocalDateTime dateTime = LocalDateTime.parse(dateTimeString);
-		return dateTime;
-	}
-
 	public LocalDate geraLocalDate(String dateString) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
 		LocalDate date = LocalDate.parse(dateString, formatter);
 		return date;
+	}
+
+	public LocalDateTime geraDataLocalTime(String dateTimeString) {
+		LocalDateTime dateTime = LocalDateTime.parse(dateTimeString);
+		return dateTime;
 	}
 }

@@ -5,12 +5,12 @@ import java.util.Map;
 
 import org.springframework.hateoas.PagedModel;
 
-public interface JdbcService<M> {
+public interface JdbcService<V> {
 	
-	public M executeQueryNativeFindBySingle(Map<String, Object> filter, String invokerQuery);
+	public V executeQueryNativeFindBySingle(Map<String, Object> filter, String invokerQuery);
 
-	public List<M> executeQueryNative(Map<String, Object> search, String invokerQuery);
+	public List<V> executeQueryNative(Map<String, Object> filter, String invokerQuery);
 
-	public PagedModel<M> executeQueryNative(Map<String, Object> search, String invokerQuery, Integer page, Integer size, List<String> sortList, String sortOrder);
+	public PagedModel<V> executeQueryNative(Map<String, Object> search, String invokerQuery, Integer page, Integer size, List<String> sortList, String sortOrder);
 
 }	

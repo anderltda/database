@@ -55,7 +55,7 @@ public class Constants {
 	public static final String METHOD_EXECUTE_QUERY_NATIVE_FIND_BY_SINGLE = "executeQueryNativeFindBySingle"; 
 	
 	public static final String SORT_LIST = "sortList";
-	public static final String SORT_ORDER = "sortOrder";
+	public static final String SORT_ORDERS = "sortOrders";
 	
 	/**
 	 * Operadores Lógicos

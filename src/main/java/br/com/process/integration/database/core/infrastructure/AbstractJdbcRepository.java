@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import br.com.process.integration.database.core.domain.ConfigQuery;
+import br.com.process.integration.database.core.domain.DynamicRowMapper;
 import br.com.process.integration.database.core.domain.ViewRepository;
 import br.com.process.integration.database.core.util.Constants;
 
@@ -63,7 +64,7 @@ public abstract class AbstractJdbcRepository<V> implements ViewRepository<V> {
 
 			String sql = configQuery.executeSQL(filter, fileQuery, invokerQuery, mapSqlParameterSource);
 
-			return namedParameterJdbcTemplate.query(sql, mapSqlParameterSource, rowMapper);
+	        return namedParameterJdbcTemplate.query(sql, mapSqlParameterSource, new DynamicRowMapper<>((Class<V>) view.getClass()));
 
 		} catch (Exception ex) {
 			LOGGER.error("[findAll]", ex);

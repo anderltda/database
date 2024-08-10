@@ -59,56 +59,69 @@ public class ConfigQuery {
 	private String executeQuery(Map<String, Object> filters, String fileQuery, String invokerQuery, MapSqlParameterSource mapSqlParameterSource, boolean isCount) {
 
 		StringBuilder sql = new StringBuilder();
-
 		Query query = getQuery(fileQuery, invokerQuery);
-
 		if(query != null) {
-			
-			crreateSelect(isCount, sql, query);
-			
+			createSelect(isCount, sql, query);
 			createJoin(sql, query);
-			
 			createWhere(filters, sql, query);
-			
 			createGroupBy(sql, query);
-			
 			createOrderBy(filters, isCount, sql, query);
-			
 			if (isCount && query.getGroupby() != null) {
 				sql.append(") AS VALUE" + Constants.WRITERSPACE);
 			}
-
 			// SET KEY VALUE
 			if(filters != null) {
 				filters.forEach((key, value) -> 
 				mapSqlParameterSource.addValue(key, value.toString().contains("*") ? value.toString().replace("*", "%") : value));
 			}
-			
 		}
-		
-		return sql.toString();
+		return sql.toString().trim();
 	}
-
-	public void createOrderBy(Map<String, Object> filters, boolean isCount, StringBuilder sql, Query query) {
+	
+	private void createOrderBy(Map<String, Object> filters, boolean isCount, StringBuilder sql, Query query) {
 		// CHECK IF DON'T SELECT COUNT
 		// ORDER BY
 		if (!isCount && query.getOrderby() != null) {
-			sql.append(Constants.ORDER_BY + Constants.WRITERSPACE);
-			sql.append(query.getOrderby()
-					.replace(Constants.DOIS_PONTOS + Constants.SORT_LIST,
-							filters != null && filters.get(Constants.SORT_LIST) != null
-									? filters.get(Constants.SORT_LIST).toString().replaceAll("[\\[\\]]", "")
-									: "")
-					.replace(Constants.DOIS_PONTOS + Constants.SORT_ORDER,
-							filters != null && filters.get(Constants.SORT_ORDER) != null
-									? filters.get(Constants.SORT_ORDER).toString()
-									: "")
-					+ Constants.WRITERSPACE);
+			boolean isOrderby = (filters != null
+					&& (filters.get(Constants.SORT_LIST) != null && filters.get(Constants.SORT_ORDERS) != null));
+			if (!isOrderby) {
+				String checkValid = query.getOrderby().replaceAll("\\s?:\\S+", "").replaceAll("\\s{2,}", " ").trim();
+				sql.append(
+						!checkValid.isEmpty() ? Constants.ORDER_BY + Constants.WRITERSPACE + query.getOrderby() : "");
+			} else {
+				sql.append(createSortOrders(filters, query, isOrderby));
+			}
 		}
 	}
 
-	public void createGroupBy(StringBuilder sql, Query query) {
+	private String createSortOrders(Map<String, Object> filters, Query query, boolean isOrderby) {
 		
+		StringBuilder orderby = new StringBuilder();
+		orderby.append(isOrderby ? Constants.ORDER_BY + Constants.WRITERSPACE : "");
+
+		String sortList = query.getOrderby().replace(Constants.DOIS_PONTOS + Constants.SORT_LIST,
+				isOrderby ? toSnakeCase(filters.get(Constants.SORT_LIST).toString().replaceAll("[\\[\\]]", "")) : "");
+
+		String sortOrder = query.getOrderby().replace(Constants.DOIS_PONTOS + Constants.SORT_ORDERS,
+				isOrderby ? filters.get(Constants.SORT_ORDERS).toString().replaceAll("[\\[\\]]", "") : "");
+		
+		String newSortList = sortList.replace(Constants.DOIS_PONTOS + Constants.SORT_ORDERS, "").trim();
+		String newSortOrders = sortOrder.replace(Constants.DOIS_PONTOS + Constants.SORT_LIST, "").trim();
+		
+		String[] sortLists = newSortList.split(",");
+		String[] sortOrders = newSortOrders.split(",");
+		
+		for (int i = 0; i < sortLists.length; i++) {
+			orderby.append(sortLists[i]);
+			orderby.append(" ");
+			orderby.append(sortOrders.length > i ? sortOrders[i].toUpperCase() : sortOrders[i-1].toUpperCase());
+			orderby.append(",");
+		}
+		
+		return orderby.substring(0, orderby.length()-1).trim();
+	}
+
+	private void createGroupBy(StringBuilder sql, Query query) {
 		// GROUP BY
 		if (query.getGroupby() != null) {
 			sql.append(Constants.GROUP_BY + Constants.WRITERSPACE);
@@ -116,24 +129,18 @@ public class ConfigQuery {
 		}
 	}
 
-	public void createWhere(Map<String, Object> filters, StringBuilder sql, Query query) {
-		
+	private void createWhere(Map<String, Object> filters, StringBuilder sql, Query query) {
 		// WHERE
 		if (query.getWhere() != null) {
-			
 			sql.append(Constants.WHERE + Constants.WRITERSPACE);
-			
 			query.getWhere().forEach(where -> {
-			
 				where = createWhereOperator(filters, where);
-				
 				createWhereValues(filters, sql, where);
-				
 			});
 		}
 	}
 
-	public void createWhereValues(Map<String, Object> filters, StringBuilder sql, String where) {
+	private void createWhereValues(Map<String, Object> filters, StringBuilder sql, String where) {
 		Pattern pattern = Pattern.compile(":(?:[^():]*\\([^)]*\\))?([^:()\\s]+)");
 		Matcher matcher = pattern.matcher(where);
 		if (matcher.find() && filters.get(matcher.group(1).trim()) != null) {
@@ -151,11 +158,10 @@ public class ConfigQuery {
 		}
 	}
 
-	public String createWhereOperator(Map<String, Object> filters, String where) {
+	private String createWhereOperator(Map<String, Object> filters, String where) {
 		Pattern pattern = Pattern.compile("\\{(.*?)\\}");
 		Matcher matcher = pattern.matcher(where);
 		String operator = Constants.IGUAL;
-		
 		if (matcher.find()) {
 			if (filters.get(matcher.group(1).trim()) != null) {
 				operator = OPERADORES.get(filters.get(matcher.group(1).trim()).toString());
@@ -165,18 +171,15 @@ public class ConfigQuery {
 		return where;
 	}
 
-	public void createJoin(StringBuilder sql, Query query) {
+	private void createJoin(StringBuilder sql, Query query) {
 		// JOIN
 		if (query.getJoin() != null) {
-			query.getJoin().forEach(join -> 
-			sql.append(join + Constants.WRITERSPACE)
-					);			
+			query.getJoin().forEach(join -> sql.append(join + Constants.WRITERSPACE));
 		}
 	}
 
-	public void crreateSelect(boolean isCount, StringBuilder sql, Query query) {
+	private void createSelect(boolean isCount, StringBuilder sql, Query query) {
 		if (isCount) {
-			
 			if(query.getGroupby() == null) {
 				// SELECT COUNT
 				Pattern pattern = Pattern.compile("\\b(from\\b.*)", Pattern.CASE_INSENSITIVE);
@@ -184,12 +187,9 @@ public class ConfigQuery {
 				if (matcher.find()) {
 					sql.append(Constants.SELECT_COUNT + Constants.WRITERSPACE + matcher.group(1).trim() + Constants.WRITERSPACE);
 				}
-				
 			} else {
-				
 				// SELECT COUNT
 				sql.append(Constants.SELECT_COUNT + Constants.WRITERSPACE + Constants.FROM + Constants.WRITERSPACE + "(" + Constants.WRITERSPACE);
-				
 				// SELECT
 				sql.append(query.getSelect() + Constants.WRITERSPACE);
 			}
@@ -199,47 +199,47 @@ public class ConfigQuery {
 			sql.append(query.getSelect() + Constants.WRITERSPACE);
 		}
 	}
+	
+	private static String toSnakeCase(Object camelCase) {
+	    StringBuilder snakeCaseString = new StringBuilder();
+	    for (char c : camelCase.toString().toCharArray()) {
+	        if (Character.isUpperCase(c)) {
+	            snakeCaseString.append('_').append(Character.toLowerCase(c));
+	        } else {
+	            snakeCaseString.append(c);
+	        }
+	    }
+	    return snakeCaseString.toString();
+	}
 
 	private List<Query> loadConfig(String value) {
-
 		try {
-
 			String string = "classpath:/querys/{file}.json";
 			String file = alterPlaceholders(string, "file", value);
 			Resource resource = resourceLoader.getResource(file);
 			InputStream inputStream = resource.getInputStream();
 			ObjectMapper objectMapper = new ObjectMapper();
-
 			return objectMapper.readValue(inputStream, new TypeReference<List<Query>>() {});
-
 		} catch (Exception ex) {
 			LOGGER.error("[loadConfig]", ex);
 		}
-		
 		return new ArrayList<>();
 	}
 
 	private Query getQuery(String fileQuery, String invokerQuery) {
-
 		try {
-
 			List<Query> querys = loadConfig(fileQuery);
-
 			Query query = null;
-
 			for (Query query_ : querys) {
 				if (query_.getName().equalsIgnoreCase(invokerQuery)) {
 					query = query_;
 					return query;
 				}
 			}
-
 			return query;
-
 		} catch (Exception ex) {
 			LOGGER.error("[getQuery]", ex);
 		}
-
 		return null;
 	}
 

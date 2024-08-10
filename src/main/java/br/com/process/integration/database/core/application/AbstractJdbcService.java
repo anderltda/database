@@ -50,7 +50,8 @@ public abstract class AbstractJdbcService<V> extends AbstractJdbcRepository<V> i
 	}
 
 	@Override
-	public PagedModel<V> executeQueryNative(Map<String, Object> filter, String invokerQuery, Integer page, Integer size, List<String> sortList, String sortOrder) {
+	public PagedModel<V> executeQueryNative(Map<String, Object> filter, String invokerQuery, Integer page, Integer size, 
+			List<String> sortList, String sortOrder) {
 
 		try {
 			

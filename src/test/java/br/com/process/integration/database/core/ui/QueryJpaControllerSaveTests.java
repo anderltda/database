@@ -59,12 +59,19 @@ class QueryJpaControllerSaveTests {
 	
 	@BeforeAll
 	void setupOnce() {
-		ids = new ArrayList<>();
+		
+		if(ids == null) {
+			ids = new ArrayList<>();
+		}
 	}
 
 	@BeforeEach
-	void setup() {
-		id = 0l;
+	void setup() { 
+		
+		if(id == null) {
+			id = 0l;
+		}
+		
 	}
 
 	@Test
@@ -136,9 +143,101 @@ class QueryJpaControllerSaveTests {
 		assertNotNull(entity.getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getId());
 	}
 
-
 	@Test
-	@Order(2)
+	@Order(3)
+	void teste_valida_o_save_anterior_order_2() {
+
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/EntityTest1/" + id;
+		
+		EntityTest1 entity = getSingleResult(url);
+		
+		assertNotNull(entity);
+		assertEquals("Ricardo", entity.getName());
+		assertEquals(22, entity.getAge());
+		assertEquals(1.80, entity.getHeight());
+	}
+	
+	@Test
+	@Order(4)
+	void testSaveUpdate() {
+
+		String url = "http://localhost:" + port + "/v1/api-rest-database/save/EntityTest1";
+
+		String[] text = new String[5];
+		Integer[] inteiro = new Integer[5];
+		Double[] dobro = new Double[5];
+		String[] localDate = new String[5];
+		String[] localTime = new String[5];
+
+		text[0] = "Manolo";
+		inteiro[0] = 70;
+		dobro[0] = 1.40;
+		localDate[0] = "01-01-1990";
+		localTime[0] = "2024-11-01T08:00:00";
+
+		text[1] = "Verde";
+		inteiro[1] = 12344;
+		dobro[1] = 25.5;
+		localDate[1] = "01-07-2024";
+		localTime[1] = "2024-01-07T16:41:43";
+
+		text[2] = "Gato";
+		inteiro[2] = 24;
+		dobro[2] = 24.6;
+		localDate[2] = "01-08-2024";
+		localTime[2] = "2024-01-08T17:32:32";
+
+		text[3] = "Banana";
+		inteiro[3] = 45;
+		dobro[3] = 103.12;
+		localDate[3] = "10-12-2024";
+		localTime[3] = "2024-03-29T18:23:21";
+
+		text[4] = "Vassoura";
+		dobro[4] = 22.9;
+		inteiro[4] = 26;
+		localDate[4] = "01-10-2024";
+		localTime[4] = "2024-01-10T19:14:10";
+
+		EntityTest1 entityTest1 = gerarEntity(text, inteiro, dobro, localDate, localTime);
+		
+		entityTest1.setId(id);
+
+		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
+
+		String json = gson.toJson(entityTest1);
+
+		List<String> responses = postJson(url, json);
+
+		EntityTest1 entity = gson.fromJson(responses.get(1), EntityTest1.class);
+
+		id = entity.getId();
+				
+		assertEquals(responses.get(0), HttpStatus.OK.toString());
+		assertNotNull(entity.getId());
+		assertNotNull(entity.getEntityTest2().getId());
+		assertNotNull(entity.getEntityTest2().getEntityTest3().getId());
+		assertNotNull(entity.getEntityTest2().getEntityTest3().getEntityTest4().getId());
+		assertNotNull(entity.getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getId());
+	}
+	
+	@Test
+	@Order(5)
+	void teste_valida_o_save_anterior_order_4() {
+
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/EntityTest1/" + id;
+		
+		EntityTest1 entity = getSingleResult(url);
+		
+		assertNotNull(entity);
+		assertEquals("Manolo", entity.getName());
+		assertEquals(70, entity.getAge());
+		assertEquals(1.40, entity.getHeight());
+	}
+	
+	@Test
+	@Order(6)
 	void testSaveAll() {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/save/all/EntityTest1";
@@ -306,7 +405,6 @@ class QueryJpaControllerSaveTests {
 
 		Type userListType = new TypeToken<List<EntityTest1>>(){}.getType();
 
-		// Desserializa o JSON para uma lista de User
 		List<EntityTest1> lists = gson.fromJson(responses.get(1), userListType);
 
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
@@ -341,6 +439,36 @@ class QueryJpaControllerSaveTests {
 		ids.add(lists.get(0).getId());
 		ids.add(lists.get(1).getId());
 		ids.add(lists.get(2).getId());
+	}
+	
+	@Test
+	@Order(7)
+	void teste_valida_o_save_anterior_order_7() {
+
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/EntityTest1/" + ids.get(0);
+		
+		EntityTest1 entity = getSingleResult(url);
+		
+		assertEquals("Carlos Alberto", entity.getName());
+		assertEquals(55, entity.getAge());
+		assertEquals(1.77, entity.getHeight());
+		assertEquals(LocalDate.parse("1970-09-22", DateTimeFormatter.ISO_LOCAL_DATE), entity.getBirthDate());
+		assertEquals(LocalDateTime.parse("2024-04-30T23:50:54", DateTimeFormatter.ISO_LOCAL_DATE_TIME), entity.getProhibited());
+
+		assertEquals("Preto", entity.getEntityTest2().getColor());
+		assertEquals(234, entity.getEntityTest2().getHex());
+		assertEquals(25.5, entity.getEntityTest2().getCost());
+		assertEquals(LocalDate.parse("2024-01-10", DateTimeFormatter.ISO_LOCAL_DATE), entity.getEntityTest2().getDateInclusion());
+
+		assertEquals("Capivara", entity.getEntityTest2().getEntityTest3().getAnimal());
+		assertEquals(72, entity.getEntityTest2().getEntityTest3().getNumber());
+
+		assertEquals("Damasco", entity.getEntityTest2().getEntityTest3().getEntityTest4().getFruit());
+		assertEquals(13, entity.getEntityTest2().getEntityTest3().getEntityTest4().getNutritiou());
+		assertEquals(LocalDateTime.parse("2024-04-09T18:23:21", DateTimeFormatter.ISO_LOCAL_DATE_TIME), entity.getEntityTest2().getEntityTest3().getEntityTest4().getDateInclusionTime());
+
+		assertEquals("Cama", entity.getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getObject());
+		assertEquals(55, entity.getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getValue());
 	}
 
 	public EntityTest1 gerarEntity(String[] text, Integer[] inteiro, Double[] dobro, String[] localDate,
@@ -405,15 +533,32 @@ class QueryJpaControllerSaveTests {
 			throw new RuntimeException("Failed to post JSON. Status code: " + response.getStatusCode());
 		}
 	}
+	
+	public EntityTest1 getSingleResult(String url) {
+		
+		HttpHeaders headers = new HttpHeaders();
+		
+		headers.set("Accept", "application/json");
 
-	public LocalDateTime geraDataLocalTime(String dateTimeString) {
-		LocalDateTime dateTime = LocalDateTime.parse(dateTimeString);
-		return dateTime;
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+
+		ResponseEntity<EntityTest1> response = restTemplate.exchange(url, HttpMethod.GET, entity, EntityTest1.class);
+
+		if (response.getStatusCode().is2xxSuccessful()) {
+			return response.getBody();
+		} else {
+			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode());
+		}
 	}
 
 	public LocalDate geraLocalDate(String dateString) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
 		LocalDate date = LocalDate.parse(dateString, formatter);
 		return date;
+	}
+
+	public LocalDateTime geraDataLocalTime(String dateTimeString) {
+		LocalDateTime dateTime = LocalDateTime.parse(dateTimeString);
+		return dateTime;
 	}
 }

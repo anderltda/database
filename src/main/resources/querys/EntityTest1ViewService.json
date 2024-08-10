@@ -1,0 +1,37 @@
+[
+	{
+		"name": "teste_busca_com_condicoes_diversars",
+		"select": "SELECT t1.*, t2.*, t3.*, t4.*, t5.* FROM entity_test_1 t1",
+		"join": [
+				"INNER JOIN entity_test_2 t2 ON t2.id_entity_test_2 = t1.id_entity_test_2",
+				"INNER JOIN entity_test_3 t3 ON t3.id_entity_test_3 = t2.id_entity_test_3",
+				"INNER JOIN entity_test_4 t4 ON t4.id_entity_test_4 = t3.id_entity_test_4",
+				"INNER JOIN entity_test_5 t5 ON t5.id_entity_test_5 = t4.id_entity_test_5"
+		],
+		"where": [
+		    "AND t1.id_entity_test_1 {idEntityTest1_op} :idEntityTest1",
+			"AND t1.name {name_op} :name",
+			"AND t1.age {age_op} :age",
+			"AND t1.birth_date {birthDate_op} :birthDate",
+			"AND t1.height {height_op} :height",
+			"AND t1.prohibited {prohibited_op} :prohibited"
+		],
+		"orderby": ":sortList :sortOrders"
+	},
+	
+	{
+		"name": "teste_busca_com_equal_validar_orderby",
+		"select": "SELECT t1.*, t2.*, t3.*, t4.*, t5.* FROM entity_test_1 t1",
+		"join": [
+				"INNER JOIN entity_test_2 t2 ON t2.id_entity_test_2 = t1.id_entity_test_2",
+				"INNER JOIN entity_test_3 t3 ON t3.id_entity_test_3 = t2.id_entity_test_3",
+				"INNER JOIN entity_test_4 t4 ON t4.id_entity_test_4 = t3.id_entity_test_4",
+				"INNER JOIN entity_test_5 t5 ON t5.id_entity_test_5 = t4.id_entity_test_5"
+		],
+		"where": [
+			"AND t1.name {name_op} :name"
+		],
+		"orderby": "t1.id_entity_test_1 ASC"
+	}	
+
+]
