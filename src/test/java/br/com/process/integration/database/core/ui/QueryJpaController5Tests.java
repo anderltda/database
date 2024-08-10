@@ -30,7 +30,6 @@ import com.google.gson.GsonBuilder;
 
 import br.com.process.integration.database.core.ui.adapter.LocalDateAdapter;
 import br.com.process.integration.database.core.ui.adapter.LocalDateTimeAdapter;
-import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.domain.entity.EntityTest1;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -47,12 +46,8 @@ class QueryJpaController5Tests {
 	@Autowired
 	private QueryJpaController queryJpaController;
 	
-	static String endpoint;
-	
 	@BeforeAll
-	void setupOnce() {
-		endpoint = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?";
-	}
+	void setupOnce() { }
 	
 	@Test
 	@Order(1)
@@ -63,17 +58,7 @@ class QueryJpaController5Tests {
 	@Test
 	void teste_busca_com_equal_pelo_entityTest2_por_color_por_ordernacao_entityTest2() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
-
-		url.append("entityTest2.color=").append("Preto").append("&");
-		url.append("entityTest2.color_op=").append(Constants.HTML_IGUAL).append("&");
-		
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(10).append("&");
-
-		url.append("sortList=").append("entityTest2.dateInclusion, entityTest2.hex").append("&");
-		url.append("sortOrders=").append("desc,asc");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?entityTest2.color=Preto&entityTest2.color_op=eq&page=0&size=10&sortList=entityTest2.dateInclusion,entityTest2.hex&sortOrders=desc,asc";
 		
 		List<EntityTest1> list = getAll(url.toString());
 
@@ -88,19 +73,7 @@ class QueryJpaController5Tests {
 	@Test
 	void teste_busca_com_in_pelo_entityTest3_por_animal() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
-		
-		url.append("entityTest2.entityTest3.animal=").append("Cavalo").append(",").append("Gato").append(",")
-				.append("Papagaio").append("&");
-		
-		url.append("entityTest2.entityTest3.animal_op=").append(Constants.HTML_IN).append("&");
-		
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(10).append("&");
-		
-		url.append("sortList=").append("entityTest2.color, entityTest2.entityTest3.animal").append("&");
-		url.append("sortOrders=").append("desc,asc");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?entityTest2.entityTest3.animal=Cavalo,Gato,Papagaio&entityTest2.entityTest3.animal_op=in&page=0&size=10&sortList=entityTest2.color,entityTest2.entityTest3.animal&sortOrders=desc,asc";
 
 		List<EntityTest1> list = getAll(url.toString());
 
@@ -124,23 +97,14 @@ class QueryJpaController5Tests {
 		assertEquals("Cavalo", list.get(2).getEntityTest2().getEntityTest3().getAnimal());
 		assertEquals("Papagaio", list.get(3).getEntityTest2().getEntityTest3().getAnimal());
 		assertEquals("Gato", list.get(4).getEntityTest2().getEntityTest3().getAnimal());
-
 	}
 
 	@Test
 	void teste_busca_com_equal_pelo_entityTest3_por_animal() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
-
-		url.append("entityTest2.entityTest3.animal=").append("Capivara").append("&");
-		url.append("entityTest2.entityTest3.animal_op=").append(Constants.HTML_IGUAL).append("&");
-		
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(10).append("&");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?entityTest2.entityTest3.animal=Capivara&entityTest2.entityTest3.animal_op=eq";
 		
 		List<EntityTest1> list = getAll(url.toString());
-		System.out.println(url.toString());
 
 		list.forEach(entity -> {
 			assertEquals("Carlos Alberto", entity.getName());
@@ -153,17 +117,9 @@ class QueryJpaController5Tests {
 	@Test
 	void teste_busca_com_equal_pelo_entityTest4_por_fruit() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
-
-		url.append("entityTest2.entityTest3.entityTest4.fruit=").append("Pitanga").append("&");
-		url.append("entityTest2.entityTest3.entityTest4.fruit_op=").append(Constants.HTML_IGUAL).append("&");
-		
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(10).append("&");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?entityTest2.entityTest3.entityTest4.fruit=Pitanga&entityTest2.entityTest3.entityTest4.fruit_op=eq&page=0&size=10";
 
 		List<EntityTest1> list = getAll(url.toString());
-		System.out.println(url.toString());
 
 		assertNotNull(list);
 		assertEquals(2, list.size());
@@ -173,14 +129,7 @@ class QueryJpaController5Tests {
 	@Test
 	void teste_busca_com_equal_pelo_entityTest5_por_fruit() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
-
-		url.append("entityTest2.entityTest3.entityTest4.entityTest5.object=").append("Cama").append("&");
-		url.append("entityTest2.entityTest3.entityTest4.entityTest5.object_op=").append(Constants.HTML_IGUAL).append("&");
-		
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(10).append("&");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?entityTest2.entityTest3.entityTest4.entityTest5.object=Cama&entityTest2.entityTest3.entityTest4.entityTest5.object_op=eq&page=0&size=10&sortList=name&sortOrders=desc";
 
 		List<EntityTest1> list = getAll(url.toString());
 
@@ -196,17 +145,7 @@ class QueryJpaController5Tests {
 	@Test
 	void teste_busca_com_like_pelo_entityTest5_por_fruit() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
-
-		url.append("entityTest2.entityTest3.entityTest4.entityTest5.object=").append("c*").append("&");
-		url.append("entityTest2.entityTest3.entityTest4.entityTest5.object_op=").append(Constants.HTML_LIKE).append("&");
-		
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(10).append("&");
-		
-		url.append("sortList=").append("entityTest2.dateInclusion, entityTest2.hex").append("&");
-		url.append("sortOrders=").append("desc,asc");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?entityTest2.entityTest3.entityTest4.entityTest5.object=c*&entityTest2.entityTest3.entityTest4.entityTest5.object_op=lk&page=0&size=10&sortList=entityTest2.dateInclusion,entityTest2.hex&sortOrders=desc,asc";
 
 		List<EntityTest1> list = getAll(url.toString());
 	

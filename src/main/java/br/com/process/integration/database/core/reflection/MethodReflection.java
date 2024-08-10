@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -274,53 +273,49 @@ public class MethodReflection {
 	}
 	
 	public static Object[] getMethodArgs(Class<?> clazz, String methodName, Map<String, Object> param) {
+	    try {
+	        Method targetMethod = findMatchingMethod(clazz, methodName, param);
+	        if (targetMethod != null) {
+	            return buildMethodArgs(targetMethod.getParameterTypes(), param);
+	        }
+	    } catch (Exception ex) {
+	        LOGGER.error("[getMethodArgs]", ex);
+	    }
+	    return new Object[0];
+	}
 
-		Object[] methodArgs = null;
+	private static Method findMatchingMethod(Class<?> clazz, String methodName, Map<String, Object> param) {
+	    for (Method method : clazz.getDeclaredMethods()) {
+	        if (method.getName().equals(methodName) && hasMatchingParameters(method, param)) {
+	            return method;
+	        }
+	    }
+	    return null;
+	}
 
-		try {
+	private static boolean hasMatchingParameters(Method method, Map<String, Object> param) {
+	    Class<?>[] methodParameterTypes = method.getParameterTypes();
+	    if (param.size() != methodParameterTypes.length) {
+	        return false;
+	    }
 
-			Method[] methods = clazz.getDeclaredMethods();
-			Method targetMethod = null;
-			Class<?>[] parameterTypes = null;
+	    int index = 0;
+	    for (Object value : param.values()) {
+	        if (!isCompatibleType(methodParameterTypes[index++], value)) {
+	            return false;
+	        }
+	    }
+	    return true;
+	}
 
-			for (Method method : methods) {
-				if (method.getName().equals(methodName)) {
-					Class<?>[] methodParameterTypes = method.getParameterTypes();
-					if (param.size() == methodParameterTypes.length) {
-						boolean match = true;
-						int index = 0;
-						for (Entry<String, Object> entry : param.entrySet()) {
-							Object value = entry.getValue();
-							Class<?> paramType = methodParameterTypes[index++];
-							if (!isCompatibleType(paramType, value)) {
-								match = false;
-								break;
-							}
-						}
-						if (match) {
-							targetMethod = method;
-							parameterTypes = methodParameterTypes;
-							break;
-						}
-					}
-				}
-			}
-
-			if (targetMethod != null) {
-				methodArgs = new Object[parameterTypes.length];
-				int index = 0;
-				for (Entry<String, Object> entry : param.entrySet()) {
-					Object value = entry.getValue();
-					Class<?> paramType = parameterTypes[index];
-					methodArgs[index++] = DynamicTypeConverter.convert(paramType, value);
-				}
-			}
-
-		} catch (Exception ex) {
-			LOGGER.error("[getMethodArgs]", ex);
-		}
-
-		return methodArgs;
+	private static Object[] buildMethodArgs(Class<?>[] parameterTypes, Map<String, Object> param) {
+	    Object[] methodArgs = new Object[parameterTypes.length];
+	    int index = 0;
+	    for (Object value : param.values()) {
+	        methodArgs[index] = DynamicTypeConverter.convert(parameterTypes[index], value);
+	        index++;
+	    }
+	    return methodArgs;
 	}
 	
 	private static boolean isCompatibleType(Class<?> paramType, Object value) {
@@ -332,10 +327,10 @@ public class MethodReflection {
 		if (paramType.isPrimitive()) {
 			return isPrimitiveMatch(paramType, value);
 		}
-
-		if (paramType == LocalDateTime.class && value instanceof String) {
+		
+		if (paramType == LocalDateTime.class && value instanceof String string) {
 			try {
-				LocalDateTime.parse((String) value, DateTimeFormatter.ISO_DATE_TIME);
+				LocalDateTime.parse(string, DateTimeFormatter.ISO_DATE_TIME);
 				return true;
 			} catch (Exception e) {
 				return false;
@@ -344,26 +339,20 @@ public class MethodReflection {
 
 		return false;
 	}
-
+	
 	private static boolean isPrimitiveMatch(Class<?> paramType, Object value) {
-		if (paramType.isPrimitive()) {
-			if (paramType == int.class && value instanceof Integer)
-				return true;
-			if (paramType == long.class && value instanceof Long)
-				return true;
-			if (paramType == double.class && value instanceof Double)
-				return true;
-			if (paramType == float.class && value instanceof Float)
-				return true;
-			if (paramType == boolean.class && value instanceof Boolean)
-				return true;
-			if (paramType == char.class && value instanceof Character)
-				return true;
-			if (paramType == byte.class && value instanceof Byte)
-				return true;
-			if (paramType == short.class && value instanceof Short)
-				return true;
-		}
-		return false;
+
+		Map<Class<?>, Class<?>> primitiveToWrapper = Map.of(
+				int.class, Integer.class, 
+				long.class, Long.class,
+				double.class, Double.class, 
+				float.class, Float.class, 
+				boolean.class, Boolean.class, 
+				char.class, Character.class, 
+				byte.class, Byte.class, 
+				short.class, Short.class);
+
+		return paramType.isPrimitive() && primitiveToWrapper.get(paramType).isInstance(value);
 	}
+	
 }

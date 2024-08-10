@@ -33,12 +33,8 @@ class QueryJpaControllerDeleteTests {
 	@Autowired
 	private CrudJpaController crudJpaController;
 	
-	static String endpoint;
-	
 	@BeforeAll
-	void setupOnce() {
-		endpoint = "http://localhost:" + port + "/v1/api-rest-database/delete";
-	}
+	void setupOnce() { }
 
 	@Test
 	@Order(1)
@@ -59,7 +55,7 @@ class QueryJpaControllerDeleteTests {
 
 		json = json.substring(0, json.length() - 1) + "]";
 
-		String url = endpoint + "/all/id/EntityTest1";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/delete/all/id/EntityTest1";
 
 		String statusCode = deleteResource(url, json);
 
@@ -70,7 +66,7 @@ class QueryJpaControllerDeleteTests {
 	@Order(3)
 	void testDeleteForId() {
 
-		String url = endpoint + "/id/EntityTest1/" + QueryJpaControllerSaveTests.id;
+		String url = "http://localhost:" + port + "/v1/api-rest-database/delete/id/EntityTest1/" + QueryJpaControllerSaveTests.id;
 
 		String statusCode = deleteResource(url);
 
@@ -81,7 +77,7 @@ class QueryJpaControllerDeleteTests {
 	@Order(4)
 	void testDeleteForAll() {
 
-		String url = endpoint + "/all/EntityTest1";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/delete/all/EntityTest1";
 
 		String statusCode = deleteResource(url);
 

@@ -19,6 +19,8 @@ public interface JpaService<T, E> {
 
 	public E findBySingle(Map<String, Object> filter, String methodQueryJPQL); 
 	
+	public E findBySingle(Map<String, Object> filter);
+	
 	public Long count(Map<String, Object> filter, String methodQueryJPQL);
 
 	public List<E> findAllById(List<T> ids);

@@ -46,12 +46,8 @@ class QueryJpaController6Tests {
 	@Autowired
 	private QueryJpaController queryJpaController;
 	
-	static String endpoint;
-	
 	@BeforeAll
-	void setupOnce() {
-		endpoint = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/EntityTest1";
-	}
+	void setupOnce() { }
 
 	@Test
 	@Order(1)
@@ -62,13 +58,9 @@ class QueryJpaController6Tests {
 	@Test
 	void teste_busca_com_equal_pelo_name_unico_registro() {
 
-		StringBuilder url = new StringBuilder();
-		url.append("http://localhost:" + port + "/v1/api-rest-database/find/single/jpql/EntityTest1/buscaComEqualPeloName?");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/single/jpql/EntityTest1/buscaComEqualPeloName?name=Anderson";
 
-		url.append("name=").append("Anderson");
-
-		EntityTest1 entity = getSingleResult(url.toString());
-		System.out.println(url.toString());
+		EntityTest1 entity = getSingleResult(url);
 
 		assertNotNull(entity.getId());
 		assertEquals("Anderson", entity.getName());
@@ -85,14 +77,9 @@ class QueryJpaController6Tests {
 	@Test
 	void teste_busca_com_equal_pelo_name_unico_registro_trazend_mais_de_um() {
 
-		StringBuilder url = new StringBuilder();
-		url.append("http://localhost:" + port + "/v1/api-rest-database/find/single/jpql/EntityTest1/buscaComLikePeloName?");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/single/jpql/EntityTest1/buscaComLikePeloName?name=Paulo";
 
-		url.append("name=").append("Paulo");
-
-		getSingleResult(url.toString());
-		
-		System.out.println(url.toString());
+		getSingleResult(url);
 
 		assertThatExceptionOfType(InvocationTargetException.class).isThrownBy(() -> {
 			throw new InvocationTargetException(null);
@@ -110,15 +97,9 @@ class QueryJpaController6Tests {
 	@Test
 	void teste_busca_com_like_pelo_name() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint + "/buscaComLikePeloName?");
-		
-		url.append("name=").append("ar").append("&");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/EntityTest1/buscaComLikePeloName?name=ar&sortList=birthDate,name&sortOrders=asc,desc";
 
-		url.append("sortList=").append("birthDate, name").append("&");
-		url.append("sortOrders=").append("asc, desc");
-
-		List<EntityTest1> list = getAll(url.toString());
+		List<EntityTest1> list = getAll(url);
 
 		assertNotNull(list);
 		assertEquals(5, list.size());
@@ -132,13 +113,9 @@ class QueryJpaController6Tests {
 	@Test
 	void teste_busca_all_ordernacao_birthDate_asc_name_desc() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint + "/buscaAll?");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/EntityTest1/buscaAll?sortList=birthDate,name&sortOrders=asc,desc";
 
-		url.append("sortList=").append("birthDate, name").append("&");
-		url.append("sortOrders=").append("asc, desc");
-
-		List<EntityTest1> list = getAll(url.toString());
+		List<EntityTest1> list = getAll(url);
 
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -157,13 +134,9 @@ class QueryJpaController6Tests {
 	@Test
 	void teste_busca_all_ordernacao_birthDate_desc_name_asc() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint + "/buscaAll?");
-		
-		url.append("sortList=").append("birthDate, name").append("&");
-		url.append("sortOrders=").append("desc, asc");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/EntityTest1/buscaAll?sortList=birthDate,name&sortOrders=desc,asc";
 
-		List<EntityTest1> list = getAll(url.toString());
+		List<EntityTest1> list = getAll(url);
 
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -182,13 +155,9 @@ class QueryJpaController6Tests {
 	@Test
 	void teste_busca_all_ordernacao_name_asc_birthDate_desc() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint + "/buscaAll?");
-		
-		url.append("sortList=").append("name, birthDate").append("&");
-		url.append("sortOrders=").append("asc, desc");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/EntityTest1/buscaAll?sortList=name,birthDate&sortOrders=asc,desc";
 
-		List<EntityTest1> list = getAll(url.toString());
+		List<EntityTest1> list = getAll(url);
 		
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -208,13 +177,9 @@ class QueryJpaController6Tests {
 	@Test
 	void teste_busca_all_ordernacao_name_desc_birthDate_asc() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint + "/buscaAll?");
-		
-		url.append("sortList=").append("name, birthDate").append("&");
-		url.append("sortOrders=").append("desc, asc");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/EntityTest1/buscaAll?sortList=name,birthDate&sortOrders=desc,asc";
 
-		List<EntityTest1> list = getAll(url.toString());
+		List<EntityTest1> list = getAll(url);
 		
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -233,16 +198,9 @@ class QueryJpaController6Tests {
 	@Test
 	void teste_nenhum_registro_encontrado() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint + "/buscaComLikePeloName?");
-
-		url.append("name=").append("Silva").append("&");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/EntityTest1/buscaComLikePeloName?name=Silva&sortList=name,birthDate&sortOrders=desc,asc";
 		
-		url.append("sortList=").append("name, birthDate").append("&");
-		url.append("sortOrders=").append("desc, asc");
-		
-		List<EntityTest1> list = getAll(url.toString());
-		System.out.println(url.toString());
+		List<EntityTest1> list = getAll(url);
 		
 		assertNull(list);
 	}
@@ -250,13 +208,9 @@ class QueryJpaController6Tests {
 	@Test
 	void teste_count_maior_prohibited() {
 
-		StringBuilder url = new StringBuilder();
-		url.append("http://localhost:" + port + "/v1/api-rest-database/count/jpql/EntityTest1/countMaiorProhibited?");
-
-		url.append("prohibited=").append("2024-11-01T08:00:00");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/count/jpql/EntityTest1/countMaiorProhibited?prohibited=2024-11-01T08:00:00";
 		
-		Long count = getCountResult(url.toString());
-		System.out.println(url.toString());
+		Long count = getCountResult(url);
 		
 		assertEquals(4, count);
 	}

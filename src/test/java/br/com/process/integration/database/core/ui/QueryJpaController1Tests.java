@@ -56,12 +56,10 @@ class QueryJpaController1Tests {
 
 	public static Long id;
 	public static List<Long> ids;
-	static String endpoint;
 	
 	@BeforeAll
 	void setupOnce() {
 		ids = new ArrayList<>();
-		endpoint = "http://localhost:" + port + "/v1/api-rest-database/save";
 	}
 
 	@BeforeEach
@@ -80,7 +78,7 @@ class QueryJpaController1Tests {
 	@Order(2)
 	void testSave() {
 
-		String url = endpoint + "/EntityTest1";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/save/EntityTest1";
 
 		String[] text = new String[5];
 		Integer[] inteiro = new Integer[5];
@@ -143,7 +141,7 @@ class QueryJpaController1Tests {
 	@Order(3)
 	void testSaveFlush() {
 
-		String url = endpoint + "/flush/EntityTest1";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/save/flush/EntityTest1";
 
 		String[] text = new String[5];
 		Integer[] inteiro = new Integer[5];
@@ -204,7 +202,7 @@ class QueryJpaController1Tests {
 	@Order(4)
 	void testSaveAll() {
 
-		String url = endpoint + "/all/EntityTest1";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/save/all/EntityTest1";
 
 		List<EntityTest1> list = new ArrayList<>();
 
@@ -410,7 +408,7 @@ class QueryJpaController1Tests {
 	@Order(5)
 	void testSaveAllFlush() {
 
-		String url = endpoint + "/all/flush/EntityTest1";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/save/all/flush/EntityTest1";
 
 		List<EntityTest1> list = new ArrayList<>();
 

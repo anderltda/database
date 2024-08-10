@@ -32,7 +32,6 @@ import com.google.gson.GsonBuilder;
 
 import br.com.process.integration.database.core.ui.adapter.LocalDateAdapter;
 import br.com.process.integration.database.core.ui.adapter.LocalDateTimeAdapter;
-import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.domain.entity.EntityTest1;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -49,12 +48,8 @@ class QueryJpaController4Tests {
 	@Autowired
 	private QueryJpaController queryJpaController;
 	
-	static String endpoint;
-	
 	@BeforeAll
-	void setupOnce() {
-		endpoint = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?";
-	}
+	void setupOnce() {}
 	
 	@Test
 	@Order(1)
@@ -65,19 +60,9 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_com_equal_pelo_name() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?name=Anderson&name_op=eq&page=0&size=10&sortList=name&sortOrders=asc";
 
-		url.append("name=").append("Anderson").append("&");
-		url.append("name_op=").append(Constants.HTML_IGUAL).append("&");
-
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(10).append("&");
-
-		url.append("sortList=").append("name").append("&");
-		url.append("sortOrders=").append("asc");
-		
-		List<EntityTest1> list = getAll(url.toString());
+		List<EntityTest1> list = getAll(url);
 		
 		list.forEach(entity -> {
 			assertNotNull(entity.getId());
@@ -97,25 +82,9 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_com_equal_pelo_age_e_birthDate_e_prohibited_ordernacao_name_asc() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&prohibited=2024-11-01T08:00:00&prohibited_op=eq&page=0&size=10&sortList=name&sortOrders=asc";
 
-		url.append("age=").append("22").append("&");
-		url.append("age_op=").append(Constants.HTML_IGUAL).append("&");
-
-		url.append("birthDate=").append("1990-01-01").append("&");
-		url.append("birthDate_op=").append(Constants.HTML_IGUAL).append("&");
-
-		url.append("prohibited=").append("2024-11-01T08:00:00").append("&");
-		url.append("prohibited_op=").append(Constants.HTML_IGUAL).append("&");
-
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(10).append("&");
-
-		url.append("sortList=").append("name").append("&");
-		url.append("sortOrders=").append("asc");
-
-		List<EntityTest1> list = getAll(url.toString());
+		List<EntityTest1> list = getAll(url);
 
 		assertNotNull(list);
 		assertEquals(2, list.size());
@@ -126,25 +95,9 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_notEqual_do_teste_busca_com_equal_pelo_age_e_birthDate_e_prohibited_ordernacao_name_asc() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?age=22&age_op=ne&birthDate=1990-01-01&birthDate_op=ne&prohibited=2024-11-01T08:00:00&prohibited_op=ne&page=0&size=10&sortList=name,id&sortOrders=asc,desc";
 
-		url.append("age=").append("22").append("&");
-		url.append("age_op=").append(Constants.HTML_DIFERENTE).append("&");
-
-		url.append("birthDate=").append("1990-01-01").append("&");
-		url.append("birthDate_op=").append(Constants.HTML_DIFERENTE).append("&");
-
-		url.append("prohibited=").append("2024-11-01T08:00:00").append("&");
-		url.append("prohibited_op=").append(Constants.HTML_DIFERENTE).append("&");
-
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(10).append("&");
-
-		url.append("sortList=").append("name,id").append("&");
-		url.append("sortOrders=").append("asc,desc");
-
-		List<EntityTest1> list = getAll(url.toString());
+		List<EntityTest1> list = getAll(url);
 
 		assertNotNull(list);
 		assertEquals(7, list.size());
@@ -159,69 +112,26 @@ class QueryJpaController4Tests {
 
 	@Test
 	void teste_notEqual_com_name() {
-
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
-
-		url.append("name=").append("Carlos").append("&");
-		url.append("name_op=").append(Constants.HTML_DIFERENTE).append("&");
-
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(10).append("&");
-
-		url.append("sortList=").append("name").append("&");
-		url.append("sortOrders=").append("asc");
 		
-		List<EntityTest1> list = getAll(url.toString());
-
-		assertNotNull(list);
-		assertEquals(9, list.size());
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?name=Carlos&name_op=ne&page=0&size=10&sortList=name&sortOrders=asc";
+		
+		testes_single_parameterized_one(url, 9);
 	}
 
 	@Test
 	void teste_busca_com_equal_pelo_age_e_birthDate_e_height() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&height=1.8&height_op=eq&page=0&size=10&sortList=name,height&sortOrders=asc,desc";
 
-		url.append("age=").append("22").append("&");
-		url.append("age_op=").append(Constants.HTML_IGUAL).append("&");
-
-		url.append("birthDate=").append("1990-01-01").append("&");
-		url.append("birthDate_op=").append(Constants.HTML_IGUAL).append("&");
-
-		url.append("height=").append("1.8").append("&");
-		url.append("height_op=").append(Constants.HTML_IGUAL).append("&");
-
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(10).append("&");
-
-		url.append("sortList=").append("name,height").append("&");
-		url.append("sortOrders=").append("asc,desc");
-
-		List<EntityTest1> list = getAll(url.toString());
-
-		list.forEach(entity -> {
-			assertEquals("Ricardo", entity.getName());
-		});
-
-		assertNotNull(list);
-		assertEquals(1, list.size());
+		testes_single_parameterized_other(url, "Ricardo", 1);
 	}
 
 	@Test
 	void teste_busca_com_equal_e_prohibited_e_ordernado_por_name_asc() {
-
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
-
-		url.append("prohibited=").append("2024-11-01T08:00:00").append("&");
-		url.append("prohibited_op=").append(Constants.HTML_IGUAL).append("&");
-
-		url.append("sortList=").append("name").append("&");
-		url.append("sortOrder=").append("asc");
 		
-		List<EntityTest1> list = getAll(url.toString());
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?prohibited=2024-11-01T08:00:00&prohibited_op=eq&sortList=name&sortOrder=asc";
+		
+		List<EntityTest1> list = getAll(url);
 		
 		assertNotNull(list);
 		assertEquals(3, list.size());
@@ -232,20 +142,10 @@ class QueryJpaController4Tests {
 	
 	@Test
 	void teste_busca_com_like_pelo_name_asterico_esquerda_e_direita_ordernado_por_birthDate_desc_e_name_asc() {
-
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
-
-		url.append("name=").append("*ar*").append("&");
-		url.append("name_op=").append(Constants.HTML_LIKE).append("&");
-
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(10).append("&");
-
-		url.append("sortList=").append("birthDate,name").append("&");
-		url.append("sortOrders=").append("desc,asc");
 		
-		List<EntityTest1> list = getAll(url.toString());
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?name=*ar*&name_op=lk&page=0&size=10&sortList=birthDate,name&sortOrders=desc,asc";
+		
+		List<EntityTest1> list = getAll(url);
 
 		assertNotNull(list);
 		assertEquals(5, list.size());
@@ -259,45 +159,17 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_por_like_pelo_name_asterico_direita() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
-
-		url.append("name=").append("ar*").append("&");
-		url.append("name_op=").append(Constants.HTML_LIKE).append("&");
-
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(10).append("&");
-
-		url.append("sortList=").append("name").append("&");
-		url.append("sortOrders=").append("asc");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?name=ar*&name_op=lk&page=0&size=10&sortList=name&sortOrders=asc";
 		
-		List<EntityTest1> list = getAll(url.toString());
-
-		list.forEach(entity -> {
-			assertEquals("Ariovaldo", entity.getName());
-		});
-
-		assertNotNull(list);
-		assertEquals(1, list.size());
+		testes_single_parameterized_other(url, "Ariovaldo", 1);
 	}
 
 	@Test
 	void teste_busca_por_in_com_birthDate_ordernado_com_age_asc() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
-
-		url.append("birthDate=").append("1956-08-30").append(",").append("1986-09-09").append(",").append("1990-09-09")
-				.append("&");
-		url.append("birthDate_op=").append(Constants.HTML_IN).append("&");
-
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(10).append("&");
-
-		url.append("sortList=").append("age").append("&");
-		url.append("sortOrders=").append("asc");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?birthDate=1956-08-30,1986-09-09,1990-09-09&birthDate_op=in&page=0&size=10&sortList=age&sortOrders=asc";
 		
-		List<EntityTest1> list = getAll(url.toString());
+		List<EntityTest1> list = getAll(url);
 
 		assertNotNull(list);
 		assertEquals(3, list.size());
@@ -308,20 +180,10 @@ class QueryJpaController4Tests {
 
 	@Test
 	void teste_busca_por_in_com_birthDate_ordernado_com_age_desc() {
-
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
-
-		url.append("birthDate=").append("1956-08-30").append(",").append("1990-01-01").append(",").append("1990-09-09").append("&");
-		url.append("birthDate_op=").append(Constants.HTML_IN).append("&");
-
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(10).append("&");
-
-		url.append("sortList=").append("age,height").append("&");
-		url.append("sortOrders=").append("desc,asc");
 		
-		List<EntityTest1> list = getAll(url.toString());
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?birthDate=1956-08-30,1990-01-01,1990-09-09&birthDate_op=in&page=0&size=10&sortList=age,height&sortOrders=desc,asc";
+		
+		List<EntityTest1> list = getAll(url);
 
 		assertNotNull(list);
 		assertEquals(4, list.size());
@@ -333,64 +195,26 @@ class QueryJpaController4Tests {
 
 	@Test
 	void teste_busca_por_in_com_age() {
+		
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?age=55,12,22&age_op=in&page=0&size=10&sortList=age&sortOrders=desc";
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
-
-		url.append("age=").append("55").append(",").append("12").append(",").append("22").append("&");
-		url.append("age_op=").append(Constants.HTML_IN).append("&");
-
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(10).append("&");
-
-		url.append("sortList=").append("age").append("&");
-		url.append("sortOrders=").append("desc");
-
-		List<EntityTest1> list = getAll(url.toString());
-
-		assertNotNull(list);
-		assertEquals(4, list.size());
+		testes_single_parameterized_one(url, 4);
 	}
 
 	@Test
 	void teste_busca_por_in_com_ids() {
 
-		List<Long> ids = QueryJpaController1Tests.ids;
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?id= " + QueryJpaController1Tests.ids.get(0) + "," + QueryJpaController1Tests.ids.get(1) + "&id_op=in&page=0&size=10&sortList=id&sortOrders=asc";
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
-
-		url.append("id=").append(ids.get(0)).append(",").append(ids.get(1)).append("&");
-		url.append("id_op=").append(Constants.HTML_IN).append("&");
-
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(10).append("&");
-
-		url.append("sortList=").append("id").append("&");
-		url.append("sortOrders=").append("asc");
-
-		List<EntityTest1> list = getAll(url.toString());
-
-		assertNotNull(list);
-		assertEquals(2, list.size());
+		testes_single_parameterized_one(url, 2);
 	}
 
 	@Test
 	void teste_busca_por_between_com_height_ordernado_por_height_desc() {
+		
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?height=1.40,1.78&height_op=bt&page=0&size=10&sortList=height&sortOrders=desc";
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
-
-		url.append("height=").append("1.40").append(",").append("1.78").append("&");
-		url.append("height_op=").append(Constants.HTML_BETWEEN).append("&");
-
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(10).append("&");
-
-		url.append("sortList=").append("height").append("&");
-		url.append("sortOrders=").append("desc");
-
-		List<EntityTest1> list = getAll(url.toString());
+		List<EntityTest1> list = getAll(url);
 
 		assertNotNull(list);
 		assertEquals(4, list.size());
@@ -402,20 +226,10 @@ class QueryJpaController4Tests {
 
 	@Test
 	void teste_busca_por_between_com_prohibited_ordernado_por_birthDate_desc() {
-
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
-
-		url.append("prohibited=").append("2024-02-01T08:50:00").append(",").append("2024-10-01T08:50:55").append("&");
-		url.append("prohibited_op=").append(Constants.HTML_BETWEEN).append("&");
-
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(10).append("&");
-
-		url.append("sortList=").append("birthDate").append("&");
-		url.append("sortOrders=").append("desc");
 		
-		List<EntityTest1> list = getAll(url.toString());
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?prohibited=2024-02-01T08:50:00,2024-10-01T08:50:55&prohibited_op=bt&page=0&size=10&sortList=birthDate&sortOrders=desc";
+		
+		List<EntityTest1> list = getAll(url);
 
 		assertNotNull(list);
 		assertEquals(5, list.size());
@@ -428,205 +242,82 @@ class QueryJpaController4Tests {
 
 	@Test
 	void teste_busca_por_greaterThanOrEqualTo_com_height() {
+		
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?height=1.86&height_op=ge&page=0&size=10&ortList=height&sortOrders=desc";
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
-
-		url.append("height=").append("1.86").append("&");
-		url.append("height_op=").append(Constants.HTML_MAIOR_OU_IGUAL).append("&");
-
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(10).append("&");
-
-		url.append("sortList=").append("height").append("&");
-		url.append("sortOrders=").append("desc");
-
-		List<EntityTest1> list = getAll(url.toString());
-
-		assertNotNull(list);
-		assertEquals(3, list.size());
+		testes_single_parameterized_one(url, 3);
 	}
 
 	@Test
 	void teste_busca_por_greaterThan_com_height() {
-
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
-
-		url.append("height=").append("1.87").append("&");
-		url.append("height_op=").append(Constants.HTML_MAIOR_QUE).append("&");
-
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(10).append("&");
-
-		url.append("sortList=").append("height").append("&");
-		url.append("sortOrders=").append("desc");
-
-		List<EntityTest1> list = getAll(url.toString());
-
-		assertNotNull(list);
-		assertEquals(2, list.size());
-	}
-
-	@Test
-	void teste_busca_por_greaterThanOrEqualTo_com_birthDate() {
-
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
-
-		url.append("birthDate=").append("2016-01-01").append("&");
-		url.append("birthDate_op=").append(Constants.HTML_MAIOR_OU_IGUAL).append("&");
-
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(10).append("&");
-
-		url.append("sortList=").append("birthDate").append("&");
-		url.append("sortOrders=").append("desc");
 		
-		List<EntityTest1> list = getAll(url.toString());
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?height=1.87&height_op=gt&page=0&size=10&ortList=height&sortOrders=desc";
 
-		list.forEach(entity -> {
-			assertEquals("Maria", entity.getName());
-		});
-
-		assertNotNull(list);
-		assertEquals(1, list.size());
+		testes_single_parameterized_one(url, 2);
 	}
 
 	@Test
 	void teste_busca_por_greaterThan_com_birthDate() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?birthDate=1990-09-09&birthDate_op=gt&page=0&size=10&sortList=birthDate&sortOrders=desc";
 
-		url.append("birthDate=").append("1990-09-09").append("&");
-		url.append("birthDate_op=").append(Constants.HTML_MAIOR_QUE).append("&");
-
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(10).append("&");
-
-		url.append("sortList=").append("birthDate").append("&");
-		url.append("sortOrders=").append("desc");
-
-		List<EntityTest1> list = getAll(url.toString());
-
-		assertNotNull(list);
-		assertEquals(3, list.size());
+		testes_single_parameterized_one(url, 3);
 	}
 
 	@Test
 	void teste_busca_por_greaterThanOrEqualTo_e_lessThanOrEqualTo_com_birthDate() {
+		
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?birthDate=1990-01-02&birthDate_op=ge&birthDate=2016-01-01&birthDate_op=le&page=0&size=10&sortList=birthDate&sortOrders=desc";
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
-
-		url.append("birthDate=").append("1990-01-02").append("&");
-		url.append("birthDate_op=").append(Constants.HTML_MAIOR_OU_IGUAL).append("&");
-
-		url.append("birthDate=").append("2016-01-01").append("&");
-		url.append("birthDate_op=").append(Constants.HTML_MENOR_OU_IGUAL).append("&");
-
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(10).append("&");
-
-		url.append("sortList=").append("birthDate").append("&");
-		url.append("sortOrders=").append("desc");
-
-		List<EntityTest1> list = getAll(url.toString());
-
-		assertNotNull(list);
-		assertEquals(4, list.size());
+		testes_single_parameterized_one(url, 4);
 	}
 
 	@Test
 	void teste_busca_por_lessThanOrEqualTo_com_birthDate() {
+		
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?birthDate=1990-01-02&birthDate_op=le&page=0&size=10&sortList=birthDate&sortOrders=desc";
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
-
-		url.append("birthDate=").append("1990-01-02").append("&");
-		url.append("birthDate_op=").append(Constants.HTML_MENOR_OU_IGUAL).append("&");
-
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(10).append("&");
-
-		url.append("sortList=").append("birthDate").append("&");
-		url.append("sortOrders=").append("desc");
-
-		List<EntityTest1> list = getAll(url.toString());
-
-		assertNotNull(list);
-		assertEquals(6, list.size());
+		testes_single_parameterized_one(url, 6);
 	}
 
 	@Test
 	void teste_busca_por_lessThan_com_birthDate() {
+		
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?birthDate=1986-09-08&birthDate_op=lt&page=0&size=10&sortList=birthDate&sortOrders=desc";
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
+		testes_single_parameterized_one(url, 3);
+	}
 
-		url.append("birthDate=").append("1986-09-08").append("&");
-		url.append("birthDate_op=").append(Constants.HTML_MENOR_QUE).append("&");
+	@Test
+	void teste_busca_por_lessThanOrEqualTo_com_age() {
+		
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?age=21&age_op=le&page=0&size=10&sortList=age&sortOrders=desc";
 
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(10).append("&");
-
-		url.append("sortList=").append("birthDate").append("&");
-		url.append("sortOrders=").append("desc");
-
-		List<EntityTest1> list = getAll(url.toString());
-
-		assertNotNull(list);
-		assertEquals(3, list.size());
+		testes_single_parameterized_one(url, 2);
 	}
 	
 	@Test
-	void teste_busca_por_lessThanOrEqualTo_com_age() {
+	void teste_busca_por_greaterThanOrEqualTo_com_birthDate() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?birthDate=2016-01-01&birthDate_op=ge&page=0&size=10&sortList=birthDate&sortOrders=desc";
 
-		url.append("age=").append("21").append("&");
-		url.append("age_op=").append(Constants.HTML_MENOR_OU_IGUAL);
-
-		List<EntityTest1> list = getAll(url.toString());
-
-		assertNotNull(list);
-		assertEquals(2, list.size());
+		testes_single_parameterized_other(url, "Maria", 1);
 	}
 	
 	@Test
 	void teste_busca_por_lessThan_com_age() {
-
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
-
-		url.append("age=").append("21").append("&");
-		url.append("age_op=").append(Constants.HTML_MENOR_QUE);
 		
-		List<EntityTest1> list = getAll(url.toString());
-
-		list.forEach(entity -> {
-			assertEquals("Maria", entity.getName());
-		});
-
-		assertNotNull(list);
-		assertEquals(1, list.size());
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?age=21&age_op=lt&page=0&size=10&sortList=age&sortOrders=desc";
+		
+		testes_single_parameterized_other(url, "Maria", 1);
 	}
-
+	
 	@Test
 	void teste_busca_all_ordernacao_birthDate_asc_name_desc() {
-
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
 		
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(20).append("&");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
 
-		url.append("sortList=").append("birthDate, name").append("&");
-		url.append("sortOrders=").append("asc, desc");
-
-		List<EntityTest1> list = getAll(url.toString());
+		List<EntityTest1>list = getAll(url);
 
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -644,17 +335,10 @@ class QueryJpaController4Tests {
 	
 	@Test
 	void teste_busca_all_ordernacao_birthDate_desc_name_asc() {
-
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
 		
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(20).append("&");
-		
-		url.append("sortList=").append("birthDate, name").append("&");
-		url.append("sortOrders=").append("desc, asc");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?page=0&size=20&sortList=birthDate,name&sortOrders=desc,asc";
 
-		List<EntityTest1> list = getAll(url.toString());
+		List<EntityTest1> list = getAll(url);
 
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -673,16 +357,9 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_all_ordernacao_name_asc_birthDate_desc() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
-		
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(20).append("&");
-		
-		url.append("sortList=").append("name, birthDate").append("&");
-		url.append("sortOrders=").append("asc, desc");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?page=0&size=20&sortList=name,birthDate&sortOrders=asc,desc";
 
-		List<EntityTest1> list = getAll(url.toString());
+		List<EntityTest1> list = getAll(url);
 		
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -698,20 +375,12 @@ class QueryJpaController4Tests {
 		assertEquals("Ricardo", list.get(9).getName());
 	}
 	
-	
 	@Test
 	void teste_busca_all_ordernacao_name_desc_birthDate_asc() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
-		
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(20).append("&");
-		
-		url.append("sortList=").append("name, birthDate").append("&");
-		url.append("sortOrders=").append("desc, asc");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?page=0&size=20&sortList=name, birthDate&sortOrders=desc, asc";
 
-		List<EntityTest1> list = getAll(url.toString());
+		List<EntityTest1> list = getAll(url);
 		
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -730,22 +399,55 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_nenhum_registro_encontrado() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint);
-		
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(20).append("&");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?page=0&size=20&name=Silva&name_op=eq";
 
-		url.append("name=").append("Silva").append("&");
-		url.append("name_op=").append(Constants.HTML_IGUAL).append("&");
-
-		List<EntityTest1> list = getAll(url.toString());
-		System.out.println(url.toString());
+		List<EntityTest1> list = getAll(url);
 		
 		assertNotNull(list);
 		assertEquals(0, list.size());
 	}
+	
+	@Test
+	void teste_busca_por_ids() {
 
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?id=" + QueryJpaController1Tests.ids.get(0) + "," + QueryJpaController1Tests.ids.get(1) + "," + QueryJpaController1Tests.ids.get(2) + "&id_op=in&page=0&size=20";
+
+		List<EntityTest1> list = getAll(url);
+		
+		assertNotNull(list);
+		assertEquals(3, list.size());
+		assertEquals("Carlos Alberto", list.get(0).getName());
+		assertEquals("Paulo", list.get(1).getName());
+		assertEquals("Maria", list.get(2).getName());
+	}
+	
+	@Test
+	void teste_busca_por_ids_nao_encontrado() {
+
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?id=1,2,3&id_op=in&page=0&size=20&sortList=name&sortOrders=desc";
+
+		List<EntityTest1> list = getAll(url);
+		
+		assertEquals(0, list.size());
+	}
+	
+	void testes_single_parameterized_other(String url, String value, Integer size) {
+		
+		List<EntityTest1> list = getAll(url);
+		
+		assertNotNull(list);
+		assertEquals(size, list.size());
+		assertEquals(value, list.get(0).getName());
+	}
+	
+	void testes_single_parameterized_one(String url, Integer size) {
+		
+		List<EntityTest1> list = getAll(url);
+		
+		assertNotNull(list);
+		assertEquals(size, list.size());
+	}
+	
 	private List<EntityTest1> getAll(String url) {
 
 		List<EntityTest1> entitys = new ArrayList<>();
@@ -754,14 +456,16 @@ class QueryJpaController4Tests {
 		
 		System.out.println(url);
 		
-		list.getContent().forEach(object -> {
-			Gson gson = new GsonBuilder()
-					.registerTypeAdapter(LocalDate.class, new LocalDateAdapter(true))
-					.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter(true)).create();
-
-	        String jsonString = gson.toJson(object);
-	        entitys.add(gson.fromJson(jsonString, EntityTest1.class));
-		});
+		if(list != null) {
+			list.getContent().forEach(object -> {
+				Gson gson = new GsonBuilder()
+						.registerTypeAdapter(LocalDate.class, new LocalDateAdapter(true))
+						.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter(true)).create();
+				
+				String jsonString = gson.toJson(object);
+				entitys.add(gson.fromJson(jsonString, EntityTest1.class));
+			});
+		}
 		
 		assertNotNull(list);
 		assertEquals(entitys.size(), list.getContent().size());

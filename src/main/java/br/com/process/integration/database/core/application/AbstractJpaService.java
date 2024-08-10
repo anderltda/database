@@ -46,112 +46,92 @@ public abstract class AbstractJpaService<E extends Entity<?>, T> extends Abstrac
 	}
 	
 	@Override
+	public E findBySingle(Map<String, Object> filter) {
+		return super.findBySingle(filter);
+	}
+
+	@Override
 	public List<E> findAll(Map<String, Object> filter, List<String> sortList, List<String> sortOrders) {
 		return super.findAll(filter, sortList, sortOrders);
 	}
 	
 	@Override
 	public PagedModel<E> findAll(Map<String, Object> filter, Integer page, Integer size, List<String> sortList, List<String> sortOrders) {
-
 		try {
-
 			Pageable pageable = PageRequest.of(page, size, createSortOrder(sortList, sortOrders));
-
 			pages = super.findAll(filter, pageable);
-
 			setPagedModel();
-
 			return pagedModel;
-			
 		} catch (Exception ex) {
 			LOGGER.error("[findAll(Map filter, Integer page, Integer size, List sortList, List sortOrders)]", ex);
 		}
+		return null;
+	}
+	
+	@Override
+	public Long count(Map<String, Object> filter, String methodQueryJPQL) {
 		
+		try {
+			Object[] methodArgs = MethodReflection.getMethodArgs(getRepository().getClass(), methodQueryJPQL, filter);
+			return (Long) methodInvoker.invokeMethodReturnObjectWithParameters(
+					MethodReflection.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
+		} catch (Exception ex) {
+			LOGGER.error("[count]", ex);
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public E findBySingle(Map<String, Object> filter, String methodQueryJPQL) {
+		try {
+			Object[] methodArgs = MethodReflection.getMethodArgs(getRepository().getClass(), methodQueryJPQL, filter);
+			return (E) methodInvoker.invokeMethodReturnObjectWithParameters(
+					MethodReflection.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
+		} catch (Exception ex) {
+			LOGGER.error("[findBySingle]", ex);
+		}
 		return null;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<E> findAll(Map<String, Object> filter, String methodQueryJPQL, List<String> sortList, List<String> sortOrders) {
-		
 		try {
-			
 			Sort sort = createSortOrder(sortList, sortOrders);
-			
 			filter.put("sort", sort);
-			
 			Object[] methodArgs = MethodReflection.getMethodArgs(getRepository().getClass(), methodQueryJPQL, filter);
-			
 			return (List<E>) methodInvoker.invokeMethodReturnObjectWithParameters(
 					MethodReflection.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
-			
 		} catch (Exception ex) {
 			LOGGER.error("[findAll(Map filter, String methodQueryJPQL)]", ex);
 		}
-		
 		return new ArrayList<>();
 	}
-	
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public PagedModel<E> findAll(Map<String, Object> filter, String methodQueryJPQL, Integer page, Integer size, List<String> sortList, List<String> sortOrders) {
-
 		try {
-
 			Pageable pageable = PageRequest.of(page, size, createSortOrder(sortList, sortOrders));
-
 			filter.put("page", pageable);
-
 			Object[] methodArgs = MethodReflection.getMethodArgs(getRepository().getClass(), methodQueryJPQL, filter);
-
 			pages = (Page<E>) methodInvoker.invokeMethodReturnObjectWithParameters(
 					MethodReflection.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
-
 			setPagedModel();
-
 			return pagedModel;
-
 		} catch (Exception ex) {
 			LOGGER.error("[findAll]", ex);
 		}
-
 		return null;
 	}
 	
-	
-	@SuppressWarnings("unchecked")
 	@Override
-	public E findBySingle(Map<String, Object> filter, String methodQueryJPQL) {
-
-		try {
-			
-			Object[] methodArgs = MethodReflection.getMethodArgs(getRepository().getClass(), methodQueryJPQL, filter);
-
-			return (E) methodInvoker.invokeMethodReturnObjectWithParameters(
-					MethodReflection.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
-			
-		} catch (Exception ex) {
-			LOGGER.error("[findBySingle]", ex);
+	public E findById() {
+		Optional<E> entity = getRepository().findById(id);
+		if (entity.isPresent()) {
+			return entity.get();
 		}
-
-		return null;
-	}
-
-	@Override
-	public Long count(Map<String, Object> filter, String methodQueryJPQL) {
-
-		try {
-
-			Object[] methodArgs = MethodReflection.getMethodArgs(getRepository().getClass(), methodQueryJPQL, filter);
-
-			return (Long) methodInvoker.invokeMethodReturnObjectWithParameters(
-					MethodReflection.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
-
-		} catch (Exception ex) {
-			LOGGER.error("[count]", ex);
-		}
-
 		return null;
 	}
 	
@@ -160,17 +140,6 @@ public abstract class AbstractJpaService<E extends Entity<?>, T> extends Abstrac
 		return getRepository().findAllById(ids);
 	}
 
-	@Override
-	public E findById() {
-		Optional<E> entity = getRepository().findById(id);
-
-		if (entity.isPresent()) {
-			return entity.get();
-		}
-
-		return null;
-	}
-	
 	@Override
 	public boolean existsById() {
 		return getRepository().existsById(id);
@@ -211,12 +180,10 @@ public abstract class AbstractJpaService<E extends Entity<?>, T> extends Abstrac
 		getRepository().saveAllAndFlush(entitys);
 	}
 	
-	public static Sort createSortOrder(List<String> sortList, List<String> sortOrders) {
-
+	private static Sort createSortOrder(List<String> sortList, List<String> sortOrders) {
 		List<Sort.Order> orders = IntStream.range(0, sortList.size())
 				.mapToObj(i -> new Sort.Order(Sort.Direction.fromString(sortOrders.get(i)), sortList.get(i)))
 				.toList();
-
 		return Sort.by(orders);
 	}
 }

@@ -46,12 +46,8 @@ class QueryJpaController7Tests {
 	@Autowired
 	private QueryJpaController queryJpaController;
 	
-	static String endpoint;
-	
 	@BeforeAll
-	void setupOnce() {
-		endpoint = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest1";
-	}
+	void setupOnce() { }
 	
 	@Test
 	@Order(1)
@@ -62,14 +58,7 @@ class QueryJpaController7Tests {
 	@Test
 	void teste_busca_all_ordernacao_birthDate_asc_name_desc() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint + "/buscaAll?");
-		
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(20).append("&");
-
-		url.append("sortList=").append("birthDate, name").append("&");
-		url.append("sortOrders=").append("asc, desc");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest1/buscaAll?page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
 
 		List<EntityTest1> list = getAll(url.toString());
 
@@ -90,16 +79,7 @@ class QueryJpaController7Tests {
 	@Test
 	void teste_busca_com_like_pelo_name() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint + "/buscaComLikePeloName?");
-		
-		url.append("name=").append("ar").append("&");
-		
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(20).append("&");
-
-		url.append("sortList=").append("birthDate, name").append("&");
-		url.append("sortOrders=").append("asc, desc");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest1/buscaComLikePeloName?name=ar&page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
 
 		List<EntityTest1> list = getAll(url.toString());
 
@@ -115,16 +95,7 @@ class QueryJpaController7Tests {
 	@Test
 	void teste_busca_com_like_pelo_name_nao_encontrado() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint + "/buscaComLikePeloName?");
-		
-		url.append("name=").append("Silva").append("&");
-		
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(20).append("&");
-
-		url.append("sortList=").append("birthDate, name").append("&");
-		url.append("sortOrders=").append("asc, desc");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest1/buscaComLikePeloName?name=Silva&page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
 
 		List<EntityTest1> list = getAll(url.toString());
 
@@ -135,14 +106,7 @@ class QueryJpaController7Tests {
 	@Test
 	void teste_busca_all_ordernacao_birthDate_desc_name_asc() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint + "/buscaAll?");
-		
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(20).append("&");
-
-		url.append("sortList=").append("birthDate, name").append("&");
-		url.append("sortOrders=").append("desc, asc");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest1/buscaAll?page=0&size=20&sortList=birthDate,name&sortOrders=desc,asc";
 
 		List<EntityTest1> list = getAll(url.toString());
 
@@ -163,14 +127,7 @@ class QueryJpaController7Tests {
 	@Test
 	void teste_busca_all_ordernacao_name_asc_birthDate_desc() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint + "/buscaAll?");
-		
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(20).append("&");
-
-		url.append("sortList=").append("name, birthDate").append("&");
-		url.append("sortOrders=").append("asc, desc");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest1/buscaAll?page=0&size=20&sortList=name,birthDate&sortOrders=asc,desc";
 
 		List<EntityTest1> list = getAll(url.toString());
 		
@@ -192,21 +149,10 @@ class QueryJpaController7Tests {
 	@Test
 	void teste_busca_all_ordernacao_name_desc_birthDate_asc() {
 
-		StringBuilder url = new StringBuilder();
-		url.append(endpoint + "/buscaAll?");
-		
-		url.append("page=").append(0).append("&");
-		url.append("size=").append(20).append("&");
-
-		url.append("sortList=").append("name, birthDate").append("&");
-		url.append("sortOrders=").append("desc, asc");
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest1/buscaAll?page=0&size=20&sortList=name,birthDate&sortOrders=desc,asc";
 
 		List<EntityTest1> list = getAll(url.toString());
 		
-		list.forEach(entity -> {
-			System.out.println(entity.getName());
-		});
-
 		assertNotNull(list);
 		assertEquals(10, list.size());
 		assertEquals("Ricardo", list.get(0).getName());

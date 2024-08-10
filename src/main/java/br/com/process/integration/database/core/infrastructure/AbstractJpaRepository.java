@@ -162,6 +162,23 @@ public abstract class AbstractJpaRepository<E extends Entity<?>, R extends JpaRe
 		return entityManager.createQuery(query).getSingleResult();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public E findBySingle(Map<String, Object> filter) {
+		
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+
+		CriteriaQuery<E> query = (CriteriaQuery<E>) criteriaBuilder.createQuery(entity.getClass());
+
+		Root<E> root = (Root<E>) query.from(entity.getClass());
+
+		List<Predicate> predicates = buildPredicates(filter, criteriaBuilder, root);
+
+		query.select(root).where(criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()])));
+
+		return entityManager.createQuery(query).getSingleResult();
+	}
+
 	private List<Predicate> buildPredicates(Map<String, Object> filter, CriteriaBuilder criteriaBuilder, Path<E> path) {
 
 		List<Predicate> predicates = new ArrayList<>();
