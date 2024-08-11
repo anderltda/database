@@ -6,16 +6,18 @@ import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import br.com.process.integration.database.core.exception.UncheckedException;
+
 public interface EntityRepository<E, R> {
 
 	public R getRepository();
 	
-	public Long count(Map<String, Object> filter);
+	public Long countatble(Map<String, Object> filter) throws UncheckedException;
 	
-	public E findBySingle(Map<String, Object> filter);
+	public E findSingle(Map<String, Object> filter) throws UncheckedException;
 	
-	public List<E> findAll(Map<String, Object> filter, List<String> sortList, List<String> sortOrders);
+	public List<E> findByAll(Map<String, Object> filter, List<String> sortList, List<String> sortOrders) throws UncheckedException;
 	
-	public Page<E> findAll(Map<String, Object> filter, Pageable pageable);
+	public Page<E> findByPageAll(Map<String, Object> filter, Pageable pageable) throws UncheckedException;
 
 }

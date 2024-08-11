@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import br.com.process.integration.database.core.domain.Entity;
+import br.com.process.integration.database.core.exception.CheckedException;
 import br.com.process.integration.database.core.reflection.MethodReflection;
 import br.com.process.integration.database.core.util.Constants;
 
@@ -25,7 +26,7 @@ import br.com.process.integration.database.core.util.Constants;
 public class CrudJpaController extends AbstractController {
 
 	@DeleteMapping(value = "/delete/all/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> deleteAll(@PathVariable String entity) {
+	public ResponseEntity<String> deleteAll(@PathVariable String entity) throws CheckedException {
 
 		methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_DELETE_ALL);
 
@@ -34,7 +35,7 @@ public class CrudJpaController extends AbstractController {
 	}
 	
 	@DeleteMapping(value = "/delete/all/id/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> deleteAllById(@PathVariable String entity, @RequestBody JsonNode jsonNode) {
+	public ResponseEntity<String> deleteAllById(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws CheckedException {
 		
 		List<Object> ids = MethodReflection.transformsJsonIds(jsonNode);
 
@@ -44,7 +45,7 @@ public class CrudJpaController extends AbstractController {
 	}
 	
 	@DeleteMapping(value = "/delete/id/{entity}/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> deleteById(@PathVariable String entity, @PathVariable String id) {
+	public ResponseEntity<String> deleteById(@PathVariable String entity, @PathVariable String id) throws CheckedException {
 
 		setId(entity, id);
 		
@@ -55,7 +56,7 @@ public class CrudJpaController extends AbstractController {
 	}
 	
 	@PostMapping(value = "/save/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> save(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws Exception {
+	public ResponseEntity<String> save(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws CheckedException {
 
 		Entity<?> entityFound = createEntity(entity, jsonNode);
 
@@ -68,7 +69,7 @@ public class CrudJpaController extends AbstractController {
 	}
 	
 	@PostMapping(value = "/save/flush/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> saveAndFlush(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws Exception {
+	public ResponseEntity<String> saveAndFlush(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws CheckedException {
 
 		Entity<?> entityFound = createEntity(entity, jsonNode);
 
@@ -81,7 +82,7 @@ public class CrudJpaController extends AbstractController {
 	}
 	
 	@PostMapping(value = "/save/all/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> saveAll(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws Exception {
+	public ResponseEntity<String> saveAll(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws CheckedException {
 
 		String body = persisteAll(Constants.METHOD_SAVE_ALL, entity, jsonNode);
 
@@ -90,7 +91,7 @@ public class CrudJpaController extends AbstractController {
 	}
 	
 	@PostMapping(value = "/save/all/flush/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> saveAllAndFlush(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws Exception {
+	public ResponseEntity<String> saveAllAndFlush(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws CheckedException {
 
 		String body = persisteAll(Constants.METHOD_SAVE_ALL_AND_FLUSH, entity, jsonNode);
 
@@ -98,7 +99,7 @@ public class CrudJpaController extends AbstractController {
 
 	}
 	
-	private Entity<?> createEntity(String entity, JsonNode jsonNode) throws Exception {
+	private Entity<?> createEntity(String entity, JsonNode jsonNode) throws CheckedException {
 		
 		Entity<?> entityFound = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
@@ -109,7 +110,7 @@ public class CrudJpaController extends AbstractController {
 		return entityFound;
 	}
 	
-	private String persisteAll(String method, String entity, JsonNode jsonNode) throws Exception {
+	private String persisteAll(String method, String entity, JsonNode jsonNode) throws CheckedException {
 
 		Entity<?> entityFound = null;
 		

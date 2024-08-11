@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import br.com.process.integration.database.core.domain.Entity;
+import br.com.process.integration.database.core.exception.CheckedException;
 import br.com.process.integration.database.core.reflection.MethodInvoker;
 import br.com.process.integration.database.core.reflection.MethodReflection;
 import br.com.process.integration.database.core.ui.adapter.LocalDateAdapter;
@@ -33,75 +34,48 @@ public abstract class AbstractController {
 				.registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
 				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
 	}
-
-	/**
-	 * Remove parametros que nao fazem parte da entidade
-	 * @param params - Map<String, Object> de parametros com key é o atributo da entidade e value é o valor do atributo
-	 */
-	protected void removeParams(Map<String, Object> params) {
+	
+	protected void removeTrashFilter(Map<String, Object> params) {
 		params.remove("page");
 		params.remove("size");
 		params.remove("sortList");
-		params.remove("sortOrder");
 		params.remove("sortOrders");
 		params.remove("sort");
 	}
 	
-	/**
-	 * Remove parametros que nao fazem parte da entidade e ajusta
-	 * @param params - Map<String, Object> de parametros com key é o atributo da entidade e value é o valor do atributo
-	 */
-	protected void addParam(Map<String, Object> params) {
+	protected void addAjustFilter(Map<String, Object> filter) {
+		
+		Map<String, Object> filterRefactory = new HashMap<>();
 
-		Map<String, Object> paramsRefactory = new HashMap<>();
-
-		params.forEach((key, value) -> {
+		filter.forEach((key, value) -> {
 			if (value.toString().equals(Constants.HTML_BETWEEN)) {
-				String valueRefactory = params.get(key.replace(Constants.IDENTITY_OPERATOR, "")).toString();
+				String valueRefactory = filter.get(key.replace(Constants.IDENTITY_OPERATOR, "")).toString();
 				String[] split = valueRefactory.replaceAll("[\\[\\]]", "").split(",");
-				paramsRefactory.put(key.replace(Constants.IDENTITY_OPERATOR, Constants.BETWEEN_START), split[0].trim());
-				paramsRefactory.put(key.replace(Constants.IDENTITY_OPERATOR, Constants.BETWEEN_END), split[1].trim());
+				filterRefactory.put(key.replace(Constants.IDENTITY_OPERATOR, Constants.BETWEEN_START), split[0].trim());
+				filterRefactory.put(key.replace(Constants.IDENTITY_OPERATOR, Constants.BETWEEN_END), split[1].trim());
 			} else {
-				params.put(key, value.toString().contains(",") ? Arrays.asList(value.toString().split(",")) : value);
+				filter.put(key, value.toString().contains(",") ? Arrays.asList(value.toString().split(",")) : value);
 			}
 		});
 
-		params.putAll(paramsRefactory);
+		filter.putAll(filterRefactory);
 	}
 	
-	/**
-	 * Informar (Setando) a Entidade (Tabela) com apenas o ID, que a classe <EntityService> irá trabalhar passando o nome da entidade e ID
-	 * @param nameEntity - Nome da Entidade (Tabela)
-	 * @param id - ID da Entidade (Tabela)
-	 */
-	protected void setId(String nameEntity, String id) {
+	protected void setId(String nameEntity, String id) throws CheckedException {
 		Entity<?> entity = (Entity<?>) MethodReflection.findEntityUsingClassLoader(nameEntity);
 		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameEntity), "setId", DynamicTypeConverter.convert(entity, id));
 	}
 	
-	/**
-	 * Informar (Setando) a Entidade (Tabela) que a classe <EntityService> irá trabalhar passando o nome da entidade
-	 * @param nameEntity - Nome da Entidade (Tabela)
-	 */
-	protected void setEntity(String nameEntity) {
+	protected void setEntity(String nameEntity) throws CheckedException {
 		Entity<?> entity = (Entity<?>) MethodReflection.findEntityUsingClassLoader(nameEntity);
 		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameEntity), "setEntity", entity);
 	}
 	
-	/**
-	 * Informar (Setando) a Entidade (Tabela) que a classe <EntityService> irá trabalhar passando o nome da entidade e a instancia da entity
-	 * @param nameEntity - Nome da Entidade (Tabela)
-	 * @param entity - Object Entity - Entidade (Tabela)
-	 */
-	protected void setEntity(String nameEntity, Entity<?> entity) {
+	protected void setEntity(String nameEntity, Entity<?> entity) throws CheckedException {
 		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameEntity), "setEntity", entity);
 	}
 	
-	/**
-	 * Informar (Setando) o Model (QUERY NATIVE) que a classe <ViewService> irá trabalhar passando o nome do Model
-	 * @param nameView - Nome do Model (QUERY NATIVE)
-	 */
-	protected void setView(String nameView) {
+	protected void setView(String nameView) throws CheckedException {
 		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameView), "setView", MethodReflection.findDtoUsingClassLoader(nameView));
 	}
 }

@@ -51,8 +51,10 @@ public class Constants {
 	public static final String METHOD_SAVE_ALL = "saveAll"; 
 	public static final String METHOD_SAVE_ALL_AND_FLUSH = "saveAllAndFlush"; 
 	
-	public static final String METHOD_EXECUTE_QUERY_NATIVE = "executeQueryNative"; 
-	public static final String METHOD_EXECUTE_QUERY_NATIVE_FIND_BY_SINGLE = "executeQueryNativeFindBySingle"; 
+	public static final String METHOD_EXECUTE_QUERY_NATIVE_SINGLE = "executeQueryNativeSingle"; 
+	public static final String METHOD_EXECUTE_QUERY_NATIVE = "executeQueryNative";
+	public static final String METHOD_EXECUTE_QUERY_NATIVE_PAGINATOR = "executeQueryNativePaginator"; 
+	public static final String METHOD_EXECUTE_QUERY_NATIVE_COUNT = "executeQueryNativeCount";
 	
 	public static final String SORT_LIST = "sortList";
 	public static final String SORT_ORDERS = "sortOrders";

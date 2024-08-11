@@ -1,15 +1,12 @@
 package br.com.process.integration.database.core.domain;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -22,6 +19,7 @@ import org.stringtemplate.v4.ST;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import br.com.process.integration.database.core.exception.UncheckedException;
 import br.com.process.integration.database.core.util.Constants;
 
 @Configuration
@@ -29,8 +27,6 @@ import br.com.process.integration.database.core.util.Constants;
 @ConfigurationProperties("database")
 public class ConfigQuery {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(ConfigQuery.class);
-
 	@Autowired
 	private ResourceLoader resourceLoader;
 
@@ -75,7 +71,7 @@ public class ConfigQuery {
 				mapSqlParameterSource.addValue(key, value.toString().contains("*") ? value.toString().replace("*", "%") : value));
 			}
 		}
-		return sql.toString().trim();
+		return sql.toString().trim() + Constants.WRITERSPACE;
 	}
 	
 	private void createOrderBy(Map<String, Object> filters, boolean isCount, StringBuilder sql, Query query) {
@@ -211,8 +207,14 @@ public class ConfigQuery {
 	    }
 	    return snakeCaseString.toString();
 	}
+	
+	private String alterPlaceholders(String file, String name, String value) {
+		ST st = new ST(file, '{', '}');
+		st.add(name, value);
+		return st.render();
+	}
 
-	private List<Query> loadConfig(String value) {
+	private List<Query> loadConfig(String value) throws UncheckedException {
 		try {
 			String string = "classpath:/querys/{file}.json";
 			String file = alterPlaceholders(string, "file", value);
@@ -221,12 +223,11 @@ public class ConfigQuery {
 			ObjectMapper objectMapper = new ObjectMapper();
 			return objectMapper.readValue(inputStream, new TypeReference<List<Query>>() {});
 		} catch (Exception ex) {
-			LOGGER.error("[loadConfig]", ex);
+			throw new UncheckedException(ex.getMessage(), ex);
 		}
-		return new ArrayList<>();
 	}
 
-	private Query getQuery(String fileQuery, String invokerQuery) {
+	private Query getQuery(String fileQuery, String invokerQuery) throws UncheckedException {
 		try {
 			List<Query> querys = loadConfig(fileQuery);
 			Query query = null;
@@ -238,14 +239,7 @@ public class ConfigQuery {
 			}
 			return query;
 		} catch (Exception ex) {
-			LOGGER.error("[getQuery]", ex);
+			throw new UncheckedException(ex.getMessage(), ex);
 		}
-		return null;
-	}
-
-	private String alterPlaceholders(String file, String name, String value) {
-		ST st = new ST(file, '{', '}');
-		st.add(name, value);
-		return st.render();
 	}
 }

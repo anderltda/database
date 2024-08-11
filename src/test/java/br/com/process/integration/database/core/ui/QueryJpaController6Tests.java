@@ -1,18 +1,16 @@
 package br.com.process.integration.database.core.ui;
 
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import org.hibernate.NonUniqueResultException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -23,13 +21,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import br.com.process.integration.database.core.exception.ErrorResponse;
 import br.com.process.integration.database.domain.entity.EntityTest1;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -60,7 +62,7 @@ class QueryJpaController6Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/single/jpql/EntityTest1/buscaComEqualPeloName?name=Anderson";
 
-		EntityTest1 entity = getSingleResult(url);
+		EntityTest1 entity = getSingleResult(url, new ErrorResponse());
 
 		assertNotNull(entity.getId());
 		assertEquals("Anderson", entity.getName());
@@ -79,19 +81,9 @@ class QueryJpaController6Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/single/jpql/EntityTest1/buscaComLikePeloName?name=Paulo";
 
-		getSingleResult(url);
-
-		assertThatExceptionOfType(InvocationTargetException.class).isThrownBy(() -> {
-			throw new InvocationTargetException(null);
-		});		
+		ErrorResponse errorResponse = new ErrorResponse("Query did not return a unique result: 2 results were returned", 400);
 		
-		assertThatExceptionOfType(IncorrectResultSizeDataAccessException.class).isThrownBy(() -> {
-			throw new IncorrectResultSizeDataAccessException(2);
-		});
-		
-		assertThatExceptionOfType(NonUniqueResultException.class).isThrownBy(() -> {
-			throw new NonUniqueResultException(2);
-		});
+	    assertThrows(RuntimeException.class, () -> getSingleResult(url, errorResponse));
 	}
 	
 	@Test
@@ -99,7 +91,7 @@ class QueryJpaController6Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/EntityTest1/buscaComLikePeloName?name=ar&sortList=birthDate,name&sortOrders=asc,desc";
 
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(5, list.size());
@@ -115,7 +107,7 @@ class QueryJpaController6Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/EntityTest1/buscaAll?sortList=birthDate,name&sortOrders=asc,desc";
 
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -136,7 +128,7 @@ class QueryJpaController6Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/EntityTest1/buscaAll?sortList=birthDate,name&sortOrders=desc,asc";
 
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -157,7 +149,7 @@ class QueryJpaController6Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/EntityTest1/buscaAll?sortList=name,birthDate&sortOrders=asc,desc";
 
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -179,7 +171,7 @@ class QueryJpaController6Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/EntityTest1/buscaAll?sortList=name,birthDate&sortOrders=desc,asc";
 
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -200,7 +192,7 @@ class QueryJpaController6Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/EntityTest1/buscaComLikePeloName?name=Silva&sortList=name,birthDate&sortOrders=desc,asc";
 		
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 		
 		assertNull(list);
 	}
@@ -215,38 +207,42 @@ class QueryJpaController6Tests {
 		assertEquals(4, count);
 	}
 	
-	private List<EntityTest1> getAll(String url) {
-		
+	public List<EntityTest1> getAll(String url, ErrorResponse compare) {
 		HttpHeaders headers = new HttpHeaders();
-		
 		headers.set("Accept", "application/json");
 
 		HttpEntity<String> entity = new HttpEntity<>(headers);
 
-		ResponseEntity<List<EntityTest1>> response = restTemplate.exchange(url, HttpMethod.GET, entity, new ParameterizedTypeReference<List<EntityTest1>>() { });
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
 		if (response.getStatusCode().is2xxSuccessful()) {
-			return response.getBody();
+			return convertResponseToEntityTest1List(response.getBody());
 		} else {
-			throw new RuntimeException("Failed to fetch users. Status code: " + response.getStatusCode());
+			ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
+			assertEquals(compare.getStatus(), errorResponse.getStatus());
+			assertEquals(compare.getMessage(), errorResponse.getMessage());
+			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: " + errorResponse.getMessage());
 		}
 	}
-	
-	private EntityTest1 getSingleResult(String url) {
-	
-		HttpHeaders headers = new HttpHeaders();
+
+	public EntityTest1 getSingleResult(String url, ErrorResponse compare) {
 		
-		headers.set("Accept", "application/json");
+	    HttpHeaders headers = new HttpHeaders();
+	    
+	    headers.set("Accept", "application/json");
 
-		HttpEntity<String> entity = new HttpEntity<>(headers);
+	    HttpEntity<String> entity = new HttpEntity<>(headers);
 
-		ResponseEntity<EntityTest1> response = restTemplate.exchange(url, HttpMethod.GET, entity, EntityTest1.class);
+	    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
-		if (response.getStatusCode().is2xxSuccessful()) {
-			return response.getBody();
-		} else {
-			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode());
-		}
+	    if (response.getStatusCode().is2xxSuccessful()) {
+	        return convertResponseToEntityTest1(response.getBody());
+	    } else {
+	    	ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
+			assertEquals(compare.getStatus(), errorResponse.getStatus());
+			assertEquals(compare.getMessage(), errorResponse.getMessage());
+	        throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: " + errorResponse.getMessage());
+	    }
 	}
 	
 	private Long getCountResult(String url) {
@@ -264,5 +260,47 @@ class QueryJpaController6Tests {
 		} else {
 			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode());
 		}
+	}
+	
+	private ObjectMapper createObjectMapper() {
+	    ObjectMapper objectMapper = new ObjectMapper();
+	    objectMapper.registerModule(new JavaTimeModule());
+	    objectMapper.findAndRegisterModules(); 
+	    return objectMapper;
+	}
+
+	private List<EntityTest1> convertResponseToEntityTest1List(String body) {
+	    ObjectMapper objectMapper = createObjectMapper();
+	    try {
+	    	if(body != null) {
+	    		return objectMapper.readValue(body, new TypeReference<List<EntityTest1>>(){});
+	    	} else {
+	    		return null;
+	    	}
+	    } catch (JsonProcessingException e) {
+	        throw new RuntimeException("Error parsing EntityTest1 list response", e);
+	    }
+	}
+
+	private EntityTest1 convertResponseToEntityTest1(String body) {
+	    ObjectMapper objectMapper = createObjectMapper();
+	    try {
+	    	if(body != null) {
+	    		return objectMapper.readValue(body, EntityTest1.class);
+	    	} else {
+	    		return null;
+	    	}
+	    } catch (JsonProcessingException e) {
+	        throw new RuntimeException("Error parsing EntityTest1 response", e);
+	    }
+	}
+
+	private ErrorResponse convertResponseToErrorResponse(String body) {
+	    ObjectMapper objectMapper = new ObjectMapper();
+	    try {
+	        return objectMapper.readValue(body, ErrorResponse.class);
+	    } catch (JsonProcessingException e) {
+	        throw new RuntimeException("Error parsing ErrorResponse", e);
+	    }
 	}
 }

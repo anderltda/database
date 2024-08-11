@@ -1,13 +1,10 @@
 package br.com.process.integration.database.core.application;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.process.integration.database.core.domain.Entity;
+import br.com.process.integration.database.core.exception.CheckedException;
+import br.com.process.integration.database.core.exception.UncheckedException;
 import br.com.process.integration.database.core.infrastructure.AbstractJpaRepository;
 import br.com.process.integration.database.core.reflection.MethodInvoker;
 import br.com.process.integration.database.core.reflection.MethodReflection;
@@ -27,8 +26,6 @@ import br.com.process.integration.database.core.reflection.MethodReflection;
 @Transactional
 public abstract class AbstractJpaService<E extends Entity<?>, T> extends AbstractJpaRepository<E, JpaRepository<E, T>> implements JpaService<T, E> {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractJpaService.class);
-	
 	protected T id;
 	protected Page<E> pages;
 	protected PagedModel<E> pagedModel;
@@ -49,31 +46,42 @@ public abstract class AbstractJpaService<E extends Entity<?>, T> extends Abstrac
 	 *****************************************************************************************************************************************************************/	
 	
 	@Override
-	public Long count(Map<String, Object> filter) {
-		return super.count(filter);
+	public Long count(Map<String, Object> filter) throws CheckedException {
+		try {
+			return super.countatble(filter);
+		} catch (UncheckedException cuex) {
+			throw new CheckedException(cuex.getMessage(), cuex);
+		}
 	}
 	
 	@Override
-	public E findBySingle(Map<String, Object> filter) {
-		return super.findBySingle(filter);
+	public E findBySingle(Map<String, Object> filter) throws CheckedException {
+		try {
+			return super.findSingle(filter);
+		} catch (UncheckedException cuex) {
+			throw new CheckedException(cuex.getMessage(), cuex);
+		}
 	}
 
 	@Override
-	public List<E> findAll(Map<String, Object> filter, List<String> sortList, List<String> sortOrders) {
-		return super.findAll(filter, sortList, sortOrders);
+	public List<E> findAll(Map<String, Object> filter, List<String> sortList, List<String> sortOrders) throws CheckedException {
+		try {
+			return super.findByAll(filter, sortList, sortOrders);
+		} catch (UncheckedException cuex) {
+			throw new CheckedException(cuex.getMessage(), cuex);
+		}
 	}
 	
 	@Override
-	public PagedModel<E> findAll(Map<String, Object> filter, Integer page, Integer size, List<String> sortList, List<String> sortOrders) {
+	public PagedModel<E> findAll(Map<String, Object> filter, Integer page, Integer size, List<String> sortList, List<String> sortOrders) throws CheckedException {
 		try {
 			Pageable pageable = PageRequest.of(page, size, createSortOrder(sortList, sortOrders));
-			pages = super.findAll(filter, pageable);
+			pages = super.findByPageAll(filter, pageable);
 			setPagedModel();
 			return pagedModel;
-		} catch (Exception ex) {
-			LOGGER.error("[findAll(Map filter, Integer page, Integer size, List sortList, List sortOrders)]", ex);
+		} catch (UncheckedException cuex) {
+			throw new CheckedException(cuex.getMessage(), cuex);
 		}
-		return null;
 	}
 	
 	 /*****************************************************************************************************************************************************************
@@ -99,34 +107,32 @@ public abstract class AbstractJpaService<E extends Entity<?>, T> extends Abstrac
 	 *****************************************************************************************************************************************************************/
 	
 	@Override
-	public Long count(Map<String, Object> filter, String methodQueryJPQL) {
+	public Long count(Map<String, Object> filter, String methodQueryJPQL) throws CheckedException {
 		
 		try {
 			Object[] methodArgs = MethodReflection.getMethodArgs(getRepository().getClass(), methodQueryJPQL, filter);
 			return (Long) methodInvoker.invokeMethodReturnObjectWithParameters(
 					MethodReflection.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
 		} catch (Exception ex) {
-			LOGGER.error("[count]", ex);
+			throw new CheckedException(ex.getMessage(), ex);
 		}
-		return null;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public E findBySingle(Map<String, Object> filter, String methodQueryJPQL) {
+	public E findBySingle(Map<String, Object> filter, String methodQueryJPQL) throws CheckedException {
 		try {
 			Object[] methodArgs = MethodReflection.getMethodArgs(getRepository().getClass(), methodQueryJPQL, filter);
 			return (E) methodInvoker.invokeMethodReturnObjectWithParameters(
 					MethodReflection.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
 		} catch (Exception ex) {
-			LOGGER.error("[findBySingle]", ex);
+			throw new CheckedException(ex.getMessage(), ex);
 		}
-		return null;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<E> findAll(Map<String, Object> filter, String methodQueryJPQL, List<String> sortList, List<String> sortOrders) {
+	public List<E> findAll(Map<String, Object> filter, String methodQueryJPQL, List<String> sortList, List<String> sortOrders) throws CheckedException {
 		try {
 			Sort sort = createSortOrder(sortList, sortOrders);
 			filter.put("sort", sort);
@@ -134,14 +140,13 @@ public abstract class AbstractJpaService<E extends Entity<?>, T> extends Abstrac
 			return (List<E>) methodInvoker.invokeMethodReturnObjectWithParameters(
 					MethodReflection.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
 		} catch (Exception ex) {
-			LOGGER.error("[findAll(Map filter, String methodQueryJPQL)]", ex);
+			throw new CheckedException(ex.getMessage(), ex);
 		}
-		return new ArrayList<>();
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public PagedModel<E> findAll(Map<String, Object> filter, String methodQueryJPQL, Integer page, Integer size, List<String> sortList, List<String> sortOrders) {
+	public PagedModel<E> findAll(Map<String, Object> filter, String methodQueryJPQL, Integer page, Integer size, List<String> sortList, List<String> sortOrders) throws CheckedException {
 		try {
 			Pageable pageable = PageRequest.of(page, size, createSortOrder(sortList, sortOrders));
 			filter.put("page", pageable);
@@ -151,9 +156,8 @@ public abstract class AbstractJpaService<E extends Entity<?>, T> extends Abstrac
 			setPagedModel();
 			return pagedModel;
 		} catch (Exception ex) {
-			LOGGER.error("[findAll]", ex);
+			throw new CheckedException(ex.getMessage(), ex);
 		}
-		return null;
 	}
 	
 	 /*****************************************************************************************************************************************************************

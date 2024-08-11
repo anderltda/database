@@ -13,24 +13,38 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.process.integration.database.core.exception.CheckedException;
 import br.com.process.integration.database.core.reflection.MethodReflection;
 import br.com.process.integration.database.core.util.Constants;
 
 @RestController
 @RequestMapping("/v1/api-rest-database")
 public class QueryNativeController extends AbstractController {
+	
+	@GetMapping(value = "/execute/query/count/{instance}/{query}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<String> count(@PathVariable String instance, @RequestParam Map<String, Object> filter, @PathVariable String query) throws CheckedException {
 
-	@GetMapping(value = "/execute/query/find/single/{instance}/{methodInvokerQuery}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> findBySingle(@PathVariable String instance,
-			@RequestParam(defaultValue = "") Map<String, Object> params, 
-			@PathVariable String methodInvokerQuery) {
+		addAjustFilter(filter);
 
-		addParam(params);
+		setView(instance);
+
+		Integer count = (Integer) methodInvoker.invokeMethodReturnObjectWithParameters(
+				MethodReflection.getNameService(instance), Constants.METHOD_EXECUTE_QUERY_NATIVE_COUNT, filter, query);
+
+		final String body = gson.toJson(count);
+
+		return new ResponseEntity<>(body, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/execute/query/find/single/{instance}/{query}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<String> findSingle(@PathVariable String instance, @RequestParam Map<String, Object> filter, @PathVariable String query) throws CheckedException {
+
+		addAjustFilter(filter);
 
 		setView(instance);
 
 		Object object = methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(instance), Constants.METHOD_EXECUTE_QUERY_NATIVE_FIND_BY_SINGLE, params, methodInvokerQuery);
+				MethodReflection.getNameService(instance), Constants.METHOD_EXECUTE_QUERY_NATIVE_SINGLE, filter, query);
 
 		if (object != null) {
 
@@ -42,17 +56,15 @@ public class QueryNativeController extends AbstractController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
-	@GetMapping(value = "/execute/query/find/all/{instance}/{methodInvokerQuery}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> findAll(@PathVariable String instance, 
-			@RequestParam(defaultValue = "") Map<String, Object> filter, 
-			@PathVariable String methodInvokerQuery) {
+	@GetMapping(value = "/execute/query/find/all/{instance}/{query}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<String> findAll(@PathVariable String instance, @RequestParam Map<String, Object> filter, @PathVariable String query) throws CheckedException {
 
-		addParam(filter);
+		addAjustFilter(filter);
 
 		setView(instance);
 
 		List<?> list = (List<?>) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(instance), Constants.METHOD_EXECUTE_QUERY_NATIVE, filter, methodInvokerQuery);
+				MethodReflection.getNameService(instance), Constants.METHOD_EXECUTE_QUERY_NATIVE, filter, query);
 
 		if (list != null && !list.isEmpty()) {
 
@@ -65,21 +77,14 @@ public class QueryNativeController extends AbstractController {
 	}
 
 	@SuppressWarnings({ "rawtypes" })
-	@GetMapping(value = "/execute/query/page/{instance}/{methodInvokerQuery}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public PagedModel executeQuery(@PathVariable String instance,
-			@RequestParam(defaultValue = "") Map<String, Object> params, 
-			@PathVariable String methodInvokerQuery,
-			@RequestParam(defaultValue = "0") Integer page, 
-			@RequestParam(defaultValue = "30") Integer size,
-			@RequestParam(defaultValue = "") List<String> sortList,
-			@RequestParam(defaultValue = "DESC") String sortOrder) {
+	@GetMapping(value = "/execute/query/page/{instance}/{query}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public PagedModel executeQuery(@PathVariable String instance, @RequestParam(defaultValue = "") Map<String, Object> filter, @PathVariable String query) throws CheckedException {
 
-		addParam(params);
+		addAjustFilter(filter);
 
 		setView(instance);
 
 		return (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(instance), Constants.METHOD_EXECUTE_QUERY_NATIVE, params,
-				methodInvokerQuery, page, size, sortList, sortOrder);
+				MethodReflection.getNameService(instance), Constants.METHOD_EXECUTE_QUERY_NATIVE_PAGINATOR, filter, query);
 	}
 }

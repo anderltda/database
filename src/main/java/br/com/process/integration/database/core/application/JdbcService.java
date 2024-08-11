@@ -5,12 +5,16 @@ import java.util.Map;
 
 import org.springframework.hateoas.PagedModel;
 
+import br.com.process.integration.database.core.exception.CheckedException;
+
 public interface JdbcService<V> {
 	
-	public V executeQueryNativeFindBySingle(Map<String, Object> filter, String invokerQuery);
+	public Integer executeQueryNativeCount(Map<String, Object> filter, String query) throws CheckedException;
+	
+	public V executeQueryNativeSingle(Map<String, Object> filter, String query) throws CheckedException;
 
-	public List<V> executeQueryNative(Map<String, Object> filter, String invokerQuery);
+	public List<V> executeQueryNative(Map<String, Object> filter, String query) throws CheckedException;
 
-	public PagedModel<V> executeQueryNative(Map<String, Object> search, String invokerQuery, Integer page, Integer size, List<String> sortList, String sortOrder);
+	public PagedModel<V> executeQueryNativePaginator(Map<String, Object> filter, String query) throws CheckedException;
 
 }	

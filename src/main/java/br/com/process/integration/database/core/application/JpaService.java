@@ -5,23 +5,25 @@ import java.util.Map;
 
 import org.springframework.hateoas.PagedModel;
 
+import br.com.process.integration.database.core.exception.CheckedException;
+
 public interface JpaService<T, E> {
 
-	public Long count(Map<String, Object> filter);
+	public Long count(Map<String, Object> filter) throws CheckedException;
 
-	public List<E> findAll(Map<String, Object> filter, List<String> sortList, List<String> sortOrders);
+	public List<E> findAll(Map<String, Object> filter, List<String> sortList, List<String> sortOrders) throws CheckedException;
 
-	public PagedModel<E> findAll(Map<String, Object> filter, Integer page, Integer size, List<String> sortList, List<String> sortOrders);
-	
-	public List<E> findAll(Map<String, Object> filter, String methodQueryJPQL, List<String> sortList, List<String> sortOrders);
-	
-	public PagedModel<E> findAll(Map<String, Object> filter, String methodQueryJPQL, Integer page, Integer size, List<String> sortList, List<String> sortOrders);
+	public PagedModel<E> findAll(Map<String, Object> filter, Integer page, Integer size, List<String> sortList, List<String> sortOrders) throws CheckedException;
 
-	public E findBySingle(Map<String, Object> filter, String methodQueryJPQL); 
-	
-	public E findBySingle(Map<String, Object> filter);
-	
-	public Long count(Map<String, Object> filter, String methodQueryJPQL);
+	public List<E> findAll(Map<String, Object> filter, String methodQueryJPQL, List<String> sortList, List<String> sortOrders) throws CheckedException;
+
+	public PagedModel<E> findAll(Map<String, Object> filter, String methodQueryJPQL, Integer page, Integer size, List<String> sortList, List<String> sortOrders) throws CheckedException;
+
+	public E findBySingle(Map<String, Object> filter, String methodQueryJPQL) throws CheckedException;
+
+	public E findBySingle(Map<String, Object> filter) throws CheckedException;
+
+	public Long count(Map<String, Object> filter, String methodQueryJPQL) throws CheckedException;
 
 	public List<E> findAllById(List<T> ids);
 
@@ -42,5 +44,5 @@ public interface JpaService<T, E> {
 	public void saveAll(List<E> models);
 
 	public void saveAllAndFlush(List<E> models);
-	
-}	
+
+}

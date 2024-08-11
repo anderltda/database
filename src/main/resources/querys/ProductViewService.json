@@ -40,7 +40,7 @@
 			"AND p.schedule_date {schedule_op} :schedule",
 			"AND p.end_date {endDate_op} :endDate"
 		],
-		"orderby": ":sortList :sortOrder"
+		"orderby": ":sortList :sortOrders"
 	},
 	
 	
@@ -73,7 +73,7 @@
 		"where": [
 			"AND p.title {title_op} :title"
 		],
-		"orderby": ":sortList :sortOrder"
+		"orderby": ":sortList :sortOrders"
 	},
 	
 	

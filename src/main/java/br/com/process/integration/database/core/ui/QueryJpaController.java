@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.process.integration.database.core.domain.Entity;
+import br.com.process.integration.database.core.exception.CheckedException;
 import br.com.process.integration.database.core.reflection.MethodReflection;
 import br.com.process.integration.database.core.util.Constants;
 
@@ -34,14 +35,14 @@ public class QueryJpaController extends AbstractController {
 	 * 	public Long count(Map<String, Object> filter)
 	 */
 	@GetMapping(value = "/count/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> count(@PathVariable String entity, @RequestParam(defaultValue = "") Map<String, Object> params) {
+	public ResponseEntity<String> count(@PathVariable String entity, @RequestParam(defaultValue = "") Map<String, Object> filter) throws CheckedException {
 
 		Entity<?> entityFound = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
 		setEntity(entity, entityFound);
 
 		Long count = (Long) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(entity), Constants.METHOD_COUNT, params);
+				MethodReflection.getNameService(entity), Constants.METHOD_COUNT, filter);
 
 		final String body = gson.toJson(count);
 
@@ -53,7 +54,7 @@ public class QueryJpaController extends AbstractController {
 	 * 	public E findBySingle(Map<String, Object> filter)
 	 */
 	@GetMapping(value = "/find/single/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> findBySingle(@PathVariable String entity, @RequestParam(defaultValue = "") Map<String, Object> params) {
+	public ResponseEntity<String> findBySingle(@PathVariable String entity, @RequestParam(defaultValue = "") Map<String, Object> params) throws CheckedException {
 
 		Entity<?> entityFound = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
@@ -78,18 +79,18 @@ public class QueryJpaController extends AbstractController {
 	@SuppressWarnings("unchecked")
 	@GetMapping(value = "/find/all/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> findAll(@PathVariable String entity, 
-			@RequestParam(defaultValue = "") Map<String, Object> params,
+			@RequestParam(defaultValue = "") Map<String, Object> filter,
 			@RequestParam(defaultValue = "") List<String> sortList,
-			@RequestParam(defaultValue = "DESC") List<String> sortOrders) {
+			@RequestParam(defaultValue = "DESC") List<String> sortOrders) throws CheckedException {
 		
-		removeParams(params);
+		removeTrashFilter(filter);
 		
 		Entity<?> entityFound = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
 		setEntity(entity, entityFound);
 
 		List<Entity<?>> list = (List<Entity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL, params, sortList, sortOrders);
+				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL, filter, sortList, sortOrders);
 
 		if (list != null && !list.isEmpty()) {
 
@@ -107,20 +108,20 @@ public class QueryJpaController extends AbstractController {
 	@SuppressWarnings({ "rawtypes" })
 	@GetMapping(value = "/find/all/page/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public PagedModel findAll(@PathVariable String entity,
-			@RequestParam(defaultValue = "") Map<String, Object> params, 
+			@RequestParam(defaultValue = "") Map<String, Object> filter, 
 			@RequestParam(defaultValue = "0") Integer page,
 			@RequestParam(defaultValue = "5") Integer size,
 			@RequestParam(defaultValue = "") List<String> sortList,
-			@RequestParam(defaultValue = "DESC") List<String> sortOrders) {
+			@RequestParam(defaultValue = "DESC") List<String> sortOrders) throws CheckedException {
 		
-		removeParams(params);
+		removeTrashFilter(filter);
 
 		Entity<?> entityFound = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
 		setEntity(entity, entityFound);
 
 		return (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL, params, page, size, sortList, sortOrders);
+				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL, filter, page, size, sortList, sortOrders);
 	}
 	
 	 /*****************************************************************************************************************************************************************
@@ -150,7 +151,7 @@ public class QueryJpaController extends AbstractController {
 	@GetMapping(value = "/count/jpql/{entity}/{methodQueryJPQL}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> count(@PathVariable String entity, 
 			@RequestParam(defaultValue = "") Map<String, Object> params,
-			@PathVariable String methodQueryJPQL) {
+			@PathVariable String methodQueryJPQL) throws CheckedException {
 
 		Entity<?> entityFound = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
@@ -170,7 +171,7 @@ public class QueryJpaController extends AbstractController {
 	@GetMapping(value = "/find/single/jpql/{entity}/{methodQueryJPQL}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> findBySingle(@PathVariable String entity, 
 			@RequestParam(defaultValue = "") Map<String, Object> params, 
-			@PathVariable String methodQueryJPQL) {
+			@PathVariable String methodQueryJPQL) throws CheckedException {
 
 		Entity<?> entityFound = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
@@ -195,19 +196,19 @@ public class QueryJpaController extends AbstractController {
 	@SuppressWarnings("unchecked")
 	@GetMapping(value = "/find/all/jpql/{entity}/{methodQueryJPQL}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> findAll(@PathVariable String entity, 
-			@RequestParam(defaultValue = "") Map<String, Object> params, 
+			@RequestParam(defaultValue = "") Map<String, Object> filter, 
 			@PathVariable String methodQueryJPQL,
 			@RequestParam(defaultValue = "") List<String> sortList,
-			@RequestParam(defaultValue = "DESC") List<String> sortOrders) {
+			@RequestParam(defaultValue = "DESC") List<String> sortOrders) throws CheckedException {
 		
-		removeParams(params);
+		removeTrashFilter(filter);
 
 		Entity<?> entityFound = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
 		setEntity(entity, entityFound);
 
 		List<Entity<?>> list = (List<Entity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL, params, methodQueryJPQL, sortList, sortOrders);
+				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL, filter, methodQueryJPQL, sortList, sortOrders);
 
 		if (list != null && !list.isEmpty()) {
 
@@ -225,14 +226,14 @@ public class QueryJpaController extends AbstractController {
 	@SuppressWarnings({ "rawtypes" })
 	@GetMapping(value = "/find/all/jpql/page/{entity}/{methodQueryJPQL}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public PagedModel findAll(@PathVariable String entity, 
-			@RequestParam(defaultValue = "") Map<String, Object> params, 
+			@RequestParam(defaultValue = "") Map<String, Object> filter, 
 			@PathVariable String methodQueryJPQL,
 			@RequestParam(defaultValue = "0") Integer page,
 			@RequestParam(defaultValue = "30") Integer size,
 			@RequestParam(defaultValue = "") List<String> sortList,
-			@RequestParam(defaultValue = "DESC") List<String> sortOrders) {
+			@RequestParam(defaultValue = "DESC") List<String> sortOrders) throws CheckedException {
 
-		removeParams(params);
+		removeTrashFilter(filter);
 
 		Entity<?> entityFound = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
@@ -240,7 +241,7 @@ public class QueryJpaController extends AbstractController {
 
 		return (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(
 				MethodReflection.getNameService(entityFound.getClass().getSimpleName()), Constants.METHOD_FIND_ALL, 
-				params, methodQueryJPQL, page, size, sortList, sortOrders);
+				filter, methodQueryJPQL, page, size, sortList, sortOrders);
 	}
 	
 	 /*****************************************************************************************************************************************************************
@@ -266,7 +267,7 @@ public class QueryJpaController extends AbstractController {
 	
 	@SuppressWarnings("unchecked")
 	@GetMapping(value = "/find/all/ids/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> findAllIds(@PathVariable String entity, @RequestParam List<String> ids) {
+	public ResponseEntity<String> findAllIds(@PathVariable String entity, @RequestParam List<String> ids) throws CheckedException {
 
 		List<Entity<?>> list = (List<Entity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
 				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL_BY_ID, ids);
@@ -282,7 +283,7 @@ public class QueryJpaController extends AbstractController {
 	}
 	
 	@GetMapping(value = "/find/{entity}/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> findById(@PathVariable String entity, @PathVariable String id) {
+	public ResponseEntity<String> findById(@PathVariable String entity, @PathVariable String id) throws CheckedException {
 
 		setId(entity, id);
 
@@ -300,7 +301,7 @@ public class QueryJpaController extends AbstractController {
 	}
 
 	@GetMapping(value = "/exist/{entity}/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> existsById(@PathVariable String entity, @PathVariable String id) {
+	public ResponseEntity<String> existsById(@PathVariable String entity, @PathVariable String id) throws CheckedException {
 
 		setId(entity, id);
 

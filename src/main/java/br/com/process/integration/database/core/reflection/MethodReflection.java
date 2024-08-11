@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import br.com.process.integration.database.core.exception.CheckedException;
 import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.core.util.DynamicTypeConverter;
 import jakarta.persistence.JoinColumn;
@@ -34,7 +35,7 @@ public class MethodReflection {
 	
 	private MethodReflection() {}
 	
-	public static void transformsJsonModel(JsonNode jsonNode, Object object) throws Exception {
+	public static void transformsJsonModel(JsonNode jsonNode, Object object) throws CheckedException {
 
 		List<Field> fields = MethodReflection.getFields(object.getClass(), Object.class);
 
