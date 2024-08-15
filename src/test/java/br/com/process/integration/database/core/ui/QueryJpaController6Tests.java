@@ -188,7 +188,17 @@ class QueryJpaController6Tests {
 	}
 	
 	@Test
-	void teste_nenhum_registro_encontrado() {
+	void teste_single_nenhum_registro_encontrado() {
+
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/single/jpql/EntityTest1/buscaComEqualPeloName?name=Pedro";
+		
+		EntityTest1 entity = getSingleResult(url, new ErrorResponse());
+		
+		assertNull(entity);
+	}
+	
+	@Test
+	void teste_all_nenhum_registro_encontrado() {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/EntityTest1/buscaComLikePeloName?name=Silva&sortList=name,birthDate&sortOrders=desc,asc";
 		

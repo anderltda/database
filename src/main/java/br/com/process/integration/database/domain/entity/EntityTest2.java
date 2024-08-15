@@ -7,6 +7,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import br.com.process.integration.database.core.domain.BeanEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,8 +19,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "Entity_Test_2")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EntityTest2 extends RepresentationModel<EntityTest2>
-		implements br.com.process.integration.database.core.domain.Entity<String> {
+public class EntityTest2 extends RepresentationModel<EntityTest2> implements BeanEntity<String> {
 
 	@Id
 	@Column(name = "id_entity_test_2")

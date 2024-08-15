@@ -1,6 +1,7 @@
 package br.com.process.integration.database.core.ui;
 
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -323,6 +324,26 @@ class QueryNativeController1Tests {
 	}
 	
 	@Test
+	void teste_utilizando_group_by() {
+
+		String url = "http://localhost:" + port + "/v1/api-rest-database//execute/query/find/all/EntityTest1View/teste_utilizando_group_by";
+
+		List<EntityTest1View> list = getAll(url, new ErrorResponse());
+		
+		assertNotNull(list);
+	}
+	
+	@Test
+	void teste_utilizando_group_by_erro() {
+
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_utilizando_group_by_erro";
+
+		ErrorResponse errorResponse = new ErrorResponse("PreparedStatementCallback; uncategorized SQLException for SQL", 400);
+		
+	    assertThrows(RuntimeException.class, () -> getSingleResult(url, errorResponse));
+	}
+	
+	@Test
 	void teste_busca_all_ordernacao_birthDate_asc_name_desc() {
 		
 		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?sortList=birthDate,name&sortOrders=asc,desc";
@@ -487,7 +508,9 @@ class QueryNativeController1Tests {
 	}
 	
 	public List<EntityTest1View> getAll(String url, ErrorResponse compare) {
+		
 		HttpHeaders headers = new HttpHeaders();
+		
 		headers.set("Accept", "application/json");
 
 		HttpEntity<String> entity = new HttpEntity<>(headers);
@@ -499,7 +522,7 @@ class QueryNativeController1Tests {
 		} else {
 			ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
 			assertEquals(compare.getStatus(), errorResponse.getStatus());
-			assertEquals(compare.getMessage(), errorResponse.getMessage());
+			assertTrue(errorResponse.getMessage().contains(compare.getMessage()));
 			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: " + errorResponse.getMessage());
 		}
 	}
@@ -519,7 +542,7 @@ class QueryNativeController1Tests {
 	    } else {
 	    	ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
 			assertEquals(compare.getStatus(), errorResponse.getStatus());
-			assertEquals(compare.getMessage(), errorResponse.getMessage());
+			assertTrue(errorResponse.getMessage().contains(compare.getMessage()));
 	        throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: " + errorResponse.getMessage());
 	    }
 	}
@@ -539,7 +562,7 @@ class QueryNativeController1Tests {
 		} else {
 	    	ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
 			assertEquals(compare.getStatus(), errorResponse.getStatus());
-			assertEquals(compare.getMessage(), errorResponse.getMessage());
+			assertTrue(errorResponse.getMessage().contains(compare.getMessage()));
 	        throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: " + errorResponse.getMessage());
 
 		}

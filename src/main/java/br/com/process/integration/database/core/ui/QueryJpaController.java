@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.process.integration.database.core.domain.Entity;
+import br.com.process.integration.database.core.domain.BeanEntity;
 import br.com.process.integration.database.core.exception.CheckedException;
 import br.com.process.integration.database.core.reflection.MethodReflection;
 import br.com.process.integration.database.core.util.Constants;
@@ -37,7 +37,7 @@ public class QueryJpaController extends AbstractController {
 	@GetMapping(value = "/count/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> count(@PathVariable String entity, @RequestParam(defaultValue = "") Map<String, Object> filter) throws CheckedException {
 
-		Entity<?> entityFound = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
+		BeanEntity<?> entityFound = (BeanEntity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
 		setEntity(entity, entityFound);
 
@@ -56,14 +56,14 @@ public class QueryJpaController extends AbstractController {
 	@GetMapping(value = "/find/single/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> findBySingle(@PathVariable String entity, @RequestParam(defaultValue = "") Map<String, Object> params) throws CheckedException {
 
-		Entity<?> entityFound = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
+		BeanEntity<?> entityFound = (BeanEntity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
 		setEntity(entity, entityFound);
 
-		entityFound = (Entity<?>) methodInvoker.invokeMethodReturnObjectWithParameters(
+		entityFound = (BeanEntity<?>) methodInvoker.invokeMethodReturnObjectWithParameters(
 				MethodReflection.getNameService(entity), Constants.METHOD_FIND_BY_SINGLE, params);
 
-		if (entityFound != null && entityFound.getId() != null) {
+		if (entityFound != null) {
 
 			final String body = gson.toJson(entityFound, entityFound.getClass());
 
@@ -85,14 +85,14 @@ public class QueryJpaController extends AbstractController {
 		
 		removeTrashFilter(filter);
 		
-		Entity<?> entityFound = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
+		BeanEntity<?> entityFound = (BeanEntity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
 		setEntity(entity, entityFound);
 
-		List<Entity<?>> list = (List<Entity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
+		List<BeanEntity<?>> list = (List<BeanEntity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
 				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL, filter, sortList, sortOrders);
 
-		if (list != null && !list.isEmpty()) {
+		if (!list.isEmpty()) {
 
 			final String body = gson.toJson(list);
 
@@ -116,7 +116,7 @@ public class QueryJpaController extends AbstractController {
 		
 		removeTrashFilter(filter);
 
-		Entity<?> entityFound = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
+		BeanEntity<?> entityFound = (BeanEntity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
 		setEntity(entity, entityFound);
 
@@ -153,7 +153,7 @@ public class QueryJpaController extends AbstractController {
 			@RequestParam(defaultValue = "") Map<String, Object> params,
 			@PathVariable String methodQueryJPQL) throws CheckedException {
 
-		Entity<?> entityFound = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
+		BeanEntity<?> entityFound = (BeanEntity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
 		setEntity(entity, entityFound);
 
@@ -173,14 +173,14 @@ public class QueryJpaController extends AbstractController {
 			@RequestParam(defaultValue = "") Map<String, Object> params, 
 			@PathVariable String methodQueryJPQL) throws CheckedException {
 
-		Entity<?> entityFound = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
+		BeanEntity<?> entityFound = (BeanEntity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
 		setEntity(entity, entityFound);
 
-		entityFound = (Entity<?>) methodInvoker.invokeMethodReturnObjectWithParameters(
+		entityFound = (BeanEntity<?>) methodInvoker.invokeMethodReturnObjectWithParameters(
 				MethodReflection.getNameService(entity), Constants.METHOD_FIND_BY_SINGLE, params, methodQueryJPQL);
 
-		if (entityFound != null && entityFound.getId() != null) {
+		if (entityFound != null) {
 
 			final String body = gson.toJson(entityFound, entityFound.getClass());
 
@@ -203,14 +203,14 @@ public class QueryJpaController extends AbstractController {
 		
 		removeTrashFilter(filter);
 
-		Entity<?> entityFound = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
+		BeanEntity<?> entityFound = (BeanEntity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
 		setEntity(entity, entityFound);
 
-		List<Entity<?>> list = (List<Entity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
+		List<BeanEntity<?>> list = (List<BeanEntity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
 				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL, filter, methodQueryJPQL, sortList, sortOrders);
 
-		if (list != null && !list.isEmpty()) {
+		if (!list.isEmpty()) {
 
 			final String body = gson.toJson(list);
 
@@ -235,7 +235,7 @@ public class QueryJpaController extends AbstractController {
 
 		removeTrashFilter(filter);
 
-		Entity<?> entityFound = (Entity<?>) MethodReflection.findEntityUsingClassLoader(entity);
+		BeanEntity<?> entityFound = (BeanEntity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
 		setEntity(entity, entityFound);
 
@@ -269,10 +269,10 @@ public class QueryJpaController extends AbstractController {
 	@GetMapping(value = "/find/all/ids/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> findAllIds(@PathVariable String entity, @RequestParam List<String> ids) throws CheckedException {
 
-		List<Entity<?>> list = (List<Entity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
+		List<BeanEntity<?>> list = (List<BeanEntity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
 				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL_BY_ID, ids);
 
-		if (list != null && !list.isEmpty()) {
+		if (!list.isEmpty()) {
 
 			final String body = gson.toJson(list);
 
@@ -287,10 +287,10 @@ public class QueryJpaController extends AbstractController {
 
 		setId(entity, id);
 
-		Entity<?> entityFound = (Entity<?>) methodInvoker.invokeMethodReturnObjectWithParameters(
+		BeanEntity<?> entityFound = (BeanEntity<?>) methodInvoker.invokeMethodReturnObjectWithParameters(
 				MethodReflection.getNameService(entity), Constants.METHOD_FIND_BY_ID);
 
-		if (entityFound != null && entityFound.getId() != null) {
+		if (entityFound != null) {
 
 			final String body = gson.toJson(entityFound, entityFound.getClass());
 
