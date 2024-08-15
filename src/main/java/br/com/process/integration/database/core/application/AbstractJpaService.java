@@ -15,7 +15,7 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.process.integration.database.core.domain.Entity;
+import br.com.process.integration.database.core.domain.BeanEntity;
 import br.com.process.integration.database.core.exception.CheckedException;
 import br.com.process.integration.database.core.exception.UncheckedException;
 import br.com.process.integration.database.core.infrastructure.AbstractJpaRepository;
@@ -24,7 +24,7 @@ import br.com.process.integration.database.core.reflection.MethodReflection;
 
 @Service
 @Transactional
-public abstract class AbstractJpaService<E extends Entity<?>, T> extends AbstractJpaRepository<E, JpaRepository<E, T>> implements JpaService<T, E> {
+public abstract class AbstractJpaService<E extends BeanEntity<?>, T> extends AbstractJpaRepository<E, JpaRepository<E, T>> implements JpaService<T, E> {
 
 	protected T id;
 	protected Page<E> pages;

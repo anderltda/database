@@ -18,6 +18,7 @@ public class EntityTest1View extends RepresentationModel<EntityTest1View> {
 	private Double height;
 	private LocalDate birthDate;
 	private LocalDateTime prohibited;
+	private Long count;
 
 	// EntityTest2
 	private String idEntityTest2;
@@ -235,6 +236,14 @@ public class EntityTest1View extends RepresentationModel<EntityTest1View> {
 
 	public void setValue5(Integer value5) {
 		this.value5 = value5;
+	}
+	
+	public Long getCount() {
+		return count;
+	}
+
+	public void setCount(Long count) {
+		this.count = count;
 	}
 
 	@Override

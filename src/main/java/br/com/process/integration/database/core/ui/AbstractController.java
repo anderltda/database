@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import br.com.process.integration.database.core.domain.Entity;
+import br.com.process.integration.database.core.domain.BeanEntity;
 import br.com.process.integration.database.core.exception.CheckedException;
 import br.com.process.integration.database.core.reflection.MethodInvoker;
 import br.com.process.integration.database.core.reflection.MethodReflection;
@@ -62,20 +62,24 @@ public abstract class AbstractController {
 	}
 	
 	protected void setId(String nameEntity, String id) throws CheckedException {
-		Entity<?> entity = (Entity<?>) MethodReflection.findEntityUsingClassLoader(nameEntity);
+		BeanEntity<?> entity = (BeanEntity<?>) MethodReflection.findEntityUsingClassLoader(nameEntity);
 		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameEntity), "setId", DynamicTypeConverter.convert(entity, id));
 	}
 	
 	protected void setEntity(String nameEntity) throws CheckedException {
-		Entity<?> entity = (Entity<?>) MethodReflection.findEntityUsingClassLoader(nameEntity);
+		BeanEntity<?> entity = (BeanEntity<?>) MethodReflection.findEntityUsingClassLoader(nameEntity);
 		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameEntity), "setEntity", entity);
 	}
 	
-	protected void setEntity(String nameEntity, Entity<?> entity) throws CheckedException {
+	protected void setEntity(String nameEntity, BeanEntity<?> entity) throws CheckedException {
 		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameEntity), "setEntity", entity);
 	}
 	
 	protected void setView(String nameView) throws CheckedException {
-		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameView), "setView", MethodReflection.findDtoUsingClassLoader(nameView));
+		try {
+			methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameView), "setView", MethodReflection.findDtoUsingClassLoader(nameView));
+		} catch (Exception ex) {
+			throw new CheckedException(ex.getMessage());
+		}
 	}
 }

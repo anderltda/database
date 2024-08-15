@@ -12,7 +12,7 @@ import org.springframework.data.domain.Sort;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import br.com.process.integration.database.core.domain.Entity;
+import br.com.process.integration.database.core.domain.BeanEntity;
 import br.com.process.integration.database.core.reflection.MethodReflection;
 
 public class DynamicTypeConverter {
@@ -65,7 +65,7 @@ public class DynamicTypeConverter {
 		return object;
 	}
 
-	public static Object convert(Entity<?> model, String value) {
+	public static Object convert(BeanEntity<?> model, String value) {
 
 		Class<?> object = MethodReflection.getTypeById(model);
 

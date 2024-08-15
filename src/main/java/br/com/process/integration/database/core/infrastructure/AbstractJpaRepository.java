@@ -12,13 +12,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import br.com.process.integration.database.core.domain.Entity;
+import br.com.process.integration.database.core.domain.BeanEntity;
 import br.com.process.integration.database.core.domain.EntityRepository;
 import br.com.process.integration.database.core.exception.UncheckedException;
 import br.com.process.integration.database.core.reflection.MethodPredicate;
 import br.com.process.integration.database.core.reflection.MethodReflection;
 import br.com.process.integration.database.core.util.Constants;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -29,7 +30,7 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
 @Repository
-public abstract class AbstractJpaRepository<E extends Entity<?>, R extends JpaRepository<?, ?>> implements EntityRepository<E, R> {
+public abstract class AbstractJpaRepository<E extends BeanEntity<?>, R extends JpaRepository<?, ?>> implements EntityRepository<E, R> {
 
 	protected static final Map<String, String> OPERADORES = new HashMap<>();
 
@@ -139,6 +140,8 @@ public abstract class AbstractJpaRepository<E extends Entity<?>, R extends JpaRe
 			List<Predicate> predicates = buildPredicates(filter, criteriaBuilder, root);
 			query.select(root).where(criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()])));
 			return entityManager.createQuery(query).getSingleResult();
+		} catch (NoResultException ex) {
+			return null;
 		} catch (Exception ex) {
 			throw new UncheckedException(ex.getMessage(), ex);
 		}

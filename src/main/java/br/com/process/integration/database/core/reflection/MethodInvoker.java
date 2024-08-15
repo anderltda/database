@@ -2,6 +2,7 @@ package br.com.process.integration.database.core.reflection;
 
 import java.lang.reflect.Method;
 
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,8 @@ public class MethodInvoker {
 			Method method = bean.getClass().getMethod(methodName, paramTypes);
 			method.invoke(bean, params);
 
+		} catch (NoSuchBeanDefinitionException ex) {
+			throw new CheckedException(ex.getMessage());
 		} catch (Exception ex) {
 			if (ex.getCause() instanceof CheckedException ccx) {
 				throw ccx;
@@ -43,6 +46,8 @@ public class MethodInvoker {
 			Method method = bean.getClass().getMethod(methodName, paramTypes);
 			return method.invoke(bean, params);
 
+		} catch (NoSuchBeanDefinitionException ex) {
+			throw new CheckedException(ex.getMessage());
 		} catch (Exception ex) {
 			if (ex.getCause() instanceof CheckedException ccx) {
 				throw ccx;
