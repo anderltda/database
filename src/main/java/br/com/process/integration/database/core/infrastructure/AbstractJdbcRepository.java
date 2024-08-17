@@ -20,9 +20,9 @@ import br.com.process.integration.database.core.exception.UncheckedException;
 import br.com.process.integration.database.core.util.Constants;
 
 @Repository
-public abstract class AbstractJdbcRepository<V extends RepresentationModel<V>> extends AbstractAssembler<V> implements ViewRepository<V> {
+public abstract class AbstractJdbcRepository<M extends RepresentationModel<M>> extends AbstractAssembler<M> implements ViewRepository<M> {
 
-    protected AbstractJdbcRepository(Class<?> controllerClass, Class<V> resourceType) {
+    protected AbstractJdbcRepository(Class<?> controllerClass, Class<M> resourceType) {
         super(controllerClass, resourceType);
     }
 
@@ -32,17 +32,17 @@ public abstract class AbstractJdbcRepository<V extends RepresentationModel<V>> e
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	private RowMapper<V> rowMapper = null;
+	private RowMapper<M> rowMapper = null;
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public V findSingle(V view, Map<String, Object> filters, String fileQuery, String query) throws UncheckedException {
+	public M findSingle(M view, Map<String, Object> filters, String fileQuery, String query) throws UncheckedException {
 
 		try {
 
 			MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 
-			rowMapper = new BeanPropertyRowMapper<>((Class<V>) view.getClass());
+			rowMapper = new BeanPropertyRowMapper<>((Class<M>) view.getClass());
 
 			String sql = configQuery.executeSQL(filters, fileQuery, query, mapSqlParameterSource);
 
@@ -60,33 +60,34 @@ public abstract class AbstractJdbcRepository<V extends RepresentationModel<V>> e
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<V> findAll(V view, Map<String, Object> filter, String fileQuery, String query) throws UncheckedException {
+	public List<M> findAll(M view, Map<String, Object> filter, String fileQuery, String query) throws UncheckedException {
 
 		try {
 
 			MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 
-			rowMapper = new BeanPropertyRowMapper<>((Class<V>) view.getClass());
+			rowMapper = new BeanPropertyRowMapper<>((Class<M>) view.getClass());
 
 			String sql = configQuery.executeSQL(filter, fileQuery, query, mapSqlParameterSource);
 
 			return namedParameterJdbcTemplate.query(sql, mapSqlParameterSource,
-					new DynamicRowMapper<>((Class<V>) view.getClass()));
+					new DynamicRowMapper<>((Class<M>) view.getClass()));
 
 		} catch (Exception ex) {
 			throw new UncheckedException(ex.getMessage(), ex);
 		}
+		
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<V> findAll(V view, Map<String, Object> filter, String fileQuery, String query, Integer page, Integer size) throws UncheckedException {
+	public List<M> findAll(M view, Map<String, Object> filter, String fileQuery, String query, Integer page, Integer size) throws UncheckedException {
 
 		try {
 
 			MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 
-			rowMapper = new BeanPropertyRowMapper<>((Class<V>) view.getClass());
+			rowMapper = new BeanPropertyRowMapper<>((Class<M>) view.getClass());
 
 			StringBuilder sql = new StringBuilder();
 
@@ -104,7 +105,6 @@ public abstract class AbstractJdbcRepository<V extends RepresentationModel<V>> e
 		} catch (Exception ex) {
 			throw new UncheckedException(ex.getMessage(), ex);
 		}
-
 	}
 
 	@Override

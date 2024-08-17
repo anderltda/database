@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +25,7 @@ import br.com.process.integration.database.core.reflection.MethodReflection;
 
 @Service
 @Transactional
-public abstract class AbstractJpaService<E extends BeanEntity<?>, T> extends AbstractJpaRepository<E, JpaRepository<E, T>> implements JpaService<T, E> {
+public abstract class AbstractJpaService<E extends BeanEntity<?>, M extends RepresentationModel<M>, T> extends AbstractJpaRepository<E, M, JpaRepository<E, T>> implements JpaService<T, E> {
 
 	protected T id;
 	protected Page<E> pages;
@@ -36,6 +37,10 @@ public abstract class AbstractJpaService<E extends BeanEntity<?>, T> extends Abs
 
 	@Autowired
 	protected MethodInvoker methodInvoker;
+
+	protected AbstractJpaService(Class<?> controllerClass, Class<M> resourceType) {
+		super(controllerClass, resourceType);
+	}
 	
 	 /*****************************************************************************************************************************************************************
 	 *																																								  *

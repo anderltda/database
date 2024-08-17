@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.stereotype.Repository;
 
 import br.com.process.integration.database.core.domain.BeanEntity;
@@ -30,7 +31,11 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
 @Repository
-public abstract class AbstractJpaRepository<E extends BeanEntity<?>, R extends JpaRepository<?, ?>> implements EntityRepository<E, R> {
+public abstract class AbstractJpaRepository<E extends BeanEntity<?>, M extends RepresentationModel<M>, R extends JpaRepository<?, ?>> extends AbstractAssembler<M> implements EntityRepository<E, R> {
+
+	protected AbstractJpaRepository(Class<?> controllerClass, Class<M> resourceType) {
+		super(controllerClass, resourceType);
+	}
 
 	protected static final Map<String, String> OPERADORES = new HashMap<>();
 

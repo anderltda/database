@@ -19,6 +19,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import br.com.process.integration.database.core.util.Constants;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -55,7 +57,7 @@ class QueryJpaControllerDeleteTests {
 
 		json = json.substring(0, json.length() - 1) + "]";
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/delete/all/id/EntityOne";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/delete/all/id/EntityOne";
 
 		String statusCode = deleteResource(url, json);
 
@@ -66,7 +68,7 @@ class QueryJpaControllerDeleteTests {
 	@Order(3)
 	void testDeleteForId() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/delete/id/EntityOne/" + QueryJpaControllerSaveTests.id;
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/delete/id/EntityOne/" + QueryJpaControllerSaveTests.id;
 
 		String statusCode = deleteResource(url);
 
@@ -77,7 +79,7 @@ class QueryJpaControllerDeleteTests {
 	@Order(4)
 	void testDeleteForAll() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/delete/all/EntityOne";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/delete/all/EntityOne";
 
 		String statusCode = deleteResource(url);
 

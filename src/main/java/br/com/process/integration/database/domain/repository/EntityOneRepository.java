@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import br.com.process.integration.database.domain.entity.test.EntityOne;
+import br.com.process.integration.database.domain.model.entity.EntityOne;
 
 @Repository
 public interface EntityOneRepository extends JpaRepository<EntityOne, Long>, JpaSpecificationExecutor<EntityOne> {

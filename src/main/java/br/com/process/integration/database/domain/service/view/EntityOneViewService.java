@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.process.integration.database.core.application.AbstractJdbcService;
 import br.com.process.integration.database.core.ui.QueryNativeController;
-import br.com.process.integration.database.domain.view.EntityOneView;
+import br.com.process.integration.database.domain.model.view.EntityOneView;
 
 @Service
 @Transactional
@@ -36,7 +36,6 @@ public class EntityOneViewService extends AbstractJdbcService<EntityOneView> {
 	@Override
 	public void setPagedModel() {
 		pagedModel = pagedResourcesAssembler.toModel(pages, this);
-		
 	}
 
 }

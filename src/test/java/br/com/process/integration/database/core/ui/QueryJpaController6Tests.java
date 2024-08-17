@@ -33,7 +33,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import br.com.process.integration.database.core.exception.ErrorResponse;
-import br.com.process.integration.database.domain.entity.test.EntityOne;
+import br.com.process.integration.database.core.util.Constants;
+import br.com.process.integration.database.domain.model.entity.EntityOne;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -63,7 +64,7 @@ class QueryJpaController6Tests {
 	void teste_busca_com_equal_pelo_name_unico_registro() {
 
 		String url = "http://localhost:" + port
-				+ "/v1/api-rest-database/find/single/jpql/EntityOne/buscaComEqualPeloName?name=Anderson";
+				+ Constants.API_NAME_REQUEST_MAPPING + "/find/single/jpql/EntityOne/buscaComEqualPeloName?name=Anderson";
 
 		EntityOne entity = getSingleResult(url, new ErrorResponse());
 
@@ -84,7 +85,7 @@ class QueryJpaController6Tests {
 	void teste_busca_com_equal_pelo_name_unico_registro_trazend_mais_de_um() {
 
 		String url = "http://localhost:" + port
-				+ "/v1/api-rest-database/find/single/jpql/EntityOne/buscaComLikePeloName?name=Paulo";
+				+ Constants.API_NAME_REQUEST_MAPPING + "/find/single/jpql/EntityOne/buscaComLikePeloName?name=Paulo";
 
 		ErrorResponse errorResponse = new ErrorResponse("Query did not return a unique result: 2 results were returned",
 				400);
@@ -97,7 +98,7 @@ class QueryJpaController6Tests {
 	void teste_busca_com_like_pelo_name() {
 
 		String url = "http://localhost:" + port
-				+ "/v1/api-rest-database/find/all/jpql/EntityOne/buscaComLikePeloName?name=ar&sortList=birthDate,name&sortOrders=asc,desc";
+				+ Constants.API_NAME_REQUEST_MAPPING + "/find/all/jpql/EntityOne/buscaComLikePeloName?name=ar&sortList=birthDate,name&sortOrders=asc,desc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -114,7 +115,7 @@ class QueryJpaController6Tests {
 	void teste_busca_all_ordernacao_birthDate_asc_name_desc() {
 
 		String url = "http://localhost:" + port
-				+ "/v1/api-rest-database/find/all/jpql/EntityOne/buscaAll?sortList=birthDate,name&sortOrders=asc,desc";
+				+ Constants.API_NAME_REQUEST_MAPPING + "/find/all/jpql/EntityOne/buscaAll?sortList=birthDate,name&sortOrders=asc,desc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -136,7 +137,7 @@ class QueryJpaController6Tests {
 	void teste_busca_all_ordernacao_birthDate_desc_name_asc() {
 
 		String url = "http://localhost:" + port
-				+ "/v1/api-rest-database/find/all/jpql/EntityOne/buscaAll?sortList=birthDate,name&sortOrders=desc,asc";
+				+ Constants.API_NAME_REQUEST_MAPPING + "/find/all/jpql/EntityOne/buscaAll?sortList=birthDate,name&sortOrders=desc,asc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -158,7 +159,7 @@ class QueryJpaController6Tests {
 	void teste_busca_all_ordernacao_name_asc_birthDate_desc() {
 
 		String url = "http://localhost:" + port
-				+ "/v1/api-rest-database/find/all/jpql/EntityOne/buscaAll?sortList=name,birthDate&sortOrders=asc,desc";
+				+ Constants.API_NAME_REQUEST_MAPPING + "/find/all/jpql/EntityOne/buscaAll?sortList=name,birthDate&sortOrders=asc,desc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -180,7 +181,7 @@ class QueryJpaController6Tests {
 	void teste_busca_all_ordernacao_name_desc_birthDate_asc() {
 
 		String url = "http://localhost:" + port
-				+ "/v1/api-rest-database/find/all/jpql/EntityOne/buscaAll?sortList=name,birthDate&sortOrders=desc,asc";
+				+ Constants.API_NAME_REQUEST_MAPPING + "/find/all/jpql/EntityOne/buscaAll?sortList=name,birthDate&sortOrders=desc,asc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -202,7 +203,7 @@ class QueryJpaController6Tests {
 	void teste_single_nenhum_registro_encontrado() {
 
 		String url = "http://localhost:" + port
-				+ "/v1/api-rest-database/find/single/jpql/EntityOne/buscaComEqualPeloName?name=Pedro";
+				+ Constants.API_NAME_REQUEST_MAPPING + "/find/single/jpql/EntityOne/buscaComEqualPeloName?name=Pedro";
 
 		EntityOne entity = getSingleResult(url, new ErrorResponse());
 
@@ -212,7 +213,7 @@ class QueryJpaController6Tests {
 	@Test
 	void teste_all_nenhum_registro_encontrado() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/EntityOne/buscaComLikePeloName?name=Silva&sortList=name,birthDate&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/jpql/EntityOne/buscaComLikePeloName?name=Silva&sortList=name,birthDate&sortOrders=desc,asc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -223,7 +224,7 @@ class QueryJpaController6Tests {
 	void teste_count_maior_prohibited() {
 
 		String url = "http://localhost:" + port
-				+ "/v1/api-rest-database/count/jpql/EntityOne/countMaiorProhibited?prohibited=2024-11-01T08:00:00";
+				+ Constants.API_NAME_REQUEST_MAPPING + "/count/jpql/EntityOne/countMaiorProhibited?prohibited=2024-11-01T08:00:00";
 
 		Long count = Long.parseLong(getUniqueResult(url, new ErrorResponse()));
 
@@ -234,7 +235,7 @@ class QueryJpaController6Tests {
 	void teste_count_erro() {
 
 		String url = "http://localhost:" + port
-				+ "/v1/api-rest-database/count/jpql/EntityOne/countMaiorProhibited?prohibited=2024-11-01T08:00:00";
+				+ Constants.API_NAME_REQUEST_MAPPING + "/count/jpql/EntityOne/countMaiorProhibited?prohibited=2024-11-01T08:00:00";
 
 		Long count = Long.parseLong(getUniqueResult(url, new ErrorResponse()));
 

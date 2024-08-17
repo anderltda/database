@@ -3,12 +3,10 @@ package br.com.process.integration.database.core.infrastructure;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 
-public abstract class AbstractAssembler<V extends RepresentationModel<V>> extends RepresentationModelAssemblerSupport<V, V> {
+public abstract class AbstractAssembler<M extends RepresentationModel<M>> extends RepresentationModelAssemblerSupport<M, M> {
 
-    protected AbstractAssembler(Class<?> controllerClass, Class<V> resourceType) {
+    protected AbstractAssembler(Class<?> controllerClass, Class<M> resourceType) {
         super(controllerClass, resourceType);
     }
-
-    @Override
-    public abstract V toModel(V view);
+    
 }

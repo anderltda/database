@@ -18,7 +18,7 @@ import br.com.process.integration.database.core.reflection.MethodReflection;
 import br.com.process.integration.database.core.util.Constants;
 
 @RestController
-@RequestMapping("/v1/api-rest-database")
+@RequestMapping("/v1/database")
 public class QueryNativeController extends AbstractController {
 	
 	@GetMapping(value = "/execute/query/count/{instance}/{query}", produces = { MediaType.APPLICATION_JSON_VALUE })

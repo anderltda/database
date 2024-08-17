@@ -30,7 +30,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import br.com.process.integration.database.core.exception.ErrorResponse;
-import br.com.process.integration.database.domain.entity.test.EntityOne;
+import br.com.process.integration.database.core.util.Constants;
+import br.com.process.integration.database.domain.model.entity.EntityOne;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -59,7 +60,7 @@ class QueryJpaController5Tests {
 	@Test
 	void teste_busca_com_equal_pelo_entityTwo_por_color_por_ordernacao_entityTwo() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?entityTwo.color=Preto&entityTwo.color_op=eq&page=0&size=10&sortList=entityTwo.dateInclusion,entityTwo.hex&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?entityTwo.color=Preto&entityTwo.color_op=eq&page=0&size=10&sortList=entityTwo.dateInclusion,entityTwo.hex&sortOrders=desc,asc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -74,7 +75,7 @@ class QueryJpaController5Tests {
 	@Test
 	void teste_busca_com_in_pelo_entityTree_por_animal() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?entityTwo.entityTree.animal=Cavalo,Gato,Papagaio&entityTwo.entityTree.animal_op=in&page=0&size=10&sortList=entityTwo.color,entityTwo.entityTree.animal&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?entityTwo.entityTree.animal=Cavalo,Gato,Papagaio&entityTwo.entityTree.animal_op=in&page=0&size=10&sortList=entityTwo.color,entityTwo.entityTree.animal&sortOrders=desc,asc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -103,7 +104,7 @@ class QueryJpaController5Tests {
 	@Test
 	void teste_busca_com_equal_pelo_entityTree_por_animal() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?entityTwo.entityTree.animal=Capivara&entityTwo.entityTree.animal_op=eq";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?entityTwo.entityTree.animal=Capivara&entityTwo.entityTree.animal_op=eq";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -118,7 +119,7 @@ class QueryJpaController5Tests {
 	@Test
 	void teste_busca_com_equal_pelo_entityFour_por_fruit() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?entityTwo.entityTree.entityFour.fruit=Pitanga&entityTwo.entityTree.entityFour.fruit_op=eq&page=0&size=10";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?entityTwo.entityTree.entityFour.fruit=Pitanga&entityTwo.entityTree.entityFour.fruit_op=eq&page=0&size=10";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -129,7 +130,7 @@ class QueryJpaController5Tests {
 	@Test
 	void teste_busca_com_equal_pelo_entityFive_por_fruit() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?entityTwo.entityTree.entityFour.entityFive.object=Cama&entityTwo.entityTree.entityFour.entityFive.object_op=eq&page=0&size=10&sortList=name&sortOrders=desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?entityTwo.entityTree.entityFour.entityFive.object=Cama&entityTwo.entityTree.entityFour.entityFive.object_op=eq&page=0&size=10&sortList=name&sortOrders=desc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -145,7 +146,7 @@ class QueryJpaController5Tests {
 	@Test
 	void teste_busca_com_like_pelo_entityFive_por_fruit() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?entityTwo.entityTree.entityFour.entityFive.object=c*&entityTwo.entityTree.entityFour.entityFive.object_op=lk&page=0&size=10&sortList=entityTwo.dateInclusion,entityTwo.hex&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?entityTwo.entityTree.entityFour.entityFive.object=c*&entityTwo.entityTree.entityFour.entityFive.object_op=lk&page=0&size=10&sortList=entityTwo.dateInclusion,entityTwo.hex&sortOrders=desc,asc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 

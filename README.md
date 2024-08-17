@@ -1,6 +1,4 @@
-# database
-
-# Command Sonar
+# database - Command Sonar
 mvn clean install verify sonar:sonar \            
   -Dsonar.projectKey=database \
   -Dsonar.host.url=http://localhost:9001 \

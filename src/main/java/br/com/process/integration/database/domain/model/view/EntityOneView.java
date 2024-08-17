@@ -1,4 +1,4 @@
-package br.com.process.integration.database.domain.view;
+package br.com.process.integration.database.domain.model.view;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

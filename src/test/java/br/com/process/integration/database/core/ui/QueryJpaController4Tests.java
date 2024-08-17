@@ -35,7 +35,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import br.com.process.integration.database.core.exception.ErrorResponse;
-import br.com.process.integration.database.domain.entity.test.EntityOne;
+import br.com.process.integration.database.core.util.Constants;
+import br.com.process.integration.database.domain.model.entity.EntityOne;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -63,15 +64,15 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_sortList_sortOrders_com_erro() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?name=Anderson&name_op=lk&sortList=name,asc&sortOrders=asc,desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?name=Anderson&name_op=lk&sortList=name,asc&sortOrders=asc,desc";
 		
-		teste_single_parameterized_one(url, "Could not resolve attribute 'asc' of 'br.com.process.integration.database.domain.entity.test.EntityOne'");
+		teste_single_parameterized_one(url, "Could not resolve attribute 'asc' of 'br.com.process.integration.database.domain.model.entity.EntityOne'");
 	}
 
 	@Test
 	void teste_busca_com_equal_pelo_name() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?name=Anderson&name_op=eq&page=0&size=10&sortList=name&sortOrders=asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?name=Anderson&name_op=eq&page=0&size=10&sortList=name&sortOrders=asc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 		
@@ -93,7 +94,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_com_equal_pelo_age_e_birthDate_e_prohibited_ordernacao_name_asc() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&prohibited=2024-11-01T08:00:00&prohibited_op=eq&page=0&size=10&sortList=name&sortOrders=asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&prohibited=2024-11-01T08:00:00&prohibited_op=eq&page=0&size=10&sortList=name&sortOrders=asc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -106,7 +107,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_notEqual_do_teste_busca_com_equal_pelo_age_e_birthDate_e_prohibited_ordernacao_name_asc() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?age=22&age_op=ne&birthDate=1990-01-01&birthDate_op=ne&prohibited=2024-11-01T08:00:00&prohibited_op=ne&page=0&size=10&sortList=name,id&sortOrders=asc,desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?age=22&age_op=ne&birthDate=1990-01-01&birthDate_op=ne&prohibited=2024-11-01T08:00:00&prohibited_op=ne&page=0&size=10&sortList=name,id&sortOrders=asc,desc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -124,7 +125,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_notEqual_com_name() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?name=Carlos&name_op=ne&page=0&size=10&sortList=name&sortOrders=asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?name=Carlos&name_op=ne&page=0&size=10&sortList=name&sortOrders=asc";
 		
 		testes_single_parameterized_one(url, 9);
 	}
@@ -132,7 +133,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_com_equal_pelo_age_e_birthDate_e_height() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&height=1.8&height_op=eq&page=0&size=10&sortList=name,height&sortOrders=asc,desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&height=1.8&height_op=eq&page=0&size=10&sortList=name,height&sortOrders=asc,desc";
 
 		testes_single_parameterized_other(url, "Ricardo", 1);
 	}
@@ -140,7 +141,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_com_equal_e_prohibited_e_ordernado_por_name_asc() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?prohibited=2024-11-01T08:00:00&prohibited_op=eq&sortList=name&sortOrders=asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?prohibited=2024-11-01T08:00:00&prohibited_op=eq&sortList=name&sortOrders=asc";
 		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 		
@@ -154,15 +155,15 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_com_equal_e_prohibited_e_ordernado_por_name_asc_com_erro() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?prohibited=2024-11-01T08:00:00&prohibited_op=eq&sortList=name&sortOrder=asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?prohibited=2024-11-01T08:00:00&prohibited_op=eq&sortList=name&sortOrder=asc";
 		
-		teste_single_parameterized_one(url, "Could not resolve attribute 'sortOrder' of 'br.com.process.integration.database.domain.entity.test.EntityOne'");
+		teste_single_parameterized_one(url, "Could not resolve attribute 'sortOrder' of 'br.com.process.integration.database.domain.model.entity.EntityOne'");
 	}
 	
 	@Test
 	void teste_busca_com_like_pelo_name_asterico_esquerda_e_direita_ordernado_por_birthDate_desc_e_name_asc() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?name=*ar*&name_op=lk&page=0&size=10&sortList=birthDate,name&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?name=*ar*&name_op=lk&page=0&size=10&sortList=birthDate,name&sortOrders=desc,asc";
 		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -178,7 +179,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_por_like_pelo_name_asterico_direita() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?name=ar*&name_op=lk&page=0&size=10&sortList=name&sortOrders=asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?name=ar*&name_op=lk&page=0&size=10&sortList=name&sortOrders=asc";
 		
 		testes_single_parameterized_other(url, "Ariovaldo", 1);
 	}
@@ -186,7 +187,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_por_in_com_birthDate_ordernado_com_age_asc() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?birthDate=1956-08-30,1986-09-09,1990-09-09&birthDate_op=in&page=0&size=10&sortList=age&sortOrders=asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?birthDate=1956-08-30,1986-09-09,1990-09-09&birthDate_op=in&page=0&size=10&sortList=age&sortOrders=asc";
 		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -200,7 +201,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_por_in_com_birthDate_ordernado_com_age_desc() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?birthDate=1956-08-30,1990-01-01,1990-09-09&birthDate_op=in&page=0&size=10&sortList=age,height&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?birthDate=1956-08-30,1990-01-01,1990-09-09&birthDate_op=in&page=0&size=10&sortList=age,height&sortOrders=desc,asc";
 		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -215,7 +216,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_por_in_com_age() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?age=55,12,22&age_op=in&page=0&size=10&sortList=age&sortOrders=desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?age=55,12,22&age_op=in&page=0&size=10&sortList=age&sortOrders=desc";
 
 		testes_single_parameterized_one(url, 4);
 	}
@@ -223,7 +224,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_por_in_com_ids() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?id= " + QueryJpaController1Tests.ids.get(0) + "," + QueryJpaController1Tests.ids.get(1) + "&id_op=in&page=0&size=10&sortList=id&sortOrders=asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?id= " + QueryJpaController1Tests.ids.get(0) + "," + QueryJpaController1Tests.ids.get(1) + "&id_op=in&page=0&size=10&sortList=id&sortOrders=asc";
 
 		testes_single_parameterized_one(url, 2);
 	}
@@ -231,7 +232,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_por_between_com_height_ordernado_por_height_desc() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?height=1.40,1.78&height_op=bt&page=0&size=10&sortList=height&sortOrders=desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?height=1.40,1.78&height_op=bt&page=0&size=10&sortList=height&sortOrders=desc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -246,7 +247,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_por_between_com_prohibited_ordernado_por_birthDate_desc() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?prohibited=2024-02-01T08:50:00,2024-10-01T08:50:55&prohibited_op=bt&page=0&size=10&sortList=birthDate&sortOrders=desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?prohibited=2024-02-01T08:50:00,2024-10-01T08:50:55&prohibited_op=bt&page=0&size=10&sortList=birthDate&sortOrders=desc";
 		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -262,15 +263,15 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_por_greaterThanOrEqualTo_com_height_com_erro() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?height=1.86&height_op=ge&page=0&size=10&ortList=height&sortOrders=desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?height=1.86&height_op=ge&page=0&size=10&ortList=height&sortOrders=desc";
 		
-		teste_single_parameterized_one(url, "Could not resolve attribute 'ortList' of 'br.com.process.integration.database.domain.entity.test.EntityOne'");
+		teste_single_parameterized_one(url, "Could not resolve attribute 'ortList' of 'br.com.process.integration.database.domain.model.entity.EntityOne'");
 	}
 	
 	@Test
 	void teste_busca_por_greaterThanOrEqualTo_com_height() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?height=1.86&height_op=ge&page=0&size=10&sortList=height&sortOrders=desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?height=1.86&height_op=ge&page=0&size=10&sortList=height&sortOrders=desc";
 		
 		testes_single_parameterized_one(url, 3);
 	}
@@ -278,7 +279,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_por_greaterThan_com_height() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?height=1.87&height_op=gt&page=0&size=10&sortList=height&sortOrders=desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?height=1.87&height_op=gt&page=0&size=10&sortList=height&sortOrders=desc";
 
 		testes_single_parameterized_one(url, 2);
 	}
@@ -286,7 +287,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_por_greaterThan_com_birthDate() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?birthDate=1990-09-09&birthDate_op=gt&page=0&size=10&sortList=birthDate&sortOrders=desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?birthDate=1990-09-09&birthDate_op=gt&page=0&size=10&sortList=birthDate&sortOrders=desc";
 
 		testes_single_parameterized_one(url, 3);
 	}
@@ -294,7 +295,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_por_greaterThanOrEqualTo_e_lessThanOrEqualTo_com_birthDate() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?birthDate=1990-01-02&birthDate_op=ge&birthDate=2016-01-01&birthDate_op=le&page=0&size=10&sortList=birthDate&sortOrders=desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?birthDate=1990-01-02&birthDate_op=ge&birthDate=2016-01-01&birthDate_op=le&page=0&size=10&sortList=birthDate&sortOrders=desc";
 
 		testes_single_parameterized_one(url, 4);
 	}
@@ -302,7 +303,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_por_lessThanOrEqualTo_com_birthDate() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?birthDate=1990-01-02&birthDate_op=le&page=0&size=10&sortList=birthDate&sortOrders=desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?birthDate=1990-01-02&birthDate_op=le&page=0&size=10&sortList=birthDate&sortOrders=desc";
 
 		testes_single_parameterized_one(url, 6);
 	}
@@ -310,7 +311,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_por_lessThan_com_birthDate() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?birthDate=1986-09-08&birthDate_op=lt&page=0&size=10&sortList=birthDate&sortOrders=desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?birthDate=1986-09-08&birthDate_op=lt&page=0&size=10&sortList=birthDate&sortOrders=desc";
 
 		testes_single_parameterized_one(url, 3);
 	}
@@ -318,7 +319,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_por_lessThanOrEqualTo_com_age() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?age=21&age_op=le&page=0&size=10&sortList=age&sortOrders=desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?age=21&age_op=le&page=0&size=10&sortList=age&sortOrders=desc";
 
 		testes_single_parameterized_one(url, 2);
 	}
@@ -326,7 +327,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_por_greaterThanOrEqualTo_com_birthDate() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?birthDate=2016-01-01&birthDate_op=ge&page=0&size=10&sortList=birthDate&sortOrders=desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?birthDate=2016-01-01&birthDate_op=ge&page=0&size=10&sortList=birthDate&sortOrders=desc";
 
 		testes_single_parameterized_other(url, "Maria", 1);
 	}
@@ -334,7 +335,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_por_lessThan_com_age() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?age=21&age_op=lt&page=0&size=10&sortList=age&sortOrders=desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?age=21&age_op=lt&page=0&size=10&sortList=age&sortOrders=desc";
 		
 		testes_single_parameterized_other(url, "Maria", 1);
 	}
@@ -342,7 +343,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_all_ordernacao_birthDate_asc_name_desc() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -363,7 +364,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_all_ordernacao_birthDate_desc_name_asc() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?page=0&size=20&sortList=birthDate,name&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?page=0&size=20&sortList=birthDate,name&sortOrders=desc,asc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -384,7 +385,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_all_ordernacao_name_asc_birthDate_desc() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?page=0&size=20&sortList=name,birthDate&sortOrders=asc,desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?page=0&size=20&sortList=name,birthDate&sortOrders=asc,desc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 		
@@ -405,7 +406,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_all_ordernacao_name_desc_birthDate_asc() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?page=0&size=20&sortList=name, birthDate&sortOrders=desc, asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?page=0&size=20&sortList=name, birthDate&sortOrders=desc, asc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 		
@@ -426,7 +427,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_nenhum_registro_encontrado() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?page=0&size=20&name=Silva&name_op=eq";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?page=0&size=20&name=Silva&name_op=eq";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 		
@@ -437,7 +438,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_por_ids() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?id=" + QueryJpaController1Tests.ids.get(0) + "," + QueryJpaController1Tests.ids.get(1) + "," + QueryJpaController1Tests.ids.get(2) + "&id_op=in&page=0&size=20";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?id=" + QueryJpaController1Tests.ids.get(0) + "," + QueryJpaController1Tests.ids.get(1) + "," + QueryJpaController1Tests.ids.get(2) + "&id_op=in&page=0&size=20";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 		
@@ -451,7 +452,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_por_ids_nao_encontrado() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?id=1,2,3&id_op=in&page=0&size=20&sortList=name&sortOrders=desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?id=1,2,3&id_op=in&page=0&size=20&sortList=name&sortOrders=desc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 		

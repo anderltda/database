@@ -22,7 +22,7 @@ import br.com.process.integration.database.core.reflection.MethodReflection;
 import br.com.process.integration.database.core.util.Constants;
 
 @RestController
-@RequestMapping("/v1/api-rest-database")
+@RequestMapping("/v1/database")
 public class CrudJpaController extends AbstractController {
 
 	@DeleteMapping(value = "/delete/all/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -129,5 +129,4 @@ public class CrudJpaController extends AbstractController {
 		
 		return gson.toJson(list);
 	}
-
 }

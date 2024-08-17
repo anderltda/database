@@ -17,6 +17,8 @@ spring:
     generate-ddl: false
     show-sql: true
     open-in-view: false
-
+  mvc:
+    favicon:
+      enabled: false
 query:
   path: "select p from Product p where p.title like CONCAT('%',(?1),'%')"

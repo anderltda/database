@@ -34,11 +34,12 @@ import com.google.gson.reflect.TypeToken;
 
 import br.com.process.integration.database.core.ui.adapter.LocalDateAdapter;
 import br.com.process.integration.database.core.ui.adapter.LocalDateTimeAdapter;
-import br.com.process.integration.database.domain.entity.test.EntityFive;
-import br.com.process.integration.database.domain.entity.test.EntityFour;
-import br.com.process.integration.database.domain.entity.test.EntityOne;
-import br.com.process.integration.database.domain.entity.test.EntityTree;
-import br.com.process.integration.database.domain.entity.test.EntityTwo;
+import br.com.process.integration.database.core.util.Constants;
+import br.com.process.integration.database.domain.model.entity.EntityFive;
+import br.com.process.integration.database.domain.model.entity.EntityFour;
+import br.com.process.integration.database.domain.model.entity.EntityOne;
+import br.com.process.integration.database.domain.model.entity.EntityTree;
+import br.com.process.integration.database.domain.model.entity.EntityTwo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -80,12 +81,11 @@ class QueryJpaController1Tests {
 		assertNotNull(crudJpaController);
 	}
 	
-	
 	@Test
 	@Order(2)
 	void testSave() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/save/EntityOne";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/save/EntityOne";
 
 		String[] text = new String[5];
 		Integer[] inteiro = new Integer[5];
@@ -148,7 +148,7 @@ class QueryJpaController1Tests {
 	@Order(3)
 	void testSaveFlush() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/save/flush/EntityOne";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/save/flush/EntityOne";
 
 		String[] text = new String[5];
 		Integer[] inteiro = new Integer[5];
@@ -209,7 +209,7 @@ class QueryJpaController1Tests {
 	@Order(4)
 	void testSaveAll() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/save/all/EntityOne";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/save/all/EntityOne";
 
 		List<EntityOne> list = new ArrayList<>();
 
@@ -414,7 +414,7 @@ class QueryJpaController1Tests {
 	@Order(5)
 	void testSaveAllFlush() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/save/all/flush/EntityOne";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/save/all/flush/EntityOne";
 
 		List<EntityOne> list = new ArrayList<>();
 

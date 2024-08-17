@@ -4,7 +4,7 @@ public class Constants {
 	
 	private Constants() {}
 	
-	public static final String API_NAME_REQUEST_MAPPING = "/v1/api-rest-database";
+	public static final String API_NAME_REQUEST_MAPPING = "/v1/database";
 	
 	/**
 	 *  Inicio do nome do diretorio
@@ -19,12 +19,12 @@ public class Constants {
 	/**
 	 *  Nome do pacote onde estao as classes das entidades (entitys)
 	 */
-	public static final String PACKAGE_NAME_ENTITY = "br.com.process.integration.database.domain.entity";
+	public static final String PACKAGE_NAME_ENTITY = "br.com.process.integration.database.domain.model.entity";
 	
 	/**
 	 *  Nome do pacote onde estao as classes dos views
 	 */
-	public static final String PACKAGE_NAME_VIEW = "br.com.process.integration.database.domain.view";
+	public static final String PACKAGE_NAME_VIEW = "br.com.process.integration.database.domain.model.view";
 	
 	/**
 	 * Referencia ao identificador da operacao
@@ -113,7 +113,6 @@ public class Constants {
 	public static final String HTML_LIKE = "lk";
 	public static final String HTML_IN = "in";
 	public static final String HTML_BETWEEN = "bt";
-
 	
 	public static final String SELECT_COUNT = "SELECT COUNT(*)";
 	public static final String FROM = "FROM";
@@ -123,8 +122,5 @@ public class Constants {
 	public static final String WHERE = "WHERE 1=1";
 	public static final String ORDER_BY = "ORDER BY";
 	public static final String GROUP_BY = "GROUP BY";
-	
-	
-
 
 }

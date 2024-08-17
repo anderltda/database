@@ -1,4 +1,4 @@
-package br.com.process.integration.database.domain.entity.test;
+package br.com.process.integration.database.domain.model.entity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
