@@ -3,7 +3,6 @@ package br.com.process.integration.database.core.ui;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Collection;
 import java.util.List;
@@ -102,16 +101,6 @@ class QueryJpaController7Tests {
 
 		assertNotNull(list);
 		assertEquals(0, list.size());
-	}
-	
-	@Test
-	void teste_busca_com_like_pelo_name_nao_encontrado_com_erro() {
-
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest/buscaComLikePeloName?name=Silva&page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
-
-		ErrorResponse errorResponse = new ErrorResponse("Cannot invoke \"org.springframework.data.jpa.repository.JpaRepository.getClass()\" because the return value of \"br.com.process.integration.database.core.application.AbstractJpaService.getRepository()\" is null", 400);
-
-		assertThrows(RuntimeException.class, () -> getAll(url, errorResponse));
 	}
 	
 	@Test

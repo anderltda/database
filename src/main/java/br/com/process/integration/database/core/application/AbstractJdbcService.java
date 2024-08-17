@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +18,11 @@ import br.com.process.integration.database.core.infrastructure.AbstractJdbcRepos
 
 @Service
 @Transactional
-public abstract class AbstractJdbcService<V> extends AbstractJdbcRepository<V> implements JdbcService<V> {
+public abstract class AbstractJdbcService<V extends RepresentationModel<V>> extends AbstractJdbcRepository<V> implements JdbcService<V> {
+   
+	protected AbstractJdbcService(Class<?> controllerClass, Class<V> resourceType) {
+        super(controllerClass, resourceType);
+    }
 
 	protected V view;
 

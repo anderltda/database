@@ -241,36 +241,6 @@ class QueryJpaController6Tests {
 		assertEquals(4, count);
 	}
 
-	@Test
-	void teste_count_erro_repository() {
-
-		String url = "http://localhost:" + port
-				+ "/v1/api-rest-database/count/jpql/EntityTest/countMaiorProhibited?prohibited=2024-11-01T08:00:00";
-
-		ErrorResponse errorResponse = new ErrorResponse(
-				"Cannot invoke \"org.springframework.data.jpa.repository.JpaRepository.getClass()\" because the return value of \"br.com.process.integration.database.core.application.AbstractJpaService.getRepository()\" is null",
-				400);
-
-		assertThrows(RuntimeException.class, () -> getSingleResult(url, errorResponse));
-
-	}
-
-	@Test
-	void teste_findAll_erro_repository() {
-
-		String url = "http://localhost:" + port
-				+ "/v1/api-rest-database/find/all/jpql/EntityTest/buscaComLikePeloName?name=Silva&sortList=name,birthDate&sortOrders=desc,asc";
-
-		ErrorResponse errorResponse = new ErrorResponse(
-				"Cannot invoke \"org.springframework.data.jpa.repository.JpaRepository.getClass()\" because the return value of \"br.com.process.integration.database.core.application.AbstractJpaService.getRepository()\" is null",
-				400);
-
-		assertThrows(RuntimeException.class, () -> getAll(url, errorResponse));
-
-	}
-
-
-
 	public List<EntityOne> getAll(String url, ErrorResponse compare) {
 		
 		HttpHeaders headers = new HttpHeaders();

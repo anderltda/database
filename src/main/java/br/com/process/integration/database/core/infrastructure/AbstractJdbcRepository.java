@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,7 +20,11 @@ import br.com.process.integration.database.core.exception.UncheckedException;
 import br.com.process.integration.database.core.util.Constants;
 
 @Repository
-public abstract class AbstractJdbcRepository<V> implements ViewRepository<V> {
+public abstract class AbstractJdbcRepository<V extends RepresentationModel<V>> extends AbstractAssembler<V> implements ViewRepository<V> {
+
+    protected AbstractJdbcRepository(Class<?> controllerClass, Class<V> resourceType) {
+        super(controllerClass, resourceType);
+    }
 
 	@Autowired
 	private ConfigQuery configQuery;
