@@ -1,4 +1,4 @@
-package br.com.process.integration.database.domain.service;
+package br.com.process.integration.database.domain.service.entity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.process.integration.database.core.application.AbstractJpaService;
-import br.com.process.integration.database.domain.entity.EntityTest;
 import br.com.process.integration.database.domain.entity.assembler.EntityTestAssembler;
+import br.com.process.integration.database.domain.entity.test.EntityTest;
 
 @Service
 @Transactional

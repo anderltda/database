@@ -34,7 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import br.com.process.integration.database.core.exception.ErrorResponse;
-import br.com.process.integration.database.domain.entity.EntityOne;
+import br.com.process.integration.database.domain.entity.test.EntityOne;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -87,7 +87,7 @@ class QueryJpaController2Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?name=Anderson&name_op=lk&sortList=name,asc&sortOrders=asc,desc";
 		
-	    testes_single_parameterized_one(url, "Could not resolve attribute 'asc' of 'br.com.process.integration.database.domain.entity.EntityOne'");
+	    testes_single_parameterized_one(url, "Could not resolve attribute 'asc' of 'br.com.process.integration.database.domain.entity.test.EntityOne'");
 	}
 
 	@Test
@@ -148,7 +148,7 @@ class QueryJpaController2Tests {
 		
 		String url = "http://localhost:" + port + "/v1/api-rest-database/count/EntityTest?name=*ar*&name_op=lk";
 		
-		ErrorResponse errorResponse = new ErrorResponse("Not an entity: br.com.process.integration.database.domain.entity.EntityTest", 400);
+		ErrorResponse errorResponse = new ErrorResponse("Not an entity: br.com.process.integration.database.domain.entity.test.EntityTest", 400);
 		
 	    assertThrows(RuntimeException.class, () -> getUniqueResult(url, errorResponse));
 	}
@@ -208,7 +208,7 @@ class QueryJpaController2Tests {
 		
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?prohibited=2024-11-01T08:00:00&prohibited_op=eq&sortList=name&sortOrder=asc";
 
-		testes_single_parameterized_one(url, "Could not resolve attribute 'sortOrder' of 'br.com.process.integration.database.domain.entity.EntityOne'");
+		testes_single_parameterized_one(url, "Could not resolve attribute 'sortOrder' of 'br.com.process.integration.database.domain.entity.test.EntityOne'");
 	}
 	
 	@Test

@@ -35,7 +35,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import br.com.process.integration.database.core.exception.ErrorResponse;
-import br.com.process.integration.database.domain.view.EntityOneView;
+import br.com.process.integration.database.domain.view.test.EntityOneView;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

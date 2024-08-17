@@ -5,7 +5,7 @@ import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSuppor
 import org.springframework.stereotype.Component;
 
 import br.com.process.integration.database.core.ui.QueryNativeController;
-import br.com.process.integration.database.domain.view.EntityOneView;
+import br.com.process.integration.database.domain.view.test.EntityOneView;
 
 @Component
 public class EntityOneViewAssembler extends RepresentationModelAssemblerSupport<EntityOneView, EntityOneView> {

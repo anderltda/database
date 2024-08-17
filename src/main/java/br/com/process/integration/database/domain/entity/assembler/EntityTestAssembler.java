@@ -5,7 +5,7 @@ import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSuppor
 import org.springframework.stereotype.Component;
 
 import br.com.process.integration.database.core.ui.QueryJpaController;
-import br.com.process.integration.database.domain.entity.EntityTest;
+import br.com.process.integration.database.domain.entity.test.EntityTest;
 
 @Component
 public class EntityTestAssembler extends RepresentationModelAssemblerSupport<EntityTest, EntityTest> {

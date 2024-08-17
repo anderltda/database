@@ -34,11 +34,11 @@ import com.google.gson.reflect.TypeToken;
 
 import br.com.process.integration.database.core.ui.adapter.LocalDateAdapter;
 import br.com.process.integration.database.core.ui.adapter.LocalDateTimeAdapter;
-import br.com.process.integration.database.domain.entity.EntityOne;
-import br.com.process.integration.database.domain.entity.EntityTwo;
-import br.com.process.integration.database.domain.entity.EntityTree;
-import br.com.process.integration.database.domain.entity.EntityFour;
-import br.com.process.integration.database.domain.entity.EntityFive;
+import br.com.process.integration.database.domain.entity.test.EntityFive;
+import br.com.process.integration.database.domain.entity.test.EntityFour;
+import br.com.process.integration.database.domain.entity.test.EntityOne;
+import br.com.process.integration.database.domain.entity.test.EntityTree;
+import br.com.process.integration.database.domain.entity.test.EntityTwo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

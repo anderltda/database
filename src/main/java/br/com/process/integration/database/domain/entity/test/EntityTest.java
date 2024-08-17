@@ -1,4 +1,4 @@
-package br.com.process.integration.database.domain.entity;
+package br.com.process.integration.database.domain.entity.test;
 
 import java.util.Objects;
 
