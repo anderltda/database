@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import br.com.process.integration.database.core.domain.BeanEntity;
+import br.com.process.integration.database.core.exception.CheckedException;
 import br.com.process.integration.database.core.reflection.MethodReflection;
 
 public class DynamicTypeConverter {
@@ -65,24 +66,30 @@ public class DynamicTypeConverter {
 		return object;
 	}
 
-	public static Object convert(BeanEntity<?> model, String value) {
+	public static Object convert(BeanEntity<?> model, String value) throws CheckedException {
 
-		Class<?> object = MethodReflection.getTypeById(model);
+		try {
 
-		if (object.getTypeName().equals(Integer.class.getName())) {
-			return Integer.parseInt(value);
-		} else if (object.getTypeName().equals(Long.class.getName())) {
-			return Long.parseLong(value);
-		} else if (object.getTypeName().equals(Short.class.getName())) {
-			return Short.parseShort(value);
-		} else if (object.getTypeName().equals(Double.class.getName())) {
-			return Double.parseDouble(value);
-		} else if (object.getTypeName().equals(Float.class.getName())) {
-			return Float.parseFloat(value);
-		} else if (object.getTypeName().equals(Byte.class.getName())) {
-			return Byte.parseByte(value);
-		} else {
-			return value;
+			Class<?> object = MethodReflection.getTypeById(model);
+
+			if (object.getTypeName().equals(Integer.class.getName())) {
+				return Integer.parseInt(value);
+			} else if (object.getTypeName().equals(Long.class.getName())) {
+				return Long.parseLong(value);
+			} else if (object.getTypeName().equals(Short.class.getName())) {
+				return Short.parseShort(value);
+			} else if (object.getTypeName().equals(Double.class.getName())) {
+				return Double.parseDouble(value);
+			} else if (object.getTypeName().equals(Float.class.getName())) {
+				return Float.parseFloat(value);
+			} else if (object.getTypeName().equals(Byte.class.getName())) {
+				return Byte.parseByte(value);
+			} else {
+				return value;
+			}
+
+		} catch (Exception ex) {
+			throw new CheckedException(ex.getMessage(), ex);
 		}
 
 	}

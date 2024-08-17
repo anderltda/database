@@ -21,23 +21,17 @@ public class DynamicRowMapper<T> implements RowMapper<T> {
 
 	@Override
 	public T mapRow(ResultSet rs, int rowNum) throws SQLException {
-		
+
 		T instance;
 
 		try {
-			
 			instance = mappedClass.getDeclaredConstructor().newInstance();
-
 			for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
 				String columnName = rs.getMetaData().getColumnLabel(i);
 				Object columnValue = rs.getObject(i);
-
 				String fieldName = convertToCamelCase(columnName);
-
-				// Chama método separado para definir o valor do campo
 				setFieldValue(instance, fieldName, columnValue);
 			}
-			
 		} catch (Exception e) {
 			throw new SQLException("Failed to map row to " + mappedClass.getName(), e);
 		}
@@ -46,18 +40,14 @@ public class DynamicRowMapper<T> implements RowMapper<T> {
 	}
 
 	private void setFieldValue(T instance, String fieldName, Object columnValue) {
-		
-		try {
 
-			// Converte o valor da coluna para o tipo adequado
+		try {
 			Field field = mappedClass.getDeclaredField(fieldName);
 			Object convertedValue = convertToFieldType(field, columnValue);
 
-			// Constrói o nome do método setter (ex: setFirstName)
 			String setterName = "set" + capitalize(fieldName);
 			Method setter = mappedClass.getMethod(setterName, field.getType());
 
-			// Invoca o setter para definir o valor no campo
 			setter.invoke(instance, convertedValue);
 
 		} catch (NoSuchFieldException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
@@ -86,16 +76,16 @@ public class DynamicRowMapper<T> implements RowMapper<T> {
 				result.append(Character.toLowerCase(ch));
 			}
 		}
-
 		return result.toString();
 	}
 
 	private Object convertToFieldType(Field field, Object columnValue) {
+		
+		Class<?> fieldType = field.getType();
+		
 		if (columnValue == null) {
 			return null;
 		}
-
-		Class<?> fieldType = field.getType();
 
 		if (fieldType.equals(LocalDate.class) && columnValue instanceof java.sql.Date date) {
 			return date.toLocalDate();
@@ -104,8 +94,7 @@ public class DynamicRowMapper<T> implements RowMapper<T> {
 		} else if (fieldType.equals(LocalDateTime.class) && columnValue instanceof java.sql.Timestamp timestamp) {
 			return timestamp.toLocalDateTime();
 		}
-
-		// Adicione mais conversões conforme necessário
+		
 		return columnValue;
 	}
 }

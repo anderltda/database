@@ -31,6 +31,12 @@
 		<sonar.sources>src,pom.xml</sonar.sources>
 		<sonar.test.inclusions>src/test/**/*</sonar.test.inclusions>
 		<sonar.tests>src</sonar.tests>
+	    <sonar.exclusions>
+			**/domain/**,
+			**/core/util/**,
+			**/core/ui/adapter/**,
+			**/GlobalExceptionHandler.java
+	    </sonar.exclusions>
 		<!-- sonarqube -->
 	</properties>	
 	

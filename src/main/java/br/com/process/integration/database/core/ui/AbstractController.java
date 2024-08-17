@@ -66,20 +66,11 @@ public abstract class AbstractController {
 		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameEntity), "setId", DynamicTypeConverter.convert(entity, id));
 	}
 	
-	protected void setEntity(String nameEntity) throws CheckedException {
-		BeanEntity<?> entity = (BeanEntity<?>) MethodReflection.findEntityUsingClassLoader(nameEntity);
-		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameEntity), "setEntity", entity);
-	}
-	
 	protected void setEntity(String nameEntity, BeanEntity<?> entity) throws CheckedException {
 		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameEntity), "setEntity", entity);
 	}
 	
 	protected void setView(String nameView) throws CheckedException {
-		try {
-			methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameView), "setView", MethodReflection.findDtoUsingClassLoader(nameView));
-		} catch (Exception ex) {
-			throw new CheckedException(ex.getMessage());
-		}
+		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameView), "setView", MethodReflection.findDtoUsingClassLoader(nameView));
 	}
 }

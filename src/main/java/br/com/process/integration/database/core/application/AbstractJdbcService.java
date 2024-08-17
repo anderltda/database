@@ -62,8 +62,7 @@ public abstract class AbstractJdbcService<V> extends AbstractJdbcRepository<V> i
 	}
 
 	@Override
-	public PagedModel<V> executeQueryNativePaginator(Map<String, Object> filter, String invokerQuery)
-			throws CheckedException {
+	public PagedModel<V> executeQueryNativePaginator(Map<String, Object> filter, String invokerQuery) throws CheckedException {
 
 		try {
 

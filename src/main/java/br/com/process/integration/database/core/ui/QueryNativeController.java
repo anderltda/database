@@ -66,7 +66,7 @@ public class QueryNativeController extends AbstractController {
 		List<?> list = (List<?>) methodInvoker.invokeMethodReturnObjectWithParameters(
 				MethodReflection.getNameService(instance), Constants.METHOD_EXECUTE_QUERY_NATIVE, filter, query);
 
-		if (list != null && !list.isEmpty()) {
+		if (!list.isEmpty()) {
 
 			final String body = gson.toJson(list);
 

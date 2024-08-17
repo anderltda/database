@@ -1,12 +1,13 @@
 package br.com.process.integration.database.core.ui;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
@@ -18,18 +19,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import br.com.process.integration.database.core.ui.adapter.LocalDateAdapter;
-import br.com.process.integration.database.core.ui.adapter.LocalDateTimeAdapter;
+import br.com.process.integration.database.core.exception.ErrorResponse;
 import br.com.process.integration.database.domain.entity.EntityTest1;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -60,7 +61,7 @@ class QueryJpaController7Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest1/buscaAll?page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
 
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -81,7 +82,7 @@ class QueryJpaController7Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest1/buscaComLikePeloName?name=ar&page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
 
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(5, list.size());
@@ -97,10 +98,20 @@ class QueryJpaController7Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest1/buscaComLikePeloName?name=Silva&page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
 
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(0, list.size());
+	}
+	
+	@Test
+	void teste_busca_com_like_pelo_name_nao_encontrado_com_erro() {
+
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest/buscaComLikePeloName?name=Silva&page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
+
+		ErrorResponse errorResponse = new ErrorResponse("Cannot invoke \"org.springframework.data.jpa.repository.JpaRepository.getClass()\" because the return value of \"br.com.process.integration.database.core.application.AbstractJpaService.getRepository()\" is null", 400);
+
+		assertThrows(RuntimeException.class, () -> getAll(url, errorResponse));
 	}
 	
 	@Test
@@ -108,7 +119,7 @@ class QueryJpaController7Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest1/buscaAll?page=0&size=20&sortList=birthDate,name&sortOrders=desc,asc";
 
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -129,7 +140,7 @@ class QueryJpaController7Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest1/buscaAll?page=0&size=20&sortList=name,birthDate&sortOrders=asc,desc";
 
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -145,13 +156,12 @@ class QueryJpaController7Tests {
 		assertEquals("Ricardo", list.get(9).getName());
 	}
 	
-	
 	@Test
 	void teste_busca_all_ordernacao_name_desc_birthDate_asc() {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest1/buscaAll?page=0&size=20&sortList=name,birthDate&sortOrders=desc,asc";
 
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -167,43 +177,70 @@ class QueryJpaController7Tests {
 		assertEquals("Anderson", list.get(9).getName());
 	}
 	
-	private List<EntityTest1> getAll(String url) {
+	private List<EntityTest1> getAll(String url, ErrorResponse compare) {
 
-		List<EntityTest1> entitys = new ArrayList<>();
-		
-		PagedModel<?> list = getRestAll(url);
-		
-		System.out.println(url);
-		
-		list.getContent().forEach(object -> {
-			Gson gson = new GsonBuilder()
-					.registerTypeAdapter(LocalDate.class, new LocalDateAdapter(true))
-					.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter(true)).create();
+		PagedModel<EntityTest1> page = getRestAll(url, compare);
 
-	        String jsonString = gson.toJson(object);
-	        entitys.add(gson.fromJson(jsonString, EntityTest1.class));
-		});
-		
+		List<EntityTest1> list = convertToEntityTest1List(page.getContent());
+
 		assertNotNull(list);
-		assertEquals(entitys.size(), list.getContent().size());
-		
-		return entitys;
+		assertEquals(list.size(), page.getContent().size());
+
+		return list;
 	}
-	
-	private PagedModel<?> getRestAll(String url) {
-		
+
+	private PagedModel<EntityTest1> getRestAll(String url, ErrorResponse compare) {
+
 		HttpHeaders headers = new HttpHeaders();
-		
+
 		headers.set("Accept", "application/json");
 
 		HttpEntity<String> entity = new HttpEntity<>(headers);
 
-		ResponseEntity<PagedModel<?>> response = restTemplate.exchange(url, HttpMethod.GET, entity, new ParameterizedTypeReference<PagedModel<?>>() { });
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
 		if (response.getStatusCode().is2xxSuccessful()) {
-			return response.getBody();
+			return convertResponseToPagedModel(response.getBody());
 		} else {
-			throw new RuntimeException("Failed to fetch users. Status code: " + response.getStatusCode());
+			ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody().toString());
+			assertEquals(compare.getStatus(), errorResponse.getStatus());
+			assertTrue(errorResponse.getMessage().contains(compare.getMessage()));
+			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: "
+					+ errorResponse.getMessage());
 		}
+	}
+
+	private PagedModel<EntityTest1> convertResponseToPagedModel(String body) {
+		ObjectMapper objectMapper = createObjectMapper();
+		try {
+			return objectMapper.readValue(body, new TypeReference<PagedModel<EntityTest1>>() {
+			});
+		} catch (Exception e) {
+			throw new RuntimeException("Error parsing PagedModel<EntityTest1View> response", e);
+		}
+	}
+
+	private ErrorResponse convertResponseToErrorResponse(String body) {
+		ObjectMapper objectMapper = createObjectMapper();
+		try {
+			return objectMapper.readValue(body, ErrorResponse.class);
+		} catch (Exception e) {
+			throw new RuntimeException("Error parsing ErrorResponse", e);
+		}
+	}
+
+	private ObjectMapper createObjectMapper() {
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.registerModule(new JavaTimeModule());
+		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		return objectMapper;
+	}
+
+	public List<EntityTest1> convertToEntityTest1List(Collection<EntityTest1> collection) {
+		return collection.stream().map(this::convertToEntityTest1).collect(Collectors.toList());
+	}
+
+	private EntityTest1 convertToEntityTest1(EntityTest1 element) {
+		return element;
 	}
 }

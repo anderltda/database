@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -41,6 +43,10 @@ public abstract class AbstractJdbcRepository<V> implements ViewRepository<V> {
 
 			return namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, rowMapper);
 
+		} catch (EmptyResultDataAccessException ex) {
+			return null;
+		} catch (BadSqlGrammarException ex) {
+			throw new UncheckedException(ex.getCause().getLocalizedMessage(), ex);
 		} catch (Exception ex) {
 			throw new UncheckedException(ex.getMessage(), ex);
 		}
@@ -65,7 +71,6 @@ public abstract class AbstractJdbcRepository<V> implements ViewRepository<V> {
 		} catch (Exception ex) {
 			throw new UncheckedException(ex.getMessage(), ex);
 		}
-
 	}
 
 	@SuppressWarnings("unchecked")

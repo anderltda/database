@@ -72,7 +72,7 @@ public abstract class AbstractJpaRepository<E extends BeanEntity<?>, R extends J
 			CriteriaQuery<E> query = (CriteriaQuery<E>) criteriaBuilder.createQuery(entity.getClass());
 			Root<E> root = (Root<E>) query.from(entity.getClass());
 			List<Predicate> predicates = buildPredicates(filter, criteriaBuilder, root);
-			if (sortList != null && sortOrders != null) {
+			if (!sortList.isEmpty() && !sortOrders.isEmpty()) {
 				List<Order> orders = new ArrayList<>();
 				for (int i = 0; i < sortList.size(); i++) {
 					String sortField = sortList.get(i);
@@ -100,15 +100,19 @@ public abstract class AbstractJpaRepository<E extends BeanEntity<?>, R extends J
 			query.select(root).where(criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()])));
 			List<Order> orders = new ArrayList<>();
 			pageable.getSort().forEach(order -> {
-				boolean isAscending = order.isAscending();
-				orders.add(methodPredicate.buildOrder(order.getProperty(), criteriaBuilder, root, isAscending));
+				try {
+					boolean isAscending = order.isAscending();
+					orders.add(methodPredicate.buildOrder(order.getProperty(), criteriaBuilder, root, isAscending));
+				} catch (Exception ex) {
+					throw new UncheckedException(ex.getCause().getLocalizedMessage(), ex);
+				}
 			});
 			query.orderBy(orders);
 			TypedQuery<E> typedQuery = entityManager.createQuery(query);
 			typedQuery.setFirstResult((int) pageable.getOffset());
 			typedQuery.setMaxResults(pageable.getPageSize());
 			List<E> list = typedQuery.getResultList();
-			Long total = countatble(filter);
+			Long total = countable(filter);
 			return new PageImpl<>(list, pageable, total);
 		} catch (Exception ex) {
 			throw new UncheckedException(ex.getMessage(), ex);
@@ -117,7 +121,7 @@ public abstract class AbstractJpaRepository<E extends BeanEntity<?>, R extends J
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Long countatble(Map<String, Object> filter) throws UncheckedException {
+	public Long countable(Map<String, Object> filter) {
 		try {
 			CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 			CriteriaQuery<Long> query = criteriaBuilder.createQuery(Long.class);
@@ -160,10 +164,10 @@ public abstract class AbstractJpaRepository<E extends BeanEntity<?>, R extends J
 					MethodReflection.executeMethod(methodPredicate, "setOperatorJoin", method + "Criteria");
 					method = "join";
 				}
-				MethodReflection.executeMethod(methodPredicate, method + "Criteria", criteriaBuilder, predicates, path,
-						key, value);
+				MethodReflection.executeMethod(methodPredicate, method + "Criteria", criteriaBuilder, predicates, path, key, value);
+
 			} catch (Exception ex) {
-				throw new UncheckedException(ex.getMessage(), ex);
+				throw new UncheckedException(ex.getCause().getLocalizedMessage(), ex);
 			}
 
 		});

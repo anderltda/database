@@ -58,6 +58,37 @@ class QueryJpaController2Tests {
 	void contextLoads() {
 		assertNotNull(queryJpaController);
 	};
+	
+	@Test
+	void teste_sortList_sortOrders() {
+
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?name=Anderson&name_op=lk&sortList=name,age&sortOrders=asc,desc";
+		
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		
+		assertNotNull(list);
+		assertEquals(1, list.size());
+	}
+	
+	@Test
+	void teste_busca_name_e_sortList_sortOrders() {
+
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?name=Anderson&name_op=lk&sortList=name,age";
+		
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		
+		assertNotNull(list);
+		assertEquals(1, list.size());
+		assertEquals("Anderson", list.get(0).getName());
+	}
+	
+	@Test
+	void teste_sortList_sortOrders_com_erro() {
+
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?name=Anderson&name_op=lk&sortList=name,asc&sortOrders=asc,desc";
+		
+	    testes_single_parameterized_one(url, "Could not resolve attribute 'asc' of 'br.com.process.integration.database.domain.entity.EntityTest1'");
+	}
 
 	@Test
 	void teste_busca_com_equal_pelo_name() {
@@ -113,6 +144,16 @@ class QueryJpaController2Tests {
 	}
 	
 	@Test
+	void teste_count_no_entity() {
+		
+		String url = "http://localhost:" + port + "/v1/api-rest-database/count/EntityTest?name=*ar*&name_op=lk";
+		
+		ErrorResponse errorResponse = new ErrorResponse("Not an entity: br.com.process.integration.database.domain.entity.EntityTest", 400);
+		
+	    assertThrows(RuntimeException.class, () -> getUniqueResult(url, errorResponse));
+	}
+	
+	@Test
 	void teste_no_content_single() {
 		
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/single/EntityTest1?age=41&age_op=eq&name=Pedro&name_op=eq&birthDate=1983-03-29&birthDate_op=ge";
@@ -120,6 +161,16 @@ class QueryJpaController2Tests {
 		EntityTest1 entity = getSingleResult(url, new ErrorResponse());
 		
 		assertNull(entity);
+	}
+	
+	@Test
+	void teste_single_mais_de_um_registro() {
+		
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/single/EntityTest1?age=22,41&age_op=in";
+		
+		ErrorResponse errorResponse = new ErrorResponse("Query did not return a unique result: 3 results were returned", 400);
+		
+	    assertThrows(RuntimeException.class, () -> getSingleResult(url, errorResponse));
 	}
 	
 	@Test
@@ -141,15 +192,23 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_com_equal_e_prohibited_e_ordernado_por_name_asc() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?prohibited=2024-11-01T08:00:00&prohibited_op=eq&sortList=name&sortOrder=asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?prohibited=2024-11-01T08:00:00&prohibited_op=eq&sortList=name&sortOrders=asc";
 		
 		List<EntityTest1> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(3, list.size());
-		assertEquals("Ricardo", list.get(0).getName());
+		assertEquals("Ariovaldo", list.get(0).getName());
 		assertEquals("Joana", list.get(1).getName());
-		assertEquals("Ariovaldo", list.get(2).getName());
+		assertEquals("Ricardo", list.get(2).getName());
+	}
+	
+	@Test
+	void teste_busca_com_equal_e_prohibited_e_ordernado_por_name_asc_com_erro() {
+		
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?prohibited=2024-11-01T08:00:00&prohibited_op=eq&sortList=name&sortOrder=asc";
+
+		testes_single_parameterized_one(url, "Could not resolve attribute 'sortOrder' of 'br.com.process.integration.database.domain.entity.EntityTest1'");
 	}
 	
 	@Test
@@ -235,6 +294,14 @@ class QueryJpaController2Tests {
 		assertEquals("Carlos", list.get(2).getName());
 		assertEquals("Maria", list.get(3).getName());
 	}
+	
+	@Test
+	void teste_busca_por_between_com_height_ordernado_por_height_desc_erro() {
+		
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?height=1.40,&height_op=bt&sortList=height&sortOrders=desc";
+
+	    testes_single_parameterized_one(url, "Index 1 out of bounds for length 1");
+	}
 
 	@Test
 	void teste_busca_por_between_com_prohibited_ordernado_por_birthDate_desc() {
@@ -259,6 +326,14 @@ class QueryJpaController2Tests {
 
 		testes_single_parameterized_one(url, 3);
 	}
+	
+	@Test
+	void teste_busca_por_greaterThanOrEqualTo_com_height_com_erro() {
+		
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?height=1.8A6&height_op=ge";
+
+	    testes_single_parameterized_one(url, "Error coercing value");
+	}
 
 	@Test
 	void teste_busca_por_greaterThan_com_height() {
@@ -266,6 +341,14 @@ class QueryJpaController2Tests {
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?height=1.87&height_op=gt";
 
 		testes_single_parameterized_one(url, 2);
+	}
+	
+	@Test
+	void teste_busca_por_greaterThan_com_height_erro() {
+		
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?height=AWs&height_op=gt";
+
+	    testes_single_parameterized_one(url, "Error coercing value");
 	}
 
 	@Test
@@ -291,6 +374,14 @@ class QueryJpaController2Tests {
 
 		testes_single_parameterized_one(url, 6);
 	}
+	
+	@Test
+	void teste_busca_por_lessThanOrEqualTo_com_age_erro() {
+		
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?age=Wre&age_op=le";
+
+	    testes_single_parameterized_one(url, "Error coercing value");
+	}
 
 	@Test
 	void teste_busca_por_lessThan_com_birthDate() {
@@ -306,6 +397,14 @@ class QueryJpaController2Tests {
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?age=21&age_op=le";
 
 		testes_single_parameterized_one(url, 2);
+	}
+	
+	@Test
+	void teste_busca_por_lessThan_com_age_erro() {
+		
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?age=QW&age_op=lt";
+
+	    testes_single_parameterized_one(url, "Error coercing value");
 	}
 	
 	@Test
@@ -514,6 +613,13 @@ class QueryJpaController2Tests {
 		
 		assertNotNull(list);
 		assertEquals(size, list.size());
+	}
+	
+	void testes_single_parameterized_one(String url, String message) {
+		
+		ErrorResponse errorResponse = new ErrorResponse(message, 400);
+		
+	    assertThrows(RuntimeException.class, () -> getAll(url, errorResponse));
 	}
 	
 	void testes_result_is_null(String url) {

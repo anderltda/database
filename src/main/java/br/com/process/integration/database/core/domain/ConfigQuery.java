@@ -55,31 +55,35 @@ public class ConfigQuery {
 	private String executeQuery(Map<String, Object> filters, String fileQuery, String invokerQuery, MapSqlParameterSource mapSqlParameterSource, boolean isCount) {
 
 		StringBuilder sql = new StringBuilder();
+
 		Query query = getQuery(fileQuery, invokerQuery);
-		if(query != null) {
-			createSelect(isCount, sql, query);
-			createJoin(sql, query);
-			createWhere(filters, sql, query);
-			createGroupBy(sql, query);
-			createOrderBy(filters, isCount, sql, query);
-			if (isCount && query.getGroupby() != null) {
-				sql.append(") AS VALUE" + Constants.WRITERSPACE);
-			}
-			// SET KEY VALUE
-			if(filters != null) {
-				filters.forEach((key, value) -> 
-				mapSqlParameterSource.addValue(key, value.toString().contains("*") ? value.toString().replace("*", "%") : value));
-			}
+
+		createSelect(isCount, sql, query);
+
+		createJoin(sql, query);
+
+		createWhere(filters, sql, query);
+
+		createGroupBy(sql, query);
+
+		createOrderBy(filters, isCount, sql, query);
+
+		if (isCount && query.getGroupby() != null) {
+			sql.append(") AS VALUE" + Constants.WRITERSPACE);
 		}
+
+		filters.forEach((key, value) -> mapSqlParameterSource.addValue(key,
+				value.toString().contains("*") ? value.toString().replace("*", "%") : value));
+
 		return sql.toString().trim() + Constants.WRITERSPACE;
 	}
 	
 	private void createOrderBy(Map<String, Object> filters, boolean isCount, StringBuilder sql, Query query) {
-		// CHECK IF DON'T SELECT COUNT
-		// ORDER BY
+		
 		if (!isCount && query.getOrderby() != null) {
-			boolean isOrderby = (filters != null
-					&& (filters.get(Constants.SORT_LIST) != null && filters.get(Constants.SORT_ORDERS) != null));
+			
+			boolean isOrderby = (filters.get(Constants.SORT_LIST) != null && filters.get(Constants.SORT_ORDERS) != null);
+			
 			if (!isOrderby) {
 				String checkValid = query.getOrderby().replaceAll("\\s?:\\S+", "").replaceAll("\\s{2,}", " ").trim();
 				sql.append(
@@ -118,7 +122,6 @@ public class ConfigQuery {
 	}
 
 	private void createGroupBy(StringBuilder sql, Query query) {
-		// GROUP BY
 		if (query.getGroupby() != null) {
 			sql.append(Constants.GROUP_BY + Constants.WRITERSPACE);
 			sql.append(query.getGroupby() + Constants.WRITERSPACE);
@@ -126,7 +129,6 @@ public class ConfigQuery {
 	}
 
 	private void createWhere(Map<String, Object> filters, StringBuilder sql, Query query) {
-		// WHERE
 		if (query.getWhere() != null) {
 			sql.append(Constants.WHERE + Constants.WRITERSPACE);
 			query.getWhere().forEach(where -> {
@@ -168,7 +170,6 @@ public class ConfigQuery {
 	}
 
 	private void createJoin(StringBuilder sql, Query query) {
-		// JOIN
 		if (query.getJoin() != null) {
 			query.getJoin().forEach(join -> sql.append(join + Constants.WRITERSPACE));
 		}
@@ -177,21 +178,17 @@ public class ConfigQuery {
 	private void createSelect(boolean isCount, StringBuilder sql, Query query) {
 		if (isCount) {
 			if(query.getGroupby() == null) {
-				// SELECT COUNT
 				Pattern pattern = Pattern.compile("\\b(from\\b.*)", Pattern.CASE_INSENSITIVE);
 				Matcher matcher = pattern.matcher(query.getSelect());
 				if (matcher.find()) {
 					sql.append(Constants.SELECT_COUNT + Constants.WRITERSPACE + matcher.group(1).trim() + Constants.WRITERSPACE);
 				}
 			} else {
-				// SELECT COUNT
 				sql.append(Constants.SELECT_COUNT + Constants.WRITERSPACE + Constants.FROM + Constants.WRITERSPACE + "(" + Constants.WRITERSPACE);
-				// SELECT
 				sql.append(query.getSelect() + Constants.WRITERSPACE);
 			}
 			
 		} else {
-			// SELECT
 			sql.append(query.getSelect() + Constants.WRITERSPACE);
 		}
 	}
@@ -230,14 +227,13 @@ public class ConfigQuery {
 	private Query getQuery(String fileQuery, String invokerQuery) throws UncheckedException {
 		try {
 			List<Query> querys = loadConfig(fileQuery);
-			Query query = null;
-			for (Query query_ : querys) {
-				if (query_.getName().equalsIgnoreCase(invokerQuery)) {
-					query = query_;
+			for (Query query : querys) {
+				if (query.getName().equalsIgnoreCase(invokerQuery)) {
 					return query;
 				}
 			}
-			return query;
+			
+			throw new UncheckedException(String.format("Query not found %s !", invokerQuery));
 		} catch (Exception ex) {
 			throw new UncheckedException(ex.getMessage(), ex);
 		}

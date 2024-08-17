@@ -1,14 +1,17 @@
 package br.com.process.integration.database.core.ui;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
@@ -20,18 +23,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import br.com.process.integration.database.core.ui.adapter.LocalDateAdapter;
-import br.com.process.integration.database.core.ui.adapter.LocalDateTimeAdapter;
+import br.com.process.integration.database.core.exception.ErrorResponse;
 import br.com.process.integration.database.domain.entity.EntityTest1;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -56,13 +59,21 @@ class QueryJpaController4Tests {
 	void contextLoads() {
 		assertNotNull(queryJpaController);
 	};
+	
+	@Test
+	void teste_sortList_sortOrders_com_erro() {
+
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?name=Anderson&name_op=lk&sortList=name,asc&sortOrders=asc,desc";
+		
+		teste_single_parameterized_one(url, "Could not resolve attribute 'asc' of 'br.com.process.integration.database.domain.entity.EntityTest1'");
+	}
 
 	@Test
 	void teste_busca_com_equal_pelo_name() {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?name=Anderson&name_op=eq&page=0&size=10&sortList=name&sortOrders=asc";
 
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 		
 		list.forEach(entity -> {
 			assertNotNull(entity.getId());
@@ -84,7 +95,7 @@ class QueryJpaController4Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&prohibited=2024-11-01T08:00:00&prohibited_op=eq&page=0&size=10&sortList=name&sortOrders=asc";
 
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(2, list.size());
@@ -97,7 +108,7 @@ class QueryJpaController4Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?age=22&age_op=ne&birthDate=1990-01-01&birthDate_op=ne&prohibited=2024-11-01T08:00:00&prohibited_op=ne&page=0&size=10&sortList=name,id&sortOrders=asc,desc";
 
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(7, list.size());
@@ -129,15 +140,23 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_com_equal_e_prohibited_e_ordernado_por_name_asc() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?prohibited=2024-11-01T08:00:00&prohibited_op=eq&sortList=name&sortOrder=asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?prohibited=2024-11-01T08:00:00&prohibited_op=eq&sortList=name&sortOrders=asc";
 		
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(3, list.size());
-		assertEquals("Ricardo", list.get(0).getName());
+		assertEquals("Ariovaldo", list.get(0).getName());
 		assertEquals("Joana", list.get(1).getName());
-		assertEquals("Ariovaldo", list.get(2).getName());
+		assertEquals("Ricardo", list.get(2).getName());
+	}
+	
+	@Test
+	void teste_busca_com_equal_e_prohibited_e_ordernado_por_name_asc_com_erro() {
+		
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?prohibited=2024-11-01T08:00:00&prohibited_op=eq&sortList=name&sortOrder=asc";
+		
+		teste_single_parameterized_one(url, "Could not resolve attribute 'sortOrder' of 'br.com.process.integration.database.domain.entity.EntityTest1'");
 	}
 	
 	@Test
@@ -145,7 +164,7 @@ class QueryJpaController4Tests {
 		
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?name=*ar*&name_op=lk&page=0&size=10&sortList=birthDate,name&sortOrders=desc,asc";
 		
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(5, list.size());
@@ -169,7 +188,7 @@ class QueryJpaController4Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?birthDate=1956-08-30,1986-09-09,1990-09-09&birthDate_op=in&page=0&size=10&sortList=age&sortOrders=asc";
 		
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(3, list.size());
@@ -183,7 +202,7 @@ class QueryJpaController4Tests {
 		
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?birthDate=1956-08-30,1990-01-01,1990-09-09&birthDate_op=in&page=0&size=10&sortList=age,height&sortOrders=desc,asc";
 		
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(4, list.size());
@@ -214,7 +233,7 @@ class QueryJpaController4Tests {
 		
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?height=1.40,1.78&height_op=bt&page=0&size=10&sortList=height&sortOrders=desc";
 
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(4, list.size());
@@ -229,7 +248,7 @@ class QueryJpaController4Tests {
 		
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?prohibited=2024-02-01T08:50:00,2024-10-01T08:50:55&prohibited_op=bt&page=0&size=10&sortList=birthDate&sortOrders=desc";
 		
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(5, list.size());
@@ -241,17 +260,25 @@ class QueryJpaController4Tests {
 	}
 
 	@Test
-	void teste_busca_por_greaterThanOrEqualTo_com_height() {
+	void teste_busca_por_greaterThanOrEqualTo_com_height_com_erro() {
 		
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?height=1.86&height_op=ge&page=0&size=10&ortList=height&sortOrders=desc";
-
+		
+		teste_single_parameterized_one(url, "Could not resolve attribute 'ortList' of 'br.com.process.integration.database.domain.entity.EntityTest1'");
+	}
+	
+	@Test
+	void teste_busca_por_greaterThanOrEqualTo_com_height() {
+		
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?height=1.86&height_op=ge&page=0&size=10&sortList=height&sortOrders=desc";
+		
 		testes_single_parameterized_one(url, 3);
 	}
 
 	@Test
 	void teste_busca_por_greaterThan_com_height() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?height=1.87&height_op=gt&page=0&size=10&ortList=height&sortOrders=desc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?height=1.87&height_op=gt&page=0&size=10&sortList=height&sortOrders=desc";
 
 		testes_single_parameterized_one(url, 2);
 	}
@@ -317,7 +344,7 @@ class QueryJpaController4Tests {
 		
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
 
-		List<EntityTest1>list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -338,7 +365,7 @@ class QueryJpaController4Tests {
 		
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?page=0&size=20&sortList=birthDate,name&sortOrders=desc,asc";
 
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -359,7 +386,7 @@ class QueryJpaController4Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?page=0&size=20&sortList=name,birthDate&sortOrders=asc,desc";
 
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -380,7 +407,7 @@ class QueryJpaController4Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?page=0&size=20&sortList=name, birthDate&sortOrders=desc, asc";
 
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -401,7 +428,7 @@ class QueryJpaController4Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?page=0&size=20&name=Silva&name_op=eq";
 
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(0, list.size());
@@ -412,7 +439,7 @@ class QueryJpaController4Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?id=" + QueryJpaController1Tests.ids.get(0) + "," + QueryJpaController1Tests.ids.get(1) + "," + QueryJpaController1Tests.ids.get(2) + "&id_op=in&page=0&size=20";
 
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(3, list.size());
@@ -426,14 +453,19 @@ class QueryJpaController4Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?id=1,2,3&id_op=in&page=0&size=20&sortList=name&sortOrders=desc";
 
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 		
 		assertEquals(0, list.size());
 	}
 	
+	public void teste_single_parameterized_one(String url, String message) {
+		ErrorResponse errorResponse = new ErrorResponse(message, 400);
+	    assertThrows(RuntimeException.class, () -> getAll(url, errorResponse));
+	}
+	
 	void testes_single_parameterized_other(String url, String value, Integer size) {
 		
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(size, list.size());
@@ -442,51 +474,80 @@ class QueryJpaController4Tests {
 	
 	void testes_single_parameterized_one(String url, Integer size) {
 		
-		List<EntityTest1> list = getAll(url);
+		List<EntityTest1> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(size, list.size());
 	}
 	
-	private List<EntityTest1> getAll(String url) {
+	private List<EntityTest1> getAll(String url, ErrorResponse compare) {
 
-		List<EntityTest1> entitys = new ArrayList<>();
+		PagedModel<EntityTest1> page = getRestAll(url, compare);
 		
-		PagedModel<?> list = getRestAll(url);
-		
-		System.out.println(url);
-		
-		if(list != null) {
-			list.getContent().forEach(object -> {
-				Gson gson = new GsonBuilder()
-						.registerTypeAdapter(LocalDate.class, new LocalDateAdapter(true))
-						.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter(true)).create();
-				
-				String jsonString = gson.toJson(object);
-				entitys.add(gson.fromJson(jsonString, EntityTest1.class));
-			});
-		}
+		List<EntityTest1> list = convertToEntityTest1List(page.getContent());
 		
 		assertNotNull(list);
-		assertEquals(entitys.size(), list.getContent().size());
+		assertEquals(list.size(), page.getContent().size());
 		
-		return entitys;
+		return list;
 	}
 	
-	private PagedModel<?> getRestAll(String url) {
+	private PagedModel<EntityTest1> getRestAll(String url, ErrorResponse compare) {
 		
-		HttpHeaders headers = new HttpHeaders();
-		
-		headers.set("Accept", "application/json");
+        HttpHeaders headers = new HttpHeaders();
+      
+        headers.set("Accept", "application/json");
 
-		HttpEntity<String> entity = new HttpEntity<>(headers);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
 
-		ResponseEntity<PagedModel<?>> response = restTemplate.exchange(url, HttpMethod.GET, entity, new ParameterizedTypeReference<PagedModel<?>>() { });
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
-		if (response.getStatusCode().is2xxSuccessful()) {
-			return response.getBody();
-		} else {
-			throw new RuntimeException("Failed to fetch users. Status code: " + response.getStatusCode());
-		}
-	}
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return convertResponseToPagedModel(response.getBody());
+        } else {
+			ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody().toString());
+			assertEquals(compare.getStatus(), errorResponse.getStatus());
+			assertTrue(errorResponse.getMessage().contains(compare.getMessage()));
+			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: " + errorResponse.getMessage());
+        }
+    }
+
+    private PagedModel<EntityTest1> convertResponseToPagedModel(String body) {
+        ObjectMapper objectMapper = createObjectMapper();
+        try {
+            // Converte a string JSON para PagedModel<EntityTest1View>
+            return objectMapper.readValue(body, new TypeReference<PagedModel<EntityTest1>>() {});
+        } catch (Exception e) {
+            throw new RuntimeException("Error parsing PagedModel<EntityTest1View> response", e);
+        }
+    }
+
+    private ErrorResponse convertResponseToErrorResponse(String body) {
+        ObjectMapper objectMapper = createObjectMapper();
+        try {
+            return objectMapper.readValue(body, ErrorResponse.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Error parsing ErrorResponse", e);
+        }
+    }
+
+    private ObjectMapper createObjectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+
+        // Ignorar propriedades desconhecidas
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        return objectMapper;
+    }
+    
+    public List<EntityTest1> convertToEntityTest1List(Collection<EntityTest1> collection) {
+        return collection.stream()
+                         .map(this::convertToEntityTest1)
+                         .collect(Collectors.toList());
+    }
+
+    private EntityTest1 convertToEntityTest1(EntityTest1 element) {
+        return element;
+    }
 }

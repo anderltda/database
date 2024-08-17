@@ -338,9 +338,7 @@ class QueryNativeController1Tests {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_utilizando_group_by_erro";
 
-		ErrorResponse errorResponse = new ErrorResponse("PreparedStatementCallback; uncategorized SQLException for SQL", 400);
-		
-	    assertThrows(RuntimeException.class, () -> getSingleResult(url, errorResponse));
+		teste_single_parameterized_one(url, "PreparedStatementCallback; uncategorized SQLException for SQL");
 	}
 	
 	@Test
@@ -449,6 +447,14 @@ class QueryNativeController1Tests {
 	}
 	
 	@Test
+	void teste_query_not_found() {
+	    
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/nao_existe_query";
+		
+	    teste_single_parameterized_one(url, "Query not found nao_existe_query !");
+	}
+	
+	@Test
 	void teste_filter_empty() {
 	    
 		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars";
@@ -460,23 +466,67 @@ class QueryNativeController1Tests {
 	}
 	
 	@Test
-	void teste_busca_por_single_age_name_birthDate_erro_mais_de_um_registro() {
+	void teste_single_encontra_name() {
 	    
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/single/EntityTest1View/teste_busca_com_condicoes_diversars?age=41,38,32&age_op=in&name=*ar*&name_op=lk&birthDate=1956-08-30&birthDate_op=ge";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/single/EntityTest1View/teste_busca_com_condicoes_diversars?name=Paulo&name_op=eq";
 
-		ErrorResponse errorResponse = new ErrorResponse("Incorrect result size: expected 1, actual 0", 400);
+		EntityTest1View entity = getSingleResult(url, new ErrorResponse());
 		
-	    assertThrows(RuntimeException.class, () -> getSingleResult(url, errorResponse));
+		assertNotNull(entity);
+		assertEquals("Paulo", entity.getName());
+		assertEquals(21, entity.getAge());
 	}
 	
 	@Test
-	void teste_count_maior_prohibited_com_erro() {
+	void teste_single_nao_encontra_name() {
+	    
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/single/EntityTest1View/teste_busca_com_condicoes_diversars?name=Pablo&name_op=eq";
+
+		EntityTest1View entity = getSingleResult(url, new ErrorResponse());
+		
+		assertNull(entity);
+
+	}
+	
+	@Test
+	void teste_busca_por_single_age_name_birthDate_erro_mais_de_um_registro() {
+	    
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/single/EntityTest1View/teste_busca_com_condicoes_diversars?age=41,38,32&age_op=eq&name=*ar*&name_op=lk&birthDate=1956-08-30&birthDate_op=ge";
+
+	    teste_single_parameterized_one(url, "You have an error in your SQL syntax");
+	}
+	
+	@Test
+	void teste_count_query_not_found() {
 
 		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/count/EntityTest1View/teste?prohibited=2024-11-01T08:00:00&prohibited_op=ge";
 		
-		ErrorResponse errorResponse = new ErrorResponse("PreparedStatementCallback; SQL [ ]; Statement.executeQuery() cannot issue statements that do not produce result sets.", 400);
+		ErrorResponse errorResponse = new ErrorResponse("Query not found teste !", 400);
 		
 	    assertThrows(RuntimeException.class, () -> getUniqueResult(url, errorResponse));
+		
+	}
+	
+	@Test
+	void teste_um_exemplo_sem_order_by() {
+
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_um_exemplo_sem_order_by?prohibited=2024-11-01T08:00:00&prohibited_op=ge";
+		
+		List<EntityTest1View> list = getAll(url, new ErrorResponse());
+		
+		assertNotNull(list);
+		assertEquals(4, list.size());
+		
+	}
+	
+	@Test
+	void teste_um_exemplo_sem_order_by_erro() {
+
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1/teste_um_exemplo_sem_order_by?prohibited-=2024-11-01T08:00:00&prohibited_op=ge";
+		
+		ErrorResponse errorResponse = new ErrorResponse("Class not found EntityTest1 !", 400);
+		
+	    assertThrows(RuntimeException.class, () -> getAll(url, errorResponse));
 		
 	}
 	
@@ -505,6 +555,13 @@ class QueryNativeController1Tests {
 		
 		assertNotNull(list);
 		assertEquals(size, list.size());
+	}
+	
+	public void teste_single_parameterized_one(String url, String message) {
+		
+		ErrorResponse errorResponse = new ErrorResponse(message, 400);
+		
+	    assertThrows(RuntimeException.class, () -> getSingleResult(url, errorResponse));
 	}
 	
 	public List<EntityTest1View> getAll(String url, ErrorResponse compare) {

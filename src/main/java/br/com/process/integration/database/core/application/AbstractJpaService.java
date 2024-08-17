@@ -48,9 +48,9 @@ public abstract class AbstractJpaService<E extends BeanEntity<?>, T> extends Abs
 	@Override
 	public Long count(Map<String, Object> filter) throws CheckedException {
 		try {
-			return super.countatble(filter);
+			return super.countable(filter);
 		} catch (UncheckedException cuex) {
-			throw new CheckedException(cuex.getMessage(), cuex);
+			throw new CheckedException(cuex.getCause().getLocalizedMessage(), cuex);
 		}
 	}
 	
@@ -59,7 +59,7 @@ public abstract class AbstractJpaService<E extends BeanEntity<?>, T> extends Abs
 		try {
 			return super.findSingle(filter);
 		} catch (UncheckedException cuex) {
-			throw new CheckedException(cuex.getMessage(), cuex);
+			throw new CheckedException(cuex.getCause().getLocalizedMessage(), cuex);
 		}
 	}
 
@@ -68,7 +68,7 @@ public abstract class AbstractJpaService<E extends BeanEntity<?>, T> extends Abs
 		try {
 			return super.findByAll(filter, sortList, sortOrders);
 		} catch (UncheckedException cuex) {
-			throw new CheckedException(cuex.getMessage(), cuex);
+			throw new CheckedException(cuex.getCause().getLocalizedMessage(), cuex);
 		}
 	}
 	
@@ -80,7 +80,7 @@ public abstract class AbstractJpaService<E extends BeanEntity<?>, T> extends Abs
 			setPagedModel();
 			return pagedModel;
 		} catch (UncheckedException cuex) {
-			throw new CheckedException(cuex.getMessage(), cuex);
+			throw new CheckedException(cuex.getCause().getLocalizedMessage(), cuex);
 		}
 	}
 	

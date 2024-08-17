@@ -12,7 +12,7 @@ public interface EntityRepository<E, R> {
 
 	public R getRepository();
 	
-	public Long countatble(Map<String, Object> filter) throws UncheckedException;
+	public Long countable(Map<String, Object> filter) throws UncheckedException;
 	
 	public E findSingle(Map<String, Object> filter) throws UncheckedException;
 	

@@ -1,13 +1,13 @@
 package br.com.process.integration.database.core.reflection;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.process.integration.database.core.exception.UncheckedException;
 import br.com.process.integration.database.core.util.DynamicTypeConverter;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Expression;
@@ -21,36 +21,40 @@ import jakarta.persistence.criteria.Root;
 @Service
 public class MethodPredicate {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(MethodPredicate.class);
-	
 	private String operatorJoin;
 	
 	public void setOperatorJoin(String operatorJoin) {
 		this.operatorJoin = operatorJoin;
 	}
 	
-	public Order buildOrder(String attributePath, CriteriaBuilder criteriaBuilder, Path<?> root, boolean asc) {
+	public Order buildOrder(String attributePath, CriteriaBuilder criteriaBuilder, Path<?> root, boolean asc) throws UncheckedException {
+		
+		try {
 
-		String[] pathParts = attributePath.split("\\.");
-
-		for (int i = 0; i < pathParts.length; i++) {
-			String part = pathParts[i];
-			if (i < pathParts.length - 1) {
-				if (root instanceof Root<?>) {
-					root = ((Root<?>) root).join(part);
-				} else if (root instanceof Join<?, ?>) {
-					root = ((Join<?, ?>) root).join(part);
+			String[] pathParts = attributePath.split("\\.");
+			
+			for (int i = 0; i < pathParts.length; i++) {
+				String part = pathParts[i];
+				if (i < pathParts.length - 1) {
+					if (root instanceof Root<?>) {
+						root = ((Root<?>) root).join(part);
+					} else if (root instanceof Join<?, ?>) {
+						root = ((Join<?, ?>) root).join(part);
+					}
+				} else {
+					root = root.get(part);
 				}
-			} else {
-				root = root.get(part);
 			}
+			
+			return asc ? criteriaBuilder.asc(root) : criteriaBuilder.desc(root);
+			
+		} catch (Exception ex) {
+			throw new UncheckedException(ex.getMessage(), ex);
 		}
-
-		return asc ? criteriaBuilder.asc(root) : criteriaBuilder.desc(root);
 	}
 
 	@Transactional
-	public void joinCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
+	public void joinCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) throws UncheckedException {
 
 		try {
 
@@ -74,12 +78,12 @@ public class MethodPredicate {
 			}
 
 		} catch (Exception ex) {
-			LOGGER.error("[joinCriteria]", ex);
+			throw new UncheckedException(ex.getMessage(), ex);
 		}
 	}
 	
 	@Transactional
-	public void equalCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
+	public void equalCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 		
 		try {
 
@@ -88,12 +92,12 @@ public class MethodPredicate {
 			predicates.add(predicate);
 
 		} catch (Exception ex) {
-			LOGGER.error("[equalCriteria]", ex);
+			throw new UncheckedException(ex.getMessage(), ex);
 		}
 	}
 	
 	@Transactional
-	public void betweenCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, Object value) {
+	public void betweenCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, Object value) throws UncheckedException {
 		
 		try {
 			
@@ -103,70 +107,33 @@ public class MethodPredicate {
 			predicates.add(predicate);
 			
 		} catch (Exception ex) {
-			LOGGER.error("[betweenCriteria]", ex);
+			throw new UncheckedException(ex.getMessage(), ex);
 		}
 	}
 	
 	
 	@Transactional
-	public void greaterThanOrEqualToCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
-		
-		try {
-			
-			Method invokeMethod = CriteriaBuilder.class.getMethod("greaterThanOrEqualTo", Expression.class, Comparable.class);
-			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convert(value));
-			predicates.add(predicate);
-
-		} catch (Exception ex) {
-			LOGGER.error("[greaterThanOrEqualToCriteria]", ex);
-		}
+	public void greaterThanOrEqualToCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) throws UncheckedException {
+		greaterThan("greaterThanOrEqualTo", criteriaBuilder, predicates, root, field, value);
 	}
 	
 	@Transactional
-	public void lessThanOrEqualToCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
-		
-		try {
-			
-			Method invokeMethod = CriteriaBuilder.class.getMethod("lessThanOrEqualTo", Expression.class, Comparable.class);
-			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convert(value));
-			predicates.add(predicate);
-
-		} catch (Exception ex) {
-			LOGGER.error("[lessThanOrEqualToCriteria]", ex);
-		}
-	}
-	
-	
-	@Transactional
-	public void greaterThanCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
-		
-		try {
-			
-			Method invokeMethod = CriteriaBuilder.class.getMethod("greaterThan", Expression.class, Comparable.class);
-			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convert(value));
-			predicates.add(predicate);
-
-		} catch (Exception ex) {
-			LOGGER.error("[greaterThanCriteria]", ex);
-		}
-	}
-	
-	@Transactional
-	public void lessThanCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
-		
-		try {
-			
-			Method invokeMethod = CriteriaBuilder.class.getMethod("lessThan", Expression.class, Comparable.class);
-			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convert(value));
-			predicates.add(predicate);
-
-		} catch (Exception ex) {
-			LOGGER.error("[lessThanCriteria]", ex);
-		}
+	public void greaterThanCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) throws UncheckedException {
+		greaterThan("greaterThan", criteriaBuilder, predicates, root, field, value);
 	}
 
 	@Transactional
-	public void likeCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
+	public void lessThanOrEqualToCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) throws UncheckedException {
+		lessThan("lessThanOrEqualTo", criteriaBuilder, predicates, root, field, value);
+	}
+	
+	@Transactional
+	public void lessThanCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) throws UncheckedException {
+		lessThan("lessThan", criteriaBuilder, predicates, root, field, value);
+	}
+	
+	@Transactional
+	public void likeCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) throws UncheckedException {
 		
 		try {
 
@@ -175,12 +142,12 @@ public class MethodPredicate {
 			predicates.add(predicate);
 
 		} catch (Exception ex) {
-			LOGGER.error("[likeCriteria]", ex);
+			throw new UncheckedException(ex.getMessage(), ex);
 		}
 	}
 	
 	@Transactional
-	public void notEqualCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
+	public void notEqualCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) throws UncheckedException {
 		
 		try {
 
@@ -189,12 +156,12 @@ public class MethodPredicate {
 			predicates.add(predicate);
 
 		} catch (Exception ex) {
-			LOGGER.error("[notEqualCriteria]", ex);
+			throw new UncheckedException(ex.getMessage(), ex);
 		}
 	}
 	
 	@Transactional
-	public void inCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) {
+	public void inCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) throws UncheckedException {
 		
 		try {
 
@@ -209,7 +176,33 @@ public class MethodPredicate {
 			predicates.add(predicate);
 
 		} catch (Exception ex) {
-			LOGGER.error("[inCriteria]", ex);
+			throw new UncheckedException(ex.getMessage(), ex);
+		}
+	}
+	
+	private void greaterThan(String method, CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) throws UncheckedException {
+		try {
+			Method invokeMethod = CriteriaBuilder.class.getMethod(method, Expression.class, Comparable.class);
+			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convert(value));
+			predicates.add(predicate);
+		} catch (InvocationTargetException ex) {
+			Throwable tex = ex.getTargetException();
+			throw new UncheckedException(tex.getMessage(), tex);
+		} catch (Exception ex) {
+			throw new UncheckedException(ex.getMessage(), ex);
+		}
+	}
+	
+	public void lessThan(String method, CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) throws UncheckedException {
+		try {
+			Method invokeMethod = CriteriaBuilder.class.getMethod(method, Expression.class, Comparable.class);
+			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convert(value));
+			predicates.add(predicate);
+		} catch (InvocationTargetException ex) {
+			Throwable tex = ex.getTargetException();
+			throw new UncheckedException(tex.getMessage(), tex);
+		} catch (Exception ex) {
+			throw new UncheckedException(ex.getMessage(), ex);
 		}
 	}
 

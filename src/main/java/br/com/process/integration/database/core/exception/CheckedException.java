@@ -7,21 +7,11 @@ package br.com.process.integration.database.core.exception;
  * declarada ou tratada explicitamente (checked exception), estenda a classe
  * Exception:
  */
-public class CheckedException extends Exception {
+public class CheckedException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 	
 	private final String customMessage;
-
-	public CheckedException(String message) {
-		super(message);
-		this.customMessage = "";
-	}
-	
-	public CheckedException(String message, String customMessage) {
-		super(message);
-		this.customMessage = customMessage;
-	}
 
 	public CheckedException(String message, String customMessage, Throwable cause) {
 		super(message, cause);
