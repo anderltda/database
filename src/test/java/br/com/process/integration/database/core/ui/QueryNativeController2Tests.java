@@ -1,6 +1,5 @@
 package br.com.process.integration.database.core.ui;
 
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -36,7 +35,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import br.com.process.integration.database.core.exception.ErrorResponse;
-import br.com.process.integration.database.domain.view.EntityTest1View;
+import br.com.process.integration.database.domain.view.EntityOneView;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -64,11 +63,11 @@ class QueryNativeController2Tests {
 	@Test
 	void teste_paginacao_com_varios_parmetros_page_nulo() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/page/EntityTest1View/teste_busca_com_condicoes_diversars?name=Anderson&name_op=eq&age=41&age_op=eq&size=10&sortList=age,name&sortOrders=asc,desc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/page/EntityOneView/teste_busca_com_condicoes_diversars?name=Anderson&name_op=eq&age=41&age_op=eq&size=10&sortList=age,name&sortOrders=asc,desc";
 
-		PagedModel<EntityTest1View> page = getAll(url, new ErrorResponse());
+		PagedModel<EntityOneView> page = getAll(url, new ErrorResponse());
 		
-		List<EntityTest1View> list = convertToEntityTest1ViewList(page.getContent());
+		List<EntityOneView> list = convertToEntityOneViewList(page.getContent());
 
 		assertNotNull(list);
 		assertEquals(1, list.size());
@@ -78,11 +77,11 @@ class QueryNativeController2Tests {
 	@Test
 	void teste_paginacao_com_varios_parmetros() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/page/EntityTest1View/teste_busca_com_condicoes_diversars?name=Anderson&name_op=in&age=23&age_op=eq&birthDate=1983-03-29&birthDate_op=eq&height=1.7&height_op=gt&prohibited=2024-02-01T02:52:54&prohibited_op=gt&page=0&size=10&sortList=name&sortOrders=asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/page/EntityOneView/teste_busca_com_condicoes_diversars?name=Anderson&name_op=in&age=23&age_op=eq&birthDate=1983-03-29&birthDate_op=eq&height=1.7&height_op=gt&prohibited=2024-02-01T02:52:54&prohibited_op=gt&page=0&size=10&sortList=name&sortOrders=asc";
 
-		PagedModel<EntityTest1View> page = getAll(url, new ErrorResponse());
+		PagedModel<EntityOneView> page = getAll(url, new ErrorResponse());
 		
-		List<EntityTest1View> list = convertToEntityTest1ViewList(page.getContent());
+		List<EntityOneView> list = convertToEntityOneViewList(page.getContent());
 
 		assertNotNull(list);
 		assertEquals(0, list.size());
@@ -92,7 +91,7 @@ class QueryNativeController2Tests {
 	@Test
 	void teste_gera_um_erro_paginacao() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/page/EntityTest1View/teste_busca_com_condicoes_diversars?page=ee&size=10&sortList=name&sortOrders=asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/page/EntityOneView/teste_busca_com_condicoes_diversars?page=ee&size=10&sortList=name&sortOrders=asc";
 
 		teste_single_parameterized_one(url, "For input string: \"ee\"");
 	}
@@ -100,7 +99,7 @@ class QueryNativeController2Tests {
 	@Test
 	void teste_gera_um_erro_single_query_nao_encontrada() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/single/EntityTest1View/query_123?page=0&size=5&sortList=name&sortOrders=asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/single/EntityOneView/query_123?page=0&size=5&sortList=name&sortOrders=asc";
 
 		teste_single_parameterized_one(url, "Query not found query_123 !");
 	}
@@ -108,7 +107,7 @@ class QueryNativeController2Tests {
 	@Test
 	void teste_gera_um_erro_paginacao_query_nao_encontrada() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/page/EntityTest1View/query_123?page=0&size=5&sortList=name&sortOrders=asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/page/EntityOneView/query_123?page=0&size=5&sortList=name&sortOrders=asc";
 
 		teste_single_parameterized_one(url, "Query not found query_123 !");
 	}
@@ -116,9 +115,9 @@ class QueryNativeController2Tests {
 	@Test
 	void teste_a_query_teste_busca_com_condicoes_diversars_paginada() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/page/EntityTest1View/teste_busca_com_condicoes_diversars?page=0&size=10&sortList=name&sortOrders=asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/page/EntityOneView/teste_busca_com_condicoes_diversars?page=0&size=10&sortList=name&sortOrders=asc";
 
-		PagedModel<EntityTest1View> page = getAll(url, new ErrorResponse());
+		PagedModel<EntityOneView> page = getAll(url, new ErrorResponse());
 		
 		assertEquals(10, page.getContent().size());
 
@@ -127,21 +126,35 @@ class QueryNativeController2Tests {
 	@Test
 	void teste_a_query_teste_busca_com_condicoes_diversars_paginada_com_size_2() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/page/EntityTest1View/teste_busca_com_condicoes_diversars?page=0&size=2&sortList=name&sortOrders=asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/page/EntityOneView/teste_busca_com_condicoes_diversars?page=0&size=2&sortList=name&sortOrders=asc";
 
-		PagedModel<EntityTest1View> page = getAll(url, new ErrorResponse());
+		PagedModel<EntityOneView> page = getAll(url, new ErrorResponse());
 		
 		assertEquals(2, page.getContent().size());
 		
+	}
+	
+	@Test
+	void teste_a_query_teste_busca_com_condicoes_diversars_paginada_com_id() {
+
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/page/EntityOneView/teste_busca_com_condicoes_diversars?idEntityOne="+ QueryJpaController1Tests.ids.get(0) +"&idEntityOne_op=eq&page=0&size=2&sortList=name&sortOrders=asc";
+
+		PagedModel<EntityOneView> page = getAll(url, new ErrorResponse());
+		
+		List<EntityOneView> list = convertToEntityOneViewList(page.getContent());
+
+		assertEquals(1, page.getContent().size());
+		assertEquals("Carlos Alberto", list.get(0).getName());
+		assertEquals(55, list.get(0).getAge());
 	}
 	
 	
 	@Test
 	void teste_busca_com_equal_pelo_name() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/page/EntityTest1View/teste_busca_com_condicoes_diversars?name=Anderson&name_op=eq&page=0&size=10&sortList=name&sortOrders=asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/page/EntityOneView/teste_busca_com_condicoes_diversars?name=Anderson&name_op=eq&page=0&size=10&sortList=name&sortOrders=asc";
 
-		PagedModel<EntityTest1View> list = getAll(url, new ErrorResponse());
+		PagedModel<EntityOneView> list = getAll(url, new ErrorResponse());
 		
 		list.getContent().forEach(entity -> {
 			assertEquals("Anderson", entity.getName());
@@ -150,11 +163,11 @@ class QueryNativeController2Tests {
 			assertEquals(LocalDate.parse("1983-03-29", DateTimeFormatter.ISO_LOCAL_DATE), entity.getBirthDate());
 			assertEquals(LocalDateTime.parse("2024-02-01T02:52:54", DateTimeFormatter.ISO_LOCAL_DATE_TIME), entity.getProhibited());
 			assertNotEquals(0, entity.hashCode()); 
-			assertNull(entity.getIdEntityTest1());
-			assertNull(entity.getIdEntityTest2());
-			assertNull(entity.getIdEntityTest3());
-			assertNull(entity.getIdEntityTest4());
-			assertNull(entity.getIdEntityTest5());
+			assertNotNull(entity.getIdEntityOne());
+			assertNotNull(entity.getIdEntityTwo());
+			assertNotNull(entity.getIdEntityTree());
+			assertNotNull(entity.getIdEntityFour());
+			assertNotNull(entity.getIdEntityFive());
 		});
 		
 		assertNotNull(list);
@@ -164,11 +177,11 @@ class QueryNativeController2Tests {
 	@Test
 	void teste_busca_com_equal_pelo_age_e_birthDate_e_prohibited_ordernacao_name_asc() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/page/EntityTest1View/teste_busca_com_condicoes_diversars?age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&prohibited=2024-11-01T08:00:00&prohibited_op=eq&page=0&size=10&sortList=name&sortOrders=asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/page/EntityOneView/teste_busca_com_condicoes_diversars?age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&prohibited=2024-11-01T08:00:00&prohibited_op=eq&page=0&size=10&sortList=name&sortOrders=asc";
 
-		PagedModel<EntityTest1View> page = getAll(url, new ErrorResponse());
+		PagedModel<EntityOneView> page = getAll(url, new ErrorResponse());
 		
-		List<EntityTest1View> list = convertToEntityTest1ViewList(page.getContent());
+		List<EntityOneView> list = convertToEntityOneViewList(page.getContent());
 
 		assertNotNull(list);
 		assertEquals(2, page.getContent().size());
@@ -179,11 +192,11 @@ class QueryNativeController2Tests {
 	@Test
 	void teste_notEqual_do_teste_busca_com_equal_pelo_age_e_birthDate_e_prohibited_ordernacao_name_asc() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/page/EntityTest1View/teste_busca_com_condicoes_diversars?age=22&age_op=ne&birthDate=1990-01-01&birthDate_op=ne&prohibited=2024-11-01T08:00:00&prohibited_op=ne&page=0&size=10&sortList=name&sortOrders=asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/page/EntityOneView/teste_busca_com_condicoes_diversars?age=22&age_op=ne&birthDate=1990-01-01&birthDate_op=ne&prohibited=2024-11-01T08:00:00&prohibited_op=ne&page=0&size=10&sortList=name&sortOrders=asc";
 
-		PagedModel<EntityTest1View> page = getAll(url, new ErrorResponse());
+		PagedModel<EntityOneView> page = getAll(url, new ErrorResponse());
 		
-		List<EntityTest1View> list = convertToEntityTest1ViewList(page.getContent());
+		List<EntityOneView> list = convertToEntityOneViewList(page.getContent());
 
 		assertNotNull(list);
 		assertEquals(7, list.size());
@@ -199,11 +212,11 @@ class QueryNativeController2Tests {
 	@Test
 	void teste_utilizando_group_by() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/page/EntityTest1View/teste_utilizando_group_by?page=0&size=10";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/page/EntityOneView/teste_utilizando_group_by?page=0&size=10";
 
-		PagedModel<EntityTest1View> page = getAll(url, new ErrorResponse());
+		PagedModel<EntityOneView> page = getAll(url, new ErrorResponse());
 		
-		List<EntityTest1View> list = convertToEntityTest1ViewList(page.getContent());
+		List<EntityOneView> list = convertToEntityOneViewList(page.getContent());
 
 		assertNotNull(list);
 		assertEquals(8, list.size());
@@ -213,9 +226,9 @@ class QueryNativeController2Tests {
 	@Test
 	void teste_utilizando_group_by_erro() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/page/EntityTest1/teste_utilizando_group_by_erro?page=0&size=10";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/page/EntityOne/teste_utilizando_group_by_erro?page=0&size=10";
 		
-		ErrorResponse errorResponse = new ErrorResponse("Class not found EntityTest1 !", 400);
+		ErrorResponse errorResponse = new ErrorResponse("Class not found EntityOne !", 400);
 		
 	    assertThrows(RuntimeException.class, () -> getAll(url, errorResponse));
 
@@ -224,11 +237,11 @@ class QueryNativeController2Tests {
 	@Test
 	void teste_busca_com_equal_pelo_age_e_birthDate_e_prohibited_ordernacao_name_desc() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/page/EntityTest1View/teste_busca_com_condicoes_diversars?age=22&age_op=ne&birthDate=1990-01-01&birthDate_op=ne&prohibited=2024-11-01T08:00:00&prohibited_op=ne&page=0&size=10&sortList=name&sortOrders=desc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/page/EntityOneView/teste_busca_com_condicoes_diversars?age=22&age_op=ne&birthDate=1990-01-01&birthDate_op=ne&prohibited=2024-11-01T08:00:00&prohibited_op=ne&page=0&size=10&sortList=name&sortOrders=desc";
 
-		PagedModel<EntityTest1View> page = getAll(url, new ErrorResponse());
+		PagedModel<EntityOneView> page = getAll(url, new ErrorResponse());
 		
-		List<EntityTest1View> list = convertToEntityTest1ViewList(page.getContent());
+		List<EntityOneView> list = convertToEntityOneViewList(page.getContent());
 
 		assertEquals("Renato", list.get(0).getName());
 		assertEquals("Paulo Henrique", list.get(1).getName());
@@ -244,7 +257,7 @@ class QueryNativeController2Tests {
 	    assertThrows(RuntimeException.class, () -> getAll(url, errorResponse));
 	}
 	
-	private PagedModel<EntityTest1View> getAll(String url, ErrorResponse compare) {
+	private PagedModel<EntityOneView> getAll(String url, ErrorResponse compare) {
 		
         HttpHeaders headers = new HttpHeaders();
       
@@ -264,13 +277,13 @@ class QueryNativeController2Tests {
         }
     }
 
-    private PagedModel<EntityTest1View> convertResponseToPagedModel(String body) {
+    private PagedModel<EntityOneView> convertResponseToPagedModel(String body) {
         ObjectMapper objectMapper = createObjectMapper();
         try {
-            // Converte a string JSON para PagedModel<EntityTest1View>
-            return objectMapper.readValue(body, new TypeReference<PagedModel<EntityTest1View>>() {});
+            // Converte a string JSON para PagedModel<EntityOneView>
+            return objectMapper.readValue(body, new TypeReference<PagedModel<EntityOneView>>() {});
         } catch (Exception e) {
-            throw new RuntimeException("Error parsing PagedModel<EntityTest1View> response", e);
+            throw new RuntimeException("Error parsing PagedModel<EntityOneView> response", e);
         }
     }
 
@@ -293,13 +306,13 @@ class QueryNativeController2Tests {
         return objectMapper;
     }
     
-    public List<EntityTest1View> convertToEntityTest1ViewList(Collection<EntityTest1View> collection) {
+    public List<EntityOneView> convertToEntityOneViewList(Collection<EntityOneView> collection) {
         return collection.stream()
-                         .map(this::convertToEntityTest1View)
+                         .map(this::convertToEntityOneView)
                          .collect(Collectors.toList());
     }
 
-    private EntityTest1View convertToEntityTest1View(EntityTest1View element) {
+    private EntityOneView convertToEntityOneView(EntityOneView element) {
         return element;
     }
 }

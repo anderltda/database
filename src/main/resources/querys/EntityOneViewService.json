@@ -1,0 +1,97 @@
+[
+	{
+		"name": "teste_busca_com_condicoes_diversars",
+		"select": "SELECT t1.*, t2.*, t3.*, t4.*, t5.* FROM entity_one t1",
+		"join": [
+			"INNER JOIN entity_two t2 ON t2.id_entity_two = t1.id_entity_two",
+			"INNER JOIN entity_tree t3 ON t3.id_entity_tree = t2.id_entity_tree",
+			"INNER JOIN entity_four t4 ON t4.id_entity_four = t3.id_entity_four",
+			"INNER JOIN entity_five t5 ON t5.id_entity_five = t4.id_entity_five"
+		],
+		"where": [
+			"AND t1.id_entity_one {idEntityOne_op} :idEntityOne",
+			"AND t2.id_entity_two {idEntityTwo_op} :idEntityTwo",
+			"AND t3.id_entity_tree {idEntityTree_op} :idEntityTree",
+			"AND t4.id_entity_four {idEntityFour_op} :idEntityFour",
+			"AND t5.id_entity_five {idEntityFive_op} :idEntityFive",
+			"AND t1.name {name_op} :name",
+			"AND t1.age {age_op} :age",
+			"AND t1.birth_date {birthDate_op} :birthDate",
+			"AND t1.height {height_op} :height",
+			"AND t1.prohibited {prohibited_op} :prohibited"
+		],
+		"orderby": ":sortList :sortOrders"
+	},
+	{
+		"name": "teste_busca_com_equal_validar_orderby",
+		"select": "SELECT t1.*, t2.*, t3.*, t4.*, t5.* FROM entity_one t1",
+		"join": [
+			"INNER JOIN entity_two t2 ON t2.id_entity_two = t1.id_entity_two",
+			"INNER JOIN entity_tree t3 ON t3.id_entity_tree = t2.id_entity_tree",
+			"INNER JOIN entity_four t4 ON t4.id_entity_four = t3.id_entity_four",
+			"INNER JOIN entity_five t5 ON t5.id_entity_five = t4.id_entity_five"
+		],
+		"where": [
+			"AND t1.name {name_op} :name"
+		],
+		"orderby": "t1.id_entity_one ASC"
+	},
+	{
+		"name": "teste_um_exemplo_sem_order_by",
+		"select": "SELECT t1.* FROM entity_one t1",
+		"join": [
+			"INNER JOIN entity_two t2 ON t2.id_entity_two = t1.id_entity_two",
+			"INNER JOIN entity_tree t3 ON t3.id_entity_tree = t2.id_entity_tree",
+			"INNER JOIN entity_four t4 ON t4.id_entity_four = t3.id_entity_four",
+			"INNER JOIN entity_five t5 ON t5.id_entity_five = t4.id_entity_five"
+		],
+		"where": [
+			"AND t1.name {name_op} :name",
+			"AND t1.prohibited {prohibited_op} :prohibited"
+		]
+	},	
+	{
+		"name": "teste_um_exemplo_count",
+		"select": "SELECT COUNT(t1) FROM entity_one t1",
+		"join": [
+			"INNER JOIN entity_two t2 ON t2.id_entity_two = t1.id_entity_two",
+			"INNER JOIN entity_tree t3 ON t3.id_entity_tree = t2.id_entity_tree",
+			"INNER JOIN entity_four t4 ON t4.id_entity_four = t3.id_entity_four",
+			"INNER JOIN entity_five t5 ON t5.id_entity_five = t4.id_entity_five"
+		],
+		"where": [
+			"AND t1.name {name_op} :name",
+			"AND t1.prohibited {prohibited_op} :prohibited"
+		]
+	},
+	{
+		"name": "teste_utilizando_group_by",
+		"select": "SELECT e1.prohibited, count(*) AS count FROM entity_one e1",
+		"join": [
+			"INNER JOIN entity_two e2 ON e2.id_entity_two = e1.id_entity_two",
+			"INNER JOIN entity_tree e3 ON e3.id_entity_tree = e2.id_entity_tree",
+			"INNER JOIN entity_four e4 ON e4.id_entity_four = e3.id_entity_four",
+			"INNER JOIN entity_five e5 ON e5.id_entity_five = e4.id_entity_five"
+		],
+		"where": [
+			"AND e1.name {name_op} :name"
+		],
+		"groupby": "e1.prohibited",
+		"orderby": "e1.prohibited ASC"
+	} ,
+	{
+		"name": "teste_utilizando_group_by_erro",
+		"select": "SELECT e1.prohibited, count(*) AS age FROM entity_one e1",
+		"join": [
+			"INNER JOIN entity_two e2 ON e2.id_entity_two = e1.id_entity_two",
+			"INNER JOIN entity_tree e3 ON e3.id_entity_tree = e2.id_entity_tree",
+			"INNER JOIN entity_four e4 ON e4.id_entity_four = e3.id_entity_four",
+			"INNER JOIN entity_five e5 ON e5.id_entity_five = e4.id_entity_five"
+		],
+		"where": [
+			"AND e1.name {name_op} :name"
+		],
+		"groupby": "e1.prohibited",
+		"orderby": "e1.prohibited ASC"
+	}
+]

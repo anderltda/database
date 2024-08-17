@@ -55,7 +55,7 @@ class QueryJpaControllerDeleteTests {
 
 		json = json.substring(0, json.length() - 1) + "]";
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/delete/all/id/EntityTest1";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/delete/all/id/EntityOne";
 
 		String statusCode = deleteResource(url, json);
 
@@ -66,7 +66,7 @@ class QueryJpaControllerDeleteTests {
 	@Order(3)
 	void testDeleteForId() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/delete/id/EntityTest1/" + QueryJpaControllerSaveTests.id;
+		String url = "http://localhost:" + port + "/v1/api-rest-database/delete/id/EntityOne/" + QueryJpaControllerSaveTests.id;
 
 		String statusCode = deleteResource(url);
 
@@ -77,7 +77,7 @@ class QueryJpaControllerDeleteTests {
 	@Order(4)
 	void testDeleteForAll() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/delete/all/EntityTest1";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/delete/all/EntityOne";
 
 		String statusCode = deleteResource(url);
 

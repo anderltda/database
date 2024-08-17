@@ -17,12 +17,12 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Entity_Test_2")
+@Table(name = "Entity_Two")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EntityTest2 extends RepresentationModel<EntityTest2> implements BeanEntity<String> {
+public class EntityTwo extends RepresentationModel<EntityTwo> implements BeanEntity<String> {
 
 	@Id
-	@Column(name = "id_entity_test_2")
+	@Column(name = "id_entity_two")
 	private String id;
 
 	@Column(name = "color", nullable = false, length = 100)
@@ -38,8 +38,8 @@ public class EntityTest2 extends RepresentationModel<EntityTest2> implements Bea
 	private LocalDate dateInclusion;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_entity_test_3", nullable = false, referencedColumnName = "id_entity_test_3")
-	private EntityTest3 entityTest3;
+	@JoinColumn(name = "id_entity_tree", nullable = false, referencedColumnName = "id_entity_tree")
+	private EntityTree entityTree;
 
 	public String getId() {
 		return id;
@@ -81,19 +81,19 @@ public class EntityTest2 extends RepresentationModel<EntityTest2> implements Bea
 		this.dateInclusion = dateInclusion;
 	}
 
-	public EntityTest3 getEntityTest3() {
-		return entityTest3;
+	public EntityTree getEntityTree() {
+		return entityTree;
 	}
 
-	public void setEntityTest3(EntityTest3 entityTest3) {
-		this.entityTest3 = entityTest3;
+	public void setEntityTree(EntityTree entityTree) {
+		this.entityTree = entityTree;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(color, cost, dateInclusion, entityTest3, hex, id);
+		result = prime * result + Objects.hash(color, cost, dateInclusion, entityTree, hex, id);
 		return result;
 	}
 
@@ -105,10 +105,9 @@ public class EntityTest2 extends RepresentationModel<EntityTest2> implements Bea
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		EntityTest2 other = (EntityTest2) obj;
+		EntityTwo other = (EntityTwo) obj;
 		return Objects.equals(color, other.color) && Objects.equals(cost, other.cost)
-				&& Objects.equals(dateInclusion, other.dateInclusion) && Objects.equals(entityTest3, other.entityTest3)
+				&& Objects.equals(dateInclusion, other.dateInclusion) && Objects.equals(entityTree, other.entityTree)
 				&& Objects.equals(hex, other.hex) && Objects.equals(id, other.id);
 	}
-
 }

@@ -13,12 +13,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Entity_Test_5")
+@Table(name = "Entity_Five")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EntityTest5 extends RepresentationModel<EntityTest5> implements BeanEntity<String> {
+public class EntityFive extends RepresentationModel<EntityFive> implements BeanEntity<String> {
 
 	@Id
-	@Column(name = "id_entity_test_5")
+	@Column(name = "id_entity_five")
 	private String id;
 
 	@Column(name = "object", nullable = false, length = 100)
@@ -67,7 +67,7 @@ public class EntityTest5 extends RepresentationModel<EntityTest5> implements Bea
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		EntityTest5 other = (EntityTest5) obj;
+		EntityFive other = (EntityFive) obj;
 		return Objects.equals(id, other.id) && Objects.equals(object, other.object)
 				&& Objects.equals(value, other.value);
 	}

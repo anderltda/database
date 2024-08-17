@@ -20,13 +20,13 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Entity_Test_1")
+@Table(name = "Entity_One")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EntityTest1 extends RepresentationModel<EntityTest1> implements BeanEntity<Long> {
+public class EntityOne extends RepresentationModel<EntityOne> implements BeanEntity<Long> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id_entity_test_1")
+	@Column(name = "id_entity_one")
 	private Long id;
 
 	@Column(name = "name", nullable = false, length = 100)
@@ -45,8 +45,8 @@ public class EntityTest1 extends RepresentationModel<EntityTest1> implements Bea
 	private LocalDateTime prohibited;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_entity_test_2", nullable = false, referencedColumnName = "id_entity_test_2")
-	private EntityTest2 entityTest2;
+	@JoinColumn(name = "id_entity_two", nullable = false, referencedColumnName = "id_entity_two")
+	private EntityTwo entityTwo;
 
 	public Long getId() {
 		return id;
@@ -96,19 +96,19 @@ public class EntityTest1 extends RepresentationModel<EntityTest1> implements Bea
 		this.prohibited = prohibited;
 	}
 
-	public EntityTest2 getEntityTest2() {
-		return entityTest2;
+	public EntityTwo getEntityTwo() {
+		return entityTwo;
 	}
 
-	public void setEntityTest2(EntityTest2 entityTest2) {
-		this.entityTest2 = entityTest2;
+	public void setEntityTwo(EntityTwo entityTwo) {
+		this.entityTwo = entityTwo;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(age, birthDate, entityTest2, height, id, name, prohibited);
+		result = prime * result + Objects.hash(age, birthDate, entityTwo, height, id, name, prohibited);
 		return result;
 	}
 
@@ -120,9 +120,9 @@ public class EntityTest1 extends RepresentationModel<EntityTest1> implements Bea
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		EntityTest1 other = (EntityTest1) obj;
+		EntityOne other = (EntityOne) obj;
 		return Objects.equals(age, other.age) && Objects.equals(birthDate, other.birthDate)
-				&& Objects.equals(entityTest2, other.entityTest2) && Objects.equals(height, other.height)
+				&& Objects.equals(entityTwo, other.entityTwo) && Objects.equals(height, other.height)
 				&& Objects.equals(id, other.id) && Objects.equals(name, other.name)
 				&& Objects.equals(prohibited, other.prohibited);
 	}

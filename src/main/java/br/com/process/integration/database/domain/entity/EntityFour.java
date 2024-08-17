@@ -17,12 +17,12 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Entity_Test_4")
+@Table(name = "Entity_Four")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EntityTest4 extends RepresentationModel<EntityTest4> implements BeanEntity<String> {
+public class EntityFour extends RepresentationModel<EntityFour> implements BeanEntity<String> {
 
 	@Id
-	@Column(name = "id_entity_test_4")
+	@Column(name = "id_entity_four")
 	private String id;
 
 	@Column(name = "fruit", nullable = false, length = 100)
@@ -35,8 +35,8 @@ public class EntityTest4 extends RepresentationModel<EntityTest4> implements Bea
 	private LocalDateTime dateInclusionTime;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_entity_test_5", nullable = false, referencedColumnName = "id_entity_test_5")
-	private EntityTest5 entityTest5;
+	@JoinColumn(name = "id_entity_five", nullable = false, referencedColumnName = "id_entity_five")
+	private EntityFive entityFive;
 
 	public String getId() {
 		return id;
@@ -70,19 +70,19 @@ public class EntityTest4 extends RepresentationModel<EntityTest4> implements Bea
 		this.dateInclusionTime = dateInclusionTime;
 	}
 
-	public EntityTest5 getEntityTest5() {
-		return entityTest5;
+	public EntityFive getEntityFive() {
+		return entityFive;
 	}
 
-	public void setEntityTest5(EntityTest5 entityTest5) {
-		this.entityTest5 = entityTest5;
+	public void setEntityFive(EntityFive entityFive) {
+		this.entityFive = entityFive;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(dateInclusionTime, entityTest5, fruit, id, nutritiou);
+		result = prime * result + Objects.hash(dateInclusionTime, entityFive, fruit, id, nutritiou);
 		return result;
 	}
 
@@ -94,10 +94,9 @@ public class EntityTest4 extends RepresentationModel<EntityTest4> implements Bea
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		EntityTest4 other = (EntityTest4) obj;
+		EntityFour other = (EntityFour) obj;
 		return Objects.equals(dateInclusionTime, other.dateInclusionTime)
-				&& Objects.equals(entityTest5, other.entityTest5) && Objects.equals(fruit, other.fruit)
+				&& Objects.equals(entityFive, other.entityFive) && Objects.equals(fruit, other.fruit)
 				&& Objects.equals(id, other.id) && Objects.equals(nutritiou, other.nutritiou);
 	}
-
 }

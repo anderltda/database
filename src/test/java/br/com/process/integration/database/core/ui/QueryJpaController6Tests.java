@@ -33,7 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import br.com.process.integration.database.core.exception.ErrorResponse;
-import br.com.process.integration.database.domain.entity.EntityTest1;
+import br.com.process.integration.database.domain.entity.EntityOne;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -63,9 +63,9 @@ class QueryJpaController6Tests {
 	void teste_busca_com_equal_pelo_name_unico_registro() {
 
 		String url = "http://localhost:" + port
-				+ "/v1/api-rest-database/find/single/jpql/EntityTest1/buscaComEqualPeloName?name=Anderson";
+				+ "/v1/api-rest-database/find/single/jpql/EntityOne/buscaComEqualPeloName?name=Anderson";
 
-		EntityTest1 entity = getSingleResult(url, new ErrorResponse());
+		EntityOne entity = getSingleResult(url, new ErrorResponse());
 
 		assertNotNull(entity.getId());
 		assertEquals("Anderson", entity.getName());
@@ -75,7 +75,7 @@ class QueryJpaController6Tests {
 		assertEquals(LocalDateTime.parse("2024-02-01T02:52:54", DateTimeFormatter.ISO_LOCAL_DATE_TIME),
 				entity.getProhibited());
 		assertNotEquals(0, entity.hashCode());
-		assertNotNull(entity.getEntityTest2());
+		assertNotNull(entity.getEntityTwo());
 
 		assertNotNull(entity);
 	}
@@ -84,7 +84,7 @@ class QueryJpaController6Tests {
 	void teste_busca_com_equal_pelo_name_unico_registro_trazend_mais_de_um() {
 
 		String url = "http://localhost:" + port
-				+ "/v1/api-rest-database/find/single/jpql/EntityTest1/buscaComLikePeloName?name=Paulo";
+				+ "/v1/api-rest-database/find/single/jpql/EntityOne/buscaComLikePeloName?name=Paulo";
 
 		ErrorResponse errorResponse = new ErrorResponse("Query did not return a unique result: 2 results were returned",
 				400);
@@ -97,9 +97,9 @@ class QueryJpaController6Tests {
 	void teste_busca_com_like_pelo_name() {
 
 		String url = "http://localhost:" + port
-				+ "/v1/api-rest-database/find/all/jpql/EntityTest1/buscaComLikePeloName?name=ar&sortList=birthDate,name&sortOrders=asc,desc";
+				+ "/v1/api-rest-database/find/all/jpql/EntityOne/buscaComLikePeloName?name=ar&sortList=birthDate,name&sortOrders=asc,desc";
 
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(5, list.size());
@@ -114,9 +114,9 @@ class QueryJpaController6Tests {
 	void teste_busca_all_ordernacao_birthDate_asc_name_desc() {
 
 		String url = "http://localhost:" + port
-				+ "/v1/api-rest-database/find/all/jpql/EntityTest1/buscaAll?sortList=birthDate,name&sortOrders=asc,desc";
+				+ "/v1/api-rest-database/find/all/jpql/EntityOne/buscaAll?sortList=birthDate,name&sortOrders=asc,desc";
 
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -136,9 +136,9 @@ class QueryJpaController6Tests {
 	void teste_busca_all_ordernacao_birthDate_desc_name_asc() {
 
 		String url = "http://localhost:" + port
-				+ "/v1/api-rest-database/find/all/jpql/EntityTest1/buscaAll?sortList=birthDate,name&sortOrders=desc,asc";
+				+ "/v1/api-rest-database/find/all/jpql/EntityOne/buscaAll?sortList=birthDate,name&sortOrders=desc,asc";
 
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -158,9 +158,9 @@ class QueryJpaController6Tests {
 	void teste_busca_all_ordernacao_name_asc_birthDate_desc() {
 
 		String url = "http://localhost:" + port
-				+ "/v1/api-rest-database/find/all/jpql/EntityTest1/buscaAll?sortList=name,birthDate&sortOrders=asc,desc";
+				+ "/v1/api-rest-database/find/all/jpql/EntityOne/buscaAll?sortList=name,birthDate&sortOrders=asc,desc";
 
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -180,9 +180,9 @@ class QueryJpaController6Tests {
 	void teste_busca_all_ordernacao_name_desc_birthDate_asc() {
 
 		String url = "http://localhost:" + port
-				+ "/v1/api-rest-database/find/all/jpql/EntityTest1/buscaAll?sortList=name,birthDate&sortOrders=desc,asc";
+				+ "/v1/api-rest-database/find/all/jpql/EntityOne/buscaAll?sortList=name,birthDate&sortOrders=desc,asc";
 
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -202,9 +202,9 @@ class QueryJpaController6Tests {
 	void teste_single_nenhum_registro_encontrado() {
 
 		String url = "http://localhost:" + port
-				+ "/v1/api-rest-database/find/single/jpql/EntityTest1/buscaComEqualPeloName?name=Pedro";
+				+ "/v1/api-rest-database/find/single/jpql/EntityOne/buscaComEqualPeloName?name=Pedro";
 
-		EntityTest1 entity = getSingleResult(url, new ErrorResponse());
+		EntityOne entity = getSingleResult(url, new ErrorResponse());
 
 		assertNull(entity);
 	}
@@ -212,9 +212,9 @@ class QueryJpaController6Tests {
 	@Test
 	void teste_all_nenhum_registro_encontrado() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/EntityTest1/buscaComLikePeloName?name=Silva&sortList=name,birthDate&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/EntityOne/buscaComLikePeloName?name=Silva&sortList=name,birthDate&sortOrders=desc,asc";
 
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNull(list);
 	}
@@ -223,7 +223,7 @@ class QueryJpaController6Tests {
 	void teste_count_maior_prohibited() {
 
 		String url = "http://localhost:" + port
-				+ "/v1/api-rest-database/count/jpql/EntityTest1/countMaiorProhibited?prohibited=2024-11-01T08:00:00";
+				+ "/v1/api-rest-database/count/jpql/EntityOne/countMaiorProhibited?prohibited=2024-11-01T08:00:00";
 
 		Long count = Long.parseLong(getUniqueResult(url, new ErrorResponse()));
 
@@ -234,7 +234,7 @@ class QueryJpaController6Tests {
 	void teste_count_erro() {
 
 		String url = "http://localhost:" + port
-				+ "/v1/api-rest-database/count/jpql/EntityTest1/countMaiorProhibited?prohibited=2024-11-01T08:00:00";
+				+ "/v1/api-rest-database/count/jpql/EntityOne/countMaiorProhibited?prohibited=2024-11-01T08:00:00";
 
 		Long count = Long.parseLong(getUniqueResult(url, new ErrorResponse()));
 
@@ -271,7 +271,7 @@ class QueryJpaController6Tests {
 
 
 
-	public List<EntityTest1> getAll(String url, ErrorResponse compare) {
+	public List<EntityOne> getAll(String url, ErrorResponse compare) {
 		
 		HttpHeaders headers = new HttpHeaders();
 		
@@ -282,7 +282,7 @@ class QueryJpaController6Tests {
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
 		if (response.getStatusCode().is2xxSuccessful()) {
-			return convertResponseToEntityTest1List(response.getBody());
+			return convertResponseToEntityOneList(response.getBody());
 		} else {
 			ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
 			assertEquals(compare.getStatus(), errorResponse.getStatus());
@@ -291,7 +291,7 @@ class QueryJpaController6Tests {
 		}
 	}
 
-	public EntityTest1 getSingleResult(String url, ErrorResponse compare) {
+	public EntityOne getSingleResult(String url, ErrorResponse compare) {
 		
 	    HttpHeaders headers = new HttpHeaders();
 	    
@@ -302,7 +302,7 @@ class QueryJpaController6Tests {
 	    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
 	    if (response.getStatusCode().is2xxSuccessful()) {
-	        return convertResponseToEntityTest1(response.getBody());
+	        return convertResponseToEntityOne(response.getBody());
 	    } else {
 	    	ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
 			assertEquals(compare.getStatus(), errorResponse.getStatus());
@@ -339,29 +339,29 @@ class QueryJpaController6Tests {
 	    return objectMapper;
 	}
 
-	private List<EntityTest1> convertResponseToEntityTest1List(String body) {
+	private List<EntityOne> convertResponseToEntityOneList(String body) {
 	    ObjectMapper objectMapper = createObjectMapper();
 	    try {
 	    	if(body != null) {
-	    		return objectMapper.readValue(body, new TypeReference<List<EntityTest1>>(){});
+	    		return objectMapper.readValue(body, new TypeReference<List<EntityOne>>(){});
 	    	} else {
 	    		return null;
 	    	}
 	    } catch (JsonProcessingException e) {
-	        throw new RuntimeException("Error parsing EntityTest1 list response", e);
+	        throw new RuntimeException("Error parsing EntityOne list response", e);
 	    }
 	}
 
-	private EntityTest1 convertResponseToEntityTest1(String body) {
+	private EntityOne convertResponseToEntityOne(String body) {
 	    ObjectMapper objectMapper = createObjectMapper();
 	    try {
 	    	if(body != null) {
-	    		return objectMapper.readValue(body, EntityTest1.class);
+	    		return objectMapper.readValue(body, EntityOne.class);
 	    	} else {
 	    		return null;
 	    	}
 	    } catch (JsonProcessingException e) {
-	        throw new RuntimeException("Error parsing EntityTest1 response", e);
+	        throw new RuntimeException("Error parsing EntityOne response", e);
 	    }
 	}
 

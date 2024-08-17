@@ -34,11 +34,11 @@ import com.google.gson.reflect.TypeToken;
 
 import br.com.process.integration.database.core.ui.adapter.LocalDateAdapter;
 import br.com.process.integration.database.core.ui.adapter.LocalDateTimeAdapter;
-import br.com.process.integration.database.domain.entity.EntityTest1;
-import br.com.process.integration.database.domain.entity.EntityTest2;
-import br.com.process.integration.database.domain.entity.EntityTest3;
-import br.com.process.integration.database.domain.entity.EntityTest4;
-import br.com.process.integration.database.domain.entity.EntityTest5;
+import br.com.process.integration.database.domain.entity.EntityOne;
+import br.com.process.integration.database.domain.entity.EntityTwo;
+import br.com.process.integration.database.domain.entity.EntityTree;
+import br.com.process.integration.database.domain.entity.EntityFour;
+import br.com.process.integration.database.domain.entity.EntityFive;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -85,7 +85,7 @@ class QueryJpaController1Tests {
 	@Order(2)
 	void testSave() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/save/EntityTest1";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/save/EntityOne";
 
 		String[] text = new String[5];
 		Integer[] inteiro = new Integer[5];
@@ -123,32 +123,32 @@ class QueryJpaController1Tests {
 		localDate[4] = "01-10-2024";
 		localTime[4] = "2024-01-10T19:14:10";
 
-		EntityTest1 entityTest1 = gerarEntity(text, inteiro, dobro, localDate, localTime);
+		EntityOne entityOne = gerarEntity(text, inteiro, dobro, localDate, localTime);
 
 		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
 				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
 
-		String json = gson.toJson(entityTest1);
+		String json = gson.toJson(entityOne);
 
 		List<String> responses = postJson(url, json);
 
-		EntityTest1 entity = gson.fromJson(responses.get(1), EntityTest1.class);
+		EntityOne entity = gson.fromJson(responses.get(1), EntityOne.class);
 
 		id = entity.getId();
 				
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
 		assertNotNull(entity.getId());
-		assertNotNull(entity.getEntityTest2().getId());
-		assertNotNull(entity.getEntityTest2().getEntityTest3().getId());
-		assertNotNull(entity.getEntityTest2().getEntityTest3().getEntityTest4().getId());
-		assertNotNull(entity.getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getId());
+		assertNotNull(entity.getEntityTwo().getId());
+		assertNotNull(entity.getEntityTwo().getEntityTree().getId());
+		assertNotNull(entity.getEntityTwo().getEntityTree().getEntityFour().getId());
+		assertNotNull(entity.getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getId());
 	}
 
 	@Test
 	@Order(3)
 	void testSaveFlush() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/save/flush/EntityTest1";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/save/flush/EntityOne";
 
 		String[] text = new String[5];
 		Integer[] inteiro = new Integer[5];
@@ -186,7 +186,7 @@ class QueryJpaController1Tests {
 		localDate[4] = "01-10-2024";
 		localTime[4] = "2024-01-10T19:14:10";
 
-		EntityTest1 entity1 = gerarEntity(text, inteiro, dobro, localDate, localTime);
+		EntityOne entity1 = gerarEntity(text, inteiro, dobro, localDate, localTime);
 
 		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
 				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
@@ -195,23 +195,23 @@ class QueryJpaController1Tests {
 
 		List<String> responses = postJson(url, json);
 
-		EntityTest1 entity = gson.fromJson(responses.get(1), EntityTest1.class);
+		EntityOne entity = gson.fromJson(responses.get(1), EntityOne.class);
 
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
 		assertNotNull(entity.getId());
-		assertNotNull(entity.getEntityTest2().getId());
-		assertNotNull(entity.getEntityTest2().getEntityTest3().getId());
-		assertNotNull(entity.getEntityTest2().getEntityTest3().getEntityTest4().getId());
-		assertNotNull(entity.getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getId());
+		assertNotNull(entity.getEntityTwo().getId());
+		assertNotNull(entity.getEntityTwo().getEntityTree().getId());
+		assertNotNull(entity.getEntityTwo().getEntityTree().getEntityFour().getId());
+		assertNotNull(entity.getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getId());
 	}
 
 	@Test
 	@Order(4)
 	void testSaveAll() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/save/all/EntityTest1";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/save/all/EntityOne";
 
-		List<EntityTest1> list = new ArrayList<>();
+		List<EntityOne> list = new ArrayList<>();
 
 		String[] text = new String[5];
 		Integer[] inteiro = new Integer[5];
@@ -372,9 +372,9 @@ class QueryJpaController1Tests {
 
 		List<String> responses = postJson(url, json);
 
-		Type userListType = new TypeToken<List<EntityTest1>>(){}.getType();
+		Type userListType = new TypeToken<List<EntityOne>>(){}.getType();
 
-		List<EntityTest1> lists = gson.fromJson(responses.get(1), userListType);
+		List<EntityOne> lists = gson.fromJson(responses.get(1), userListType);
 
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
 
@@ -385,25 +385,25 @@ class QueryJpaController1Tests {
 		assertNotNull(lists.get(2).getId());
 		assertNotNull(lists.get(3).getId());
 		
-		assertNotNull(lists.get(0).getEntityTest2().getId());
-		assertNotNull(lists.get(0).getEntityTest2().getEntityTest3().getId());
-		assertNotNull(lists.get(0).getEntityTest2().getEntityTest3().getEntityTest4().getId());
-		assertNotNull(lists.get(0).getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getId());
+		assertNotNull(lists.get(0).getEntityTwo().getId());
+		assertNotNull(lists.get(0).getEntityTwo().getEntityTree().getId());
+		assertNotNull(lists.get(0).getEntityTwo().getEntityTree().getEntityFour().getId());
+		assertNotNull(lists.get(0).getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getId());
 
-		assertNotNull(lists.get(1).getEntityTest2().getId());
-		assertNotNull(lists.get(1).getEntityTest2().getEntityTest3().getId());
-		assertNotNull(lists.get(1).getEntityTest2().getEntityTest3().getEntityTest4().getId());
-		assertNotNull(lists.get(1).getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getId());
+		assertNotNull(lists.get(1).getEntityTwo().getId());
+		assertNotNull(lists.get(1).getEntityTwo().getEntityTree().getId());
+		assertNotNull(lists.get(1).getEntityTwo().getEntityTree().getEntityFour().getId());
+		assertNotNull(lists.get(1).getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getId());
 
-		assertNotNull(lists.get(2).getEntityTest2().getId());
-		assertNotNull(lists.get(2).getEntityTest2().getEntityTest3().getId());
-		assertNotNull(lists.get(2).getEntityTest2().getEntityTest3().getEntityTest4().getId());
-		assertNotNull(lists.get(2).getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getId());
+		assertNotNull(lists.get(2).getEntityTwo().getId());
+		assertNotNull(lists.get(2).getEntityTwo().getEntityTree().getId());
+		assertNotNull(lists.get(2).getEntityTwo().getEntityTree().getEntityFour().getId());
+		assertNotNull(lists.get(2).getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getId());
 		
-		assertNotNull(lists.get(3).getEntityTest2().getId());
-		assertNotNull(lists.get(3).getEntityTest2().getEntityTest3().getId());
-		assertNotNull(lists.get(3).getEntityTest2().getEntityTest3().getEntityTest4().getId());
-		assertNotNull(lists.get(3).getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getId());
+		assertNotNull(lists.get(3).getEntityTwo().getId());
+		assertNotNull(lists.get(3).getEntityTwo().getEntityTree().getId());
+		assertNotNull(lists.get(3).getEntityTwo().getEntityTree().getEntityFour().getId());
+		assertNotNull(lists.get(3).getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getId());
 		
 		ids.add(lists.get(0).getId());
 		ids.add(lists.get(1).getId());
@@ -414,9 +414,9 @@ class QueryJpaController1Tests {
 	@Order(5)
 	void testSaveAllFlush() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/save/all/flush/EntityTest1";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/save/all/flush/EntityOne";
 
-		List<EntityTest1> list = new ArrayList<>();
+		List<EntityOne> list = new ArrayList<>();
 
 		String[] text = new String[5];
 		Integer[] inteiro = new Integer[5];
@@ -577,9 +577,9 @@ class QueryJpaController1Tests {
 
 		List<String> responses = postJson(url, json);
 
-		Type userListType = new TypeToken<List<EntityTest1>>() {}.getType();
+		Type userListType = new TypeToken<List<EntityOne>>() {}.getType();
 
-		List<EntityTest1> lists = gson.fromJson(responses.get(1), userListType);
+		List<EntityOne> lists = gson.fromJson(responses.get(1), userListType);
 
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
 
@@ -590,70 +590,70 @@ class QueryJpaController1Tests {
 		assertNotNull(lists.get(2).getId());
 		assertNotNull(lists.get(3).getId());
 		
-		assertNotNull(lists.get(0).getEntityTest2().getId());
-		assertNotNull(lists.get(0).getEntityTest2().getEntityTest3().getId());
-		assertNotNull(lists.get(0).getEntityTest2().getEntityTest3().getEntityTest4().getId());
-		assertNotNull(lists.get(0).getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getId());
+		assertNotNull(lists.get(0).getEntityTwo().getId());
+		assertNotNull(lists.get(0).getEntityTwo().getEntityTree().getId());
+		assertNotNull(lists.get(0).getEntityTwo().getEntityTree().getEntityFour().getId());
+		assertNotNull(lists.get(0).getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getId());
 
-		assertNotNull(lists.get(1).getEntityTest2().getId());
-		assertNotNull(lists.get(1).getEntityTest2().getEntityTest3().getId());
-		assertNotNull(lists.get(1).getEntityTest2().getEntityTest3().getEntityTest4().getId());
-		assertNotNull(lists.get(1).getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getId());
+		assertNotNull(lists.get(1).getEntityTwo().getId());
+		assertNotNull(lists.get(1).getEntityTwo().getEntityTree().getId());
+		assertNotNull(lists.get(1).getEntityTwo().getEntityTree().getEntityFour().getId());
+		assertNotNull(lists.get(1).getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getId());
 
-		assertNotNull(lists.get(2).getEntityTest2().getId());
-		assertNotNull(lists.get(2).getEntityTest2().getEntityTest3().getId());
-		assertNotNull(lists.get(2).getEntityTest2().getEntityTest3().getEntityTest4().getId());
-		assertNotNull(lists.get(2).getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getId());
+		assertNotNull(lists.get(2).getEntityTwo().getId());
+		assertNotNull(lists.get(2).getEntityTwo().getEntityTree().getId());
+		assertNotNull(lists.get(2).getEntityTwo().getEntityTree().getEntityFour().getId());
+		assertNotNull(lists.get(2).getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getId());
 		
-		assertNotNull(lists.get(3).getEntityTest2().getId());
-		assertNotNull(lists.get(3).getEntityTest2().getEntityTest3().getId());
-		assertNotNull(lists.get(3).getEntityTest2().getEntityTest3().getEntityTest4().getId());
-		assertNotNull(lists.get(3).getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getId());
+		assertNotNull(lists.get(3).getEntityTwo().getId());
+		assertNotNull(lists.get(3).getEntityTwo().getEntityTree().getId());
+		assertNotNull(lists.get(3).getEntityTwo().getEntityTree().getEntityFour().getId());
+		assertNotNull(lists.get(3).getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getId());
 		
 	}
 
-	public EntityTest1 gerarEntity(String[] text, Integer[] inteiro, Double[] dobro, String[] localDate,
+	public EntityOne gerarEntity(String[] text, Integer[] inteiro, Double[] dobro, String[] localDate,
 			String[] localTime) {
 
-		EntityTest1 entityTest1 = new EntityTest1();
-		entityTest1.setName(text[0]);
-		entityTest1.setAge(inteiro[0]);
-		entityTest1.setHeight(dobro[0]);
-		entityTest1.setBirthDate(geraLocalDate(localDate[0]));
-		entityTest1.setProhibited(geraDataLocalTime(localTime[0]));
+		EntityOne entityOne = new EntityOne();
+		entityOne.setName(text[0]);
+		entityOne.setAge(inteiro[0]);
+		entityOne.setHeight(dobro[0]);
+		entityOne.setBirthDate(geraLocalDate(localDate[0]));
+		entityOne.setProhibited(geraDataLocalTime(localTime[0]));
 
-		EntityTest2 entityTest2 = new EntityTest2();
-		entityTest2.setId(UUID.randomUUID().toString());
-		entityTest2.setColor(text[1]);
-		entityTest2.setHex(inteiro[1]);
-		entityTest2.setCost(dobro[1]);
-		entityTest2.setDateInclusion(geraLocalDate(localDate[1]));
+		EntityTwo entityTwo = new EntityTwo();
+		entityTwo.setId(UUID.randomUUID().toString());
+		entityTwo.setColor(text[1]);
+		entityTwo.setHex(inteiro[1]);
+		entityTwo.setCost(dobro[1]);
+		entityTwo.setDateInclusion(geraLocalDate(localDate[1]));
 
-		EntityTest3 entityTest3 = new EntityTest3();
-		entityTest3.setId(UUID.randomUUID().toString());
-		entityTest3.setAnimal(text[2]);
-		entityTest3.setNumber(inteiro[2]);
-		entityTest3.setValue(dobro[2]);
-		entityTest3.setDataLocal(geraLocalDate(localDate[2]));
-		entityTest3.setDataLocalTime(geraDataLocalTime(localTime[2]));
+		EntityTree entityTree = new EntityTree();
+		entityTree.setId(UUID.randomUUID().toString());
+		entityTree.setAnimal(text[2]);
+		entityTree.setNumber(inteiro[2]);
+		entityTree.setValue(dobro[2]);
+		entityTree.setDataLocal(geraLocalDate(localDate[2]));
+		entityTree.setDataLocalTime(geraDataLocalTime(localTime[2]));
 
-		EntityTest4 entityTest4 = new EntityTest4();
-		entityTest4.setId(UUID.randomUUID().toString());
-		entityTest4.setFruit(text[3]);
-		entityTest4.setNutritiou(inteiro[3]);
-		entityTest4.setDateInclusionTime(geraDataLocalTime(localTime[3]));
+		EntityFour entityFour = new EntityFour();
+		entityFour.setId(UUID.randomUUID().toString());
+		entityFour.setFruit(text[3]);
+		entityFour.setNutritiou(inteiro[3]);
+		entityFour.setDateInclusionTime(geraDataLocalTime(localTime[3]));
 
-		EntityTest5 entityTest5 = new EntityTest5();
-		entityTest5.setId(UUID.randomUUID().toString());
-		entityTest5.setObject(text[4]);
-		entityTest5.setValue(inteiro[4]);
+		EntityFive entityFive = new EntityFive();
+		entityFive.setId(UUID.randomUUID().toString());
+		entityFive.setObject(text[4]);
+		entityFive.setValue(inteiro[4]);
 
-		entityTest1.setEntityTest2(entityTest2);
-		entityTest2.setEntityTest3(entityTest3);
-		entityTest3.setEntityTest4(entityTest4);
-		entityTest4.setEntityTest5(entityTest5);
+		entityOne.setEntityTwo(entityTwo);
+		entityTwo.setEntityTree(entityTree);
+		entityTree.setEntityFour(entityFour);
+		entityFour.setEntityFive(entityFive);
 
-		return entityTest1;
+		return entityOne;
 	}
 
 	public List<String> postJson(String url, String json) {

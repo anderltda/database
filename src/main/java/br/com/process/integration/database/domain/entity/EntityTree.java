@@ -18,12 +18,12 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Entity_Test_3")
+@Table(name = "Entity_Tree")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EntityTest3 extends RepresentationModel<EntityTest3> implements BeanEntity<String> {
+public class EntityTree extends RepresentationModel<EntityTree> implements BeanEntity<String> {
 
 	@Id
-	@Column(name = "id_entity_test_3")
+	@Column(name = "id_entity_tree")
 	private String id;
 
 	@Column(name = "animal", nullable = false, length = 100)
@@ -42,8 +42,8 @@ public class EntityTest3 extends RepresentationModel<EntityTest3> implements Bea
 	private LocalDateTime dataLocalTime;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_entity_test_4", nullable = false, referencedColumnName = "id_entity_test_4")
-	private EntityTest4 entityTest4;
+	@JoinColumn(name = "id_entity_four", nullable = false, referencedColumnName = "id_entity_four")
+	private EntityFour entityFour;
 
 	public String getId() {
 		return id;
@@ -93,19 +93,19 @@ public class EntityTest3 extends RepresentationModel<EntityTest3> implements Bea
 		this.dataLocalTime = dataLocalTime;
 	}
 
-	public EntityTest4 getEntityTest4() {
-		return entityTest4;
+	public EntityFour getEntityFour() {
+		return entityFour;
 	}
 
-	public void setEntityTest4(EntityTest4 entityTest4) {
-		this.entityTest4 = entityTest4;
+	public void setEntityFour(EntityFour entityFour) {
+		this.entityFour = entityFour;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(animal, dataLocal, dataLocalTime, entityTest4, id, number, value);
+		result = prime * result + Objects.hash(animal, dataLocal, dataLocalTime, entityFour, id, number, value);
 		return result;
 	}
 
@@ -117,11 +117,10 @@ public class EntityTest3 extends RepresentationModel<EntityTest3> implements Bea
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		EntityTest3 other = (EntityTest3) obj;
+		EntityTree other = (EntityTree) obj;
 		return Objects.equals(animal, other.animal) && Objects.equals(dataLocal, other.dataLocal)
-				&& Objects.equals(dataLocalTime, other.dataLocalTime) && Objects.equals(entityTest4, other.entityTest4)
+				&& Objects.equals(dataLocalTime, other.dataLocalTime) && Objects.equals(entityFour, other.entityFour)
 				&& Objects.equals(id, other.id) && Objects.equals(number, other.number)
 				&& Objects.equals(value, other.value);
 	}
-
 }

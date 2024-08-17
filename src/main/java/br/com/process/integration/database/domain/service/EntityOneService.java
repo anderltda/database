@@ -6,18 +6,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.process.integration.database.core.application.AbstractJpaService;
-import br.com.process.integration.database.domain.entity.EntityTest1;
-import br.com.process.integration.database.domain.entity.assembler.EntityTest1Assembler;
+import br.com.process.integration.database.domain.entity.EntityOne;
+import br.com.process.integration.database.domain.entity.assembler.EntityOneAssembler;
 
 @Service
 @Transactional
-public class EntityTest1Service extends AbstractJpaService<EntityTest1, Long> {
+public class EntityOneService extends AbstractJpaService<EntityOne, Long> {
 
 	@Autowired
-	private EntityTest1Assembler entity1ModelAssembler;
+	private EntityOneAssembler entity1ModelAssembler;
 	
 	@Autowired
-	private PagedResourcesAssembler<EntityTest1> pagedResourcesAssembler;
+	private PagedResourcesAssembler<EntityOne> pagedResourcesAssembler;
 	
 	
 	@Override
@@ -26,7 +26,7 @@ public class EntityTest1Service extends AbstractJpaService<EntityTest1, Long> {
 	}
 
 	@Override
-	public void setEntity(EntityTest1 entity1) {
+	public void setEntity(EntityOne entity1) {
 		this.entity = entity1;
 	}
 

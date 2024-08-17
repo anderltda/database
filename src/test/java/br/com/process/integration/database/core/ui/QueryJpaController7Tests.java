@@ -31,7 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import br.com.process.integration.database.core.exception.ErrorResponse;
-import br.com.process.integration.database.domain.entity.EntityTest1;
+import br.com.process.integration.database.domain.entity.EntityOne;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -59,9 +59,9 @@ class QueryJpaController7Tests {
 	@Test
 	void teste_busca_all_ordernacao_birthDate_asc_name_desc() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest1/buscaAll?page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityOne/buscaAll?page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
 
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -80,9 +80,9 @@ class QueryJpaController7Tests {
 	@Test
 	void teste_busca_com_like_pelo_name() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest1/buscaComLikePeloName?name=ar&page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityOne/buscaComLikePeloName?name=ar&page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
 
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(5, list.size());
@@ -96,9 +96,9 @@ class QueryJpaController7Tests {
 	@Test
 	void teste_busca_com_like_pelo_name_nao_encontrado() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest1/buscaComLikePeloName?name=Silva&page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityOne/buscaComLikePeloName?name=Silva&page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
 
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(0, list.size());
@@ -117,9 +117,9 @@ class QueryJpaController7Tests {
 	@Test
 	void teste_busca_all_ordernacao_birthDate_desc_name_asc() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest1/buscaAll?page=0&size=20&sortList=birthDate,name&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityOne/buscaAll?page=0&size=20&sortList=birthDate,name&sortOrders=desc,asc";
 
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -138,9 +138,9 @@ class QueryJpaController7Tests {
 	@Test
 	void teste_busca_all_ordernacao_name_asc_birthDate_desc() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest1/buscaAll?page=0&size=20&sortList=name,birthDate&sortOrders=asc,desc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityOne/buscaAll?page=0&size=20&sortList=name,birthDate&sortOrders=asc,desc";
 
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -159,9 +159,9 @@ class QueryJpaController7Tests {
 	@Test
 	void teste_busca_all_ordernacao_name_desc_birthDate_asc() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityTest1/buscaAll?page=0&size=20&sortList=name,birthDate&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/jpql/page/EntityOne/buscaAll?page=0&size=20&sortList=name,birthDate&sortOrders=desc,asc";
 
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -177,11 +177,11 @@ class QueryJpaController7Tests {
 		assertEquals("Anderson", list.get(9).getName());
 	}
 	
-	private List<EntityTest1> getAll(String url, ErrorResponse compare) {
+	private List<EntityOne> getAll(String url, ErrorResponse compare) {
 
-		PagedModel<EntityTest1> page = getRestAll(url, compare);
+		PagedModel<EntityOne> page = getRestAll(url, compare);
 
-		List<EntityTest1> list = convertToEntityTest1List(page.getContent());
+		List<EntityOne> list = convertToEntityOneList(page.getContent());
 
 		assertNotNull(list);
 		assertEquals(list.size(), page.getContent().size());
@@ -189,7 +189,7 @@ class QueryJpaController7Tests {
 		return list;
 	}
 
-	private PagedModel<EntityTest1> getRestAll(String url, ErrorResponse compare) {
+	private PagedModel<EntityOne> getRestAll(String url, ErrorResponse compare) {
 
 		HttpHeaders headers = new HttpHeaders();
 
@@ -210,13 +210,13 @@ class QueryJpaController7Tests {
 		}
 	}
 
-	private PagedModel<EntityTest1> convertResponseToPagedModel(String body) {
+	private PagedModel<EntityOne> convertResponseToPagedModel(String body) {
 		ObjectMapper objectMapper = createObjectMapper();
 		try {
-			return objectMapper.readValue(body, new TypeReference<PagedModel<EntityTest1>>() {
+			return objectMapper.readValue(body, new TypeReference<PagedModel<EntityOne>>() {
 			});
 		} catch (Exception e) {
-			throw new RuntimeException("Error parsing PagedModel<EntityTest1View> response", e);
+			throw new RuntimeException("Error parsing PagedModel<EntityOneView> response", e);
 		}
 	}
 
@@ -236,11 +236,11 @@ class QueryJpaController7Tests {
 		return objectMapper;
 	}
 
-	public List<EntityTest1> convertToEntityTest1List(Collection<EntityTest1> collection) {
-		return collection.stream().map(this::convertToEntityTest1).collect(Collectors.toList());
+	public List<EntityOne> convertToEntityOneList(Collection<EntityOne> collection) {
+		return collection.stream().map(this::convertToEntityOne).collect(Collectors.toList());
 	}
 
-	private EntityTest1 convertToEntityTest1(EntityTest1 element) {
+	private EntityOne convertToEntityOne(EntityOne element) {
 		return element;
 	}
 }

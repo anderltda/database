@@ -31,7 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import br.com.process.integration.database.core.exception.ErrorResponse;
-import br.com.process.integration.database.domain.entity.EntityTest1;
+import br.com.process.integration.database.domain.entity.EntityOne;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -58,26 +58,26 @@ class QueryJpaController5Tests {
 	};
 
 	@Test
-	void teste_busca_com_equal_pelo_entityTest2_por_color_por_ordernacao_entityTest2() {
+	void teste_busca_com_equal_pelo_entityTwo_por_color_por_ordernacao_entityTwo() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?entityTest2.color=Preto&entityTest2.color_op=eq&page=0&size=10&sortList=entityTest2.dateInclusion,entityTest2.hex&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?entityTwo.color=Preto&entityTwo.color_op=eq&page=0&size=10&sortList=entityTwo.dateInclusion,entityTwo.hex&sortOrders=desc,asc";
 
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(2, list.size());
 		assertEquals("Carlos Alberto", list.get(0).getName());
 		assertEquals("Carlos", list.get(1).getName());
-		assertEquals(234, list.get(0).getEntityTest2().getHex());
-		assertEquals(144, list.get(1).getEntityTest2().getHex());
+		assertEquals(234, list.get(0).getEntityTwo().getHex());
+		assertEquals(144, list.get(1).getEntityTwo().getHex());
 	}
 
 	@Test
-	void teste_busca_com_in_pelo_entityTest3_por_animal() {
+	void teste_busca_com_in_pelo_entityTree_por_animal() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?entityTest2.entityTest3.animal=Cavalo,Gato,Papagaio&entityTest2.entityTest3.animal_op=in&page=0&size=10&sortList=entityTest2.color,entityTest2.entityTest3.animal&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?entityTwo.entityTree.animal=Cavalo,Gato,Papagaio&entityTwo.entityTree.animal_op=in&page=0&size=10&sortList=entityTwo.color,entityTwo.entityTree.animal&sortOrders=desc,asc";
 
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(5, list.size());
@@ -88,25 +88,25 @@ class QueryJpaController5Tests {
 		assertEquals("Renato", list.get(3).getName());
 		assertEquals("Ariovaldo", list.get(4).getName());
 
-		assertEquals("Verde", list.get(0).getEntityTest2().getColor());
-		assertEquals("Verde", list.get(1).getEntityTest2().getColor());
-		assertEquals("Roxo", list.get(2).getEntityTest2().getColor());
-		assertEquals("Laranja", list.get(3).getEntityTest2().getColor());
-		assertEquals("Cinza", list.get(4).getEntityTest2().getColor());
+		assertEquals("Verde", list.get(0).getEntityTwo().getColor());
+		assertEquals("Verde", list.get(1).getEntityTwo().getColor());
+		assertEquals("Roxo", list.get(2).getEntityTwo().getColor());
+		assertEquals("Laranja", list.get(3).getEntityTwo().getColor());
+		assertEquals("Cinza", list.get(4).getEntityTwo().getColor());
 
-		assertEquals("Cavalo", list.get(0).getEntityTest2().getEntityTest3().getAnimal());
-		assertEquals("Gato", list.get(1).getEntityTest2().getEntityTest3().getAnimal());
-		assertEquals("Cavalo", list.get(2).getEntityTest2().getEntityTest3().getAnimal());
-		assertEquals("Papagaio", list.get(3).getEntityTest2().getEntityTest3().getAnimal());
-		assertEquals("Gato", list.get(4).getEntityTest2().getEntityTest3().getAnimal());
+		assertEquals("Cavalo", list.get(0).getEntityTwo().getEntityTree().getAnimal());
+		assertEquals("Gato", list.get(1).getEntityTwo().getEntityTree().getAnimal());
+		assertEquals("Cavalo", list.get(2).getEntityTwo().getEntityTree().getAnimal());
+		assertEquals("Papagaio", list.get(3).getEntityTwo().getEntityTree().getAnimal());
+		assertEquals("Gato", list.get(4).getEntityTwo().getEntityTree().getAnimal());
 	}
 
 	@Test
-	void teste_busca_com_equal_pelo_entityTest3_por_animal() {
+	void teste_busca_com_equal_pelo_entityTree_por_animal() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?entityTest2.entityTest3.animal=Capivara&entityTest2.entityTest3.animal_op=eq";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?entityTwo.entityTree.animal=Capivara&entityTwo.entityTree.animal_op=eq";
 
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		list.forEach(entity -> {
 			assertEquals("Carlos Alberto", entity.getName());
@@ -117,26 +117,26 @@ class QueryJpaController5Tests {
 	}
 
 	@Test
-	void teste_busca_com_equal_pelo_entityTest4_por_fruit() {
+	void teste_busca_com_equal_pelo_entityFour_por_fruit() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?entityTest2.entityTest3.entityTest4.fruit=Pitanga&entityTest2.entityTest3.entityTest4.fruit_op=eq&page=0&size=10";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?entityTwo.entityTree.entityFour.fruit=Pitanga&entityTwo.entityTree.entityFour.fruit_op=eq&page=0&size=10";
 
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(2, list.size());
 	}
 
 	@Test
-	void teste_busca_com_equal_pelo_entityTest5_por_fruit() {
+	void teste_busca_com_equal_pelo_entityFive_por_fruit() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?entityTest2.entityTest3.entityTest4.entityTest5.object=Cama&entityTest2.entityTest3.entityTest4.entityTest5.object_op=eq&page=0&size=10&sortList=name&sortOrders=desc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?entityTwo.entityTree.entityFour.entityFive.object=Cama&entityTwo.entityTree.entityFour.entityFive.object_op=eq&page=0&size=10&sortList=name&sortOrders=desc";
 
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		list.forEach(entity -> {
 			assertEquals("Cama",
-					entity.getEntityTest2().getEntityTest3().getEntityTest4().getEntityTest5().getObject());
+					entity.getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getObject());
 		});
 
 		assertNotNull(list);
@@ -144,11 +144,11 @@ class QueryJpaController5Tests {
 	}
 
 	@Test
-	void teste_busca_com_like_pelo_entityTest5_por_fruit() {
+	void teste_busca_com_like_pelo_entityFive_por_fruit() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityTest1?entityTest2.entityTest3.entityTest4.entityTest5.object=c*&entityTest2.entityTest3.entityTest4.entityTest5.object_op=lk&page=0&size=10&sortList=entityTest2.dateInclusion,entityTest2.hex&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/page/EntityOne?entityTwo.entityTree.entityFour.entityFive.object=c*&entityTwo.entityTree.entityFour.entityFive.object_op=lk&page=0&size=10&sortList=entityTwo.dateInclusion,entityTwo.hex&sortOrders=desc,asc";
 
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(4, list.size());
@@ -165,11 +165,11 @@ class QueryJpaController5Tests {
 
 	}
 
-	private List<EntityTest1> getAll(String url, ErrorResponse compare) {
+	private List<EntityOne> getAll(String url, ErrorResponse compare) {
 
-		PagedModel<EntityTest1> page = getRestAll(url, compare);
+		PagedModel<EntityOne> page = getRestAll(url, compare);
 
-		List<EntityTest1> list = convertToEntityTest1List(page.getContent());
+		List<EntityOne> list = convertToEntityOneList(page.getContent());
 
 		assertNotNull(list);
 		assertEquals(list.size(), page.getContent().size());
@@ -177,7 +177,7 @@ class QueryJpaController5Tests {
 		return list;
 	}
 
-	private PagedModel<EntityTest1> getRestAll(String url, ErrorResponse compare) {
+	private PagedModel<EntityOne> getRestAll(String url, ErrorResponse compare) {
 
 		HttpHeaders headers = new HttpHeaders();
 
@@ -198,13 +198,13 @@ class QueryJpaController5Tests {
 		}
 	}
 
-	private PagedModel<EntityTest1> convertResponseToPagedModel(String body) {
+	private PagedModel<EntityOne> convertResponseToPagedModel(String body) {
 		ObjectMapper objectMapper = createObjectMapper();
 		try {
-			return objectMapper.readValue(body, new TypeReference<PagedModel<EntityTest1>>() {
+			return objectMapper.readValue(body, new TypeReference<PagedModel<EntityOne>>() {
 			});
 		} catch (Exception e) {
-			throw new RuntimeException("Error parsing PagedModel<EntityTest1View> response", e);
+			throw new RuntimeException("Error parsing PagedModel<EntityOneView> response", e);
 		}
 	}
 
@@ -224,11 +224,11 @@ class QueryJpaController5Tests {
 		return objectMapper;
 	}
 
-	public List<EntityTest1> convertToEntityTest1List(Collection<EntityTest1> collection) {
-		return collection.stream().map(this::convertToEntityTest1).collect(Collectors.toList());
+	public List<EntityOne> convertToEntityOneList(Collection<EntityOne> collection) {
+		return collection.stream().map(this::convertToEntityOne).collect(Collectors.toList());
 	}
 
-	private EntityTest1 convertToEntityTest1(EntityTest1 element) {
+	private EntityOne convertToEntityOne(EntityOne element) {
 		return element;
 	}
 }

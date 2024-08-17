@@ -33,7 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import br.com.process.integration.database.core.exception.ErrorResponse;
-import br.com.process.integration.database.domain.view.EntityTest1View;
+import br.com.process.integration.database.domain.view.EntityOneView;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -61,22 +61,22 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_com_equal_pelo_name() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_equal_validar_orderby?name=Anderson&name_op=eq";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_equal_validar_orderby?name=Anderson&name_op=eq";
 
-		List<EntityTest1View> list = getAll(url, new ErrorResponse());
+		List<EntityOneView> list = getAll(url, new ErrorResponse());
 		
 		list.forEach(entity -> {
-			assertNotNull(entity.getIdEntityTest1());
+			assertNotNull(entity.getIdEntityOne());
 			assertEquals("Anderson", entity.getName());
 			assertEquals(41, entity.getAge());
 			assertEquals(1.93, entity.getHeight());
 			assertEquals(LocalDate.parse("1983-03-29", DateTimeFormatter.ISO_LOCAL_DATE), entity.getBirthDate());
 			assertEquals(LocalDateTime.parse("2024-02-01T02:52:54", DateTimeFormatter.ISO_LOCAL_DATE_TIME), entity.getProhibited());
 			assertNotEquals(0, entity.hashCode()); 
-			assertNotNull(entity.getIdEntityTest2());
-			assertNotNull(entity.getIdEntityTest3());
-			assertNotNull(entity.getIdEntityTest4());
-			assertNotNull(entity.getIdEntityTest5());
+			assertNotNull(entity.getIdEntityTwo());
+			assertNotNull(entity.getIdEntityTree());
+			assertNotNull(entity.getIdEntityFour());
+			assertNotNull(entity.getIdEntityFive());
 			
 		});
 		
@@ -87,10 +87,10 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_com_equal_pelo_age_e_birthDate_e_prohibited_ordernacao_name_asc() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?"
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?"
 				+ "age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&prohibited=2024-11-01T08:00:00&prohibited_op=eq&sortList=name,age&sortOrders=asc";
 
-		List<EntityTest1View> list = getAll(url, new ErrorResponse());
+		List<EntityOneView> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(2, list.size());
@@ -101,10 +101,10 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_notEqual_do_teste_busca_com_equal_pelo_age_e_birthDate_e_prohibited_ordernacao_name_asc() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?"
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?"
 				+ "age=22&age_op=ne&birthDate=1990-01-01&birthDate_op=ne&prohibited=2024-11-01T08:00:00&prohibited_op=ne&sortList=name&sortOrders=asc";
 		
-		List<EntityTest1View> list = getAll(url, new ErrorResponse());
+		List<EntityOneView> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(7, list.size());
@@ -120,7 +120,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_notEqual_com_name() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?"
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?"
 				+ "name=Carlos&name_op=ne&sortList=name&sortOrders=asc";
 		
 		testes_single_parameterized_one(url, 9);
@@ -129,7 +129,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_com_equal_pelo_age_e_birthDate_e_height() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?"
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?"
 				+ "age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&height=1.80&height_op=eq";
 
 		testes_single_parameterized_other(url, "Ricardo", 1);
@@ -138,10 +138,10 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_com_equal_e_prohibited_e_ordernado_por_name_asc() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?"
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?"
 				+ "prohibited=2024-11-01T08:00:00&prohibited_op=eq";
 		
-		List<EntityTest1View> list = getAll(url, new ErrorResponse());
+		List<EntityOneView> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(3, list.size());
@@ -153,10 +153,10 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_com_like_pelo_name_asterico_esquerda_e_direita_ordernado_por_birthDate_desc_e_name_asc() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?"
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?"
 				+ "name=*ar*&name_op=lk&sortList=birthDate,name&sortOrders=desc,asc";
 		
-		List<EntityTest1View> list = getAll(url, new ErrorResponse());
+		List<EntityOneView> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(5, list.size());
@@ -170,7 +170,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_like_pelo_name_asterico_direita() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?name=ar*&name_op=lk";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?name=ar*&name_op=lk";
 		
 		testes_single_parameterized_other(url, "Ariovaldo", 1);
 	}
@@ -178,9 +178,9 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_in_com_birthDate_ordernado_com_age_asc() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?birthDate=1956-08-30,1986-09-09,1990-09-09&birthDate_op=in&sortList=age&sortOrders=asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=1956-08-30,1986-09-09,1990-09-09&birthDate_op=in&sortList=age&sortOrders=asc";
 		
-		List<EntityTest1View> list = getAll(url, new ErrorResponse());
+		List<EntityOneView> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(3, list.size());
@@ -192,9 +192,9 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_in_com_birthDate_ordernado_com_age_desc() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?birthDate=1956-08-30,1990-01-01,1990-09-09&birthDate_op=in&sortList=age,height&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=1956-08-30,1990-01-01,1990-09-09&birthDate_op=in&sortList=age,height&sortOrders=desc,asc";
 		
-		List<EntityTest1View> list = getAll(url, new ErrorResponse());
+		List<EntityOneView> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(4, list.size());
@@ -207,7 +207,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_in_com_age() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?age=55,12,22&age_op=in";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?age=55,12,22&age_op=in";
 
 		testes_single_parameterized_one(url, 4);
 	}
@@ -215,7 +215,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_in_com_ids() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?idEntityTest1=" + QueryJpaController1Tests.ids.get(0) +"," + QueryJpaController1Tests.ids.get(1) + "&idEntityTest1_op=in&sortList=idEntityTest_1&sortOrders=asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?idEntityOne=" + QueryJpaController1Tests.ids.get(0) +"," + QueryJpaController1Tests.ids.get(1) + "&idEntityOne_op=in&sortList=idEntityOne&sortOrders=asc";
 
 		testes_single_parameterized_one(url, 2);
 	}
@@ -223,9 +223,9 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_between_com_height_ordernado_por_height_desc() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?height=1.40,1.78&height_op=bt&sortList=height&sortOrders=desc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?height=1.40,1.78&height_op=bt&sortList=height&sortOrders=desc";
 
-		List<EntityTest1View> list = getAll(url, new ErrorResponse());
+		List<EntityOneView> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(4, list.size());
@@ -238,9 +238,9 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_between_com_prohibited_ordernado_por_birthDate_desc() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?prohibited=2024-02-01T08:50:00,2024-10-01T08:50:55&prohibited_op=bt&sortList=birthDate&sortOrders=desc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?prohibited=2024-02-01T08:50:00,2024-10-01T08:50:55&prohibited_op=bt&sortList=birthDate&sortOrders=desc";
 		
-		List<EntityTest1View> list = getAll(url, new ErrorResponse());
+		List<EntityOneView> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(5, list.size());
@@ -254,7 +254,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_greaterThanOrEqualTo_com_height() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?height=1.86&height_op=ge&sortList=birthDate&sortOrders=desc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?height=1.86&height_op=ge&sortList=birthDate&sortOrders=desc";
 
 		testes_single_parameterized_one(url, 3);
 	}
@@ -262,7 +262,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_greaterThan_com_height() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?height=1.87&height_op=gt&sortList=birthDate&sortOrders=desc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?height=1.87&height_op=gt&sortList=birthDate&sortOrders=desc";
 
 		testes_single_parameterized_one(url, 2);
 	}
@@ -270,7 +270,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_greaterThan_com_birthDate() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?birthDate=1990-09-09&birthDate_op=gt&sortList=birthDate&sortOrders=desc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=1990-09-09&birthDate_op=gt&sortList=birthDate&sortOrders=desc";
 
 		testes_single_parameterized_one(url, 3);
 	}
@@ -278,7 +278,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_greaterThanOrEqualTo_e_lessThanOrEqualTo_com_birthDate() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?birthDate=1990-01-02&birthDate_op=ge&birthDate=2016-01-01&birthDate_op=le&sortList=birthDate&sortOrders=desc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=1990-01-02&birthDate_op=ge&birthDate=2016-01-01&birthDate_op=le&sortList=birthDate&sortOrders=desc";
 
 		testes_single_parameterized_one(url, 4);
 	}
@@ -286,7 +286,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_lessThanOrEqualTo_com_birthDate() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?birthDate=1990-01-02&birthDate_op=le";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=1990-01-02&birthDate_op=le";
 
 		testes_single_parameterized_one(url, 6);
 	}
@@ -294,7 +294,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_lessThan_com_birthDate() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?birthDate=1986-09-08&birthDate_op=lt";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=1986-09-08&birthDate_op=lt";
 
 		testes_single_parameterized_one(url, 3);
 	}
@@ -302,7 +302,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_lessThanOrEqualTo_com_age() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?age=21&age_op=le";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?age=21&age_op=le";
 
 		testes_single_parameterized_one(url, 2);
 	}
@@ -310,7 +310,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_greaterThanOrEqualTo_com_birthDate() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?birthDate=2016-01-01&birthDate_op=ge";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=2016-01-01&birthDate_op=ge";
 
 		testes_single_parameterized_other(url, "Maria", 1);
 	}
@@ -318,7 +318,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_lessThan_com_age() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?age=21&age_op=lt";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?age=21&age_op=lt";
 		
 		testes_single_parameterized_other(url, "Maria", 1);
 	}
@@ -326,9 +326,9 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_utilizando_group_by() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database//execute/query/find/all/EntityTest1View/teste_utilizando_group_by";
+		String url = "http://localhost:" + port + "/v1/api-rest-database//execute/query/find/all/EntityOneView/teste_utilizando_group_by";
 
-		List<EntityTest1View> list = getAll(url, new ErrorResponse());
+		List<EntityOneView> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 	}
@@ -336,7 +336,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_utilizando_group_by_erro() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_utilizando_group_by_erro";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_utilizando_group_by_erro";
 
 		teste_single_parameterized_one(url, "PreparedStatementCallback; uncategorized SQLException for SQL");
 	}
@@ -344,9 +344,9 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_all_ordernacao_birthDate_asc_name_desc() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?sortList=birthDate,name&sortOrders=asc,desc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?sortList=birthDate,name&sortOrders=asc,desc";
 
-		List<EntityTest1View> list = getAll(url, new ErrorResponse());
+		List<EntityOneView> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -365,9 +365,9 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_all_ordernacao_birthDate_desc_name_asc() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?sortList=birthDate,name&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?sortList=birthDate,name&sortOrders=desc,asc";
 
-		List<EntityTest1View> list = getAll(url, new ErrorResponse());
+		List<EntityOneView> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -386,9 +386,9 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_all_ordernacao_name_asc_birthDate_desc() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?sortList=name,birthDate&sortOrders=asc,desc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?sortList=name,birthDate&sortOrders=asc,desc";
 
-		List<EntityTest1View> list = getAll(url, new ErrorResponse());
+		List<EntityOneView> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -407,9 +407,9 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_all_ordernacao_name_desc_birthDate_asc() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?sortList=name,birthDate&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?sortList=name,birthDate&sortOrders=desc,asc";
 
-		List<EntityTest1View> list = getAll(url, new ErrorResponse());
+		List<EntityOneView> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -428,9 +428,9 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_nenhum_registro_encontrado() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars?name=Silva&name_op=eq";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?name=Silva&name_op=eq";
 
-		List<EntityTest1View> list = getAll(url, new ErrorResponse());
+		List<EntityOneView> list = getAll(url, new ErrorResponse());
 		
 		assertNull(list);
 	}
@@ -438,9 +438,9 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_single_age_name_birthDate() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/single/EntityTest1View/teste_busca_com_condicoes_diversars?age=41&age_op=eq&name=Anderson&name_op=eq&birthDate=1983-03-29&birthDate_op=ge";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/single/EntityOneView/teste_busca_com_condicoes_diversars?age=41&age_op=eq&name=Anderson&name_op=eq&birthDate=1983-03-29&birthDate_op=ge";
 		
-		EntityTest1View entity = getSingleResult(url, new ErrorResponse());
+		EntityOneView entity = getSingleResult(url, new ErrorResponse());
 		
 		assertNotNull(entity);
 		assertEquals("Anderson", entity.getName());
@@ -449,7 +449,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_query_not_found() {
 	    
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/nao_existe_query";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/nao_existe_query";
 		
 	    teste_single_parameterized_one(url, "Query not found nao_existe_query !");
 	}
@@ -457,9 +457,9 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_filter_empty() {
 	    
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_busca_com_condicoes_diversars";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars";
 
-		List<EntityTest1View> list = getAll(url, new ErrorResponse());
+		List<EntityOneView> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -468,9 +468,9 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_single_encontra_name() {
 	    
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/single/EntityTest1View/teste_busca_com_condicoes_diversars?name=Paulo&name_op=eq";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/single/EntityOneView/teste_busca_com_condicoes_diversars?name=Paulo&name_op=eq";
 
-		EntityTest1View entity = getSingleResult(url, new ErrorResponse());
+		EntityOneView entity = getSingleResult(url, new ErrorResponse());
 		
 		assertNotNull(entity);
 		assertEquals("Paulo", entity.getName());
@@ -480,9 +480,9 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_single_nao_encontra_name() {
 	    
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/single/EntityTest1View/teste_busca_com_condicoes_diversars?name=Pablo&name_op=eq";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/single/EntityOneView/teste_busca_com_condicoes_diversars?name=Pablo&name_op=eq";
 
-		EntityTest1View entity = getSingleResult(url, new ErrorResponse());
+		EntityOneView entity = getSingleResult(url, new ErrorResponse());
 		
 		assertNull(entity);
 
@@ -491,7 +491,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_single_age_name_birthDate_erro_mais_de_um_registro() {
 	    
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/single/EntityTest1View/teste_busca_com_condicoes_diversars?age=41,38,32&age_op=eq&name=*ar*&name_op=lk&birthDate=1956-08-30&birthDate_op=ge";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/single/EntityOneView/teste_busca_com_condicoes_diversars?age=41,38,32&age_op=eq&name=*ar*&name_op=lk&birthDate=1956-08-30&birthDate_op=ge";
 
 	    teste_single_parameterized_one(url, "You have an error in your SQL syntax");
 	}
@@ -499,7 +499,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_count_query_not_found() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/count/EntityTest1View/teste?prohibited=2024-11-01T08:00:00&prohibited_op=ge";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/count/EntityOneView/teste?prohibited=2024-11-01T08:00:00&prohibited_op=ge";
 		
 		ErrorResponse errorResponse = new ErrorResponse("Query not found teste !", 400);
 		
@@ -510,9 +510,9 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_um_exemplo_sem_order_by() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1View/teste_um_exemplo_sem_order_by?prohibited=2024-11-01T08:00:00&prohibited_op=ge";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOneView/teste_um_exemplo_sem_order_by?prohibited=2024-11-01T08:00:00&prohibited_op=ge";
 		
-		List<EntityTest1View> list = getAll(url, new ErrorResponse());
+		List<EntityOneView> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(4, list.size());
@@ -522,9 +522,9 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_um_exemplo_sem_order_by_erro() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityTest1/teste_um_exemplo_sem_order_by?prohibited-=2024-11-01T08:00:00&prohibited_op=ge";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/find/all/EntityOne/teste_um_exemplo_sem_order_by?prohibited-=2024-11-01T08:00:00&prohibited_op=ge";
 		
-		ErrorResponse errorResponse = new ErrorResponse("Class not found EntityTest1 !", 400);
+		ErrorResponse errorResponse = new ErrorResponse("Class not found EntityOne !", 400);
 		
 	    assertThrows(RuntimeException.class, () -> getAll(url, errorResponse));
 		
@@ -533,7 +533,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_count_maior_prohibited() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/count/EntityTest1View/teste_um_exemplo_count?prohibited=2024-11-01T08:00:00&prohibited_op=ge";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/execute/query/count/EntityOneView/teste_um_exemplo_count?prohibited=2024-11-01T08:00:00&prohibited_op=ge";
 		
 		Integer count = Integer.parseInt(getUniqueResult(url, new ErrorResponse()));
 		
@@ -542,7 +542,7 @@ class QueryNativeController1Tests {
 	
 	void testes_single_parameterized_other(String url, String value, Integer size) {
 		
-		List<EntityTest1View> list = getAll(url, new ErrorResponse());
+		List<EntityOneView> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(size, list.size());
@@ -551,7 +551,7 @@ class QueryNativeController1Tests {
 	
 	void testes_single_parameterized_one(String url, Integer size) {
 		
-		List<EntityTest1View> list = getAll(url, new ErrorResponse());
+		List<EntityOneView> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(size, list.size());
@@ -564,7 +564,7 @@ class QueryNativeController1Tests {
 	    assertThrows(RuntimeException.class, () -> getSingleResult(url, errorResponse));
 	}
 	
-	public List<EntityTest1View> getAll(String url, ErrorResponse compare) {
+	public List<EntityOneView> getAll(String url, ErrorResponse compare) {
 		
 		HttpHeaders headers = new HttpHeaders();
 		
@@ -575,7 +575,7 @@ class QueryNativeController1Tests {
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
 		if (response.getStatusCode().is2xxSuccessful()) {
-			return convertResponseToEntityTest1ViewList(response.getBody());
+			return convertResponseToEntityOneViewList(response.getBody());
 		} else {
 			ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
 			assertEquals(compare.getStatus(), errorResponse.getStatus());
@@ -584,7 +584,7 @@ class QueryNativeController1Tests {
 		}
 	}
 
-	public EntityTest1View getSingleResult(String url, ErrorResponse compare) {
+	public EntityOneView getSingleResult(String url, ErrorResponse compare) {
 		
 	    HttpHeaders headers = new HttpHeaders();
 	    
@@ -595,7 +595,7 @@ class QueryNativeController1Tests {
 	    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
 	    if (response.getStatusCode().is2xxSuccessful()) {
-	        return convertResponseToEntityTest1View(response.getBody());
+	        return convertResponseToEntityOneView(response.getBody());
 	    } else {
 	    	ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
 			assertEquals(compare.getStatus(), errorResponse.getStatus());
@@ -632,29 +632,29 @@ class QueryNativeController1Tests {
 	    return objectMapper;
 	}
 
-	private List<EntityTest1View> convertResponseToEntityTest1ViewList(String body) {
+	private List<EntityOneView> convertResponseToEntityOneViewList(String body) {
 	    ObjectMapper objectMapper = createObjectMapper();
 	    try {
 	    	if(body != null) {
-	    		return objectMapper.readValue(body, new TypeReference<List<EntityTest1View>>(){});
+	    		return objectMapper.readValue(body, new TypeReference<List<EntityOneView>>(){});
 	    	} else {
 	    		return null;
 	    	}
 	    } catch (JsonProcessingException e) {
-	        throw new RuntimeException("Error parsing EntityTest1View list response", e);
+	        throw new RuntimeException("Error parsing EntityOneView list response", e);
 	    }
 	}
 
-	private EntityTest1View convertResponseToEntityTest1View(String body) {
+	private EntityOneView convertResponseToEntityOneView(String body) {
 	    ObjectMapper objectMapper = createObjectMapper();
 	    try {
 	    	if(body != null) {
-	    		return objectMapper.readValue(body, EntityTest1View.class);
+	    		return objectMapper.readValue(body, EntityOneView.class);
 	    	} else {
 	    		return null;
 	    	}
 	    } catch (JsonProcessingException e) {
-	        throw new RuntimeException("Error parsing EntityTest1View response", e);
+	        throw new RuntimeException("Error parsing EntityOneView response", e);
 	    }
 	}
 

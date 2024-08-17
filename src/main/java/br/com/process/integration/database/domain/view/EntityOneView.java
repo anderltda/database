@@ -9,10 +9,10 @@ import org.springframework.hateoas.RepresentationModel;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EntityTest1View extends RepresentationModel<EntityTest1View> {
+public class EntityOneView extends RepresentationModel<EntityOneView> {
 
-	// EntityTest1
-	private Long idEntityTest1;
+	// EntityOne
+	private Long idEntityOne;
 	private String name;
 	private Integer age;
 	private Double height;
@@ -20,38 +20,38 @@ public class EntityTest1View extends RepresentationModel<EntityTest1View> {
 	private LocalDateTime prohibited;
 	private Long count;
 
-	// EntityTest2
-	private String idEntityTest2;
+	// EntityTwo
+	private String idEntityTwo;
 	private String color;
 	private Integer hex;
 	private Double cost;
 	private LocalDate dateInclusion;
 
-	// EntityTest3
-	private String idEntityTest3;
+	// EntityTree
+	private String idEntityTree;
 	private String animal;
 	private Integer number;
 	private Double value3;
 	private LocalDate dataLocal;
 	private LocalDateTime dataLocalTime;
 
-	// EntityTest4
-	private String idEntityTest4;
+	// EntityFour
+	private String idEntityFour;
 	private String fruit;
 	private Integer nutritiou;
 	private LocalDateTime dateInclusionTime;
 
-	// EntityTest5
-	private String idEntityTest5;
+	// EntityFive
+	private String idEntityFive;
 	private String object;
 	private Integer value5;
 
-	public Long getIdEntityTest1() {
-		return idEntityTest1;
+	public Long getIdEntityOne() {
+		return idEntityOne;
 	}
 
-	public void setIdEntityTest1(Long idEntityTest1) {
-		this.idEntityTest1 = idEntityTest1;
+	public void setIdEntityOne(Long idEntityOne) {
+		this.idEntityOne = idEntityOne;
 	}
 
 	public String getName() {
@@ -94,12 +94,20 @@ public class EntityTest1View extends RepresentationModel<EntityTest1View> {
 		this.prohibited = prohibited;
 	}
 
-	public String getIdEntityTest2() {
-		return idEntityTest2;
+	public Long getCount() {
+		return count;
 	}
 
-	public void setIdEntityTest2(String idEntityTest2) {
-		this.idEntityTest2 = idEntityTest2;
+	public void setCount(Long count) {
+		this.count = count;
+	}
+
+	public String getIdEntityTwo() {
+		return idEntityTwo;
+	}
+
+	public void setIdEntityTwo(String idEntityTwo) {
+		this.idEntityTwo = idEntityTwo;
 	}
 
 	public String getColor() {
@@ -134,12 +142,12 @@ public class EntityTest1View extends RepresentationModel<EntityTest1View> {
 		this.dateInclusion = dateInclusion;
 	}
 
-	public String getIdEntityTest3() {
-		return idEntityTest3;
+	public String getIdEntityTree() {
+		return idEntityTree;
 	}
 
-	public void setIdEntityTest3(String idEntityTest3) {
-		this.idEntityTest3 = idEntityTest3;
+	public void setIdEntityTree(String idEntityTree) {
+		this.idEntityTree = idEntityTree;
 	}
 
 	public String getAnimal() {
@@ -182,12 +190,12 @@ public class EntityTest1View extends RepresentationModel<EntityTest1View> {
 		this.dataLocalTime = dataLocalTime;
 	}
 
-	public String getIdEntityTest4() {
-		return idEntityTest4;
+	public String getIdEntityFour() {
+		return idEntityFour;
 	}
 
-	public void setIdEntityTest4(String idEntityTest4) {
-		this.idEntityTest4 = idEntityTest4;
+	public void setIdEntityFour(String idEntityFour) {
+		this.idEntityFour = idEntityFour;
 	}
 
 	public String getFruit() {
@@ -214,12 +222,12 @@ public class EntityTest1View extends RepresentationModel<EntityTest1View> {
 		this.dateInclusionTime = dateInclusionTime;
 	}
 
-	public String getIdEntityTest5() {
-		return idEntityTest5;
+	public String getIdEntityFive() {
+		return idEntityFive;
 	}
 
-	public void setIdEntityTest5(String idEntityTest5) {
-		this.idEntityTest5 = idEntityTest5;
+	public void setIdEntityFive(String idEntityFive) {
+		this.idEntityFive = idEntityFive;
 	}
 
 	public String getObject() {
@@ -237,22 +245,14 @@ public class EntityTest1View extends RepresentationModel<EntityTest1View> {
 	public void setValue5(Integer value5) {
 		this.value5 = value5;
 	}
-	
-	public Long getCount() {
-		return count;
-	}
-
-	public void setCount(Long count) {
-		this.count = count;
-	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(age, animal, birthDate, color, cost, dataLocal, dataLocalTime,
-				dateInclusion, dateInclusionTime, fruit, height, hex, idEntityTest1, idEntityTest2, idEntityTest3,
-				idEntityTest4, idEntityTest5, name, number, nutritiou, object, prohibited, value3, value5);
+		result = prime * result + Objects.hash(age, animal, birthDate, color, cost, count, dataLocal, dataLocalTime,
+				dateInclusion, dateInclusionTime, fruit, height, hex, idEntityFive, idEntityFour, idEntityOne,
+				idEntityTree, idEntityTwo, name, number, nutritiou, object, prohibited, value3, value5);
 		return result;
 	}
 
@@ -264,22 +264,19 @@ public class EntityTest1View extends RepresentationModel<EntityTest1View> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		EntityTest1View other = (EntityTest1View) obj;
+		EntityOneView other = (EntityOneView) obj;
 		return Objects.equals(age, other.age) && Objects.equals(animal, other.animal)
 				&& Objects.equals(birthDate, other.birthDate) && Objects.equals(color, other.color)
-				&& Objects.equals(cost, other.cost) && Objects.equals(dataLocal, other.dataLocal)
-				&& Objects.equals(dataLocalTime, other.dataLocalTime)
+				&& Objects.equals(cost, other.cost) && Objects.equals(count, other.count)
+				&& Objects.equals(dataLocal, other.dataLocal) && Objects.equals(dataLocalTime, other.dataLocalTime)
 				&& Objects.equals(dateInclusion, other.dateInclusion)
 				&& Objects.equals(dateInclusionTime, other.dateInclusionTime) && Objects.equals(fruit, other.fruit)
 				&& Objects.equals(height, other.height) && Objects.equals(hex, other.hex)
-				&& Objects.equals(idEntityTest1, other.idEntityTest1)
-				&& Objects.equals(idEntityTest2, other.idEntityTest2)
-				&& Objects.equals(idEntityTest3, other.idEntityTest3)
-				&& Objects.equals(idEntityTest4, other.idEntityTest4)
-				&& Objects.equals(idEntityTest5, other.idEntityTest5) && Objects.equals(name, other.name)
+				&& Objects.equals(idEntityFive, other.idEntityFive) && Objects.equals(idEntityFour, other.idEntityFour)
+				&& Objects.equals(idEntityOne, other.idEntityOne) && Objects.equals(idEntityTree, other.idEntityTree)
+				&& Objects.equals(idEntityTwo, other.idEntityTwo) && Objects.equals(name, other.name)
 				&& Objects.equals(number, other.number) && Objects.equals(nutritiou, other.nutritiou)
 				&& Objects.equals(object, other.object) && Objects.equals(prohibited, other.prohibited)
 				&& Objects.equals(value3, other.value3) && Objects.equals(value5, other.value5);
 	}
-
 }

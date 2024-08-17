@@ -21,10 +21,6 @@ public class PagedModelDeserializer<T> extends JsonDeserializer<PagedModel<T>> {
 	@Override
 	public PagedModel<T> deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
 		ObjectMapper mapper = (ObjectMapper) p.getCodec();
-
-		// Aqui estamos desserializando diretamente como PagedModel sem causar loops
-		// recursivos
-		return mapper.readValue(p, new TypeReference<PagedModel<T>>() {
-		});
+		return mapper.readValue(p, new TypeReference<PagedModel<T>>() { });
 	}
 }

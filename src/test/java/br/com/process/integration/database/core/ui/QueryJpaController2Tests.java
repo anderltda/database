@@ -34,7 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import br.com.process.integration.database.core.exception.ErrorResponse;
-import br.com.process.integration.database.domain.entity.EntityTest1;
+import br.com.process.integration.database.domain.entity.EntityOne;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -62,9 +62,9 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_sortList_sortOrders() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?name=Anderson&name_op=lk&sortList=name,age&sortOrders=asc,desc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?name=Anderson&name_op=lk&sortList=name,age&sortOrders=asc,desc";
 		
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(1, list.size());
@@ -73,9 +73,9 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_name_e_sortList_sortOrders() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?name=Anderson&name_op=lk&sortList=name,age";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?name=Anderson&name_op=lk&sortList=name,age";
 		
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(1, list.size());
@@ -85,17 +85,17 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_sortList_sortOrders_com_erro() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?name=Anderson&name_op=lk&sortList=name,asc&sortOrders=asc,desc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?name=Anderson&name_op=lk&sortList=name,asc&sortOrders=asc,desc";
 		
-	    testes_single_parameterized_one(url, "Could not resolve attribute 'asc' of 'br.com.process.integration.database.domain.entity.EntityTest1'");
+	    testes_single_parameterized_one(url, "Could not resolve attribute 'asc' of 'br.com.process.integration.database.domain.entity.EntityOne'");
 	}
 
 	@Test
 	void teste_busca_com_equal_pelo_name() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?name=Anderson&name_op=eq";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?name=Anderson&name_op=eq";
 
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 		
 		list.forEach(entity -> {
 			assertNotNull(entity.getId());
@@ -105,7 +105,7 @@ class QueryJpaController2Tests {
 			assertEquals(LocalDate.parse("1983-03-29", DateTimeFormatter.ISO_LOCAL_DATE), entity.getBirthDate());
 			assertEquals(LocalDateTime.parse("2024-02-01T02:52:54", DateTimeFormatter.ISO_LOCAL_DATE_TIME), entity.getProhibited());
 			assertNotEquals(0, entity.hashCode()); 
-			assertNotNull(entity.getEntityTest2());
+			assertNotNull(entity.getEntityTwo());
 		});
 		
 		assertNotNull(list);
@@ -115,9 +115,9 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_com_equal_pelo_age_e_birthDate_e_prohibited_ordernacao_name_asc() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&prohibited=2024-11-01T08:00:00&prohibited_op=eq&sortList=name&sortOrders=asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&prohibited=2024-11-01T08:00:00&prohibited_op=eq&sortList=name&sortOrders=asc";
 
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(2, list.size());
@@ -128,9 +128,9 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_notEqual_do_teste_busca_com_equal_pelo_age_e_birthDate_e_prohibited_ordernacao_name_asc() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?age=22&age_op=ne&birthDate=1990-01-01&birthDate_op=ne&prohibited=2024-11-01T08:00:00&prohibited_op=ne&sortList=name&sortOrders=asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?age=22&age_op=ne&birthDate=1990-01-01&birthDate_op=ne&prohibited=2024-11-01T08:00:00&prohibited_op=ne&sortList=name&sortOrders=asc";
 
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(7, list.size());
@@ -156,9 +156,9 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_no_content_single() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/single/EntityTest1?age=41&age_op=eq&name=Pedro&name_op=eq&birthDate=1983-03-29&birthDate_op=ge";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/single/EntityOne?age=41&age_op=eq&name=Pedro&name_op=eq&birthDate=1983-03-29&birthDate_op=ge";
 		
-		EntityTest1 entity = getSingleResult(url, new ErrorResponse());
+		EntityOne entity = getSingleResult(url, new ErrorResponse());
 		
 		assertNull(entity);
 	}
@@ -166,7 +166,7 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_single_mais_de_um_registro() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/single/EntityTest1?age=22,41&age_op=in";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/single/EntityOne?age=22,41&age_op=in";
 		
 		ErrorResponse errorResponse = new ErrorResponse("Query did not return a unique result: 3 results were returned", 400);
 		
@@ -176,7 +176,7 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_notEqual_com_name() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?name=Carlos&name_op=ne&sortList=name&sortOrders=asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?name=Carlos&name_op=ne&sortList=name&sortOrders=asc";
 		
 		testes_single_parameterized_one(url, 9);
 	}
@@ -184,7 +184,7 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_com_equal_pelo_age_e_birthDate_e_height() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&height=1.8&height_op=eq";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&height=1.8&height_op=eq";
 
 		testes_single_parameterized_other(url, "Ricardo", 1);
 	}
@@ -192,9 +192,9 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_com_equal_e_prohibited_e_ordernado_por_name_asc() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?prohibited=2024-11-01T08:00:00&prohibited_op=eq&sortList=name&sortOrders=asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?prohibited=2024-11-01T08:00:00&prohibited_op=eq&sortList=name&sortOrders=asc";
 		
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(3, list.size());
@@ -206,17 +206,17 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_com_equal_e_prohibited_e_ordernado_por_name_asc_com_erro() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?prohibited=2024-11-01T08:00:00&prohibited_op=eq&sortList=name&sortOrder=asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?prohibited=2024-11-01T08:00:00&prohibited_op=eq&sortList=name&sortOrder=asc";
 
-		testes_single_parameterized_one(url, "Could not resolve attribute 'sortOrder' of 'br.com.process.integration.database.domain.entity.EntityTest1'");
+		testes_single_parameterized_one(url, "Could not resolve attribute 'sortOrder' of 'br.com.process.integration.database.domain.entity.EntityOne'");
 	}
 	
 	@Test
 	void teste_busca_com_like_pelo_name_asterico_esquerda_e_direita_ordernado_por_birthDate_desc_e_name_asc() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?name=*ar*&name_op=lk&sortList=birthDate,name&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?name=*ar*&name_op=lk&sortList=birthDate,name&sortOrders=desc,asc";
 		
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(5, list.size());
@@ -230,7 +230,7 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_por_like_pelo_name_asterico_direita() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?name=ar*&name_op=lk";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?name=ar*&name_op=lk";
 		
 		testes_single_parameterized_other(url, "Ariovaldo", 1);
 	}
@@ -238,9 +238,9 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_por_in_com_birthDate_ordernado_com_age_asc() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?birthDate=1956-08-30,1986-09-09,1990-09-09&birthDate_op=in&sortList=age&sortOrders=asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?birthDate=1956-08-30,1986-09-09,1990-09-09&birthDate_op=in&sortList=age&sortOrders=asc";
 		
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(3, list.size());
@@ -252,9 +252,9 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_por_in_com_birthDate_ordernado_com_age_desc() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?birthDate=1956-08-30,1990-01-01,1990-09-09&birthDate_op=in&sortList=age,height&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?birthDate=1956-08-30,1990-01-01,1990-09-09&birthDate_op=in&sortList=age,height&sortOrders=desc,asc";
 		
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(4, list.size());
@@ -267,7 +267,7 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_por_in_com_age() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?age=55,12,22&age_op=in";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?age=55,12,22&age_op=in";
 
 		testes_single_parameterized_one(url, 4);
 	}
@@ -275,7 +275,7 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_por_in_com_ids() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?id=" + QueryJpaController1Tests.ids.get(0) +"," + QueryJpaController1Tests.ids.get(1) + "&id_op=in&sortList=id&sortOrders=asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?id=" + QueryJpaController1Tests.ids.get(0) +"," + QueryJpaController1Tests.ids.get(1) + "&id_op=in&sortList=id&sortOrders=asc";
 
 		testes_single_parameterized_one(url, 2);
 	}
@@ -283,9 +283,9 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_por_between_com_height_ordernado_por_height_desc() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?height=1.40,1.78&height_op=bt&sortList=height&sortOrders=desc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?height=1.40,1.78&height_op=bt&sortList=height&sortOrders=desc";
 
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(4, list.size());
@@ -298,7 +298,7 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_por_between_com_height_ordernado_por_height_desc_erro() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?height=1.40,&height_op=bt&sortList=height&sortOrders=desc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?height=1.40,&height_op=bt&sortList=height&sortOrders=desc";
 
 	    testes_single_parameterized_one(url, "Index 1 out of bounds for length 1");
 	}
@@ -306,9 +306,9 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_por_between_com_prohibited_ordernado_por_birthDate_desc() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?prohibited=2024-02-01T08:50:00,2024-10-01T08:50:55&prohibited_op=bt&sortList=birthDate&sortOrders=desc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?prohibited=2024-02-01T08:50:00,2024-10-01T08:50:55&prohibited_op=bt&sortList=birthDate&sortOrders=desc";
 		
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(5, list.size());
@@ -322,7 +322,7 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_por_greaterThanOrEqualTo_com_height() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?height=1.86&height_op=ge";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?height=1.86&height_op=ge";
 
 		testes_single_parameterized_one(url, 3);
 	}
@@ -330,7 +330,7 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_por_greaterThanOrEqualTo_com_height_com_erro() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?height=1.8A6&height_op=ge";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?height=1.8A6&height_op=ge";
 
 	    testes_single_parameterized_one(url, "Error coercing value");
 	}
@@ -338,7 +338,7 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_por_greaterThan_com_height() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?height=1.87&height_op=gt";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?height=1.87&height_op=gt";
 
 		testes_single_parameterized_one(url, 2);
 	}
@@ -346,7 +346,7 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_por_greaterThan_com_height_erro() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?height=AWs&height_op=gt";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?height=AWs&height_op=gt";
 
 	    testes_single_parameterized_one(url, "Error coercing value");
 	}
@@ -354,7 +354,7 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_por_greaterThan_com_birthDate() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?birthDate=1990-09-09&birthDate_op=gt";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?birthDate=1990-09-09&birthDate_op=gt";
 
 		testes_single_parameterized_one(url, 3);
 	}
@@ -362,7 +362,7 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_por_greaterThanOrEqualTo_e_lessThanOrEqualTo_com_birthDate() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?birthDate=1990-01-02&birthDate_op=ge&birthDate=2016-01-01&birthDate_op=le";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?birthDate=1990-01-02&birthDate_op=ge&birthDate=2016-01-01&birthDate_op=le";
 
 		testes_single_parameterized_one(url, 4);
 	}
@@ -370,7 +370,7 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_por_lessThanOrEqualTo_com_birthDate() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?birthDate=1990-01-02&birthDate_op=le";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?birthDate=1990-01-02&birthDate_op=le";
 
 		testes_single_parameterized_one(url, 6);
 	}
@@ -378,7 +378,7 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_por_lessThanOrEqualTo_com_age_erro() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?age=Wre&age_op=le";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?age=Wre&age_op=le";
 
 	    testes_single_parameterized_one(url, "Error coercing value");
 	}
@@ -386,7 +386,7 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_por_lessThan_com_birthDate() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?birthDate=1986-09-08&birthDate_op=lt";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?birthDate=1986-09-08&birthDate_op=lt";
 
 		testes_single_parameterized_one(url, 3);
 	}
@@ -394,7 +394,7 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_por_lessThanOrEqualTo_com_age() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?age=21&age_op=le";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?age=21&age_op=le";
 
 		testes_single_parameterized_one(url, 2);
 	}
@@ -402,7 +402,7 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_por_lessThan_com_age_erro() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?age=QW&age_op=lt";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?age=QW&age_op=lt";
 
 	    testes_single_parameterized_one(url, "Error coercing value");
 	}
@@ -410,7 +410,7 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_por_greaterThanOrEqualTo_com_birthDate() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?birthDate=2016-01-01&birthDate_op=ge";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?birthDate=2016-01-01&birthDate_op=ge";
 
 		testes_single_parameterized_other(url, "Maria", 1);
 	}
@@ -418,7 +418,7 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_por_lessThan_com_age() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?age=21&age_op=lt";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?age=21&age_op=lt";
 		
 		testes_single_parameterized_other(url, "Maria", 1);
 	}
@@ -426,9 +426,9 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_all_ordernacao_birthDate_asc_name_desc() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?sortList=birthDate,name&sortOrders=asc,desc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?sortList=birthDate,name&sortOrders=asc,desc";
 
-		List<EntityTest1>list = getAll(url, new ErrorResponse());
+		List<EntityOne>list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -447,9 +447,9 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_all_ordernacao_birthDate_desc_name_asc() {
 		
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?sortList=birthDate,name&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?sortList=birthDate,name&sortOrders=desc,asc";
 
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -468,9 +468,9 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_all_ordernacao_name_asc_birthDate_desc() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?sortList=name,birthDate&sortOrders=asc,desc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?sortList=name,birthDate&sortOrders=asc,desc";
 
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -489,9 +489,9 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_all_ordernacao_name_desc_birthDate_asc() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?sortList=name,birthDate&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?sortList=name,birthDate&sortOrders=desc,asc";
 
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -510,9 +510,9 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_por_ids() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/ids/EntityTest1?ids=" + QueryJpaController1Tests.ids.get(0) + "," + QueryJpaController1Tests.ids.get(1) + "," + QueryJpaController1Tests.ids.get(2);
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/all/ids/EntityOne?ids=" + QueryJpaController1Tests.ids.get(0) + "," + QueryJpaController1Tests.ids.get(1) + "," + QueryJpaController1Tests.ids.get(2);
 
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(3, list.size());
@@ -523,25 +523,25 @@ class QueryJpaController2Tests {
 	
 	@Test
 	void teste_no_content_list() {
-		testes_result_is_null("http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?name=Pedro&name_op=eq&sortList=name&sortOrders=asc");
+		testes_result_is_null("http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?name=Pedro&name_op=eq&sortList=name&sortOrders=asc");
 	}
 	
 	@Test
 	void teste_nenhum_registro_encontrado() {
-		testes_result_is_null("http://localhost:" + port + "/v1/api-rest-database/find/all/EntityTest1?name=Silva&name_op=eq");
+		testes_result_is_null("http://localhost:" + port + "/v1/api-rest-database/find/all/EntityOne?name=Silva&name_op=eq");
 	}
 	
 	@Test
 	void teste_busca_por_ids_nao_encontrado() {
-		testes_result_is_null("http://localhost:" + port + "/v1/api-rest-database/find/all/ids/EntityTest1?ids=1,2,3");
+		testes_result_is_null("http://localhost:" + port + "/v1/api-rest-database/find/all/ids/EntityOne?ids=1,2,3");
 	}
 	
 	@Test
 	void teste_busca_por_single_age_name_birthDate() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/single/EntityTest1?age=41&age_op=eq&name=Anderson&name_op=eq&birthDate=1983-03-29&birthDate_op=ge";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/single/EntityOne?age=41&age_op=eq&name=Anderson&name_op=eq&birthDate=1983-03-29&birthDate_op=ge";
 		
-		EntityTest1 entity = getSingleResult(url, new ErrorResponse());
+		EntityOne entity = getSingleResult(url, new ErrorResponse());
 		
 		assertNotNull(entity);
 		assertEquals("Anderson", entity.getName());
@@ -550,9 +550,9 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_por_id() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/EntityTest1/" + QueryJpaController1Tests.ids.get(1);
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/EntityOne/" + QueryJpaController1Tests.ids.get(1);
 		
-		EntityTest1 entity = getSingleResult(url, new ErrorResponse());
+		EntityOne entity = getSingleResult(url, new ErrorResponse());
 		
 		assertNotNull(entity);
 		assertEquals("Paulo", entity.getName());
@@ -561,9 +561,9 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_busca_por_id_nao_encontrado() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/find/EntityTest1/1";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/find/EntityOne/1";
 		
-		EntityTest1 entity = getSingleResult(url, new ErrorResponse());
+		EntityOne entity = getSingleResult(url, new ErrorResponse());
 		
 		assertNull(entity);
 	}
@@ -571,7 +571,7 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_count_maior_prohibited() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/count/EntityTest1?prohibited=2024-11-01T08:00:00&prohibited_op=ge";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/count/EntityOne?prohibited=2024-11-01T08:00:00&prohibited_op=ge";
 		
 		Integer count = Integer.parseInt(getUniqueResult(url, new ErrorResponse()));
 		
@@ -581,7 +581,7 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_existi_o_id() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/exist/EntityTest1/" + QueryJpaController1Tests.ids.get(1);
+		String url = "http://localhost:" + port + "/v1/api-rest-database/exist/EntityOne/" + QueryJpaController1Tests.ids.get(1);
 		
 		Boolean value = Boolean.parseBoolean(getUniqueResult(url, new ErrorResponse()));
 		
@@ -591,7 +591,7 @@ class QueryJpaController2Tests {
 	@Test
 	void teste_nao_existi_o_id() {
 
-		String url = "http://localhost:" + port + "/v1/api-rest-database/exist/EntityTest1/1";
+		String url = "http://localhost:" + port + "/v1/api-rest-database/exist/EntityOne/1";
 		
 		Boolean value = Boolean.parseBoolean(getUniqueResult(url, new ErrorResponse()));
 		
@@ -600,7 +600,7 @@ class QueryJpaController2Tests {
 	
 	void testes_single_parameterized_other(String url, String value, Integer size) {
 		
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(size, list.size());
@@ -609,7 +609,7 @@ class QueryJpaController2Tests {
 	
 	void testes_single_parameterized_one(String url, Integer size) {
 		
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
 		assertEquals(size, list.size());
@@ -624,12 +624,12 @@ class QueryJpaController2Tests {
 	
 	void testes_result_is_null(String url) {
 		
-		List<EntityTest1> list = getAll(url, new ErrorResponse());
+		List<EntityOne> list = getAll(url, new ErrorResponse());
 		
 		assertNull(list);
 	}
 	
-	public List<EntityTest1> getAll(String url, ErrorResponse compare) {
+	public List<EntityOne> getAll(String url, ErrorResponse compare) {
 		
 		HttpHeaders headers = new HttpHeaders();
 		
@@ -640,7 +640,7 @@ class QueryJpaController2Tests {
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
 		if (response.getStatusCode().is2xxSuccessful()) {
-			return convertResponseToEntityTest1List(response.getBody());
+			return convertResponseToEntityOneList(response.getBody());
 		} else {
 			ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
 			assertEquals(compare.getStatus(), errorResponse.getStatus());
@@ -649,7 +649,7 @@ class QueryJpaController2Tests {
 		}
 	}
 
-	public EntityTest1 getSingleResult(String url, ErrorResponse compare) {
+	public EntityOne getSingleResult(String url, ErrorResponse compare) {
 		
 	    HttpHeaders headers = new HttpHeaders();
 	    
@@ -660,7 +660,7 @@ class QueryJpaController2Tests {
 	    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
 	    if (response.getStatusCode().is2xxSuccessful()) {
-	        return convertResponseToEntityTest1(response.getBody());
+	        return convertResponseToEntityOne(response.getBody());
 	    } else {
 	    	ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
 			assertEquals(compare.getStatus(), errorResponse.getStatus());
@@ -697,29 +697,29 @@ class QueryJpaController2Tests {
 	    return objectMapper;
 	}
 
-	private List<EntityTest1> convertResponseToEntityTest1List(String body) {
+	private List<EntityOne> convertResponseToEntityOneList(String body) {
 	    ObjectMapper objectMapper = createObjectMapper();
 	    try {
 	    	if(body != null) {
-	    		return objectMapper.readValue(body, new TypeReference<List<EntityTest1>>(){});
+	    		return objectMapper.readValue(body, new TypeReference<List<EntityOne>>(){});
 	    	} else {
 	    		return null;
 	    	}
 	    } catch (JsonProcessingException e) {
-	        throw new RuntimeException("Error parsing EntityTest1 list response", e);
+	        throw new RuntimeException("Error parsing EntityOne list response", e);
 	    }
 	}
 
-	private EntityTest1 convertResponseToEntityTest1(String body) {
+	private EntityOne convertResponseToEntityOne(String body) {
 	    ObjectMapper objectMapper = createObjectMapper();
 	    try {
 	    	if(body != null) {
-	    		return objectMapper.readValue(body, EntityTest1.class);
+	    		return objectMapper.readValue(body, EntityOne.class);
 	    	} else {
 	    		return null;
 	    	}
 	    } catch (JsonProcessingException e) {
-	        throw new RuntimeException("Error parsing EntityTest1 response", e);
+	        throw new RuntimeException("Error parsing EntityOne response", e);
 	    }
 	}
 
