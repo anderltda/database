@@ -33,10 +33,6 @@ import jakarta.persistence.criteria.Root;
 @Repository
 public abstract class AbstractJpaRepository<E extends BeanEntity<?>, M extends RepresentationModel<M>, R extends JpaRepository<?, ?>> extends AbstractAssembler<M> implements EntityRepository<E, R> {
 
-	protected AbstractJpaRepository(Class<?> controllerClass, Class<M> resourceType) {
-		super(controllerClass, resourceType);
-	}
-
 	protected static final Map<String, String> OPERADORES = new HashMap<>();
 
 	static {
@@ -65,6 +61,10 @@ public abstract class AbstractJpaRepository<E extends BeanEntity<?>, M extends R
 	@Override
 	public R getRepository() {
 		return repository;
+	}
+	
+	protected AbstractJpaRepository(Class<?> controllerClass, Class<M> resourceType) {
+		super(controllerClass, resourceType);
 	}
 
 	@SuppressWarnings("unchecked")

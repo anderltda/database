@@ -8,22 +8,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.process.integration.database.core.application.AbstractJpaService;
 import br.com.process.integration.database.core.ui.QueryJpaController;
-import br.com.process.integration.database.domain.model.entity.EntityOne;
+import br.com.process.integration.database.domain.model.entity.EntityTwo;
 
 @Service
 @Transactional
-public class EntityOneService extends AbstractJpaService<EntityOne, EntityOne, Long> {
+public class EntityTwoService extends AbstractJpaService<EntityTwo, EntityTwo, Long> {
 
 	@Autowired
-	private PagedResourcesAssembler<EntityOne> pagedResourcesAssembler;
+	private PagedResourcesAssembler<EntityTwo> pagedResourcesAssembler;
 
-	protected EntityOneService() {
-		super(QueryJpaController.class, EntityOne.class);
+	protected EntityTwoService() {
+		super(QueryJpaController.class, EntityTwo.class);
 	}
 
 	@Override
-	public EntityOne toModel(EntityOne entity) {
-		EntityOne model = new EntityOne();
+	public EntityTwo toModel(EntityTwo entity) {
+		EntityTwo model = new EntityTwo();
 		BeanUtils.copyProperties(entity, model);
 		return model;
 	}
@@ -34,7 +34,7 @@ public class EntityOneService extends AbstractJpaService<EntityOne, EntityOne, L
 	}
 
 	@Override
-	public void setEntity(EntityOne entity) {
+	public void setEntity(EntityTwo entity) {
 		this.entity = entity;
 	}
 

@@ -32,11 +32,12 @@ public class GlobalExceptionHandler {
 	}
 	
     @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<String> handleNoResourceFound(NoResourceFoundException ex) {
+    public ResponseEntity<ErrorResponse> handleNoResourceFound(NoResourceFoundException ex) {
+		ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND.value());
 	    if (LOGGER.isErrorEnabled()) {
-	        LOGGER.error(String.format("Failed code: '%s'", HttpStatus.BAD_REQUEST), ex);
+	        LOGGER.error(String.format("Failed code: '%s'", HttpStatus.NOT_FOUND), ex);
 	    }
-        return ResponseEntity.notFound().build();
+		return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
 }
