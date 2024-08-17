@@ -9,13 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import br.com.process.integration.database.core.ui.CrudJpaController;
 import br.com.process.integration.database.core.ui.QueryJpaController;
 import br.com.process.integration.database.core.ui.QueryNativeController;
-import br.com.process.integration.database.domain.service.ProductService;
 
 @SpringBootTest
 class DatabaseApplicationTests {
-
-	@Autowired
-	private ProductService productService;
 
 	@Autowired
 	private QueryJpaController queryJpaController;
@@ -28,9 +24,8 @@ class DatabaseApplicationTests {
 
 	@Test
 	void contextLoads() {
-		assertNotNull(productService);
-		assertNotNull(queryJpaController);
 		assertNotNull(crudJpaController);
+		assertNotNull(queryJpaController);
 		assertNotNull(queryNativeController);
 	}
 }
