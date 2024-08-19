@@ -29,7 +29,6 @@ public class QueryJpaController extends AbstractController {
 	 * INICIAL																																						  *
 	 *  																																							  *
 	 *****************************************************************************************************************************************************************/	
-
 	
 	/**
 	 * 	public Long count(Map<String, Object> filter)
@@ -53,7 +52,7 @@ public class QueryJpaController extends AbstractController {
 	/**
 	 * 	public E findBySingle(Map<String, Object> filter)
 	 */
-	@GetMapping(value = "/find/single/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/single/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> findBySingle(@PathVariable String entity, @RequestParam(defaultValue = "") Map<String, Object> params) throws CheckedException {
 
 		BeanEntity<?> entityFound = (BeanEntity<?>) MethodReflection.findEntityUsingClassLoader(entity);
@@ -77,7 +76,7 @@ public class QueryJpaController extends AbstractController {
 	 * 	List<E> findAll(Map<String, Object> filter, List<String> sortList, List<String> sortOrders)
 	 */
 	@SuppressWarnings("unchecked")
-	@GetMapping(value = "/find/all/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/all/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> findAll(@PathVariable String entity, 
 			@RequestParam(defaultValue = "") Map<String, Object> filter,
 			@RequestParam(defaultValue = "") List<String> sortList,
@@ -93,8 +92,8 @@ public class QueryJpaController extends AbstractController {
 				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL, filter, sortList, sortOrders);
 
 		if (!list.isEmpty()) {
-
-			final String body = gson.toJson(list);
+	        
+			final String body = removeEmptyLinks(gson.toJson(list));
 
 			return new ResponseEntity<>(body, HttpStatus.OK);
 		}
@@ -106,7 +105,7 @@ public class QueryJpaController extends AbstractController {
 	 * 	public PagedModel<E> findAll(Map<String, Object> filter, Integer page, Integer size, List<String> sortList, List<String> sortOrders)
 	 */
 	@SuppressWarnings({ "rawtypes" })
-	@GetMapping(value = "/find/all/page/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/paginator/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public PagedModel findAll(@PathVariable String entity,
 			@RequestParam(defaultValue = "") Map<String, Object> filter, 
 			@RequestParam(defaultValue = "0") Integer page,
@@ -123,19 +122,6 @@ public class QueryJpaController extends AbstractController {
 		return (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(
 				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL, filter, page, size, sortList, sortOrders);
 	}
-	
-	 /*****************************************************************************************************************************************************************
-	 *																																								  *
-	 * SERVICES UTILIZANDO CRITERIA																														        	  *	
-	 * 																																								  *
-	 * FINAL																																						  *
-	 *  																																							  *
-	 *****************************************************************************************************************************************************************/	
-	
-	
-	
-	
-	
 	
 	 /*****************************************************************************************************************************************************************
 	 *																																								  *
@@ -194,7 +180,7 @@ public class QueryJpaController extends AbstractController {
 	 * 	public List<E> findAll(Map<String, Object> filter, String methodQueryJPQL, List<String> sortList, List<String> sortOrders)
 	 */
 	@SuppressWarnings("unchecked")
-	@GetMapping(value = "/find/all/jpql/{entity}/{methodQueryJPQL}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/all/jpql/{entity}/{methodQueryJPQL}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> findAll(@PathVariable String entity, 
 			@RequestParam(defaultValue = "") Map<String, Object> filter, 
 			@PathVariable String methodQueryJPQL,
@@ -224,7 +210,7 @@ public class QueryJpaController extends AbstractController {
 	 * 	public PagedModel<E> findAll(Map<String, Object> filter, String methodQueryJPQL, Integer page, Integer size, List<String> sortList, List<String> sortOrders)
 	 */
 	@SuppressWarnings({ "rawtypes" })
-	@GetMapping(value = "/find/all/jpql/page/{entity}/{methodQueryJPQL}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/all/jpql/page/{entity}/{methodQueryJPQL}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public PagedModel findAll(@PathVariable String entity, 
 			@RequestParam(defaultValue = "") Map<String, Object> filter, 
 			@PathVariable String methodQueryJPQL,
@@ -246,19 +232,6 @@ public class QueryJpaController extends AbstractController {
 	
 	 /*****************************************************************************************************************************************************************
 	 *																																								  *
-	 * SERVICES UTILIZANDO JPQL																															        	  *	
-	 * 																																								  *
-	 * FINAL																																						  *
-	 *  																																							  *
-	 *****************************************************************************************************************************************************************/
-	
-	
-	
-	
-	
-	
-	 /*****************************************************************************************************************************************************************
-	 *																																								  *
 	 * SERVICES UTILIZANDO GENERIC CRUD REPOSITORY																													  *	
 	 * 																																								  *
 	 * INICIAL																																						  *
@@ -266,11 +239,11 @@ public class QueryJpaController extends AbstractController {
 	 *****************************************************************************************************************************************************************/
 	
 	@SuppressWarnings("unchecked")
-	@GetMapping(value = "/find/all/ids/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> findAllIds(@PathVariable String entity, @RequestParam List<String> ids) throws CheckedException {
+	@GetMapping(value = "/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<String> findAllIds(@PathVariable String entity, @RequestParam List<String> id) throws CheckedException {
 
 		List<BeanEntity<?>> list = (List<BeanEntity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL_BY_ID, ids);
+				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL_BY_ID, id);
 
 		if (!list.isEmpty()) {
 
@@ -282,7 +255,7 @@ public class QueryJpaController extends AbstractController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
-	@GetMapping(value = "/find/{entity}/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/{entity}/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> findById(@PathVariable String entity, @PathVariable String id) throws CheckedException {
 
 		setId(entity, id);
@@ -314,11 +287,4 @@ public class QueryJpaController extends AbstractController {
 
 	}
 	
-	 /*****************************************************************************************************************************************************************
-	 *																																								  *
-	 * SERVICES UTILIZANDO GENERIC CRUD REPOSITORY																													  *	
-	 * 																																								  *
-	 * FINAL																																						  *
-	 *  																																							  *
-	 *****************************************************************************************************************************************************************/
 }

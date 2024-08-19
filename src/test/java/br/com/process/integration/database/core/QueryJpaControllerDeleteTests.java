@@ -1,4 +1,4 @@
-package br.com.process.integration.database.core.ui;
+package br.com.process.integration.database.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -19,6 +19,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import br.com.process.integration.database.core.ui.CrudJpaController;
 import br.com.process.integration.database.core.util.Constants;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -48,18 +49,9 @@ class QueryJpaControllerDeleteTests {
 	@Order(2)
 	void testDeleteForAllId() {
 
-		String json = "[";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?id=" + QueryJpaControllerSaveTests.ids.get(0) + "," + QueryJpaControllerSaveTests.ids.get(1);
 
-		for (Long id : QueryJpaControllerSaveTests.ids) {
-			json += "{\"id\": " + id + "}";
-			json += ",";
-		}
-
-		json = json.substring(0, json.length() - 1) + "]";
-
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/delete/all/id/EntityOne";
-
-		String statusCode = deleteResource(url, json);
+		String statusCode = deleteResource(url);
 
 		assertEquals(statusCode, HttpStatus.OK.toString());
 	}
@@ -68,7 +60,7 @@ class QueryJpaControllerDeleteTests {
 	@Order(3)
 	void testDeleteForId() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/delete/id/EntityOne/" + QueryJpaControllerSaveTests.id;
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne/" + QueryJpaControllerSaveTests.id;
 
 		String statusCode = deleteResource(url);
 
@@ -79,7 +71,7 @@ class QueryJpaControllerDeleteTests {
 	@Order(4)
 	void testDeleteForAll() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/delete/all/EntityOne";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne";
 
 		String statusCode = deleteResource(url);
 

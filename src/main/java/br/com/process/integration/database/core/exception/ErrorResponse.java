@@ -1,28 +1,31 @@
 package br.com.process.integration.database.core.exception;
 
+import org.springframework.http.HttpStatus;
+
 public class ErrorResponse {
-	private int status;
+	
+	private HttpStatus status;
 	private String message;
 	private String customMessage;
 
-	public ErrorResponse() {}
-	
-	public ErrorResponse(String message, int status) {
+	public ErrorResponse() { }
+
+	public ErrorResponse(String message, HttpStatus status) {
 		this.message = message;
 		this.status = status;
 	}
 
-	public ErrorResponse(String message, String customMessage, int status) {
+	public ErrorResponse(String message, String customMessage, HttpStatus status) {
 		this.message = message;
 		this.customMessage = customMessage;
 		this.status = status;
 	}
 
-	public int getStatus() {
+	public HttpStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(HttpStatus status) {
 		this.status = status;
 	}
 

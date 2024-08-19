@@ -1,4 +1,4 @@
-package br.com.process.integration.database.core.ui;
+package br.com.process.integration.database.core;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,6 +27,7 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -35,6 +36,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import br.com.process.integration.database.core.exception.ErrorResponse;
+import br.com.process.integration.database.core.ui.QueryNativeController;
 import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.domain.model.view.EntityOneView;
 
@@ -229,7 +231,7 @@ class QueryNativeController2Tests {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/page/EntityOne/teste_utilizando_group_by_erro?page=0&size=10";
 		
-		ErrorResponse errorResponse = new ErrorResponse("Class not found EntityOne !", 400);
+		ErrorResponse errorResponse = new ErrorResponse("Class not found EntityOne !", HttpStatus.BAD_REQUEST);
 		
 	    assertThrows(RuntimeException.class, () -> getAll(url, errorResponse));
 
@@ -254,7 +256,7 @@ class QueryNativeController2Tests {
 	}
 
 	public void teste_single_parameterized_one(String url, String message) {
-		ErrorResponse errorResponse = new ErrorResponse(message, 400);
+		ErrorResponse errorResponse = new ErrorResponse(message, HttpStatus.BAD_REQUEST);
 	    assertThrows(RuntimeException.class, () -> getAll(url, errorResponse));
 	}
 	

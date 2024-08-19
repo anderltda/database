@@ -31,7 +31,7 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
 @Repository
-public abstract class AbstractJpaRepository<E extends BeanEntity<?>, M extends RepresentationModel<M>, R extends JpaRepository<?, ?>> extends AbstractAssembler<M> implements EntityRepository<E, R> {
+public abstract class AbstractJpaRepository<E extends BeanEntity<?>, T, M extends RepresentationModel<M>, R extends JpaRepository<E, T>> extends AbstractAssembler<M> implements EntityRepository<E> {
 
 	protected static final Map<String, String> OPERADORES = new HashMap<>();
 
@@ -49,7 +49,7 @@ public abstract class AbstractJpaRepository<E extends BeanEntity<?>, M extends R
 
 	protected E entity;
 
-	@Autowired(required = false)
+	@Autowired
 	protected R repository;
 
 	@Autowired
@@ -57,11 +57,6 @@ public abstract class AbstractJpaRepository<E extends BeanEntity<?>, M extends R
 
 	@PersistenceContext
 	private EntityManager entityManager;
-
-	@Override
-	public R getRepository() {
-		return repository;
-	}
 	
 	protected AbstractJpaRepository(Class<?> controllerClass, Class<M> resourceType) {
 		super(controllerClass, resourceType);
@@ -77,7 +72,7 @@ public abstract class AbstractJpaRepository<E extends BeanEntity<?>, M extends R
 			CriteriaQuery<E> query = (CriteriaQuery<E>) criteriaBuilder.createQuery(entity.getClass());
 			Root<E> root = (Root<E>) query.from(entity.getClass());
 			List<Predicate> predicates = buildPredicates(filter, criteriaBuilder, root);
-			if (!sortList.isEmpty() && !sortOrders.isEmpty()) {
+			if (!sortList.isEmpty()) {
 				List<Order> orders = new ArrayList<>();
 				for (int i = 0; i < sortList.size(); i++) {
 					String sortField = sortList.get(i);

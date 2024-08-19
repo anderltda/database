@@ -12,7 +12,7 @@ import br.com.process.integration.database.domain.model.entity.EntityTwo;
 
 @Service
 @Transactional
-public class EntityTwoService extends AbstractJpaService<EntityTwo, EntityTwo, Long> {
+public class EntityTwoService extends AbstractJpaService<EntityTwo, EntityTwo, String> {
 
 	@Autowired
 	private PagedResourcesAssembler<EntityTwo> pagedResourcesAssembler;
@@ -29,7 +29,7 @@ public class EntityTwoService extends AbstractJpaService<EntityTwo, EntityTwo, L
 	}
 
 	@Override
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

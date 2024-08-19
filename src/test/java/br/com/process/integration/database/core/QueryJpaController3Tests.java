@@ -1,4 +1,4 @@
-package br.com.process.integration.database.core.ui;
+package br.com.process.integration.database.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -21,6 +21,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
+import br.com.process.integration.database.core.ui.QueryJpaController;
 import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.domain.model.entity.EntityOne;
 
@@ -50,7 +51,7 @@ class QueryJpaController3Tests {
 	@Test
 	void teste_busca_com_equal_pelo_entityTwo_por_color_por_ordernacao_entityTwo() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/EntityOne?entityTwo.color=Preto&entityTwo.color_op=eq&sortList=entityTwo.dateInclusion, entityTwo.hex&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/all/EntityOne?entityTwo.color=Preto&entityTwo.color_op=eq&sortList=entityTwo.dateInclusion, entityTwo.hex&sortOrders=desc,asc";
 		
 		List<EntityOne> list = getAll(url);
 		
@@ -65,7 +66,7 @@ class QueryJpaController3Tests {
 	@Test
 	void teste_busca_com_in_pelo_entityTree_por_animal() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/EntityOne?entityTwo.entityTree.animal=Cavalo,Gato,Papagaio&entityTwo.entityTree.animal_op=in&page=0&size=10&sortList=entityTwo.color,entityTwo.entityTree.animal&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/all/EntityOne?entityTwo.entityTree.animal=Cavalo,Gato,Papagaio&entityTwo.entityTree.animal_op=in&page=0&size=10&sortList=entityTwo.color,entityTwo.entityTree.animal&sortOrders=desc,asc";
 
 		List<EntityOne> list = getAll(url);
 
@@ -95,7 +96,7 @@ class QueryJpaController3Tests {
 	@Test
 	void teste_busca_com_equal_pelo_entityTree_por_animal() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/EntityOne?entityTwo.entityTree.animal=Capivara&entityTwo.entityTree.animal_op=eq";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/all/EntityOne?entityTwo.entityTree.animal=Capivara&entityTwo.entityTree.animal_op=eq";
 
 		List<EntityOne> list = getAll(url);
 
@@ -110,7 +111,7 @@ class QueryJpaController3Tests {
 	@Test
 	void teste_busca_com_equal_pelo_entityFour_por_fruit() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/EntityOne?entityTwo.entityTree.entityFour.fruit=Pitanga&entityTwo.entityTree.entityFour.fruit_op=eq";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/all/EntityOne?entityTwo.entityTree.entityFour.fruit=Pitanga&entityTwo.entityTree.entityFour.fruit_op=eq";
 
 		List<EntityOne> list = getAll(url);
 
@@ -122,7 +123,7 @@ class QueryJpaController3Tests {
 	@Test
 	void teste_busca_com_equal_pelo_entityFive_por_fruit() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/EntityOne?entityTwo.entityTree.entityFour.entityFive.object=Cama&entityTwo.entityTree.entityFour.entityFive.object_op=eq";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/all/EntityOne?entityTwo.entityTree.entityFour.entityFive.object=Cama&entityTwo.entityTree.entityFour.entityFive.object_op=eq";
 
 		List<EntityOne> list = getAll(url);
 
@@ -138,7 +139,7 @@ class QueryJpaController3Tests {
 	@Test
 	void teste_busca_com_like_pelo_entityFive_por_fruit() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/EntityOne?entityTwo.entityTree.entityFour.entityFive.object=c*&entityTwo.entityTree.entityFour.entityFive.object_op=lk";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/all/EntityOne?entityTwo.entityTree.entityFour.entityFive.object=c*&entityTwo.entityTree.entityFour.entityFive.object_op=lk";
 
 		List<EntityOne> list = getAll(url);
 	

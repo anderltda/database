@@ -25,7 +25,7 @@ import br.com.process.integration.database.core.reflection.MethodReflection;
 
 @Service
 @Transactional
-public abstract class AbstractJpaService<E extends BeanEntity<?>, M extends RepresentationModel<M>, T> extends AbstractJpaRepository<E, M, JpaRepository<E, T>> implements JpaService<T, E> {
+public abstract class AbstractJpaService<E extends BeanEntity<?>, M extends RepresentationModel<M>, T> extends AbstractJpaRepository<E, T, M, JpaRepository<E, T>> implements JpaService<T, E> {
 
 	protected T id;
 	protected Page<E> pages;
@@ -97,7 +97,7 @@ public abstract class AbstractJpaService<E extends BeanEntity<?>, M extends Repr
 	public Long count(Map<String, Object> filter, String methodQueryJPQL) throws CheckedException {
 		
 		try {
-			Object[] methodArgs = MethodReflection.getMethodArgs(getRepository().getClass(), methodQueryJPQL, filter);
+			Object[] methodArgs = MethodReflection.getMethodArgs(repository.getClass(), methodQueryJPQL, filter);
 			return (Long) methodInvoker.invokeMethodReturnObjectWithParameters(
 					MethodReflection.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
 		} catch (Exception ex) {
@@ -109,7 +109,7 @@ public abstract class AbstractJpaService<E extends BeanEntity<?>, M extends Repr
 	@Override
 	public E findBySingle(Map<String, Object> filter, String methodQueryJPQL) throws CheckedException {
 		try {
-			Object[] methodArgs = MethodReflection.getMethodArgs(getRepository().getClass(), methodQueryJPQL, filter);
+			Object[] methodArgs = MethodReflection.getMethodArgs(repository.getClass(), methodQueryJPQL, filter);
 			return (E) methodInvoker.invokeMethodReturnObjectWithParameters(
 					MethodReflection.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
 		} catch (Exception ex) {
@@ -123,7 +123,7 @@ public abstract class AbstractJpaService<E extends BeanEntity<?>, M extends Repr
 		try {
 			Sort sort = createSortOrder(sortList, sortOrders);
 			filter.put("sort", sort);
-			Object[] methodArgs = MethodReflection.getMethodArgs(getRepository().getClass(), methodQueryJPQL, filter);
+			Object[] methodArgs = MethodReflection.getMethodArgs(repository.getClass(), methodQueryJPQL, filter);
 			return (List<E>) methodInvoker.invokeMethodReturnObjectWithParameters(
 					MethodReflection.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
 		} catch (Exception ex) {
@@ -137,7 +137,7 @@ public abstract class AbstractJpaService<E extends BeanEntity<?>, M extends Repr
 		try {
 			Pageable pageable = PageRequest.of(page, size, createSortOrder(sortList, sortOrders));
 			filter.put("page", pageable);
-			Object[] methodArgs = MethodReflection.getMethodArgs(getRepository().getClass(), methodQueryJPQL, filter);
+			Object[] methodArgs = MethodReflection.getMethodArgs(repository.getClass(), methodQueryJPQL, filter);
 			pages = (Page<E>) methodInvoker.invokeMethodReturnObjectWithParameters(
 					MethodReflection.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
 			setPagedModel();
@@ -155,7 +155,7 @@ public abstract class AbstractJpaService<E extends BeanEntity<?>, M extends Repr
 	
 	@Override
 	public E findById() {
-		Optional<E> entity = getRepository().findById(id);
+		Optional<E> entity = repository.findById(id);
 		if (entity.isPresent()) {
 			return entity.get();
 		}
@@ -164,47 +164,47 @@ public abstract class AbstractJpaService<E extends BeanEntity<?>, M extends Repr
 	
 	@Override
 	public List<E> findAllById(List<T> ids) {
-		return getRepository().findAllById(ids);
+		return repository.findAllById(ids);
 	}
 
 	@Override
 	public boolean existsById() {
-		return getRepository().existsById(id);
+		return repository.existsById(id);
 	}
 	
 	@Override
 	public void deleteAll() {
-		getRepository().deleteAll();
+		repository.deleteAll();
 	}
 
 	@Override
 	public void deleteAllById(List<T> ids) {
-		getRepository().deleteAllById(ids);
+		repository.deleteAllById(ids);
 	}
 
 	@Override
 	public void deleteById() {
-		getRepository().deleteById(id);
+		repository.deleteById(id);
 	}
 
 	@Override
 	public void save() {
-		getRepository().save(entity);
+		repository.save(entity);
 	}
 
 	@Override
 	public void saveAndFlush() {
-		getRepository().saveAndFlush(entity);
+		repository.saveAndFlush(entity);
 	}
 
 	@Override
 	public void saveAll(List<E> entitys) {
-		getRepository().saveAll(entitys);
+		repository.saveAll(entitys);
 	}
 
 	@Override
 	public void saveAllAndFlush(List<E> entitys) {
-		getRepository().saveAllAndFlush(entitys);
+		repository.saveAllAndFlush(entitys);
 	}
 	
 	private static Sort createSortOrder(List<String> sortList, List<String> sortOrders) {

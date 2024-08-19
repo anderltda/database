@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -24,27 +25,20 @@ import br.com.process.integration.database.core.util.Constants;
 @RestController
 @RequestMapping("/v1/database")
 public class CrudJpaController extends AbstractController {
-
-	@DeleteMapping(value = "/delete/all/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> deleteAll(@PathVariable String entity) throws CheckedException {
-
-		methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_DELETE_ALL);
-
-		return new ResponseEntity<>(HttpStatus.OK);
-
-	}
 	
-	@DeleteMapping(value = "/delete/all/id/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> deleteAllById(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws CheckedException {
+	@DeleteMapping(value = "/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<String> deleteAllOrById(@PathVariable String entity, @RequestParam(defaultValue = "") List<String> id) throws CheckedException {
 		
-		List<Object> ids = MethodReflection.transformsJsonIds(jsonNode);
-
-		methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_DELETE_ALL_BY_ID, ids);
+		if(id.isEmpty()) {
+			methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_DELETE_ALL);
+		} else {
+			methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_DELETE_ALL_BY_ID, id);
+		}
 
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
-	@DeleteMapping(value = "/delete/id/{entity}/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@DeleteMapping(value = "/{entity}/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> deleteById(@PathVariable String entity, @PathVariable String id) throws CheckedException {
 
 		setId(entity, id);
@@ -55,7 +49,7 @@ public class CrudJpaController extends AbstractController {
 
 	}
 	
-	@PostMapping(value = "/save/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@PostMapping(value = "/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> save(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws CheckedException {
 
 		BeanEntity<?> entityFound = createEntity(entity, jsonNode);
@@ -68,7 +62,7 @@ public class CrudJpaController extends AbstractController {
 
 	}
 	
-	@PostMapping(value = "/save/flush/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@PostMapping(value = "/flush/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> saveAndFlush(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws CheckedException {
 
 		BeanEntity<?> entityFound = createEntity(entity, jsonNode);
@@ -81,7 +75,7 @@ public class CrudJpaController extends AbstractController {
 
 	}
 	
-	@PostMapping(value = "/save/all/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@PostMapping(value = "/all/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> saveAll(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws CheckedException {
 
 		String body = persisteAll(Constants.METHOD_SAVE_ALL, entity, jsonNode);
@@ -90,7 +84,7 @@ public class CrudJpaController extends AbstractController {
 
 	}
 	
-	@PostMapping(value = "/save/all/flush/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@PostMapping(value = "/all/flush/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> saveAllAndFlush(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws CheckedException {
 
 		String body = persisteAll(Constants.METHOD_SAVE_ALL_AND_FLUSH, entity, jsonNode);

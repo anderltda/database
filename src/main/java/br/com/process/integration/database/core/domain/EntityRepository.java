@@ -8,9 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 import br.com.process.integration.database.core.exception.UncheckedException;
 
-public interface EntityRepository<E, R> {
-
-	public R getRepository();
+public interface EntityRepository<E> {
 	
 	public Long countable(Map<String, Object> filter) throws UncheckedException;
 	

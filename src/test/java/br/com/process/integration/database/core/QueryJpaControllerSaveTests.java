@@ -1,4 +1,4 @@
-package br.com.process.integration.database.core.ui;
+package br.com.process.integration.database.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -32,6 +32,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import br.com.process.integration.database.core.ui.CrudJpaController;
 import br.com.process.integration.database.core.ui.adapter.LocalDateAdapter;
 import br.com.process.integration.database.core.ui.adapter.LocalDateTimeAdapter;
 import br.com.process.integration.database.core.util.Constants;
@@ -85,7 +86,7 @@ class QueryJpaControllerSaveTests {
 	@Order(2)
 	void testSave() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/save/EntityOne";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne";
 
 		String[] text = new String[5];
 		Integer[] inteiro = new Integer[5];
@@ -148,7 +149,7 @@ class QueryJpaControllerSaveTests {
 	@Order(3)
 	void teste_valida_o_save_anterior_order_2() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/EntityOne/" + id;
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne/" + id;
 		
 		EntityOne entity = getSingleResult(url);
 		
@@ -162,7 +163,7 @@ class QueryJpaControllerSaveTests {
 	@Order(4)
 	void testSaveUpdate() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/save/EntityOne";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne";
 
 		String[] text = new String[5];
 		Integer[] inteiro = new Integer[5];
@@ -227,7 +228,7 @@ class QueryJpaControllerSaveTests {
 	@Order(5)
 	void teste_valida_o_save_anterior_order_4() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/EntityOne/" + id;
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne/" + id;
 		
 		EntityOne entity = getSingleResult(url);
 		
@@ -241,7 +242,7 @@ class QueryJpaControllerSaveTests {
 	@Order(6)
 	void testSaveAll() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/save/all/EntityOne";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/all/EntityOne";
 
 		List<EntityOne> list = new ArrayList<>();
 
@@ -446,7 +447,7 @@ class QueryJpaControllerSaveTests {
 	@Order(7)
 	void teste_valida_o_save_anterior_order_7() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/EntityOne/" + ids.get(0);
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne/" + ids.get(0);
 		
 		EntityOne entity = getSingleResult(url);
 		
@@ -488,6 +489,7 @@ class QueryJpaControllerSaveTests {
 		entityTwo.setHex(inteiro[1]);
 		entityTwo.setCost(dobro[1]);
 		entityTwo.setDateInclusion(geraLocalDate(localDate[1]));
+		entityOne.setEntityTwo(entityTwo);
 
 		EntityTree entityTree = new EntityTree();
 		entityTree.setId(UUID.randomUUID().toString());
@@ -496,21 +498,19 @@ class QueryJpaControllerSaveTests {
 		entityTree.setValue(dobro[2]);
 		entityTree.setDataLocal(geraLocalDate(localDate[2]));
 		entityTree.setDataLocalTime(geraDataLocalTime(localTime[2]));
+		entityTwo.setEntityTree(entityTree);
 
 		EntityFour entityFour = new EntityFour();
 		entityFour.setId(UUID.randomUUID().toString());
 		entityFour.setFruit(text[3]);
 		entityFour.setNutritiou(inteiro[3]);
 		entityFour.setDateInclusionTime(geraDataLocalTime(localTime[3]));
+		entityTree.setEntityFour(entityFour);
 
 		EntityFive entityFive = new EntityFive();
 		entityFive.setId(UUID.randomUUID().toString());
 		entityFive.setObject(text[4]);
 		entityFive.setValue(inteiro[4]);
-
-		entityOne.setEntityTwo(entityTwo);
-		entityTwo.setEntityTree(entityTree);
-		entityTree.setEntityFour(entityFour);
 		entityFour.setEntityFive(entityFive);
 
 		return entityOne;

@@ -56,7 +56,7 @@ public class QueryNativeController extends AbstractController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
-	@GetMapping(value = "/execute/query/find/all/{instance}/{query}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/execute/query/all/{instance}/{query}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> findAll(@PathVariable String instance, @RequestParam Map<String, Object> filter, @PathVariable String query) throws CheckedException {
 
 		addAjustFilter(filter);

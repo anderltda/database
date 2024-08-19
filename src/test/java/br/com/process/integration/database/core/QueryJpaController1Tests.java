@@ -1,4 +1,4 @@
-package br.com.process.integration.database.core.ui;
+package br.com.process.integration.database.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -32,6 +32,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import br.com.process.integration.database.core.ui.CrudJpaController;
 import br.com.process.integration.database.core.ui.adapter.LocalDateAdapter;
 import br.com.process.integration.database.core.ui.adapter.LocalDateTimeAdapter;
 import br.com.process.integration.database.core.util.Constants;
@@ -85,7 +86,7 @@ class QueryJpaController1Tests {
 	@Order(2)
 	void testSave() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/save/EntityOne";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne";
 
 		String[] text = new String[5];
 		Integer[] inteiro = new Integer[5];
@@ -148,7 +149,7 @@ class QueryJpaController1Tests {
 	@Order(3)
 	void testSaveFlush() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/save/flush/EntityOne";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/flush/EntityOne";
 
 		String[] text = new String[5];
 		Integer[] inteiro = new Integer[5];
@@ -209,7 +210,7 @@ class QueryJpaController1Tests {
 	@Order(4)
 	void testSaveAll() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/save/all/EntityOne";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/all/EntityOne";
 
 		List<EntityOne> list = new ArrayList<>();
 
@@ -414,7 +415,7 @@ class QueryJpaController1Tests {
 	@Order(5)
 	void testSaveAllFlush() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/save/all/flush/EntityOne";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/all/flush/EntityOne";
 
 		List<EntityOne> list = new ArrayList<>();
 

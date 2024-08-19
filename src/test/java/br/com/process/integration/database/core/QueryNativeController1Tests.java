@@ -1,4 +1,4 @@
-package br.com.process.integration.database.core.ui;
+package br.com.process.integration.database.core;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -25,6 +25,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -33,6 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import br.com.process.integration.database.core.exception.ErrorResponse;
+import br.com.process.integration.database.core.ui.QueryNativeController;
 import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.domain.model.view.EntityOneView;
 
@@ -62,7 +64,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_com_equal_pelo_name() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_equal_validar_orderby?name=Anderson&name_op=eq";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_equal_validar_orderby?name=Anderson&name_op=eq";
 
 		List<EntityOneView> list = getAll(url, new ErrorResponse());
 		
@@ -88,7 +90,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_com_equal_pelo_age_e_birthDate_e_prohibited_ordernacao_name_asc() {
 		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?"
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?"
 				+ "age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&prohibited=2024-11-01T08:00:00&prohibited_op=eq&sortList=name,age&sortOrders=asc";
 
 		List<EntityOneView> list = getAll(url, new ErrorResponse());
@@ -102,7 +104,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_notEqual_do_teste_busca_com_equal_pelo_age_e_birthDate_e_prohibited_ordernacao_name_asc() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?"
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?"
 				+ "age=22&age_op=ne&birthDate=1990-01-01&birthDate_op=ne&prohibited=2024-11-01T08:00:00&prohibited_op=ne&sortList=name&sortOrders=asc";
 		
 		List<EntityOneView> list = getAll(url, new ErrorResponse());
@@ -121,7 +123,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_notEqual_com_name() {
 		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?"
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?"
 				+ "name=Carlos&name_op=ne&sortList=name&sortOrders=asc";
 		
 		testes_single_parameterized_one(url, 9);
@@ -130,7 +132,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_com_equal_pelo_age_e_birthDate_e_height() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?"
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?"
 				+ "age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&height=1.80&height_op=eq";
 
 		testes_single_parameterized_other(url, "Ricardo", 1);
@@ -139,7 +141,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_com_equal_e_prohibited_e_ordernado_por_name_asc() {
 		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?"
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?"
 				+ "prohibited=2024-11-01T08:00:00&prohibited_op=eq";
 		
 		List<EntityOneView> list = getAll(url, new ErrorResponse());
@@ -154,7 +156,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_com_like_pelo_name_asterico_esquerda_e_direita_ordernado_por_birthDate_desc_e_name_asc() {
 		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?"
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?"
 				+ "name=*ar*&name_op=lk&sortList=birthDate,name&sortOrders=desc,asc";
 		
 		List<EntityOneView> list = getAll(url, new ErrorResponse());
@@ -171,7 +173,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_like_pelo_name_asterico_direita() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?name=ar*&name_op=lk";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?name=ar*&name_op=lk";
 		
 		testes_single_parameterized_other(url, "Ariovaldo", 1);
 	}
@@ -179,7 +181,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_in_com_birthDate_ordernado_com_age_asc() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=1956-08-30,1986-09-09,1990-09-09&birthDate_op=in&sortList=age&sortOrders=asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=1956-08-30,1986-09-09,1990-09-09&birthDate_op=in&sortList=age&sortOrders=asc";
 		
 		List<EntityOneView> list = getAll(url, new ErrorResponse());
 
@@ -193,7 +195,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_in_com_birthDate_ordernado_com_age_desc() {
 		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=1956-08-30,1990-01-01,1990-09-09&birthDate_op=in&sortList=age,height&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=1956-08-30,1990-01-01,1990-09-09&birthDate_op=in&sortList=age,height&sortOrders=desc,asc";
 		
 		List<EntityOneView> list = getAll(url, new ErrorResponse());
 
@@ -208,7 +210,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_in_com_age() {
 		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?age=55,12,22&age_op=in";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?age=55,12,22&age_op=in";
 
 		testes_single_parameterized_one(url, 4);
 	}
@@ -216,7 +218,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_in_com_ids() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?idEntityOne=" + QueryJpaController1Tests.ids.get(0) +"," + QueryJpaController1Tests.ids.get(1) + "&idEntityOne_op=in&sortList=idEntityOne&sortOrders=asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?idEntityOne=" + QueryJpaController1Tests.ids.get(0) +"," + QueryJpaController1Tests.ids.get(1) + "&idEntityOne_op=in&sortList=idEntityOne&sortOrders=asc";
 
 		testes_single_parameterized_one(url, 2);
 	}
@@ -224,7 +226,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_between_com_height_ordernado_por_height_desc() {
 		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?height=1.40,1.78&height_op=bt&sortList=height&sortOrders=desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?height=1.40,1.78&height_op=bt&sortList=height&sortOrders=desc";
 
 		List<EntityOneView> list = getAll(url, new ErrorResponse());
 
@@ -239,7 +241,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_between_com_prohibited_ordernado_por_birthDate_desc() {
 		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?prohibited=2024-02-01T08:50:00,2024-10-01T08:50:55&prohibited_op=bt&sortList=birthDate&sortOrders=desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?prohibited=2024-02-01T08:50:00,2024-10-01T08:50:55&prohibited_op=bt&sortList=birthDate&sortOrders=desc";
 		
 		List<EntityOneView> list = getAll(url, new ErrorResponse());
 
@@ -255,7 +257,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_greaterThanOrEqualTo_com_height() {
 		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?height=1.86&height_op=ge&sortList=birthDate&sortOrders=desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?height=1.86&height_op=ge&sortList=birthDate&sortOrders=desc";
 
 		testes_single_parameterized_one(url, 3);
 	}
@@ -263,7 +265,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_greaterThan_com_height() {
 		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?height=1.87&height_op=gt&sortList=birthDate&sortOrders=desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?height=1.87&height_op=gt&sortList=birthDate&sortOrders=desc";
 
 		testes_single_parameterized_one(url, 2);
 	}
@@ -271,7 +273,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_greaterThan_com_birthDate() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=1990-09-09&birthDate_op=gt&sortList=birthDate&sortOrders=desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=1990-09-09&birthDate_op=gt&sortList=birthDate&sortOrders=desc";
 
 		testes_single_parameterized_one(url, 3);
 	}
@@ -279,7 +281,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_greaterThanOrEqualTo_e_lessThanOrEqualTo_com_birthDate() {
 		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=1990-01-02&birthDate_op=ge&birthDate=2016-01-01&birthDate_op=le&sortList=birthDate&sortOrders=desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=1990-01-02&birthDate_op=ge&birthDate=2016-01-01&birthDate_op=le&sortList=birthDate&sortOrders=desc";
 
 		testes_single_parameterized_one(url, 4);
 	}
@@ -287,7 +289,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_lessThanOrEqualTo_com_birthDate() {
 		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=1990-01-02&birthDate_op=le";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=1990-01-02&birthDate_op=le";
 
 		testes_single_parameterized_one(url, 6);
 	}
@@ -295,7 +297,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_lessThan_com_birthDate() {
 		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=1986-09-08&birthDate_op=lt";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=1986-09-08&birthDate_op=lt";
 
 		testes_single_parameterized_one(url, 3);
 	}
@@ -303,7 +305,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_lessThanOrEqualTo_com_age() {
 		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?age=21&age_op=le";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?age=21&age_op=le";
 
 		testes_single_parameterized_one(url, 2);
 	}
@@ -311,7 +313,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_greaterThanOrEqualTo_com_birthDate() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=2016-01-01&birthDate_op=ge";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=2016-01-01&birthDate_op=ge";
 
 		testes_single_parameterized_other(url, "Maria", 1);
 	}
@@ -319,7 +321,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_por_lessThan_com_age() {
 		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?age=21&age_op=lt";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?age=21&age_op=lt";
 		
 		testes_single_parameterized_other(url, "Maria", 1);
 	}
@@ -327,7 +329,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_utilizando_group_by() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "//execute/query/find/all/EntityOneView/teste_utilizando_group_by";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "//execute/query/all/EntityOneView/teste_utilizando_group_by";
 
 		List<EntityOneView> list = getAll(url, new ErrorResponse());
 		
@@ -337,7 +339,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_utilizando_group_by_erro() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_utilizando_group_by_erro";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_utilizando_group_by_erro";
 
 		teste_single_parameterized_one(url, "PreparedStatementCallback; uncategorized SQLException for SQL");
 	}
@@ -345,7 +347,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_all_ordernacao_birthDate_asc_name_desc() {
 		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?sortList=birthDate,name&sortOrders=asc,desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?sortList=birthDate,name&sortOrders=asc,desc";
 
 		List<EntityOneView> list = getAll(url, new ErrorResponse());
 
@@ -366,7 +368,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_all_ordernacao_birthDate_desc_name_asc() {
 		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?sortList=birthDate,name&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?sortList=birthDate,name&sortOrders=desc,asc";
 
 		List<EntityOneView> list = getAll(url, new ErrorResponse());
 
@@ -387,7 +389,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_all_ordernacao_name_asc_birthDate_desc() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?sortList=name,birthDate&sortOrders=asc,desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?sortList=name,birthDate&sortOrders=asc,desc";
 
 		List<EntityOneView> list = getAll(url, new ErrorResponse());
 		
@@ -408,7 +410,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_busca_all_ordernacao_name_desc_birthDate_asc() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?sortList=name,birthDate&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?sortList=name,birthDate&sortOrders=desc,asc";
 
 		List<EntityOneView> list = getAll(url, new ErrorResponse());
 		
@@ -429,7 +431,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_nenhum_registro_encontrado() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars?name=Silva&name_op=eq";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars?name=Silva&name_op=eq";
 
 		List<EntityOneView> list = getAll(url, new ErrorResponse());
 		
@@ -450,7 +452,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_query_not_found() {
 	    
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/nao_existe_query";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/nao_existe_query";
 		
 	    teste_single_parameterized_one(url, "Query not found nao_existe_query !");
 	}
@@ -458,7 +460,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_filter_empty() {
 	    
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_busca_com_condicoes_diversars";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_busca_com_condicoes_diversars";
 
 		List<EntityOneView> list = getAll(url, new ErrorResponse());
 		
@@ -502,7 +504,7 @@ class QueryNativeController1Tests {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/count/EntityOneView/teste?prohibited=2024-11-01T08:00:00&prohibited_op=ge";
 		
-		ErrorResponse errorResponse = new ErrorResponse("Query not found teste !", 400);
+		ErrorResponse errorResponse = new ErrorResponse("Query not found teste !", HttpStatus.BAD_REQUEST);
 		
 	    assertThrows(RuntimeException.class, () -> getUniqueResult(url, errorResponse));
 		
@@ -511,7 +513,7 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_um_exemplo_sem_order_by() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOneView/teste_um_exemplo_sem_order_by?prohibited=2024-11-01T08:00:00&prohibited_op=ge";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOneView/teste_um_exemplo_sem_order_by?prohibited=2024-11-01T08:00:00&prohibited_op=ge";
 		
 		List<EntityOneView> list = getAll(url, new ErrorResponse());
 		
@@ -523,9 +525,9 @@ class QueryNativeController1Tests {
 	@Test
 	void teste_um_exemplo_sem_order_by_erro() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/find/all/EntityOne/teste_um_exemplo_sem_order_by?prohibited-=2024-11-01T08:00:00&prohibited_op=ge";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/execute/query/all/EntityOne/teste_um_exemplo_sem_order_by?prohibited-=2024-11-01T08:00:00&prohibited_op=ge";
 		
-		ErrorResponse errorResponse = new ErrorResponse("Class not found EntityOne !", 400);
+		ErrorResponse errorResponse = new ErrorResponse("Class not found EntityOne !", HttpStatus.BAD_REQUEST);
 		
 	    assertThrows(RuntimeException.class, () -> getAll(url, errorResponse));
 		
@@ -560,7 +562,7 @@ class QueryNativeController1Tests {
 	
 	public void teste_single_parameterized_one(String url, String message) {
 		
-		ErrorResponse errorResponse = new ErrorResponse(message, 400);
+		ErrorResponse errorResponse = new ErrorResponse(message, HttpStatus.BAD_REQUEST);
 		
 	    assertThrows(RuntimeException.class, () -> getSingleResult(url, errorResponse));
 	}

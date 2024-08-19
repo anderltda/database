@@ -1,8 +1,9 @@
-package br.com.process.integration.database.core.ui;
+package br.com.process.integration.database.core;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Collection;
 import java.util.List;
@@ -22,6 +23,7 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -30,13 +32,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import br.com.process.integration.database.core.exception.ErrorResponse;
+import br.com.process.integration.database.core.ui.QueryJpaController;
 import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.domain.model.entity.EntityOne;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class QueryJpaController5Tests {
+class QueryJpaController7Tests {
 
 	@LocalServerPort
 	private int port;
@@ -46,11 +49,10 @@ class QueryJpaController5Tests {
 
 	@Autowired
 	private QueryJpaController queryJpaController;
-
+	
 	@BeforeAll
-	void setupOnce() {
-	}
-
+	void setupOnce() { }
+	
 	@Test
 	@Order(1)
 	void contextLoads() {
@@ -58,102 +60,128 @@ class QueryJpaController5Tests {
 	};
 
 	@Test
-	void teste_busca_com_equal_pelo_entityTwo_por_color_por_ordernacao_entityTwo() {
+	void teste_busca_all_ordernacao_birthDate_asc_name_desc() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?entityTwo.color=Preto&entityTwo.color_op=eq&page=0&size=10&sortList=entityTwo.dateInclusion,entityTwo.hex&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/all/jpql/page/EntityOne/buscaAll?page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
-		assertEquals(2, list.size());
-		assertEquals("Carlos Alberto", list.get(0).getName());
-		assertEquals("Carlos", list.get(1).getName());
-		assertEquals(234, list.get(0).getEntityTwo().getHex());
-		assertEquals(144, list.get(1).getEntityTwo().getHex());
+		assertEquals(10, list.size());
+		assertEquals("Carlos", list.get(0).getName());
+		assertEquals("Carlos Alberto", list.get(1).getName());
+		assertEquals("Anderson", list.get(2).getName());
+		assertEquals("Paulo Henrique", list.get(3).getName());
+		assertEquals("Ricardo", list.get(4).getName());
+		assertEquals("Ariovaldo", list.get(5).getName());
+		assertEquals("Paulo", list.get(6).getName());
+		assertEquals("Joana", list.get(7).getName());
+		assertEquals("Renato", list.get(8).getName());
+		assertEquals("Maria", list.get(9).getName());
 	}
-
+	
 	@Test
-	void teste_busca_com_in_pelo_entityTree_por_animal() {
+	void teste_busca_com_like_pelo_name() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?entityTwo.entityTree.animal=Cavalo,Gato,Papagaio&entityTwo.entityTree.animal_op=in&page=0&size=10&sortList=entityTwo.color,entityTwo.entityTree.animal&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/all/jpql/page/EntityOne/buscaComLikePeloName?name=ar&page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(5, list.size());
+		assertEquals("Carlos", list.get(0).getName());
+		assertEquals("Carlos Alberto", list.get(1).getName());
+		assertEquals("Ricardo", list.get(2).getName());
+		assertEquals("Ariovaldo", list.get(3).getName());
+		assertEquals("Maria", list.get(4).getName());
+	}
+	
+	@Test
+	void teste_busca_com_like_pelo_name_nao_encontrado() {
 
-		assertEquals("Paulo Henrique", list.get(0).getName());
-		assertEquals("Ricardo", list.get(1).getName());
-		assertEquals("Paulo", list.get(2).getName());
-		assertEquals("Renato", list.get(3).getName());
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/all/jpql/page/EntityOne/buscaComLikePeloName?name=Silva&page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
+
+		List<EntityOne> list = getAll(url, new ErrorResponse());
+
+		assertNotNull(list);
+		assertEquals(0, list.size());
+	}
+	
+	@Test
+	void teste_busca_all_ordernacao_birthDate_desc_name_asc() {
+
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/all/jpql/page/EntityOne/buscaAll?page=0&size=20&sortList=birthDate,name&sortOrders=desc,asc";
+
+		List<EntityOne> list = getAll(url, new ErrorResponse());
+
+		assertNotNull(list);
+		assertEquals(10, list.size());
+		assertEquals("Maria", list.get(0).getName());
+		assertEquals("Renato", list.get(1).getName());
+		assertEquals("Joana", list.get(2).getName());
+		assertEquals("Paulo", list.get(3).getName());
 		assertEquals("Ariovaldo", list.get(4).getName());
-
-		assertEquals("Verde", list.get(0).getEntityTwo().getColor());
-		assertEquals("Verde", list.get(1).getEntityTwo().getColor());
-		assertEquals("Roxo", list.get(2).getEntityTwo().getColor());
-		assertEquals("Laranja", list.get(3).getEntityTwo().getColor());
-		assertEquals("Cinza", list.get(4).getEntityTwo().getColor());
-
-		assertEquals("Cavalo", list.get(0).getEntityTwo().getEntityTree().getAnimal());
-		assertEquals("Gato", list.get(1).getEntityTwo().getEntityTree().getAnimal());
-		assertEquals("Cavalo", list.get(2).getEntityTwo().getEntityTree().getAnimal());
-		assertEquals("Papagaio", list.get(3).getEntityTwo().getEntityTree().getAnimal());
-		assertEquals("Gato", list.get(4).getEntityTwo().getEntityTree().getAnimal());
+		assertEquals("Ricardo", list.get(5).getName());
+		assertEquals("Paulo Henrique", list.get(6).getName());
+		assertEquals("Anderson", list.get(7).getName());
+		assertEquals("Carlos Alberto", list.get(8).getName());
+		assertEquals("Carlos", list.get(9).getName());
 	}
-
+	
 	@Test
-	void teste_busca_com_equal_pelo_entityTree_por_animal() {
+	void teste_busca_all_ordernacao_name_asc_birthDate_desc() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?entityTwo.entityTree.animal=Capivara&entityTwo.entityTree.animal_op=eq";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/all/jpql/page/EntityOne/buscaAll?page=0&size=20&sortList=name,birthDate&sortOrders=asc,desc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
-
-		list.forEach(entity -> {
-			assertEquals("Carlos Alberto", entity.getName());
-		});
-
+		
 		assertNotNull(list);
-		assertEquals(1, list.size());
+		assertEquals(10, list.size());
+		assertEquals("Anderson", list.get(0).getName());
+		assertEquals("Ariovaldo", list.get(1).getName());
+		assertEquals("Carlos", list.get(2).getName());
+		assertEquals("Carlos Alberto", list.get(3).getName());
+		assertEquals("Joana", list.get(4).getName());
+		assertEquals("Maria", list.get(5).getName());
+		assertEquals("Paulo", list.get(6).getName());
+		assertEquals("Paulo Henrique", list.get(7).getName());
+		assertEquals("Renato", list.get(8).getName());
+		assertEquals("Ricardo", list.get(9).getName());
 	}
-
+	
 	@Test
-	void teste_busca_com_equal_pelo_entityFour_por_fruit() {
+	void teste_busca_all_ordernacao_name_desc_birthDate_asc() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?entityTwo.entityTree.entityFour.fruit=Pitanga&entityTwo.entityTree.entityFour.fruit_op=eq&page=0&size=10";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/all/jpql/page/EntityOne/buscaAll?page=0&size=20&sortList=name,birthDate&sortOrders=desc,asc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
-
+		
 		assertNotNull(list);
-		assertEquals(2, list.size());
+		assertEquals(10, list.size());
+		assertEquals("Ricardo", list.get(0).getName());
+		assertEquals("Renato", list.get(1).getName());
+		assertEquals("Paulo Henrique", list.get(2).getName());
+		assertEquals("Paulo", list.get(3).getName());
+		assertEquals("Maria", list.get(4).getName());
+		assertEquals("Joana", list.get(5).getName());
+		assertEquals("Carlos Alberto", list.get(6).getName());
+		assertEquals("Carlos", list.get(7).getName());
+		assertEquals("Ariovaldo", list.get(8).getName());
+		assertEquals("Anderson", list.get(9).getName());
 	}
-
+	
+	
 	@Test
-	void teste_busca_com_equal_pelo_entityFive_por_fruit() {
+	void teste_all_page_erro() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?entityTwo.entityTree.entityFour.entityFive.object=Cama&entityTwo.entityTree.entityFour.entityFive.object_op=eq&page=0&size=10&sortList=name&sortOrders=desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/all/jpql/page/EntityOne/buscaAll?age=Silva&sortList=name,birthDate&sortOrders=desc,asc";
 
-		List<EntityOne> list = getAll(url, new ErrorResponse());
+		ErrorResponse errorResponse = new ErrorResponse("Parameter value [Silva] did not match expected type [SqmBasicValuedSimplePath(br.com.process.integration.database.domain.model.entity.EntityOne(e).age)]",
+				HttpStatus.BAD_REQUEST);
 
-		list.forEach(entity -> {
-			assertEquals("Cama",
-					entity.getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getObject());
-		});
-
-		assertNotNull(list);
-		assertEquals(1, list.size());
+		assertThrows(RuntimeException.class, () -> getAll(url, errorResponse));
 	}
-
-	@Test
-	void teste_busca_com_like_pelo_entityFive_por_fruit() {
-
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/find/all/page/EntityOne?entityTwo.entityTree.entityFour.entityFive.object=c*&entityTwo.entityTree.entityFour.entityFive.object_op=lk&page=0&size=10&sortList=entityTwo.dateInclusion,entityTwo.hex&sortOrders=desc,asc";
-
-		List<EntityOne> list = getAll(url, new ErrorResponse());
-
-		assertNotNull(list);
-		assertEquals(4, list.size());
-	}
-
+	
 	private List<EntityOne> getAll(String url, ErrorResponse compare) {
 
 		PagedModel<EntityOne> page = getRestAll(url, compare);
