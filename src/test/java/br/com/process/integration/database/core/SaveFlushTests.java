@@ -45,7 +45,7 @@ import br.com.process.integration.database.domain.model.entity.EntityTwo;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class QueryJpaControllerSaveTests {
+class SaveFlushTests {
 
 	@LocalServerPort
 	private int port;
@@ -84,9 +84,9 @@ class QueryJpaControllerSaveTests {
 	
 	@Test
 	@Order(2)
-	void testSave() {
+	void testFlushSave() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/flush/EntityOne";
 
 		String[] text = new String[5];
 		Integer[] inteiro = new Integer[5];
@@ -161,9 +161,9 @@ class QueryJpaControllerSaveTests {
 	
 	@Test
 	@Order(4)
-	void testSaveUpdate() {
+	void testFlushSaveUpdate() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/flush/EntityOne";
 
 		String[] text = new String[5];
 		Integer[] inteiro = new Integer[5];
@@ -240,9 +240,9 @@ class QueryJpaControllerSaveTests {
 	
 	@Test
 	@Order(6)
-	void testSaveAll() {
+	void testFlushSaveAll() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/all/EntityOne";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/all/flush/EntityOne";
 
 		List<EntityOne> list = new ArrayList<>();
 

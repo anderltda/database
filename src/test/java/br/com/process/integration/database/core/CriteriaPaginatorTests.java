@@ -43,7 +43,7 @@ import br.com.process.integration.database.domain.model.entity.EntityOne;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class QueryJpaController4Tests {
+class CriteriaPaginatorTests {
 
 	@LocalServerPort
 	private int port;
@@ -226,7 +226,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_por_in_com_ids() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?id= " + QueryJpaController1Tests.ids.get(0) + "," + QueryJpaController1Tests.ids.get(1) + "&id_op=in&page=0&size=10&sortList=id&sortOrders=asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?id= " + SaveTests.ids.get(0) + "," + SaveTests.ids.get(1) + "&id_op=in&page=0&size=10&sortList=id&sortOrders=asc";
 
 		testes_single_parameterized_one(url, 2);
 	}
@@ -440,7 +440,7 @@ class QueryJpaController4Tests {
 	@Test
 	void teste_busca_por_ids() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?id=" + QueryJpaController1Tests.ids.get(0) + "," + QueryJpaController1Tests.ids.get(1) + "," + QueryJpaController1Tests.ids.get(2) + "&id_op=in&page=0&size=20";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?id=" + SaveTests.ids.get(0) + "," + SaveTests.ids.get(1) + "," + SaveTests.ids.get(2) + "&id_op=in&page=0&size=20";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 		

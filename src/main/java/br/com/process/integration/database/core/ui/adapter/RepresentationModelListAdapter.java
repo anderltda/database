@@ -1,4 +1,4 @@
-package br.com.process.integration.database.core.ui;
+package br.com.process.integration.database.core.ui.adapter;
 
 import java.lang.reflect.Type;
 import java.util.List;

@@ -45,8 +45,8 @@ public abstract class AbstractController {
 		JsonArray jsonArray = JsonParser.parseString(json).getAsJsonArray();
 		for (JsonElement element : jsonArray) {
 			JsonObject jsonObject = element.getAsJsonObject();
-			if (jsonObject.has("links") && jsonObject.get("links").getAsJsonArray().size() == 0) {
-				jsonObject.remove("links");
+			if (jsonObject.has(Constants.HATEOAS_LINKS) && jsonObject.get(Constants.HATEOAS_LINKS).getAsJsonArray().size() == 0) {
+				jsonObject.remove(Constants.HATEOAS_LINKS);
 			}
 		}
 		return jsonArray.toString();

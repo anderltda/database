@@ -31,6 +31,8 @@ public class Constants {
 	 */
 	public static final String IDENTITY_OPERATOR = "_op";
 	
+	public static final String HATEOAS_LINKS = "links";
+	
 	/**
 	 * Nome do metodo do Service
 	 */

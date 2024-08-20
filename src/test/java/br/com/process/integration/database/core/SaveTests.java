@@ -45,7 +45,7 @@ import br.com.process.integration.database.domain.model.entity.EntityTwo;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class QueryJpaController1Tests {
+class SaveTests {
 
 	@LocalServerPort
 	private int port;

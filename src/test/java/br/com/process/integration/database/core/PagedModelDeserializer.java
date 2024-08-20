@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class PagedModelDeserializer<T> extends JsonDeserializer<PagedModel<T>> {
 
+	@SuppressWarnings("unused")
 	private final Class<T> contentType;
 
 	public PagedModelDeserializer(Class<T> contentType) {

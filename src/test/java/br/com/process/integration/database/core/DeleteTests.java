@@ -25,7 +25,7 @@ import br.com.process.integration.database.core.util.Constants;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class QueryJpaControllerDeleteTests {
+class DeleteTests {
 
 	@LocalServerPort
 	private int port;
@@ -49,7 +49,7 @@ class QueryJpaControllerDeleteTests {
 	@Order(2)
 	void testDeleteForAllId() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?id=" + QueryJpaControllerSaveTests.ids.get(0) + "," + QueryJpaControllerSaveTests.ids.get(1);
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?id=" + SaveFlushTests.ids.get(0) + "," + SaveFlushTests.ids.get(1);
 
 		String statusCode = deleteResource(url);
 
@@ -60,7 +60,7 @@ class QueryJpaControllerDeleteTests {
 	@Order(3)
 	void testDeleteForId() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne/" + QueryJpaControllerSaveTests.id;
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne/" + SaveFlushTests.id;
 
 		String statusCode = deleteResource(url);
 

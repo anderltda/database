@@ -1,5 +1,6 @@
 package br.com.process.integration.database.core.ui;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -23,11 +24,7 @@ import br.com.process.integration.database.core.util.Constants;
 public class QueryJpaController extends AbstractController {
 	
 	 /*****************************************************************************************************************************************************************
-	 *																																								  *
 	 * SERVICES UTILIZANDO CRITERIA																														        	  *	
-	 * 																																								  *
-	 * INICIAL																																						  *
-	 *  																																							  *
 	 *****************************************************************************************************************************************************************/	
 	
 	/**
@@ -76,7 +73,7 @@ public class QueryJpaController extends AbstractController {
 	 * 	List<E> findAll(Map<String, Object> filter, List<String> sortList, List<String> sortOrders)
 	 */
 	@SuppressWarnings("unchecked")
-	@GetMapping(value = "/all/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> findAll(@PathVariable String entity, 
 			@RequestParam(defaultValue = "") Map<String, Object> filter,
 			@RequestParam(defaultValue = "") List<String> sortList,
@@ -124,17 +121,13 @@ public class QueryJpaController extends AbstractController {
 	}
 	
 	 /*****************************************************************************************************************************************************************
-	 *																																								  *
 	 * SERVICES UTILIZANDO JPQL																															        	  *	
-	 * 																																								  *
-	 * INICIAL																																						  *
-	 *  																																							  *
 	 *****************************************************************************************************************************************************************/
 
 	/**
 	 * public Long count(Map<String, Object> filter, String methodQueryJPQL)
 	 */
-	@GetMapping(value = "/count/jpql/{entity}/{methodQueryJPQL}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/jpql/count/{entity}/{methodQueryJPQL}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> count(@PathVariable String entity, 
 			@RequestParam(defaultValue = "") Map<String, Object> params,
 			@PathVariable String methodQueryJPQL) throws CheckedException {
@@ -154,7 +147,7 @@ public class QueryJpaController extends AbstractController {
 	/**
 	 * public E findBySingle(Map<String, Object> filter, String methodQueryJPQL)
 	 */
-	@GetMapping(value = "/find/single/jpql/{entity}/{methodQueryJPQL}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/jpql/single/{entity}/{methodQueryJPQL}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> findBySingle(@PathVariable String entity, 
 			@RequestParam(defaultValue = "") Map<String, Object> params, 
 			@PathVariable String methodQueryJPQL) throws CheckedException {
@@ -180,7 +173,7 @@ public class QueryJpaController extends AbstractController {
 	 * 	public List<E> findAll(Map<String, Object> filter, String methodQueryJPQL, List<String> sortList, List<String> sortOrders)
 	 */
 	@SuppressWarnings("unchecked")
-	@GetMapping(value = "/all/jpql/{entity}/{methodQueryJPQL}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/jpql/{entity}/{methodQueryJPQL}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> findAll(@PathVariable String entity, 
 			@RequestParam(defaultValue = "") Map<String, Object> filter, 
 			@PathVariable String methodQueryJPQL,
@@ -210,7 +203,7 @@ public class QueryJpaController extends AbstractController {
 	 * 	public PagedModel<E> findAll(Map<String, Object> filter, String methodQueryJPQL, Integer page, Integer size, List<String> sortList, List<String> sortOrders)
 	 */
 	@SuppressWarnings({ "rawtypes" })
-	@GetMapping(value = "/all/jpql/page/{entity}/{methodQueryJPQL}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/jpql/paginator/{entity}/{methodQueryJPQL}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public PagedModel findAll(@PathVariable String entity, 
 			@RequestParam(defaultValue = "") Map<String, Object> filter, 
 			@PathVariable String methodQueryJPQL,
@@ -231,19 +224,19 @@ public class QueryJpaController extends AbstractController {
 	}
 	
 	 /*****************************************************************************************************************************************************************
-	 *																																								  *
 	 * SERVICES UTILIZANDO GENERIC CRUD REPOSITORY																													  *	
-	 * 																																								  *
-	 * INICIAL																																						  *
-	 *  																																							  *
 	 *****************************************************************************************************************************************************************/
 	
 	@SuppressWarnings("unchecked")
-	@GetMapping(value = "/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> findAllIds(@PathVariable String entity, @RequestParam List<String> id) throws CheckedException {
+	@GetMapping(value = "/{entity}/ids/{ids}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<String> findAllIds(@PathVariable String entity, @PathVariable("ids") String ids) throws CheckedException {
+		
+		List<Long> idList = Arrays.stream(ids.split(","))
+                .map(Long::parseLong)
+                .toList();
 
 		List<BeanEntity<?>> list = (List<BeanEntity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL_BY_ID, id);
+				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL_BY_ID, idList);
 
 		if (!list.isEmpty()) {
 

@@ -21,30 +21,30 @@ import br.com.process.integration.database.core.util.Constants;
 @RequestMapping("/v1/database")
 public class QueryNativeController extends AbstractController {
 	
-	@GetMapping(value = "/execute/query/count/{instance}/{query}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> count(@PathVariable String instance, @RequestParam Map<String, Object> filter, @PathVariable String query) throws CheckedException {
+	@GetMapping(value = "/query/count/{instance}/{queryName}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<String> count(@PathVariable String instance, @RequestParam Map<String, Object> filter, @PathVariable String queryName) throws CheckedException {
 
 		addAjustFilter(filter);
 
 		setView(instance);
 
 		Integer count = (Integer) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(instance), Constants.METHOD_EXECUTE_QUERY_NATIVE_COUNT, filter, query);
+				MethodReflection.getNameService(instance), Constants.METHOD_EXECUTE_QUERY_NATIVE_COUNT, filter, queryName);
 
 		final String body = gson.toJson(count);
 
 		return new ResponseEntity<>(body, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/execute/query/find/single/{instance}/{query}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> findSingle(@PathVariable String instance, @RequestParam Map<String, Object> filter, @PathVariable String query) throws CheckedException {
+	@GetMapping(value = "/query/single/{instance}/{queryName}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<String> findSingle(@PathVariable String instance, @RequestParam Map<String, Object> filter, @PathVariable String queryName) throws CheckedException {
 
 		addAjustFilter(filter);
 
 		setView(instance);
 
 		Object object = methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(instance), Constants.METHOD_EXECUTE_QUERY_NATIVE_SINGLE, filter, query);
+				MethodReflection.getNameService(instance), Constants.METHOD_EXECUTE_QUERY_NATIVE_SINGLE, filter, queryName);
 
 		if (object != null) {
 
@@ -56,15 +56,15 @@ public class QueryNativeController extends AbstractController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
-	@GetMapping(value = "/execute/query/all/{instance}/{query}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> findAll(@PathVariable String instance, @RequestParam Map<String, Object> filter, @PathVariable String query) throws CheckedException {
+	@GetMapping(value = "/query/{instance}/{queryName}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<String> findAll(@PathVariable String instance, @RequestParam Map<String, Object> filter, @PathVariable String queryName) throws CheckedException {
 
 		addAjustFilter(filter);
 
 		setView(instance);
 
 		List<?> list = (List<?>) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(instance), Constants.METHOD_EXECUTE_QUERY_NATIVE, filter, query);
+				MethodReflection.getNameService(instance), Constants.METHOD_EXECUTE_QUERY_NATIVE, filter, queryName);
 
 		if (!list.isEmpty()) {
 
@@ -77,14 +77,14 @@ public class QueryNativeController extends AbstractController {
 	}
 
 	@SuppressWarnings({ "rawtypes" })
-	@GetMapping(value = "/execute/query/page/{instance}/{query}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public PagedModel executeQuery(@PathVariable String instance, @RequestParam(defaultValue = "") Map<String, Object> filter, @PathVariable String query) throws CheckedException {
+	@GetMapping(value = "/query/paginator/{instance}/{queryName}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public PagedModel executeQuery(@PathVariable String instance, @RequestParam(defaultValue = "") Map<String, Object> filter, @PathVariable String queryName) throws CheckedException {
 
 		addAjustFilter(filter);
 
 		setView(instance);
 
 		return (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(instance), Constants.METHOD_EXECUTE_QUERY_NATIVE_PAGINATOR, filter, query);
+				MethodReflection.getNameService(instance), Constants.METHOD_EXECUTE_QUERY_NATIVE_PAGINATOR, filter, queryName);
 	}
 }
