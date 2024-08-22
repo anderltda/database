@@ -81,6 +81,14 @@ public class MethodReflection {
 			throw new CheckedException(ex.getMessage(), ex);
 		}
 	}
+	
+	public static String getNameMapper(String className) throws CheckedException {
+		try {
+			return className.substring(0, 1).toLowerCase() + className.substring(1) + "Mapper";
+		} catch (Exception ex) {
+			throw new CheckedException(ex.getMessage(), ex);
+		}
+	}
 
 	public static String getNameRepository(String className) throws CheckedException {
 		try {
@@ -98,7 +106,7 @@ public class MethodReflection {
 		}
 	}
 
-	public static Object findDtoUsingClassLoader(String className) throws CheckedException {
+	public static Object findViewUsingClassLoader(String className) throws CheckedException {
 		try {
 			String packagePath = (Constants.DIRECTORY_APPLICATION + Constants.PACKAGE_NAME_VIEW).replaceAll("[.]", "/");
 			return findClassUsingClassLoader(className, packagePath);
@@ -110,6 +118,15 @@ public class MethodReflection {
 	public static Object findEntityUsingClassLoader(String className) throws CheckedException {
 		try {
 			String packagePath = (Constants.DIRECTORY_APPLICATION + Constants.PACKAGE_NAME_ENTITY).replaceAll("[.]", "/");
+			return findClassUsingClassLoader(className, packagePath);
+		} catch (Exception ex) {
+			throw new CheckedException(ex.getMessage(), ex);
+		}
+	}
+	
+	public static Object findDataUsingClassLoader(String className) throws CheckedException {
+		try {
+			String packagePath = (Constants.DIRECTORY_APPLICATION + Constants.PACKAGE_NAME_DATA).replaceAll("[.]", "/");
 			return findClassUsingClassLoader(className, packagePath);
 		} catch (Exception ex) {
 			throw new CheckedException(ex.getMessage(), ex);

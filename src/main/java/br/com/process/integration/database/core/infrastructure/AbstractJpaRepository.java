@@ -31,7 +31,7 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
 @Repository
-public abstract class AbstractJpaRepository<E extends BeanEntity<?>, T, M extends RepresentationModel<M>, R extends JpaRepository<E, T>> extends AbstractAssembler<M> implements EntityRepository<E> {
+public abstract class AbstractJpaRepository<E extends BeanEntity<?>, I, M extends RepresentationModel<M>, R extends JpaRepository<E, I>> extends AbstractAssembler<M> implements EntityRepository<E> {
 
 	protected static final Map<String, String> OPERADORES = new HashMap<>();
 

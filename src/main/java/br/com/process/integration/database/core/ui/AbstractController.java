@@ -80,14 +80,22 @@ public abstract class AbstractController {
 	
 	protected void setId(String nameEntity, String id) throws CheckedException {
 		BeanEntity<?> entity = (BeanEntity<?>) MethodReflection.findEntityUsingClassLoader(nameEntity);
-		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameEntity), "setId", DynamicTypeConverter.convert(entity, id));
+		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameEntity), Constants.METHOD_SET_ID, DynamicTypeConverter.convert(entity, id));
 	}
 	
 	protected void setEntity(String nameEntity, BeanEntity<?> entity) throws CheckedException {
-		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameEntity), "setEntity", entity);
+		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameEntity), Constants.METHOD_SET_ENTITY, entity);
+	}
+	
+	protected void setEntity(String nameEntity) throws CheckedException {
+		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameEntity), Constants.METHOD_SET_ENTITY, MethodReflection.findEntityUsingClassLoader(nameEntity));
 	}
 	
 	protected void setView(String nameView) throws CheckedException {
-		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameView), "setView", MethodReflection.findDtoUsingClassLoader(nameView));
+		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameView), Constants.METHOD_SET_VIEW, MethodReflection.findViewUsingClassLoader(nameView));
+	}
+	
+	protected void setData(String nameData) throws CheckedException {
+		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameData), Constants.METHOD_SET_DATA, MethodReflection.findDataUsingClassLoader(nameData));
 	}
 }

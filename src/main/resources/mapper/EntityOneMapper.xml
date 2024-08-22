@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="br.com.process.integration.database.domain.mapper.EntityOneDataMapper">
+
+	<select id="findEntityOneByName"
+		resultType="br.com.process.integration.database.domain.model.data.EntityOneData">
+		SELECT t1.*, t2.*, t3.*, t4.*, t5.* 
+		FROM entity_one t1
+		INNER JOIN entity_two t2 ON t2.id_entity_two = t1.id_entity_two
+		INNER JOIN entity_tree t3 ON t3.id_entity_tree = t2.id_entity_tree
+		INNER JOIN entity_four t4 ON t4.id_entity_four = t3.id_entity_four
+		INNER JOIN entity_five t5 ON t5.id_entity_five = t4.id_entity_five
+		WHERE t1.name LIKE CONCAT('%', #{name}, '%')
+		ORDER BY name DESC
+	</select>
+
+</mapper>

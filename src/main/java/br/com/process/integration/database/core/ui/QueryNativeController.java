@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.process.integration.database.core.domain.BeanView;
 import br.com.process.integration.database.core.exception.CheckedException;
 import br.com.process.integration.database.core.reflection.MethodReflection;
 import br.com.process.integration.database.core.util.Constants;
@@ -21,34 +22,34 @@ import br.com.process.integration.database.core.util.Constants;
 @RequestMapping("/v1/database")
 public class QueryNativeController extends AbstractController {
 	
-	@GetMapping(value = "/query/count/{instance}/{queryName}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> count(@PathVariable String instance, @RequestParam Map<String, Object> filter, @PathVariable String queryName) throws CheckedException {
+	@GetMapping(value = "/query/count/{view}/{queryName}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<String> count(@PathVariable String view, @RequestParam Map<String, Object> filter, @PathVariable String queryName) throws CheckedException {
 
 		addAjustFilter(filter);
 
-		setView(instance);
+		setView(view);
 
-		Integer count = (Integer) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(instance), Constants.METHOD_EXECUTE_QUERY_NATIVE_COUNT, filter, queryName);
+		int count = (int) methodInvoker.invokeMethodReturnObjectWithParameters(
+				MethodReflection.getNameService(view), Constants.METHOD_EXECUTE_QUERY_NATIVE_COUNT, filter, queryName);
 
 		final String body = gson.toJson(count);
 
 		return new ResponseEntity<>(body, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/query/single/{instance}/{queryName}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> findSingle(@PathVariable String instance, @RequestParam Map<String, Object> filter, @PathVariable String queryName) throws CheckedException {
+	@GetMapping(value = "/query/single/{view}/{queryName}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<String> findSingle(@PathVariable String view, @RequestParam Map<String, Object> filter, @PathVariable String queryName) throws CheckedException {
 
 		addAjustFilter(filter);
 
-		setView(instance);
+		setView(view);
 
-		Object object = methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(instance), Constants.METHOD_EXECUTE_QUERY_NATIVE_SINGLE, filter, queryName);
+		BeanView<?> beanView = (BeanView<?>) methodInvoker.invokeMethodReturnObjectWithParameters(
+				MethodReflection.getNameService(view), Constants.METHOD_EXECUTE_QUERY_NATIVE_SINGLE, filter, queryName);
 
-		if (object != null) {
+		if (beanView != null) {
 
-			final String body = gson.toJson(object, MethodReflection.findDtoUsingClassLoader(instance).getClass());
+			final String body = gson.toJson(beanView, beanView.getClass());
 
 			return new ResponseEntity<>(body, HttpStatus.OK);
 		}
@@ -56,15 +57,16 @@ public class QueryNativeController extends AbstractController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
-	@GetMapping(value = "/query/{instance}/{queryName}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> findAll(@PathVariable String instance, @RequestParam Map<String, Object> filter, @PathVariable String queryName) throws CheckedException {
+	@SuppressWarnings("unchecked")
+	@GetMapping(value = "/query/{view}/{queryName}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<String> findAll(@PathVariable String view, @RequestParam Map<String, Object> filter, @PathVariable String queryName) throws CheckedException {
 
 		addAjustFilter(filter);
 
-		setView(instance);
+		setView(view);
 
-		List<?> list = (List<?>) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(instance), Constants.METHOD_EXECUTE_QUERY_NATIVE, filter, queryName);
+		List<BeanView<?>> list = (List<BeanView<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
+				MethodReflection.getNameService(view), Constants.METHOD_EXECUTE_QUERY_NATIVE, filter, queryName);
 
 		if (!list.isEmpty()) {
 
@@ -77,14 +79,14 @@ public class QueryNativeController extends AbstractController {
 	}
 
 	@SuppressWarnings({ "rawtypes" })
-	@GetMapping(value = "/query/paginator/{instance}/{queryName}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public PagedModel executeQuery(@PathVariable String instance, @RequestParam(defaultValue = "") Map<String, Object> filter, @PathVariable String queryName) throws CheckedException {
+	@GetMapping(value = "/query/paginator/{view}/{queryName}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public PagedModel executeQuery(@PathVariable String view, @RequestParam(defaultValue = "") Map<String, Object> filter, @PathVariable String queryName) throws CheckedException {
 
 		addAjustFilter(filter);
 
-		setView(instance);
+		setView(view);
 
 		return (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(instance), Constants.METHOD_EXECUTE_QUERY_NATIVE_PAGINATOR, filter, queryName);
+				MethodReflection.getNameService(view), Constants.METHOD_EXECUTE_QUERY_NATIVE_PAGINATOR, filter, queryName);
 	}
 }

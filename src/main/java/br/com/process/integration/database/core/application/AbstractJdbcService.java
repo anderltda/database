@@ -34,7 +34,7 @@ public abstract class AbstractJdbcService<V extends RepresentationModel<V>> exte
 	public abstract void setPagedModel();
 
 	@Override
-	public Integer executeQueryNativeCount(Map<String, Object> filter, String query) throws CheckedException {
+	public int executeQueryNativeCount(Map<String, Object> filter, String query) throws CheckedException {
 		try {
 			return count(filter, this.getClass().getSimpleName(), query);
 		} catch (UncheckedException cuex) {
@@ -45,37 +45,37 @@ public abstract class AbstractJdbcService<V extends RepresentationModel<V>> exte
 	}
 
 	@Override
-	public V executeQueryNativeSingle(Map<String, Object> filter, String invokerQuery) throws CheckedException {
+	public V executeQueryNativeSingle(Map<String, Object> filter, String query) throws CheckedException {
 		try {
-			return findSingle(view, filter, this.getClass().getSimpleName(), invokerQuery);
+			return findSingle(view, filter, this.getClass().getSimpleName(), query);
 		} catch (UncheckedException cuex) {
 			throw new CheckedException(cuex.getMessage(), String.format(
 					"Falha ao executar metodo 'executeQueryNativeSingle' na classe %s com filters: %s e query-name: %s",
-					this.getClass().getSimpleName(), filter, invokerQuery), cuex);
+					this.getClass().getSimpleName(), filter, query), cuex);
 		}
 	}
 
 	@Override
-	public List<V> executeQueryNative(Map<String, Object> filter, String invokerQuery) throws CheckedException {
+	public List<V> executeQueryNative(Map<String, Object> filter, String query) throws CheckedException {
 		try {
-			return findAll(view, filter, this.getClass().getSimpleName(), invokerQuery);
+			return findAll(view, filter, this.getClass().getSimpleName(), query);
 		} catch (UncheckedException cuex) {
 			throw new CheckedException(cuex.getMessage(), String.format(
 					"Falha ao executar metodo 'executeQueryNative' na classe %s com filters: %s e query-name: %s",
-					this.getClass().getSimpleName(), filter, invokerQuery), cuex);
+					this.getClass().getSimpleName(), filter, query), cuex);
 		}
 	}
 
 	@Override
-	public PagedModel<V> executeQueryNativePaginator(Map<String, Object> filter, String invokerQuery) throws CheckedException {
+	public PagedModel<V> executeQueryNativePaginator(Map<String, Object> filter, String query) throws CheckedException {
 
 		try {
 
 			int page = filter.get("page") != null ? Integer.parseInt((String) filter.get("page")) : 0;
 			int size = filter.get("page") != null ? Integer.parseInt((String) filter.get("size")) : 5;
 
-			List<V> models = findAll(view, filter, this.getClass().getSimpleName(), invokerQuery, page, size);
-			int totalElements = count(filter, this.getClass().getSimpleName(), invokerQuery);
+			List<V> models = findAll(view, filter, this.getClass().getSimpleName(), query, page, size);
+			int totalElements = count(filter, this.getClass().getSimpleName(), query);
 			Pageable pageable = PageRequest.of(page, size);
 			pages = new PageImpl<>(models, pageable, totalElements);
 
@@ -86,7 +86,7 @@ public abstract class AbstractJdbcService<V extends RepresentationModel<V>> exte
 		} catch (UncheckedException cuex) {
 			throw new CheckedException(cuex.getMessage(), String.format(
 					"Falha ao executar metodo 'executeQueryNativePaginator' na classe %s com filters: %s e query-name: %s",
-					this.getClass().getSimpleName(), filter, invokerQuery), cuex);
+					this.getClass().getSimpleName(), filter, query), cuex);
 		}
 	}
 }

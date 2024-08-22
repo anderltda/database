@@ -25,13 +25,13 @@ import br.com.process.integration.database.core.reflection.MethodReflection;
 
 @Service
 @Transactional
-public abstract class AbstractJpaService<E extends BeanEntity<?>, M extends RepresentationModel<M>, T> extends AbstractJpaRepository<E, T, M, JpaRepository<E, T>> implements JpaService<T, E> {
+public abstract class AbstractJpaService<E extends BeanEntity<?>, M extends RepresentationModel<M>, I> extends AbstractJpaRepository<E, I, M, JpaRepository<E, I>> implements JpaService<E, I> {
 
-	protected T id;
+	protected I id;
 	protected Page<E> pages;
 	protected PagedModel<E> pagedModel;
 
-	public abstract void setId(T id);
+	public abstract void setId(I id);
 	public abstract void setEntity(E entity);
 	public abstract void setPagedModel();
 
@@ -49,9 +49,9 @@ public abstract class AbstractJpaService<E extends BeanEntity<?>, M extends Repr
 	 *****************************************************************************************************************************************************************/	
 	
 	@Override
-	public Long count(Map<String, Object> filter) throws CheckedException {
+	public int count(Map<String, Object> filter) throws CheckedException {
 		try {
-			return super.countable(filter);
+			return super.countable(filter).intValue();
 		} catch (UncheckedException cuex) {
 			throw new CheckedException(cuex.getCause().getLocalizedMessage(), cuex);
 		}
@@ -94,11 +94,11 @@ public abstract class AbstractJpaService<E extends BeanEntity<?>, M extends Repr
 	 *****************************************************************************************************************************************************************/
 	
 	@Override
-	public Long count(Map<String, Object> filter, String methodQueryJPQL) throws CheckedException {
+	public int count(Map<String, Object> filter, String methodQueryJPQL) throws CheckedException {
 		
 		try {
 			Object[] methodArgs = MethodReflection.getMethodArgs(repository.getClass(), methodQueryJPQL, filter);
-			return (Long) methodInvoker.invokeMethodReturnObjectWithParameters(
+			return (int) methodInvoker.invokeMethodReturnObjectWithParameters(
 					MethodReflection.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
 		} catch (Exception ex) {
 			throw new CheckedException(ex.getMessage(), ex);
@@ -163,7 +163,7 @@ public abstract class AbstractJpaService<E extends BeanEntity<?>, M extends Repr
 	}
 	
 	@Override
-	public List<E> findAllById(List<T> ids) {
+	public List<E> findAllById(List<I> ids) {
 		return repository.findAllById(ids);
 	}
 
@@ -178,7 +178,7 @@ public abstract class AbstractJpaService<E extends BeanEntity<?>, M extends Repr
 	}
 
 	@Override
-	public void deleteAllById(List<T> ids) {
+	public void deleteAllById(List<I> ids) {
 		repository.deleteAllById(ids);
 	}
 

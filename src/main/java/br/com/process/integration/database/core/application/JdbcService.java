@@ -9,7 +9,7 @@ import br.com.process.integration.database.core.exception.CheckedException;
 
 public interface JdbcService<V> {
 	
-	public Integer executeQueryNativeCount(Map<String, Object> filter, String query) throws CheckedException;
+	public int executeQueryNativeCount(Map<String, Object> filter, String query) throws CheckedException;
 	
 	public V executeQueryNativeSingle(Map<String, Object> filter, String query) throws CheckedException;
 

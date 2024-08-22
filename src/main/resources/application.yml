@@ -7,10 +7,11 @@ spring:
     rest:
       defaultMediaType: application/json       
   datasource:
-    driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/root-database?allowPublicKeyRetrieval=true&useSSL=false
     username: anderson
     password: admin
+mybatis:
+  mapper-locations: classpath:mapper/*.xml	
   jpa:
     hibernate:
       ddl-auto: update
@@ -20,5 +21,3 @@ spring:
   mvc:
     favicon:
       enabled: false
-query:
-  path: "select p from Product p where p.title like CONCAT('%',(?1),'%')"

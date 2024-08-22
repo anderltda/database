@@ -42,10 +42,10 @@ public interface EntityOneRepository extends JpaRepository<EntityOne, Long>, Jpa
 	Page<EntityOne> buscaComLikePeloName(String name, PageRequest pageRequest);
 	
 	@Query(value = QUERY_4)
-	Long countMaiorProhibited(LocalDateTime prohibited);
+	int countMaiorProhibited(LocalDateTime prohibited);
 	
 	@Query(value = QUERY_5)
-	Long countMaiorAge(String age);
+	int countMaiorAge(String age);
 	
 	@Query(QUERY_6)
 	List<EntityOne> buscaAll(String age, Sort sort);

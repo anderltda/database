@@ -7,9 +7,9 @@ import org.springframework.hateoas.PagedModel;
 
 import br.com.process.integration.database.core.exception.CheckedException;
 
-public interface JpaService<T, E> {
+public interface JpaService<E, I> {
 
-	public Long count(Map<String, Object> filter) throws CheckedException;
+	public int count(Map<String, Object> filter) throws CheckedException;
 
 	public List<E> findAll(Map<String, Object> filter, List<String> sortList, List<String> sortOrders) throws CheckedException;
 
@@ -23,9 +23,9 @@ public interface JpaService<T, E> {
 
 	public E findBySingle(Map<String, Object> filter) throws CheckedException;
 
-	public Long count(Map<String, Object> filter, String methodQueryJPQL) throws CheckedException;
+	public int count(Map<String, Object> filter, String methodQueryJPQL) throws CheckedException;
 
-	public List<E> findAllById(List<T> ids);
+	public List<E> findAllById(List<I> ids);
 
 	public E findById();
 
@@ -33,7 +33,7 @@ public interface JpaService<T, E> {
 
 	public void deleteAll();
 
-	public void deleteAllById(List<T> ids);
+	public void deleteAllById(List<I> ids);
 
 	public void deleteById();
 

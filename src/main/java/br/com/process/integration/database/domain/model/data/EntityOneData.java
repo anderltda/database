@@ -1,18 +1,16 @@
-package br.com.process.integration.database.domain.model.view;
+package br.com.process.integration.database.domain.model.data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-import org.springframework.hateoas.RepresentationModel;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import br.com.process.integration.database.core.domain.BeanView;
+import br.com.process.integration.database.core.domain.BeanData;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EntityOneView extends RepresentationModel<EntityOneView> implements BeanView<EntityOneView> {
+public class EntityOneData implements BeanData<EntityOneData> {
 
 	// EntityOne
 	private Long idEntityOne;
@@ -48,17 +46,13 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 	private String idEntityFive;
 	private String object;
 	private Integer value5;
-
+	
 	@Override
 	@JsonIgnore
-	public EntityOneView getView() {
+	public EntityOneData getData() {
 		return this;
 	}
-
-	public Long getIdEntityOne() {
-		return idEntityOne;
-	}
-
+	
 	public void setIdEntityOne(Long idEntityOne) {
 		this.idEntityOne = idEntityOne;
 	}
@@ -254,6 +248,8 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 	public void setValue5(Integer value5) {
 		this.value5 = value5;
 	}
+	
+	
 
 	@Override
 	public int hashCode() {
@@ -273,7 +269,7 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		EntityOneView other = (EntityOneView) obj;
+		EntityOneData other = (EntityOneData) obj;
 		return Objects.equals(age, other.age) && Objects.equals(animal, other.animal)
 				&& Objects.equals(birthDate, other.birthDate) && Objects.equals(color, other.color)
 				&& Objects.equals(cost, other.cost) && Objects.equals(count, other.count)
@@ -288,4 +284,5 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 				&& Objects.equals(object, other.object) && Objects.equals(prohibited, other.prohibited)
 				&& Objects.equals(value3, other.value3) && Objects.equals(value5, other.value5);
 	}
+
 }

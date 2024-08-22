@@ -27,6 +27,11 @@ public class Constants {
 	public static final String PACKAGE_NAME_VIEW = "br.com.process.integration.database.domain.model.view";
 	
 	/**
+	 *  Nome do pacote onde estao as classes dos datas
+	 */
+	public static final String PACKAGE_NAME_DATA = "br.com.process.integration.database.domain.model.data";
+	
+	/**
 	 * Referencia ao identificador da operacao
 	 */
 	public static final String IDENTITY_OPERATOR = "_op";
@@ -57,6 +62,16 @@ public class Constants {
 	public static final String METHOD_EXECUTE_QUERY_NATIVE = "executeQueryNative";
 	public static final String METHOD_EXECUTE_QUERY_NATIVE_PAGINATOR = "executeQueryNativePaginator"; 
 	public static final String METHOD_EXECUTE_QUERY_NATIVE_COUNT = "executeQueryNativeCount";
+	
+	public static final String METHOD_EXECUTE__MAPPER_COUNT = "executeCount";
+	public static final String METHOD_EXECUTE_MAPPER_SINGLE = "executeSingle"; 
+	public static final String METHOD_EXECUTE_MAPPER_ALL = "executeAll";
+	
+	public static final String METHOD_SET_ID = "setId"; 
+	public static final String METHOD_SET_ENTITY = "setEntity";
+	public static final String METHOD_SET_VIEW = "setView"; 
+	public static final String METHOD_SET_DATA = "setData";
+	
 	
 	public static final String SORT_LIST = "sortList";
 	public static final String SORT_ORDERS = "sortOrders";

@@ -1,4 +1,4 @@
-package br.com.process.integration.database.core.domain;
+package br.com.process.integration.database.core.domain.query;
 
 import java.util.List;
 
