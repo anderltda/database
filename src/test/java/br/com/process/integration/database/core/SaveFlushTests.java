@@ -1,7 +1,10 @@
 package br.com.process.integration.database.core;
 
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.lang.reflect.Type;
 import java.time.LocalDate;
@@ -28,10 +31,15 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import br.com.process.integration.database.core.exception.ErrorResponse;
 import br.com.process.integration.database.core.ui.CrudJpaController;
 import br.com.process.integration.database.core.ui.adapter.LocalDateAdapter;
 import br.com.process.integration.database.core.ui.adapter.LocalDateTimeAdapter;
@@ -131,7 +139,7 @@ class SaveFlushTests {
 
 		String json = gson.toJson(entityOne);
 
-		List<String> responses = postJson(url, json);
+		List<String> responses = postJson(url, json, new ErrorResponse());
 
 		EntityOne entity = gson.fromJson(responses.get(1), EntityOne.class);
 
@@ -151,7 +159,7 @@ class SaveFlushTests {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne/" + id;
 		
-		EntityOne entity = getSingleResult(url);
+		EntityOne entity = getSingleResult(url, new ErrorResponse());
 		
 		assertNotNull(entity);
 		assertEquals("Ricardo", entity.getName());
@@ -210,7 +218,7 @@ class SaveFlushTests {
 
 		String json = gson.toJson(entityOne);
 
-		List<String> responses = postJson(url, json);
+		List<String> responses = postJson(url, json, new ErrorResponse());
 
 		EntityOne entity = gson.fromJson(responses.get(1), EntityOne.class);
 
@@ -230,7 +238,7 @@ class SaveFlushTests {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne/" + id;
 		
-		EntityOne entity = getSingleResult(url);
+		EntityOne entity = getSingleResult(url, new ErrorResponse());
 		
 		assertNotNull(entity);
 		assertEquals("Manolo", entity.getName());
@@ -403,7 +411,7 @@ class SaveFlushTests {
 
 		String json = gson.toJson(list);
 
-		List<String> responses = postJson(url, json);
+		List<String> responses = postJson(url, json, new ErrorResponse());
 
 		Type userListType = new TypeToken<List<EntityOne>>(){}.getType();
 
@@ -449,7 +457,7 @@ class SaveFlushTests {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne/" + ids.get(0);
 		
-		EntityOne entity = getSingleResult(url);
+		EntityOne entity = getSingleResult(url, new ErrorResponse());
 		
 		assertEquals("Carlos Alberto", entity.getName());
 		assertEquals(55, entity.getAge());
@@ -471,6 +479,143 @@ class SaveFlushTests {
 
 		assertEquals("Cama", entity.getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getObject());
 		assertEquals(55, entity.getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getValue());
+	}
+	
+	@Test
+	@Order(8)
+	void testSaveComErroNameNull() {
+
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/flush/EntityOne";
+
+		String[] text = new String[5];
+		Integer[] inteiro = new Integer[5];
+		Double[] dobro = new Double[5];
+		String[] localDate = new String[5];
+		String[] localTime = new String[5];
+
+		text[0] = null;
+		inteiro[0] = 70;
+		dobro[0] = 1.40;
+		localDate[0] = "01-01-1990";
+		localTime[0] = "2024-11-01T08:00:00";
+
+		text[1] = "Verde";
+		inteiro[1] = 12344;
+		dobro[1] = 25.5;
+		localDate[1] = "01-07-2024";
+		localTime[1] = "2024-01-07T16:41:43";
+
+		text[2] = "Gato";
+		inteiro[2] = 24;
+		dobro[2] = 24.6;
+		localDate[2] = "01-08-2024";
+		localTime[2] = "2024-01-08T17:32:32";
+
+		text[3] = "Banana";
+		inteiro[3] = 45;
+		dobro[3] = 103.12;
+		localDate[3] = "10-12-2024";
+		localTime[3] = "2024-03-29T18:23:21";
+
+		text[4] = "Vassoura";
+		dobro[4] = 22.9;
+		inteiro[4] = 26;
+		localDate[4] = "01-10-2024";
+		localTime[4] = "2024-01-10T19:14:10";
+
+		EntityOne entityOne = gerarEntity(text, inteiro, dobro, localDate, localTime);
+		
+		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
+
+		String json = gson.toJson(entityOne);
+		
+		ErrorResponse errorResponse = new ErrorResponse("not-null property references a null or transient value : br.com.process.integration.database.domain.model.entity.EntityOne.name", HttpStatus.BAD_REQUEST);
+		
+	    assertThrows(RuntimeException.class, () -> postJson(url, json, errorResponse));
+	}
+	
+	@Test
+	@Order(9)
+	void teste_valida_o_save_anterior_order_8() {
+
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/single/EntityOne?name=Marcelo&name_op=eq";
+		
+		EntityOne entity = getSingleResult(url, new ErrorResponse());
+		
+		assertNull(entity);
+	}
+	
+	@Test
+	@Order(10)
+	void testSaveNameSucesso() {
+
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/flush/EntityOne";
+
+		String[] text = new String[5];
+		Integer[] inteiro = new Integer[5];
+		Double[] dobro = new Double[5];
+		String[] localDate = new String[5];
+		String[] localTime = new String[5];
+
+		text[0] = "Marcelo";
+		inteiro[0] = 70;
+		dobro[0] = 1.40;
+		localDate[0] = "01-01-1990";
+		localTime[0] = "2024-11-01T08:00:00";
+
+		text[1] = "Verde";
+		inteiro[1] = 12344;
+		dobro[1] = 25.5;
+		localDate[1] = "01-07-2024";
+		localTime[1] = "2024-01-07T16:41:43";
+
+		text[2] = "Gato";
+		inteiro[2] = 24;
+		dobro[2] = 24.6;
+		localDate[2] = "01-08-2024";
+		localTime[2] = "2024-01-08T17:32:32";
+
+		text[3] = "Banana";
+		inteiro[3] = 45;
+		dobro[3] = 103.12;
+		localDate[3] = "10-12-2024";
+		localTime[3] = "2024-03-29T18:23:21";
+
+		text[4] = "Vassoura";
+		dobro[4] = 22.9;
+		inteiro[4] = 26;
+		localDate[4] = "01-10-2024";
+		localTime[4] = "2024-01-10T19:14:10";
+
+		EntityOne entityOne = gerarEntity(text, inteiro, dobro, localDate, localTime);
+		
+		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
+
+		String json = gson.toJson(entityOne);
+		
+		List<String> responses = postJson(url, json, new ErrorResponse());
+
+		EntityOne entity = gson.fromJson(responses.get(1), EntityOne.class);
+		
+		assertEquals(responses.get(0), HttpStatus.OK.toString());
+		assertNotNull(entity.getId());
+		assertNotNull(entity.getEntityTwo().getId());
+		assertNotNull(entity.getEntityTwo().getEntityTree().getId());
+		assertNotNull(entity.getEntityTwo().getEntityTree().getEntityFour().getId());
+		assertNotNull(entity.getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getId());
+	}
+	
+	@Test
+	@Order(11)
+	void teste_valida_o_save_anterior_order_11() {
+
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/single/EntityOne?name=Marcelo&name_op=eq";
+		
+		EntityOne entity = getSingleResult(url, new ErrorResponse());
+		
+		assertNotNull(entity);
 	}
 
 	public EntityOne gerarEntity(String[] text, Integer[] inteiro, Double[] dobro, String[] localDate,
@@ -516,7 +661,7 @@ class SaveFlushTests {
 		return entityOne;
 	}
 
-	public List<String> postJson(String url, String json) {
+	public List<String> postJson(String url, String json, ErrorResponse compare) {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
@@ -526,16 +671,19 @@ class SaveFlushTests {
 
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
 
-		if (response.getStatusCode() == HttpStatus.OK) {
+		if (response.getStatusCode().is2xxSuccessful()) {
 			responses.add(response.getStatusCode().toString());
 			responses.add(response.getBody());
 			return responses;
 		} else {
-			throw new RuntimeException("Failed to post JSON. Status code: " + response.getStatusCode());
+			ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
+			assertEquals(compare.getStatus(), errorResponse.getStatus());
+			assertTrue(errorResponse.getMessage().contains(compare.getMessage()));
+			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: " + errorResponse.getMessage());
 		}
 	}
 	
-	public EntityOne getSingleResult(String url) {
+	public List<EntityOne> getAll(String url, ErrorResponse compare) {
 		
 		HttpHeaders headers = new HttpHeaders();
 		
@@ -543,13 +691,78 @@ class SaveFlushTests {
 
 		HttpEntity<String> entity = new HttpEntity<>(headers);
 
-		ResponseEntity<EntityOne> response = restTemplate.exchange(url, HttpMethod.GET, entity, EntityOne.class);
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
 		if (response.getStatusCode().is2xxSuccessful()) {
-			return response.getBody();
+			return convertResponseToEntityOneList(response.getBody());
 		} else {
-			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode());
+			ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
+			assertEquals(compare.getStatus(), errorResponse.getStatus());
+			assertTrue(errorResponse.getMessage().contains(compare.getMessage()));
+			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: " + errorResponse.getMessage());
 		}
+	}
+
+	public EntityOne getSingleResult(String url, ErrorResponse compare) {
+		
+	    HttpHeaders headers = new HttpHeaders();
+	    
+	    headers.set("Accept", "application/json");
+
+	    HttpEntity<String> entity = new HttpEntity<>(headers);
+
+	    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+
+	    if (response.getStatusCode().is2xxSuccessful()) {
+	        return convertResponseToEntityOne(response.getBody());
+	    } else {
+	    	ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
+			assertEquals(compare.getStatus(), errorResponse.getStatus());
+			assertTrue(errorResponse.getMessage().contains(compare.getMessage()));
+	        throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: " + errorResponse.getMessage());
+	    }
+	}
+	
+	private ObjectMapper createObjectMapper() {
+	    ObjectMapper objectMapper = new ObjectMapper();
+	    objectMapper.registerModule(new JavaTimeModule());
+	    objectMapper.findAndRegisterModules(); 
+	    return objectMapper;
+	}
+
+	private List<EntityOne> convertResponseToEntityOneList(String body) {
+	    ObjectMapper objectMapper = createObjectMapper();
+	    try {
+	    	if(body != null) {
+	    		return objectMapper.readValue(body, new TypeReference<List<EntityOne>>(){});
+	    	} else {
+	    		return null;
+	    	}
+	    } catch (JsonProcessingException e) {
+	        throw new RuntimeException("Error parsing EntityOne list response", e);
+	    }
+	}
+
+	private EntityOne convertResponseToEntityOne(String body) {
+	    ObjectMapper objectMapper = createObjectMapper();
+	    try {
+	    	if(body != null) {
+	    		return objectMapper.readValue(body, EntityOne.class);
+	    	} else {
+	    		return null;
+	    	}
+	    } catch (JsonProcessingException e) {
+	        throw new RuntimeException("Error parsing EntityOne response", e);
+	    }
+	}
+
+	private ErrorResponse convertResponseToErrorResponse(String body) {
+	    ObjectMapper objectMapper = new ObjectMapper();
+	    try {
+	        return objectMapper.readValue(body, ErrorResponse.class);
+	    } catch (JsonProcessingException e) {
+	        throw new RuntimeException("Error parsing ErrorResponse", e);
+	    }
 	}
 
 	public LocalDate geraLocalDate(String dateString) {
