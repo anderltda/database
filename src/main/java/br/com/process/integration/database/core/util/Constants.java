@@ -73,8 +73,12 @@ public class Constants {
 	public static final String METHOD_SET_DATA = "setData";
 	
 	
+	public static final String NUMBER_PAGE = "page";
+	public static final String NUMBER_SIZE = "size";
+	
 	public static final String SORT_LIST = "sortList";
 	public static final String SORT_ORDERS = "sortOrders";
+	public static final String SORT = "sort";
 	
 	/**
 	 * Operadores Lógicos

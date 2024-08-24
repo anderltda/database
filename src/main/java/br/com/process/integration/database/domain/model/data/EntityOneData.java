@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import br.com.process.integration.database.core.domain.BeanData;
@@ -12,49 +11,24 @@ import br.com.process.integration.database.core.domain.BeanData;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EntityOneData implements BeanData<EntityOneData> {
 
-	// EntityOne
-	private Long idEntityOne;
+	private Long id;
 	private String name;
 	private Integer age;
 	private Double height;
 	private LocalDate birthDate;
 	private LocalDateTime prohibited;
-	private Long count;
 
-	// EntityTwo
-	private String idEntityTwo;
-	private String color;
-	private Integer hex;
-	private Double cost;
-	private LocalDate dateInclusion;
+	private EntityTwoData entityTwo;
+	private EntityTreeData entityTree;
+	private EntityFourData entityFour;
+	private EntityFiveData entityFive;
 
-	// EntityTree
-	private String idEntityTree;
-	private String animal;
-	private Integer number;
-	private Double value3;
-	private LocalDate dataLocal;
-	private LocalDateTime dataLocalTime;
-
-	// EntityFour
-	private String idEntityFour;
-	private String fruit;
-	private Integer nutritiou;
-	private LocalDateTime dateInclusionTime;
-
-	// EntityFive
-	private String idEntityFive;
-	private String object;
-	private Integer value5;
-	
-	@Override
-	@JsonIgnore
-	public EntityOneData getData() {
-		return this;
+	public Long getId() {
+		return id;
 	}
-	
-	public void setIdEntityOne(Long idEntityOne) {
-		this.idEntityOne = idEntityOne;
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -97,192 +71,62 @@ public class EntityOneData implements BeanData<EntityOneData> {
 		this.prohibited = prohibited;
 	}
 
-	public Long getCount() {
-		return count;
+	public EntityTwoData getEntityTwo() {
+		return entityTwo;
 	}
 
-	public void setCount(Long count) {
-		this.count = count;
+	public void setEntityTwo(EntityTwoData entityTwo) {
+		this.entityTwo = entityTwo;
 	}
 
-	public String getIdEntityTwo() {
-		return idEntityTwo;
+	public EntityTreeData getEntityTree() {
+		return entityTree;
 	}
 
-	public void setIdEntityTwo(String idEntityTwo) {
-		this.idEntityTwo = idEntityTwo;
+	public void setEntityTree(EntityTreeData entityTree) {
+		this.entityTree = entityTree;
 	}
 
-	public String getColor() {
-		return color;
+	public EntityFourData getEntityFour() {
+		return entityFour;
 	}
 
-	public void setColor(String color) {
-		this.color = color;
+	public void setEntityFour(EntityFourData entityFour) {
+		this.entityFour = entityFour;
 	}
 
-	public Integer getHex() {
-		return hex;
+	public EntityFiveData getEntityFive() {
+		return entityFive;
 	}
 
-	public void setHex(Integer hex) {
-		this.hex = hex;
+	public void setEntityFive(EntityFiveData entityFive) {
+		this.entityFive = entityFive;
 	}
 
-	public Double getCost() {
-		return cost;
+	@Override
+	public EntityOneData getData() {
+		return this;
 	}
-
-	public void setCost(Double cost) {
-		this.cost = cost;
-	}
-
-	public LocalDate getDateInclusion() {
-		return dateInclusion;
-	}
-
-	public void setDateInclusion(LocalDate dateInclusion) {
-		this.dateInclusion = dateInclusion;
-	}
-
-	public String getIdEntityTree() {
-		return idEntityTree;
-	}
-
-	public void setIdEntityTree(String idEntityTree) {
-		this.idEntityTree = idEntityTree;
-	}
-
-	public String getAnimal() {
-		return animal;
-	}
-
-	public void setAnimal(String animal) {
-		this.animal = animal;
-	}
-
-	public Integer getNumber() {
-		return number;
-	}
-
-	public void setNumber(Integer number) {
-		this.number = number;
-	}
-
-	public Double getValue3() {
-		return value3;
-	}
-
-	public void setValue3(Double value3) {
-		this.value3 = value3;
-	}
-
-	public LocalDate getDataLocal() {
-		return dataLocal;
-	}
-
-	public void setDataLocal(LocalDate dataLocal) {
-		this.dataLocal = dataLocal;
-	}
-
-	public LocalDateTime getDataLocalTime() {
-		return dataLocalTime;
-	}
-
-	public void setDataLocalTime(LocalDateTime dataLocalTime) {
-		this.dataLocalTime = dataLocalTime;
-	}
-
-	public String getIdEntityFour() {
-		return idEntityFour;
-	}
-
-	public void setIdEntityFour(String idEntityFour) {
-		this.idEntityFour = idEntityFour;
-	}
-
-	public String getFruit() {
-		return fruit;
-	}
-
-	public void setFruit(String fruit) {
-		this.fruit = fruit;
-	}
-
-	public Integer getNutritiou() {
-		return nutritiou;
-	}
-
-	public void setNutritiou(Integer nutritiou) {
-		this.nutritiou = nutritiou;
-	}
-
-	public LocalDateTime getDateInclusionTime() {
-		return dateInclusionTime;
-	}
-
-	public void setDateInclusionTime(LocalDateTime dateInclusionTime) {
-		this.dateInclusionTime = dateInclusionTime;
-	}
-
-	public String getIdEntityFive() {
-		return idEntityFive;
-	}
-
-	public void setIdEntityFive(String idEntityFive) {
-		this.idEntityFive = idEntityFive;
-	}
-
-	public String getObject() {
-		return object;
-	}
-
-	public void setObject(String object) {
-		this.object = object;
-	}
-
-	public Integer getValue5() {
-		return value5;
-	}
-
-	public void setValue5(Integer value5) {
-		this.value5 = value5;
-	}
-	
-	
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + Objects.hash(age, animal, birthDate, color, cost, count, dataLocal, dataLocalTime,
-				dateInclusion, dateInclusionTime, fruit, height, hex, idEntityFive, idEntityFour, idEntityOne,
-				idEntityTree, idEntityTwo, name, number, nutritiou, object, prohibited, value3, value5);
-		return result;
+		return Objects.hash(age, birthDate, entityFive, entityFour, entityTree, entityTwo, height, id, name,
+				prohibited);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!super.equals(obj))
+		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		EntityOneData other = (EntityOneData) obj;
-		return Objects.equals(age, other.age) && Objects.equals(animal, other.animal)
-				&& Objects.equals(birthDate, other.birthDate) && Objects.equals(color, other.color)
-				&& Objects.equals(cost, other.cost) && Objects.equals(count, other.count)
-				&& Objects.equals(dataLocal, other.dataLocal) && Objects.equals(dataLocalTime, other.dataLocalTime)
-				&& Objects.equals(dateInclusion, other.dateInclusion)
-				&& Objects.equals(dateInclusionTime, other.dateInclusionTime) && Objects.equals(fruit, other.fruit)
-				&& Objects.equals(height, other.height) && Objects.equals(hex, other.hex)
-				&& Objects.equals(idEntityFive, other.idEntityFive) && Objects.equals(idEntityFour, other.idEntityFour)
-				&& Objects.equals(idEntityOne, other.idEntityOne) && Objects.equals(idEntityTree, other.idEntityTree)
-				&& Objects.equals(idEntityTwo, other.idEntityTwo) && Objects.equals(name, other.name)
-				&& Objects.equals(number, other.number) && Objects.equals(nutritiou, other.nutritiou)
-				&& Objects.equals(object, other.object) && Objects.equals(prohibited, other.prohibited)
-				&& Objects.equals(value3, other.value3) && Objects.equals(value5, other.value5);
+		return Objects.equals(age, other.age) && Objects.equals(birthDate, other.birthDate)
+				&& Objects.equals(entityFive, other.entityFive) && Objects.equals(entityFour, other.entityFour)
+				&& Objects.equals(entityTree, other.entityTree) && Objects.equals(entityTwo, other.entityTwo)
+				&& Objects.equals(height, other.height) && Objects.equals(id, other.id)
+				&& Objects.equals(name, other.name) && Objects.equals(prohibited, other.prohibited);
 	}
-
 }
