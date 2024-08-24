@@ -1,4 +1,4 @@
-package br.com.process.integration.database.domain.repository;
+package br.com.process.integration.database.domain.store.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;

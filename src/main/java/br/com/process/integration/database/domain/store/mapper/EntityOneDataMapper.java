@@ -1,4 +1,4 @@
-package br.com.process.integration.database.domain.mapper;
+package br.com.process.integration.database.domain.store.mapper;
 
 import java.util.List;
 

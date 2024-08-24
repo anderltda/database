@@ -89,7 +89,7 @@ class MyBatisTests {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/single/EntityOneData/methodNoMapping?name=Anderson";
 
-		ErrorResponse errorResponse = new ErrorResponse("Invalid bound statement (not found): br.com.process.integration.database.domain.mapper.EntityOneDataMapper.methodNoMapping",
+		ErrorResponse errorResponse = new ErrorResponse("Invalid bound statement (not found): br.com.process.integration.database.domain.store.mapper.EntityOneDataMapper.methodNoMapping",
 				HttpStatus.BAD_REQUEST);
 
 		assertThrows(RuntimeException.class, () -> getSingleResult(url, errorResponse));
@@ -153,7 +153,7 @@ class MyBatisTests {
 		String url = "http://localhost:" + port
 				+ Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/methodNoMapping?name=Pedro";
 		
-		ErrorResponse errorResponse = new ErrorResponse("Invalid bound statement (not found): br.com.process.integration.database.domain.mapper.EntityOneDataMapper.methodNoMapping",
+		ErrorResponse errorResponse = new ErrorResponse("Invalid bound statement (not found): br.com.process.integration.database.domain.store.mapper.EntityOneDataMapper.methodNoMapping",
 				HttpStatus.BAD_REQUEST);
 
 		assertThrows(RuntimeException.class, () -> getSingleResult(url, errorResponse));

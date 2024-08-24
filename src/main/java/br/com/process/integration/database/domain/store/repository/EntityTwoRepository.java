@@ -1,4 +1,4 @@
-package br.com.process.integration.database.domain.repository;
+package br.com.process.integration.database.domain.store.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

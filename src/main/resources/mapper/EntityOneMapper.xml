@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="br.com.process.integration.database.domain.mapper.EntityOneDataMapper">
+<mapper namespace="br.com.process.integration.database.domain.store.mapper.EntityOneDataMapper">
 
 	<!-- ResultMap para EntityTwo -->
 	<resultMap id="EntityTwoMap" type="br.com.process.integration.database.domain.model.data.EntityTwoData">
