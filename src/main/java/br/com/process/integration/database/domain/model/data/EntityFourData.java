@@ -3,12 +3,17 @@ package br.com.process.integration.database.domain.model.data;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import org.springframework.hateoas.RepresentationModel;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import br.com.process.integration.database.core.domain.BeanData;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EntityFourData implements BeanData<EntityFourData> {
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class EntityFourData extends RepresentationModel<EntityFourData> implements BeanData<EntityFourData> {
 
 	private String id;
 	private String fruit;

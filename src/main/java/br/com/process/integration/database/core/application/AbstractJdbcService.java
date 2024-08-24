@@ -19,19 +19,17 @@ import br.com.process.integration.database.core.infrastructure.AbstractJdbcRepos
 @Service
 @Transactional
 public abstract class AbstractJdbcService<V extends RepresentationModel<V>> extends AbstractJdbcRepository<V> implements JdbcService<V> {
-   
-	protected AbstractJdbcService(Class<?> controllerClass, Class<V> resourceType) {
-        super(controllerClass, resourceType);
-    }
 
 	protected V view;
-
-	protected abstract void setView(V view);
-
 	protected Page<V> pages;
 	protected PagedModel<V> pagedModel;
 
-	public abstract void setPagedModel();
+	protected abstract void setView(V view);
+	protected abstract void setPagedModel();
+	
+	protected AbstractJdbcService(Class<?> controllerClass, Class<V> resourceType) {
+		super(controllerClass, resourceType);
+	}
 
 	@Override
 	public int executeQueryNativeCount(Map<String, Object> filter, String query) throws CheckedException {

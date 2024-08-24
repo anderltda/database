@@ -66,6 +66,7 @@ public class Constants {
 	public static final String METHOD_EXECUTE__MAPPER_COUNT = "executeCount";
 	public static final String METHOD_EXECUTE_MAPPER_SINGLE = "executeSingle"; 
 	public static final String METHOD_EXECUTE_MAPPER_ALL = "executeAll";
+	public static final String METHOD_EXECUTE_PAGINATOR = "executePaginator";
 	
 	public static final String METHOD_SET_ID = "setId"; 
 	public static final String METHOD_SET_ENTITY = "setEntity";
@@ -73,8 +74,11 @@ public class Constants {
 	public static final String METHOD_SET_DATA = "setData";
 	
 	
-	public static final String NUMBER_PAGE = "page";
-	public static final String NUMBER_SIZE = "size";
+	public static final String NAME_PAGE = "page";
+	public static final String NAME_SIZE = "size";
+	
+	public static final String NUMBER_PAGE_DEFAULT = "0";
+	public static final String NUMBER_SIZE_DEFAULT = "5";
 	
 	public static final String SORT_LIST = "sortList";
 	public static final String SORT_ORDERS = "sortOrders";
@@ -108,6 +112,12 @@ public class Constants {
 	public static final String BETWEEN_START = "Start";
 	public static final String BETWEEN_END = "End";
 	public static final String DOIS_PONTOS = ":";
+	
+	/**
+	 * Operador Ordenacao
+	 */
+	public static final String ASC = "asc";
+	public static final String DESC = "desc";
 	
 	/**
 	 * Operadores no formato Predicate

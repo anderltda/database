@@ -31,9 +31,9 @@ public abstract class AbstractJpaService<E extends BeanEntity<?>, M extends Repr
 	protected Page<E> pages;
 	protected PagedModel<E> pagedModel;
 
-	public abstract void setId(I id);
-	public abstract void setEntity(E entity);
-	public abstract void setPagedModel();
+	protected abstract void setId(I id);
+	protected abstract void setEntity(E entity);
+	protected abstract void setPagedModel();
 
 	@Autowired
 	protected MethodInvoker methodInvoker;

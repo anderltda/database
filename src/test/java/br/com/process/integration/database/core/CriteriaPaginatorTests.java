@@ -1,5 +1,6 @@
 package br.com.process.integration.database.core;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -433,8 +434,7 @@ class CriteriaPaginatorTests {
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 		
-		assertNotNull(list);
-		assertEquals(0, list.size());
+		assertNull(list);
 	}
 	
 	@Test
@@ -458,12 +458,14 @@ class CriteriaPaginatorTests {
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 		
-		assertEquals(0, list.size());
+		assertNull(list);
 	}
 	
 	public void teste_single_parameterized_one(String url, String message) {
+		
 		ErrorResponse errorResponse = new ErrorResponse(message, HttpStatus.BAD_REQUEST);
-	    assertThrows(RuntimeException.class, () -> getAll(url, errorResponse));
+	    
+		assertThrows(RuntimeException.class, () -> getAll(url, errorResponse));
 	}
 	
 	void testes_single_parameterized_other(String url, String value, Integer size) {
@@ -485,13 +487,17 @@ class CriteriaPaginatorTests {
 	
 	private List<EntityOne> getAll(String url, ErrorResponse compare) {
 
+		List<EntityOne> list = null;
 		PagedModel<EntityOne> page = getRestAll(url, compare);
-		
-		List<EntityOne> list = convertToEntityOneList(page.getContent());
-		
-		assertNotNull(list);
-		assertEquals(list.size(), page.getContent().size());
-		
+
+		if(page != null) {
+			list = convertToEntityOneList(page.getContent());
+			assertNotNull(list);
+			assertEquals(list.size(), page.getContent().size());
+		} else {
+			assertNull(page);
+		}
+
 		return list;
 	}
 	
@@ -506,7 +512,7 @@ class CriteriaPaginatorTests {
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
         if (response.getStatusCode().is2xxSuccessful()) {
-            return convertResponseToPagedModel(response.getBody());
+            return convertResponseToEntityOnePagedModel(response.getBody());
         } else {
 			ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody().toString());
 			assertEquals(compare.getStatus(), errorResponse.getStatus());
@@ -515,13 +521,14 @@ class CriteriaPaginatorTests {
         }
     }
 
-    private PagedModel<EntityOne> convertResponseToPagedModel(String body) {
+    private PagedModel<EntityOne> convertResponseToEntityOnePagedModel(String body) {
+    	if(body == null) return null;
         ObjectMapper objectMapper = createObjectMapper();
         try {
             // Converte a string JSON para PagedModel<EntityOneView>
             return objectMapper.readValue(body, new TypeReference<PagedModel<EntityOne>>() {});
         } catch (Exception e) {
-            throw new RuntimeException("Error parsing PagedModel<EntityOneView> response", e);
+            throw new RuntimeException("Error parsing PagedModel<EntityOne> response", e);
         }
     }
 

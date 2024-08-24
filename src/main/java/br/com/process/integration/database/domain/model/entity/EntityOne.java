@@ -43,6 +43,9 @@ public class EntityOne extends RepresentationModel<EntityOne> implements BeanEnt
 
 	@Column(name = "prohibited", nullable = false)
 	private LocalDateTime prohibited;
+	
+	@Column(name = "code", nullable = false)
+	private Integer code = 1;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_entity_two", nullable = false, referencedColumnName = "id_entity_two")
@@ -96,6 +99,14 @@ public class EntityOne extends RepresentationModel<EntityOne> implements BeanEnt
 		this.prohibited = prohibited;
 	}
 
+	public Integer getCode() {
+		return code;
+	}
+
+	public void setCode(Integer code) {
+		this.code = code;
+	}
+
 	public EntityTwo getEntityTwo() {
 		return entityTwo;
 	}
@@ -108,7 +119,7 @@ public class EntityOne extends RepresentationModel<EntityOne> implements BeanEnt
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(age, birthDate, entityTwo, height, id, name, prohibited);
+		result = prime * result + Objects.hash(age, birthDate, code, entityTwo, height, id, name, prohibited);
 		return result;
 	}
 
@@ -122,9 +133,11 @@ public class EntityOne extends RepresentationModel<EntityOne> implements BeanEnt
 			return false;
 		EntityOne other = (EntityOne) obj;
 		return Objects.equals(age, other.age) && Objects.equals(birthDate, other.birthDate)
-				&& Objects.equals(entityTwo, other.entityTwo) && Objects.equals(height, other.height)
-				&& Objects.equals(id, other.id) && Objects.equals(name, other.name)
-				&& Objects.equals(prohibited, other.prohibited);
+				&& Objects.equals(code, other.code) && Objects.equals(entityTwo, other.entityTwo)
+				&& Objects.equals(height, other.height) && Objects.equals(id, other.id)
+				&& Objects.equals(name, other.name) && Objects.equals(prohibited, other.prohibited);
 	}
+
+	
 
 }

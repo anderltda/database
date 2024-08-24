@@ -16,7 +16,8 @@ import org.junit.platform.suite.api.Suite;
 	JPQLPaginatorTests.class,
 	JDBCTests.class,
 	JDBCPaginatorTests.class,
-	MyBatisTests.class
+	MyBatisTests.class,
+	MyBatisPaginatorTests.class
 })
 public class OrderedTestSuite {
 

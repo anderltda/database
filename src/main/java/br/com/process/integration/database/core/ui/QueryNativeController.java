@@ -80,13 +80,19 @@ public class QueryNativeController extends AbstractController {
 
 	@SuppressWarnings({ "rawtypes" })
 	@GetMapping(value = "/query/paginator/{view}/{queryName}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public PagedModel executeQuery(@PathVariable String view, @RequestParam(defaultValue = "") Map<String, Object> filter, @PathVariable String queryName) throws CheckedException {
+	public ResponseEntity<PagedModel> executeQuery(@PathVariable String view, @RequestParam(defaultValue = "") Map<String, Object> filter, @PathVariable String queryName) throws CheckedException {
 
 		addAjustFilter(filter);
 
 		setView(view);
 
-		return (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(
+		PagedModel pagedModel = (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(
 				MethodReflection.getNameService(view), Constants.METHOD_EXECUTE_QUERY_NATIVE_PAGINATOR, filter, queryName);
+		
+		if (!pagedModel.getContent().isEmpty()) {
+			return ResponseEntity.ok(pagedModel);
+		}
+		
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }

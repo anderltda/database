@@ -3,6 +3,7 @@ package br.com.process.integration.database.core.ui;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +23,13 @@ import br.com.process.integration.database.core.util.Constants;
 public class QueryMyBatisController extends AbstractController {
 	
 	@GetMapping(value = "/mapper/count/{data}/{method}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> count(@PathVariable String data, 
-			@RequestParam(defaultValue = "") Map<String, Object> filter,
-			@PathVariable String method) throws CheckedException {
+	public ResponseEntity<String> count(@PathVariable String data, @PathVariable String method,
+			@RequestParam(defaultValue = "") Map<String, Object> filter) throws CheckedException {
 
 		setData(data);
 
-		int count = (int) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(data), Constants.METHOD_EXECUTE__MAPPER_COUNT, filter, method);
+		int count = (int) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(data),
+				Constants.METHOD_EXECUTE__MAPPER_COUNT, filter, method);
 
 		final String body = gson.toJson(count);
 
@@ -37,10 +37,9 @@ public class QueryMyBatisController extends AbstractController {
 	}	
 
 	@GetMapping(value = "/mapper/single/{data}/{method}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> findBySingle(@PathVariable String data, 
-			@RequestParam(defaultValue = "") Map<String, Object> filter, 
-			@PathVariable String method) throws CheckedException {
-		
+	public ResponseEntity<String> findBySingle(@PathVariable String data, @PathVariable String method,
+			@RequestParam(defaultValue = "") Map<String, Object> filter) throws CheckedException {
+
 		setData(data);
 
 		BeanData<?> beanData = (BeanData<?>) methodInvoker.invokeMethodReturnObjectWithParameters(
@@ -58,10 +57,9 @@ public class QueryMyBatisController extends AbstractController {
 	
 	@SuppressWarnings("unchecked")
 	@GetMapping(value = "/mapper/{data}/{method}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> findAll(@PathVariable String data, 
-			@RequestParam(defaultValue = "") Map<String, Object> filter, 
-			@PathVariable String method) throws CheckedException {
-		
+	public ResponseEntity<String> findAll(@PathVariable String data, @PathVariable String method,
+			@RequestParam(defaultValue = "") Map<String, Object> filter) throws CheckedException {
+
 		setData(data);
 		
 		List<BeanData<?>> list = (List<BeanData<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
@@ -74,6 +72,27 @@ public class QueryMyBatisController extends AbstractController {
 			return new ResponseEntity<>(body, HttpStatus.OK);
 		}
 
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+
+	@SuppressWarnings("rawtypes")
+	@GetMapping(value = "/mapper/paginator/{data}/{method}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<PagedModel> findAll(@PathVariable String data, @PathVariable String method,
+			@RequestParam(defaultValue = "") Map<String, Object> filter, 
+			@RequestParam(defaultValue = Constants.NUMBER_PAGE_DEFAULT) Integer page,
+			@RequestParam(defaultValue = Constants.NUMBER_SIZE_DEFAULT) Integer size) throws CheckedException {
+		
+		removeTrashFilter(filter);
+
+		setData(data);
+		
+		PagedModel pagedModel = (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(data),
+				Constants.METHOD_EXECUTE_PAGINATOR, filter, method, page, size);
+		
+		if (!pagedModel.getContent().isEmpty()) {
+			return ResponseEntity.ok(pagedModel);
+		}
+		
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }

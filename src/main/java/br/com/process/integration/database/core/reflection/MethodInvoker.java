@@ -49,7 +49,7 @@ public class MethodInvoker {
 
 		} catch (InvocationTargetException e) {
 			Throwable tex = e.getTargetException();
-			throw new CheckedException(tex.getMessage() == null ? tex.getCause().getMessage() : tex.getMessage() , tex);
+			throw new CheckedException(tex.getMessage() != null ? tex.getMessage() : tex.getCause().getMessage(), tex);
 		} catch (Exception ex) {
 			if (ex.getCause() instanceof CheckedException ccx) {
 				throw ccx;

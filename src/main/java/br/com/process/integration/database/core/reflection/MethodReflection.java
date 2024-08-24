@@ -374,6 +374,74 @@ public class MethodReflection {
 			return isPrimitiveMatch(paramType, value);
 		}
 
+		if (isCompatibleTypeLocalDateTime(paramType, value)) {
+			return true;
+		}
+		
+		if (isCompatibleTypeLong(paramType, value)) {
+			return true;
+		}
+		
+		if (isCompatibleTypeDouble(paramType, value)) {
+			return true;
+		}
+		
+		if (isCompatibleTypeByte(paramType, value)) {
+			return true;
+		}
+		
+		return isCompatibleTypeInteger(paramType, value);
+	}
+
+	public static boolean isCompatibleTypeByte(Class<?> paramType, Object value) {
+		if (paramType == Byte.class && value instanceof String string) {
+			try {
+				Byte.parseByte(string);
+				return true;
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		return false;
+	}
+
+	public static boolean isCompatibleTypeDouble(Class<?> paramType, Object value) {
+		if (paramType == Double.class && value instanceof String string) {
+			try {
+				Double.parseDouble(string);
+				return true;
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		return false;
+	}
+
+	public static boolean isCompatibleTypeLong(Class<?> paramType, Object value) {
+		if (paramType == Long.class && value instanceof String string) {
+			try {
+				Long.parseLong(string);
+				return true;
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		return false;
+	}
+
+	public static boolean isCompatibleTypeInteger(Class<?> paramType, Object value) {
+		if (paramType == Integer.class && value instanceof String string) {
+			try {
+				Integer.parseInt(string);
+				return true;
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		return false;
+	}
+
+	public static boolean isCompatibleTypeLocalDateTime(Class<?> paramType, Object value) {
 		if (paramType == LocalDateTime.class && value instanceof String string) {
 			try {
 				LocalDateTime.parse(string, DateTimeFormatter.ISO_DATE_TIME);
@@ -382,7 +450,6 @@ public class MethodReflection {
 				return false;
 			}
 		}
-
 		return false;
 	}
 

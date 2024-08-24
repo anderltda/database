@@ -38,19 +38,19 @@
 	</resultMap>
 
     <!-- ResultMap Principal -->
-    <resultMap id="EntityOneDataMap" type="br.com.process.integration.database.domain.model.data.EntityOneData">
-        <id property="id" column="id_entity_one"/>
-        <result property="name" column="name"/>
-        <result property="age" column="age"/>
-        <result property="height" column="height"/>
-        <result property="birthDate" column="birth_date"/>
-        <result property="prohibited" column="prohibited"/>
-        <result property="count" column="count"/>
-        <association property="entityTwo" resultMap="EntityTwoMap"/>
-        <association property="entityTree" resultMap="EntityTreeMap"/>
-        <association property="entityFour" resultMap="EntityFourMap"/>
-        <association property="entityFive" resultMap="EntityFiveMap"/>
-    </resultMap>
+	<resultMap id="EntityOneDataMap" type="br.com.process.integration.database.domain.model.data.EntityOneData">
+		<id property="id" column="id_entity_one" />
+		<result property="name" column="name" />
+		<result property="age" column="age" />
+		<result property="code" column="code" />
+		<result property="height" column="height" />
+		<result property="birthDate" column="birth_date" />
+		<result property="prohibited" column="prohibited" />
+		<association property="entityTwo" resultMap="EntityTwoMap" />
+		<association property="entityTree" resultMap="EntityTreeMap" />
+		<association property="entityFour" resultMap="EntityFourMap" />
+		<association property="entityFive" resultMap="EntityFiveMap" />
+	</resultMap>
     
     <select id="countEntitiesByName" resultType="int">
         SELECT COUNT(*) FROM entity_one
@@ -88,5 +88,39 @@
 		ORDER BY t1.birth_date ASC, t1.name DESC
 	</select>
 
+    <select id="countFindEntityOneByAll" resultType="int">
+        SELECT COUNT(*) 
+        	FROM entity_one t1
+			INNER JOIN entity_two t2 ON t2.id_entity_two = t1.id_entity_two
+			INNER JOIN entity_tree t3 ON t3.id_entity_tree = t2.id_entity_tree
+			INNER JOIN entity_four t4 ON t4.id_entity_four = t3.id_entity_four
+			INNER JOIN entity_five t5 ON t5.id_entity_five = t4.id_entity_five
+	    <where>
+	        <if test="code != null">
+	            AND t1.code = #{code}
+	        </if>
+	    </where>			
+    </select>   
+    
+	<select id="findEntityOneByAll" resultMap="EntityOneDataMap">
+		SELECT
+			t1.*,
+			t2.*,
+			t3.*,
+			t4.*,
+			t5.*
+		FROM entity_one t1
+			INNER JOIN entity_two t2 ON t2.id_entity_two = t1.id_entity_two
+			INNER JOIN entity_tree t3 ON t3.id_entity_tree = t2.id_entity_tree
+			INNER JOIN entity_four t4 ON t4.id_entity_four = t3.id_entity_four
+			INNER JOIN entity_five t5 ON t5.id_entity_five = t4.id_entity_five
+	    <where>
+	        <if test="code != null">
+	            AND t1.code = #{code}
+	        </if>
+	    </where>			
+		ORDER BY t1.name DESC
+		LIMIT #{limit} OFFSET #{offset}
+	</select>
 
 </mapper>

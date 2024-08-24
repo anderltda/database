@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
     
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
-    	ErrorResponse errorResponse = new ErrorResponse("Ocorreu um erro desconhecido", HttpStatus.INTERNAL_SERVER_ERROR);
+    	ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     	if (LOGGER.isErrorEnabled()) {
     		LOGGER.error(String.format("Failed code: '%s'", HttpStatus.INTERNAL_SERVER_ERROR), ex);
     	}

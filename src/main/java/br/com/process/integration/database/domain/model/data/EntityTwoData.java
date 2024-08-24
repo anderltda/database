@@ -1,14 +1,18 @@
 package br.com.process.integration.database.domain.model.data;
 
 import java.time.LocalDate;
-import java.util.Objects;
 
+import org.springframework.hateoas.RepresentationModel;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import br.com.process.integration.database.core.domain.BeanData;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EntityTwoData implements BeanData<EntityTwoData> {
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class EntityTwoData extends RepresentationModel<EntityTwoData> implements BeanData<EntityTwoData> {
 
 	private String id;
 	private String color;
@@ -59,25 +63,6 @@ public class EntityTwoData implements BeanData<EntityTwoData> {
 	@Override
 	public EntityTwoData getData() {
 		return this;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(color, cost, dateInclusion, hex, id);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		EntityTwoData other = (EntityTwoData) obj;
-		return Objects.equals(color, other.color) && Objects.equals(cost, other.cost)
-				&& Objects.equals(dateInclusion, other.dateInclusion) && Objects.equals(hex, other.hex)
-				&& Objects.equals(id, other.id);
 	}
 
 }

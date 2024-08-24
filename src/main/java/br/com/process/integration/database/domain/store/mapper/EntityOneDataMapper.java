@@ -18,5 +18,9 @@ public interface EntityOneDataMapper extends DataMapper<EntityOneData> {
 	EntityOneData findEntityDataByName(@Param("name") String name);
 
 	List<EntityOneData> findEntityOneByName(@Param("name") String name);
+	
+	List<EntityOneData> findEntityOneByAll(@Param("code") Integer code, @Param("limit") Integer limit, @Param("offset") Integer offset); 
+	
+	int countFindEntityOneByAll(@Param("code") Integer code);
 
 }

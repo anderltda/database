@@ -41,7 +41,6 @@ public class QueryJpaController extends AbstractController {
 		final String body = gson.toJson(count);
 
 		return new ResponseEntity<>(body, HttpStatus.OK);
-
 	}
 	
 	/**
@@ -73,7 +72,7 @@ public class QueryJpaController extends AbstractController {
 	public ResponseEntity<String> findAll(@PathVariable String entity, 
 			@RequestParam(defaultValue = "") Map<String, Object> filter,
 			@RequestParam(defaultValue = "") List<String> sortList,
-			@RequestParam(defaultValue = "DESC") List<String> sortOrders) throws CheckedException {
+			@RequestParam(defaultValue = Constants.DESC) List<String> sortOrders) throws CheckedException {
 		
 		removeTrashFilter(filter);
 		
@@ -97,19 +96,25 @@ public class QueryJpaController extends AbstractController {
 	 */
 	@SuppressWarnings({ "rawtypes" })
 	@GetMapping(value = "/paginator/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public PagedModel findAll(@PathVariable String entity,
+	public ResponseEntity<PagedModel> findAll(@PathVariable String entity,
 			@RequestParam(defaultValue = "") Map<String, Object> filter, 
-			@RequestParam(defaultValue = "0") Integer page,
-			@RequestParam(defaultValue = "5") Integer size,
+			@RequestParam(defaultValue = Constants.NUMBER_PAGE_DEFAULT) Integer page,
+			@RequestParam(defaultValue = Constants.NUMBER_SIZE_DEFAULT) Integer size,
 			@RequestParam(defaultValue = "") List<String> sortList,
-			@RequestParam(defaultValue = "DESC") List<String> sortOrders) throws CheckedException {
+			@RequestParam(defaultValue = Constants.DESC) List<String> sortOrders) throws CheckedException {
 		
 		removeTrashFilter(filter);
 
 		setEntity(entity);
 
-		return (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(
+		PagedModel pagedModel = (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(
 				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL, filter, page, size, sortList, sortOrders);
+		
+		if (!pagedModel.getContent().isEmpty()) {
+			return ResponseEntity.ok(pagedModel);
+		}
+		
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
 	 /*****************************************************************************************************************************************************************
@@ -166,7 +171,7 @@ public class QueryJpaController extends AbstractController {
 			@RequestParam(defaultValue = "") Map<String, Object> filter, 
 			@PathVariable String methodQueryJPQL,
 			@RequestParam(defaultValue = "") List<String> sortList,
-			@RequestParam(defaultValue = "DESC") List<String> sortOrders) throws CheckedException {
+			@RequestParam(defaultValue = Constants.DESC) List<String> sortOrders) throws CheckedException {
 		
 		removeTrashFilter(filter);
 
@@ -190,21 +195,27 @@ public class QueryJpaController extends AbstractController {
 	 */
 	@SuppressWarnings({ "rawtypes" })
 	@GetMapping(value = "/jpql/paginator/{entity}/{methodQueryJPQL}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public PagedModel findAll(@PathVariable String entity, 
+	public ResponseEntity<PagedModel> findAll(@PathVariable String entity, 
 			@RequestParam(defaultValue = "") Map<String, Object> filter, 
 			@PathVariable String methodQueryJPQL,
-			@RequestParam(defaultValue = "0") Integer page,
-			@RequestParam(defaultValue = "30") Integer size,
+			@RequestParam(defaultValue = Constants.NUMBER_PAGE_DEFAULT) Integer page,
+			@RequestParam(defaultValue = Constants.NUMBER_SIZE_DEFAULT) Integer size,
 			@RequestParam(defaultValue = "") List<String> sortList,
-			@RequestParam(defaultValue = "DESC") List<String> sortOrders) throws CheckedException {
+			@RequestParam(defaultValue = Constants.DESC) List<String> sortOrders) throws CheckedException {
 
 		removeTrashFilter(filter);
 
 		setEntity(entity);
 
-		return (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(
+		PagedModel pagedModel = (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(
 				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL, filter, methodQueryJPQL, page, size,
 				sortList, sortOrders);
+		
+		if (!pagedModel.getContent().isEmpty()) {
+			return ResponseEntity.ok(pagedModel);
+		}
+		
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 	
 	 /*****************************************************************************************************************************************************************
@@ -213,7 +224,7 @@ public class QueryJpaController extends AbstractController {
 	
 	@SuppressWarnings("unchecked")
 	@GetMapping(value = "/{entity}/ids/{ids}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> findAllIds(@PathVariable String entity, @PathVariable("ids") String ids) throws CheckedException {
+	public ResponseEntity<String> findAllIds(@PathVariable String entity, @PathVariable String ids) throws CheckedException {
 		
 		List<Long> idList = Arrays.stream(ids.split(","))
                 .map(Long::parseLong)
@@ -261,6 +272,5 @@ public class QueryJpaController extends AbstractController {
 		final String body = gson.toJson(existsById);
 
 		return new ResponseEntity<>(body, HttpStatus.OK);
-
 	}
 }

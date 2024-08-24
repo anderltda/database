@@ -18,6 +18,7 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 	private Long idEntityOne;
 	private String name;
 	private Integer age;
+	private Integer code;
 	private Double height;
 	private LocalDate birthDate;
 	private LocalDateTime prohibited;
@@ -77,6 +78,14 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 
 	public void setAge(Integer age) {
 		this.age = age;
+	}
+
+	public Integer getCode() {
+		return code;
+	}
+
+	public void setCode(Integer code) {
+		this.code = code;
 	}
 
 	public Double getHeight() {
@@ -259,9 +268,9 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(age, animal, birthDate, color, cost, count, dataLocal, dataLocalTime,
-				dateInclusion, dateInclusionTime, fruit, height, hex, idEntityFive, idEntityFour, idEntityOne,
-				idEntityTree, idEntityTwo, name, number, nutritiou, object, prohibited, value3, value5);
+		result = prime * result + Objects.hash(age, animal, birthDate, code, color, cost, count, dataLocal,
+				dataLocalTime, dateInclusion, dateInclusionTime, fruit, height, hex, idEntityFive, idEntityFour,
+				idEntityOne, idEntityTree, idEntityTwo, name, number, nutritiou, object, prohibited, value3, value5);
 		return result;
 	}
 
@@ -275,9 +284,10 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 			return false;
 		EntityOneView other = (EntityOneView) obj;
 		return Objects.equals(age, other.age) && Objects.equals(animal, other.animal)
-				&& Objects.equals(birthDate, other.birthDate) && Objects.equals(color, other.color)
-				&& Objects.equals(cost, other.cost) && Objects.equals(count, other.count)
-				&& Objects.equals(dataLocal, other.dataLocal) && Objects.equals(dataLocalTime, other.dataLocalTime)
+				&& Objects.equals(birthDate, other.birthDate) && Objects.equals(code, other.code)
+				&& Objects.equals(color, other.color) && Objects.equals(cost, other.cost)
+				&& Objects.equals(count, other.count) && Objects.equals(dataLocal, other.dataLocal)
+				&& Objects.equals(dataLocalTime, other.dataLocalTime)
 				&& Objects.equals(dateInclusion, other.dateInclusion)
 				&& Objects.equals(dateInclusionTime, other.dateInclusionTime) && Objects.equals(fruit, other.fruit)
 				&& Objects.equals(height, other.height) && Objects.equals(hex, other.hex)
@@ -288,4 +298,5 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 				&& Objects.equals(object, other.object) && Objects.equals(prohibited, other.prohibited)
 				&& Objects.equals(value3, other.value3) && Objects.equals(value5, other.value5);
 	}
+
 }

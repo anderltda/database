@@ -1,5 +1,6 @@
 package br.com.process.integration.database.core;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -78,17 +79,13 @@ class JDBCPaginatorTests {
 	}
 	
 	@Test
-	void teste_paginacao_com_varios_parmetros() {
+	void teste_paginacao_com_varios_parmetros_sem_nenhum_registro() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?name=Anderson&name_op=in&age=23&age_op=eq&birthDate=1983-03-29&birthDate_op=eq&height=1.7&height_op=gt&prohibited=2024-02-01T02:52:54&prohibited_op=gt&page=0&size=10&sortList=name&sortOrders=asc";
 
 		PagedModel<EntityOneView> page = getAll(url, new ErrorResponse());
 		
-		List<EntityOneView> list = convertToEntityOneViewList(page.getContent());
-
-		assertNotNull(list);
-		assertEquals(0, list.size());
-		assertEquals(0, page.getContent().size());
+		assertNull(page);
 	}
 	
 	@Test
@@ -273,6 +270,7 @@ class JDBCPaginatorTests {
     }
 
     private PagedModel<EntityOneView> convertResponseToPagedModel(String body) {
+    	if(body == null) return null;
         ObjectMapper objectMapper = createObjectMapper();
         try {
             // Converte a string JSON para PagedModel<EntityOneView>

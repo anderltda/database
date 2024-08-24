@@ -53,8 +53,8 @@ public abstract class AbstractController {
 	}
 	
 	protected void removeTrashFilter(Map<String, Object> params) {
-		params.remove(Constants.NUMBER_PAGE);
-		params.remove(Constants.NUMBER_SIZE);
+		params.remove(Constants.NAME_PAGE);
+		params.remove(Constants.NAME_SIZE);
 		params.remove(Constants.SORT_LIST);
 		params.remove(Constants.SORT_ORDERS);
 		params.remove(Constants.SORT);

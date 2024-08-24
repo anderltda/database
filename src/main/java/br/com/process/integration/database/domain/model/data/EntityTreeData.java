@@ -4,12 +4,17 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import org.springframework.hateoas.RepresentationModel;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import br.com.process.integration.database.core.domain.BeanData;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EntityTreeData implements BeanData<EntityTreeData> {
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+public class EntityTreeData extends RepresentationModel<EntityTreeData> implements BeanData<EntityTreeData> {
 
 	private String id;
 	private String animal;
