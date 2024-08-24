@@ -245,6 +245,19 @@ class JPQLTests {
 	}
 	
 	@Test
+	void teste_all_sem_ordernacao() {
+
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/EntityOne/buscaAll?age=22";
+
+		List<EntityOne> list = getAll(url, new ErrorResponse());
+
+		assertNotNull(list);
+		assertEquals(2, list.size());
+		assertEquals("Ricardo", list.get(0).getName());
+		assertEquals("Ariovaldo", list.get(1).getName());
+	}
+	
+	@Test
 	void teste_all_erro() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/EntityOne/buscaAll?age=Silva&sortList=name,birthDate&sortOrders=desc,asc";

@@ -69,7 +69,7 @@
 			INNER JOIN entity_tree t3 ON t3.id_entity_tree = t2.id_entity_tree
 			INNER JOIN entity_four t4 ON t4.id_entity_four = t3.id_entity_four
 			INNER JOIN entity_five t5 ON t5.id_entity_five = t4.id_entity_five
-		WHERE t1.name = #{name}
+		WHERE t1.name LIKE CONCAT('%', #{name}, '%')
 	</select>    
 
 	<select id="findEntityOneByName" resultMap="EntityOneDataMap">
@@ -85,7 +85,14 @@
 			INNER JOIN entity_four t4 ON t4.id_entity_four = t3.id_entity_four
 			INNER JOIN entity_five t5 ON t5.id_entity_five = t4.id_entity_five
 		WHERE t1.name LIKE CONCAT('%', #{name}, '%')
-		ORDER BY t1.birth_date ASC, t1.name DESC
+		
+	    <if test="sortList != null and sortOrders != null and sortList.size() == sortOrders.size()">
+	        ORDER BY 
+	        <foreach item="field" index="index" collection="sortList" separator=",">
+	            ${field} ${sortOrders[index]}
+	        </foreach>
+	    </if>
+	    	    			
 	</select>
 
     <select id="countFindEntityOneByAll" resultType="int">
@@ -118,9 +125,17 @@
 	        <if test="code != null">
 	            AND t1.code = #{code}
 	        </if>
-	    </where>			
-		ORDER BY t1.name DESC
-		LIMIT #{limit} OFFSET #{offset}
+	    </where>
+	    <if test="sortList != null and sortOrders != null and sortList.size() == sortOrders.size()">
+	        ORDER BY 
+	        <foreach item="field" index="index" collection="sortList" separator=",">
+	            ${field} ${sortOrders[index]}
+	        </foreach>
+	    </if>	    			
+		LIMIT #{size} OFFSET #{page}
 	</select>
+
+
+
 
 </mapper>

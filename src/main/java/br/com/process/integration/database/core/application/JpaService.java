@@ -15,9 +15,9 @@ public interface JpaService<E, I> {
 
 	public PagedModel<E> findAll(Map<String, Object> filter, Integer page, Integer size, List<String> sortList, List<String> sortOrders) throws CheckedException;
 
-	public List<E> findAll(Map<String, Object> filter, String methodQueryJPQL, List<String> sortList, List<String> sortOrders) throws CheckedException;
+	public List<E> findAll(Map<String, Object> filter, String method) throws CheckedException;
 
-	public PagedModel<E> findAll(Map<String, Object> filter, String methodQueryJPQL, Integer page, Integer size, List<String> sortList, List<String> sortOrders) throws CheckedException;
+	public PagedModel<E> findPaginator(Map<String, Object> filter, String method) throws CheckedException;
 
 	public E findBySingle(Map<String, Object> filter, String methodQueryJPQL) throws CheckedException;
 

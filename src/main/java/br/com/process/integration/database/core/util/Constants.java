@@ -41,9 +41,10 @@ public class Constants {
 	/**
 	 * Nome do metodo do Service
 	 */
-	public static final String METHOD_FIND_ALL = "findAll";
-	public static final String METHOD_FIND_BY_SINGLE = "findBySingle";
 	public static final String METHOD_COUNT = "count";
+	public static final String METHOD_FIND_BY_SINGLE = "findBySingle";
+	public static final String METHOD_FIND_ALL = "findAll";
+	public static final String METHOD_FIND_PAGINATOR = "findPaginator";
 	public static final String METHOD_FIND_ALL_BY_ID = "findAllById";
 	public static final String METHOD_FIND_BY_ID = "findById";
 	public static final String METHOD_EXISTS_BY_ID = "existsById"; 
@@ -77,8 +78,8 @@ public class Constants {
 	public static final String NAME_PAGE = "page";
 	public static final String NAME_SIZE = "size";
 	
-	public static final String NUMBER_PAGE_DEFAULT = "0";
-	public static final String NUMBER_SIZE_DEFAULT = "5";
+	public static final int NUMBER_PAGE_DEFAULT = 0;
+	public static final int NUMBER_SIZE_DEFAULT = 5;
 	
 	public static final String SORT_LIST = "sortList";
 	public static final String SORT_ORDERS = "sortOrders";

@@ -74,6 +74,16 @@ class CriteriaTests {
 	}
 	
 	@Test
+	void teste_sortList_sortOrders_com_erro_de_campo_que_nao_existe() {
+
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?name=Anderson&name_op=lk&sortList=teste,age&sortOrders=asc,desc";
+		
+		ErrorResponse errorResponse = new ErrorResponse("Could not resolve attribute 'teste' of 'br.com.process.integration.database.domain.model.entity.EntityOne'", HttpStatus.BAD_REQUEST);
+		
+	    assertThrows(RuntimeException.class, () -> getAll(url, errorResponse));
+	}
+	
+	@Test
 	void teste_count_no_entity() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/count/EntityOne?nome=*ar*&nome_op=lk";

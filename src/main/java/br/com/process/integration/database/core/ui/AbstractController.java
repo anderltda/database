@@ -78,6 +78,33 @@ public abstract class AbstractController {
 		filter.putAll(filterRefactory);
 	}
 	
+	protected void addAjustOrderByFilter(Map<String, Object> filter) {
+		
+		Map<String, Object> filterRefactory = new HashMap<>();
+
+		filter.forEach((key, value) -> {
+			if(key.equals(Constants.SORT_LIST) || key.equals(Constants.SORT_ORDERS)) {
+			    String[] array = value.toString().split(",");
+			    filterRefactory.put(key, Arrays.asList(array));
+			}
+		});
+
+		filter.putAll(filterRefactory);
+	}
+	
+	protected void addAjustPaginatorFilter(Map<String, Object> filter) {
+		
+		Map<String, Object> filterRefactory = new HashMap<>();
+
+		filter.forEach((key, value) -> {
+			if(key.equals(Constants.NAME_PAGE) || key.equals(Constants.NAME_SIZE)) {
+				filterRefactory.put(key, Integer.parseInt(value.toString()));
+			}
+		});
+
+		filter.putAll(filterRefactory);
+	}
+	
 	protected void setId(String nameEntity, String id) throws CheckedException {
 		BeanEntity<?> entity = (BeanEntity<?>) MethodReflection.findEntityUsingClassLoader(nameEntity);
 		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameEntity), Constants.METHOD_SET_ID, DynamicTypeConverter.convert(entity, id));

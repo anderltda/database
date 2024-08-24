@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.process.integration.database.core.domain.DataMapper;
 import br.com.process.integration.database.core.exception.CheckedException;
+import br.com.process.integration.database.core.exception.UncheckedException;
 import br.com.process.integration.database.core.infrastructure.AbstractAssembler;
 import br.com.process.integration.database.core.reflection.MethodInvoker;
 import br.com.process.integration.database.core.reflection.MethodReflection;
@@ -66,9 +67,16 @@ public abstract class AbstractDataService<D extends RepresentationModel<D>> exte
 	@Override
 	public List<D> executeAll(Map<String, Object> filter, String method) {
 		try {
+			
 			Object[] args = MethodReflection.getMethodArgs(mapper.getClass(), method, filter);
+			
+			if(filter.size() != args.length) {
+				throw new UncheckedException(String.format("Erro: Numero de parametros incorretos para o method: '%s'", method));
+			}
+			
 			return (List<D>) methodInvoker.invokeMethodReturnObjectWithParameters(
 					MethodReflection.getNameMapper(data.getClass().getSimpleName()), method, args);
+			
 		} catch (Exception ex) {
 			throw new CheckedException(ex.getMessage(), ex);
 		}
@@ -76,21 +84,22 @@ public abstract class AbstractDataService<D extends RepresentationModel<D>> exte
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public PagedModel executePaginator(Map<String, Object> filter, String method, Integer page, Integer size) {
+	public PagedModel executePaginator(Map<String, Object> filter, String method) {
 		try {
 			
-			filter.put("size", size);
-			filter.put("offset", page * size);
-			
-			Object[] args = MethodReflection.getMethodArgs(mapper.getClass(), method, filter);
+			int page = Integer.parseInt(filter.get(Constants.NAME_PAGE).toString());
+			int size = Integer.parseInt(filter.get(Constants.NAME_SIZE).toString());
+
+			filter.put(Constants.NAME_PAGE, page * size);
 			
 			Pageable pageable = PageRequest.of(page, size);
 			
-	        List<D> entities = (List<D>) methodInvoker.invokeMethodReturnObjectWithParameters(
-					MethodReflection.getNameMapper(data.getClass().getSimpleName()), method, args);
+	        List<D> entities = executeAll(filter, method);
 	        
-			filter.remove("size");
-			filter.remove("offset");
+			filter.remove(Constants.NAME_PAGE);
+			filter.remove(Constants.NAME_SIZE);
+			filter.remove(Constants.SORT_LIST);
+			filter.remove(Constants.SORT_ORDERS);
 	        
 	        int count = executeCount(filter, getCountMethod(method));
 	        

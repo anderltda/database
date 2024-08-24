@@ -13,6 +13,6 @@ public interface DataMapper<D> {
 	
 	List<D> executeAll(Map<String, Object> filter, String method);
 
-	PagedModel<D> executePaginator(Map<String, Object> filter, String method, Integer page, Integer size);
+	PagedModel<D> executePaginator(Map<String, Object> filter, String method);
 
 }

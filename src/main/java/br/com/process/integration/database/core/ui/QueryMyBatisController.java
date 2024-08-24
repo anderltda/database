@@ -23,7 +23,9 @@ import br.com.process.integration.database.core.util.Constants;
 public class QueryMyBatisController extends AbstractController {
 	
 	@GetMapping(value = "/mapper/count/{data}/{method}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> count(@PathVariable String data, @PathVariable String method,
+	public ResponseEntity<String> count(
+			@PathVariable String data, 
+			@PathVariable String method,
 			@RequestParam(defaultValue = "") Map<String, Object> filter) throws CheckedException {
 
 		setData(data);
@@ -37,7 +39,9 @@ public class QueryMyBatisController extends AbstractController {
 	}	
 
 	@GetMapping(value = "/mapper/single/{data}/{method}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> findBySingle(@PathVariable String data, @PathVariable String method,
+	public ResponseEntity<String> findBySingle(
+			@PathVariable String data, 
+			@PathVariable String method,
 			@RequestParam(defaultValue = "") Map<String, Object> filter) throws CheckedException {
 
 		setData(data);
@@ -57,9 +61,13 @@ public class QueryMyBatisController extends AbstractController {
 	
 	@SuppressWarnings("unchecked")
 	@GetMapping(value = "/mapper/{data}/{method}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> findAll(@PathVariable String data, @PathVariable String method,
+	public ResponseEntity<String> findAll(
+			@PathVariable String data, 
+			@PathVariable String method,
 			@RequestParam(defaultValue = "") Map<String, Object> filter) throws CheckedException {
 
+		addAjustOrderByFilter(filter);
+		
 		setData(data);
 		
 		List<BeanData<?>> list = (List<BeanData<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
@@ -77,17 +85,18 @@ public class QueryMyBatisController extends AbstractController {
 
 	@SuppressWarnings("rawtypes")
 	@GetMapping(value = "/mapper/paginator/{data}/{method}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<PagedModel> findAll(@PathVariable String data, @PathVariable String method,
-			@RequestParam(defaultValue = "") Map<String, Object> filter, 
-			@RequestParam(defaultValue = Constants.NUMBER_PAGE_DEFAULT) Integer page,
-			@RequestParam(defaultValue = Constants.NUMBER_SIZE_DEFAULT) Integer size) throws CheckedException {
+	public ResponseEntity<PagedModel> findAllPaginator(
+			@PathVariable String data, 
+			@PathVariable String method,
+			@RequestParam Map<String, Object> filter) throws CheckedException {
 		
-		removeTrashFilter(filter);
-
+		addAjustPaginatorFilter(filter);
+		addAjustOrderByFilter(filter);
+		
 		setData(data);
 		
 		PagedModel pagedModel = (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(data),
-				Constants.METHOD_EXECUTE_PAGINATOR, filter, method, page, size);
+				Constants.METHOD_EXECUTE_PAGINATOR, filter, method);
 		
 		if (!pagedModel.getContent().isEmpty()) {
 			return ResponseEntity.ok(pagedModel);

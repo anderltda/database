@@ -373,6 +373,10 @@ public class MethodReflection {
 		if (paramType.isPrimitive()) {
 			return isPrimitiveMatch(paramType, value);
 		}
+		
+		if (isCompatibleTypeInteger(paramType, value)) {
+			return true;
+		}
 
 		if (isCompatibleTypeLocalDateTime(paramType, value)) {
 			return true;
@@ -386,13 +390,9 @@ public class MethodReflection {
 			return true;
 		}
 		
-		if (isCompatibleTypeByte(paramType, value)) {
-			return true;
-		}
-		
-		return isCompatibleTypeInteger(paramType, value);
+		return isCompatibleTypeByte(paramType, value);
 	}
-
+	
 	public static boolean isCompatibleTypeByte(Class<?> paramType, Object value) {
 		if (paramType == Byte.class && value instanceof String string) {
 			try {

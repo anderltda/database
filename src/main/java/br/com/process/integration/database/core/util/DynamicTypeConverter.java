@@ -6,6 +6,7 @@ import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -138,6 +139,8 @@ public class DynamicTypeConverter {
 			return value;			
 		} else if (clazz.getTypeName().equals(Sort.class.getName())) {
 			return value;
+		} else if (clazz.getTypeName().equals(List.class.getName())) {
+			return value;			
 		} else if (clazz.getTypeName().equals(LocalDate.class.getName())) {
 			return LocalDate.parse(value.toString(), DateTimeFormatter.ISO_LOCAL_DATE);
 		} else if (clazz.getTypeName().equals(LocalDateTime.class.getName())) {

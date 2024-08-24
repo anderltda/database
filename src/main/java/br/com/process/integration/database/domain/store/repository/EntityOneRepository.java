@@ -50,6 +50,9 @@ public interface EntityOneRepository extends JpaRepository<EntityOne, Long>, Jpa
 	@Query(QUERY_6)
 	List<EntityOne> buscaAll(String age, Sort sort);
 	
+	@Query(QUERY_6)
+	List<EntityOne> buscaAll(String age);
+	
 	@Query(value = QUERY_6)
 	Page<EntityOne> buscaAll(String age, PageRequest pageRequest);
 }

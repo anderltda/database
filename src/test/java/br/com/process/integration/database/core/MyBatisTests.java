@@ -102,13 +102,6 @@ class MyBatisTests {
 
 	}
 	
-	public void single_parameterized_one_erro(String url, String message) {
-		
-		ErrorResponse errorResponse = new ErrorResponse(message, HttpStatus.BAD_REQUEST);
-		
-	    assertThrows(RuntimeException.class, () -> getSingleResult(url, errorResponse));
-	}
-
 	@Test
 	void teste_busca_com_equal_pelo_name_unico_registro() {
 
@@ -134,29 +127,37 @@ class MyBatisTests {
 	void teste_busca_com_like_pelo_name_nenhum_registro_encontrado() {
 
 		String url = "http://localhost:" + port
-				+ Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/findEntityOneByName?name=Pedro";
+				+ Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/findEntityOneByName?name=Pedro&sortList=name&sortOrders=asc";
 
 		List<EntityOneData> list = getAll(url, new ErrorResponse());
 
 		assertNull(list);
 	}
 
+	@Test
+	void teste_busca_com_like_pelo_name_com_erro() {
+
+		String url = "http://localhost:" + port
+				+ Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/findEntityDataByName?name=ar";
+
+		single_parameterized_one_erro(url, "Expected one result (or null) to be returned by selectOne(), but found: 5");
+	}
 	
 	@Test
 	void teste_busca_com_like_pelo_name() {
 
 		String url = "http://localhost:" + port
-				+ Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/findEntityOneByName?name=ar";
+				+ Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/findEntityOneByName?name=ar&sortList=name&sortOrders=asc";
 
 		List<EntityOneData> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(5, list.size());
-		assertEquals("Carlos", list.get(0).getName());
-		assertEquals("Carlos Alberto", list.get(1).getName());
-		assertEquals("Ricardo", list.get(2).getName());
-		assertEquals("Ariovaldo", list.get(3).getName());
-		assertEquals("Maria", list.get(4).getName());
+		assertEquals("Ariovaldo", list.get(0).getName());
+		assertEquals("Carlos", list.get(1).getName());
+		assertEquals("Carlos Alberto", list.get(2).getName());
+		assertEquals("Maria", list.get(3).getName());
+		assertEquals("Ricardo", list.get(4).getName());
 	}
 
 	
@@ -166,13 +167,45 @@ class MyBatisTests {
 		String url = "http://localhost:" + port
 				+ Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/methodNoMapping?name=Pedro";
 		
-		ErrorResponse errorResponse = new ErrorResponse("Invalid bound statement (not found): br.com.process.integration.database.domain.store.mapper.EntityOneDataMapper.methodNoMapping",
-				HttpStatus.BAD_REQUEST);
+		single_parameterized_one_erro(url, "Invalid bound statement (not found): br.com.process.integration.database.domain.store.mapper.EntityOneDataMapper.methodNoMapping");
+	}
+	
+	@Test
+	void teste_busca_com_like_pelo_name_ordernando_desc_com_erro() {
 
-		assertThrows(RuntimeException.class, () -> getSingleResult(url, errorResponse));
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/findEntityDataByName?name=ar&sortList=name,age&sortOrders=asc,desc";
+
+		single_parameterized_one_erro(url, "Erro: Numero de parametros incorretos para o method: 'findEntityDataByName'");
 
 	}
+	
+	@Test
+	void teste_busca_com_like_pelo_name_ordernando_desc() {
 
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/findEntityOneByName?name=ar&sortList=name,age&sortOrders=asc,desc";
+
+		List<EntityOneData> list = getAll(url, new ErrorResponse());
+
+		assertNotNull(list);
+		assertEquals(5, list.size());
+		assertEquals("Ariovaldo", list.get(0).getName());
+		assertEquals(22, list.get(0).getAge());
+		assertEquals("Carlos", list.get(1).getName());
+		assertEquals(34, list.get(1).getAge());
+		assertEquals("Carlos Alberto", list.get(2).getName());
+		assertEquals(55, list.get(2).getAge());
+		assertEquals("Maria", list.get(3).getName());
+		assertEquals(12, list.get(3).getAge());
+		assertEquals("Ricardo", list.get(4).getName());
+		assertEquals(22, list.get(4).getAge());
+	}
+
+	public void single_parameterized_one_erro(String url, String message) {
+		
+		ErrorResponse errorResponse = new ErrorResponse(message, HttpStatus.BAD_REQUEST);
+		
+	    assertThrows(RuntimeException.class, () -> getSingleResult(url, errorResponse));
+	}
 
 	public List<EntityOneData> getAll(String url, ErrorResponse compare) {
 		

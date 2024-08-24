@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.process.integration.database.core.exception.CheckedException;
 import br.com.process.integration.database.core.exception.UncheckedException;
 import br.com.process.integration.database.core.infrastructure.AbstractJdbcRepository;
+import br.com.process.integration.database.core.util.Constants;
 
 @Service
 @Transactional
@@ -69,8 +70,8 @@ public abstract class AbstractJdbcService<V extends RepresentationModel<V>> exte
 
 		try {
 
-			int page = filter.get("page") != null ? Integer.parseInt((String) filter.get("page")) : 0;
-			int size = filter.get("page") != null ? Integer.parseInt((String) filter.get("size")) : 5;
+			int page = filter.get(Constants.NAME_PAGE) != null ? Integer.parseInt((String) filter.get(Constants.NAME_PAGE)) : Constants.NUMBER_PAGE_DEFAULT;
+			int size = filter.get(Constants.NAME_SIZE) != null ? Integer.parseInt((String) filter.get(Constants.NAME_SIZE)) : Constants.NUMBER_SIZE_DEFAULT;
 
 			List<V> models = findAll(view, filter, this.getClass().getSimpleName(), query, page, size);
 			int totalElements = count(filter, this.getClass().getSimpleName(), query);

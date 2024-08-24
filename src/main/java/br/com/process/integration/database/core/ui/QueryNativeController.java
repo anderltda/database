@@ -23,7 +23,10 @@ import br.com.process.integration.database.core.util.Constants;
 public class QueryNativeController extends AbstractController {
 	
 	@GetMapping(value = "/query/count/{view}/{queryName}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> count(@PathVariable String view, @RequestParam Map<String, Object> filter, @PathVariable String queryName) throws CheckedException {
+	public ResponseEntity<String> count(
+			@PathVariable String view, 
+			@RequestParam Map<String, Object> filter, 
+			@PathVariable String queryName) throws CheckedException {
 
 		addAjustFilter(filter);
 
@@ -38,9 +41,13 @@ public class QueryNativeController extends AbstractController {
 	}
 
 	@GetMapping(value = "/query/single/{view}/{queryName}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> findSingle(@PathVariable String view, @RequestParam Map<String, Object> filter, @PathVariable String queryName) throws CheckedException {
+	public ResponseEntity<String> findSingle(
+			@PathVariable String view, 
+			@RequestParam Map<String, Object> filter, 
+			@PathVariable String queryName) throws CheckedException {
 
 		addAjustFilter(filter);
+		addAjustOrderByFilter(filter);
 
 		setView(view);
 
@@ -59,9 +66,14 @@ public class QueryNativeController extends AbstractController {
 
 	@SuppressWarnings("unchecked")
 	@GetMapping(value = "/query/{view}/{queryName}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> findAll(@PathVariable String view, @RequestParam Map<String, Object> filter, @PathVariable String queryName) throws CheckedException {
+	public ResponseEntity<String> findAll(
+			@PathVariable String view, 
+			@RequestParam Map<String, Object> filter, 
+			@PathVariable String queryName) throws CheckedException {
 
 		addAjustFilter(filter);
+		addAjustPaginatorFilter(filter);
+		addAjustOrderByFilter(filter);
 
 		setView(view);
 
@@ -80,7 +92,10 @@ public class QueryNativeController extends AbstractController {
 
 	@SuppressWarnings({ "rawtypes" })
 	@GetMapping(value = "/query/paginator/{view}/{queryName}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<PagedModel> executeQuery(@PathVariable String view, @RequestParam(defaultValue = "") Map<String, Object> filter, @PathVariable String queryName) throws CheckedException {
+	public ResponseEntity<PagedModel> executeQuery(
+			@PathVariable String view, 
+			@RequestParam Map<String, Object> filter, 
+			@PathVariable String queryName) throws CheckedException {
 
 		addAjustFilter(filter);
 

@@ -63,7 +63,7 @@ class MyBatisPaginatorTests {
 	@Test
 	void teste_busca_all() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/paginator/EntityOneData/findEntityOneByAll?code=1&page=0&size=10";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/paginator/EntityOneData/findEntityOneByAll?code=1&page=0&size=10&sortList=name&sortOrders=desc";
 
 		List<EntityOneData> list = getAll(url, new ErrorResponse());
 
@@ -84,7 +84,7 @@ class MyBatisPaginatorTests {
 	@Test
 	void teste_busca_all_nenhum_registro_encontrado() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/paginator/EntityOneData/findEntityOneByAll?code=2&page=0&size=10";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/paginator/EntityOneData/findEntityOneByAll?code=2&page=0&size=2&sortList=name&sortOrders=desc";
 
 		List<EntityOneData> list = getAll(url, new ErrorResponse());
 

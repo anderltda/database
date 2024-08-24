@@ -22,6 +22,7 @@ import br.com.process.integration.database.core.exception.UncheckedException;
 import br.com.process.integration.database.core.infrastructure.AbstractJpaRepository;
 import br.com.process.integration.database.core.reflection.MethodInvoker;
 import br.com.process.integration.database.core.reflection.MethodReflection;
+import br.com.process.integration.database.core.util.Constants;
 
 @Service
 @Transactional
@@ -119,13 +120,21 @@ public abstract class AbstractJpaService<E extends BeanEntity<?>, M extends Repr
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<E> findAll(Map<String, Object> filter, String methodQueryJPQL, List<String> sortList, List<String> sortOrders) throws CheckedException {
+	public List<E> findAll(Map<String, Object> filter, String method) throws CheckedException {
+		
 		try {
-			Sort sort = createSortOrder(sortList, sortOrders);
-			filter.put("sort", sort);
-			Object[] methodArgs = MethodReflection.getMethodArgs(repository.getClass(), methodQueryJPQL, filter);
+			
+			createOrderBy(filter);
+			
+			Object[] args = MethodReflection.getMethodArgs(repository.getClass(), method, filter);
+			
+			if(filter.size() != args.length) {
+				throw new UncheckedException(String.format("Erro: Number or Type de parametros incorretos  para o method: '%s'", method));
+			}
+			
 			return (List<E>) methodInvoker.invokeMethodReturnObjectWithParameters(
-					MethodReflection.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
+					MethodReflection.getNameRepository(entity.getClass().getSimpleName()), method, args);
+		
 		} catch (Exception ex) {
 			throw new CheckedException(ex.getMessage(), ex);
 		}
@@ -133,15 +142,25 @@ public abstract class AbstractJpaService<E extends BeanEntity<?>, M extends Repr
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public PagedModel<E> findAll(Map<String, Object> filter, String methodQueryJPQL, Integer page, Integer size, List<String> sortList, List<String> sortOrders) throws CheckedException {
+	public PagedModel<E> findPaginator(Map<String, Object> filter, String method) throws CheckedException {
+	
 		try {
-			Pageable pageable = PageRequest.of(page, size, createSortOrder(sortList, sortOrders));
-			filter.put("page", pageable);
-			Object[] methodArgs = MethodReflection.getMethodArgs(repository.getClass(), methodQueryJPQL, filter);
+			
+			createPaginator(filter);
+			
+			Object[] args = MethodReflection.getMethodArgs(repository.getClass(), method, filter);
+			
+			if(filter.size() != args.length) {
+				throw new UncheckedException(String.format("Erro: Number or Type de parametros incorretos  para o method: '%s'", method));
+			}
+			
 			pages = (Page<E>) methodInvoker.invokeMethodReturnObjectWithParameters(
-					MethodReflection.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
+					MethodReflection.getNameRepository(entity.getClass().getSimpleName()), method, args);
+			
 			setPagedModel();
+			
 			return pagedModel;
+			
 		} catch (Exception ex) {
 			throw new CheckedException(ex.getMessage(), ex);
 		}
@@ -205,6 +224,47 @@ public abstract class AbstractJpaService<E extends BeanEntity<?>, M extends Repr
 	@Override
 	public void saveAllAndFlush(List<E> entitys) {
 		repository.saveAllAndFlush(entitys);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void createOrderBy(Map<String, Object> filter) {
+		
+		List<String> sortList = (List<String>) filter.get(Constants.SORT_LIST);
+		List<String> sortOrders = (List<String>) filter.get(Constants.SORT_ORDERS);
+		
+		if(sortList != null && sortOrders != null) {
+			Sort sort = createSortOrder(sortList, sortOrders);
+			filter.put(Constants.SORT, sort);
+		}
+
+		filter.remove(Constants.SORT_LIST);
+		filter.remove(Constants.SORT_ORDERS);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void createPaginator(Map<String, Object> filter) {
+		
+		int page = filter.get(Constants.NAME_PAGE) != null ? Integer.parseInt(filter.get(Constants.NAME_PAGE).toString())
+				: Constants.NUMBER_PAGE_DEFAULT;
+		int size = filter.get(Constants.NAME_SIZE) != null ? Integer.parseInt(filter.get(Constants.NAME_SIZE).toString())
+				: Constants.NUMBER_SIZE_DEFAULT;
+		
+		List<String> sortList = (List<String>) filter.get(Constants.SORT_LIST);
+		List<String> sortOrders = (List<String>) filter.get(Constants.SORT_ORDERS);
+		
+		Pageable pageable = PageRequest.of(page, size);
+
+		if(sortList != null && sortOrders != null) {
+			Sort sort = createSortOrder(sortList, sortOrders);
+			pageable = PageRequest.of(page, size, sort);
+		}
+
+		filter.remove(Constants.NAME_PAGE);
+		filter.remove(Constants.NAME_SIZE);
+		filter.remove(Constants.SORT_LIST);
+		filter.remove(Constants.SORT_ORDERS);
+
+		filter.put(Constants.NAME_PAGE, pageable);
 	}
 	
 	private static Sort createSortOrder(List<String> sortList, List<String> sortOrders) {
