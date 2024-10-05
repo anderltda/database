@@ -151,19 +151,19 @@ public class DynamicTypeConverter {
 
 	}
 
-	public static Object convert(Object value) {
+	public static Object convertCascade(Object value) {
 
 		try {
-			return Double.parseDouble(value.toString());
+			return LocalDate.parse(value.toString(), DateTimeFormatter.ISO_LOCAL_DATE);
 		} catch (Exception doubleEx) {
 			try {
-				return Integer.parseInt(value.toString());
+				return LocalDateTime.parse(value.toString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 			} catch (Exception ix) {
 				try {
-					return LocalDate.parse(value.toString(), DateTimeFormatter.ISO_LOCAL_DATE);
+					return Integer.parseInt(value.toString());
 				} catch (Exception localDateEx) {
 					try {
-						return LocalDateTime.parse(value.toString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+						return Double.parseDouble(parseStringDouble(value.toString()));
 					} catch (Exception localDateTimeEx) {
 						return value;
 					}
@@ -171,4 +171,14 @@ public class DynamicTypeConverter {
 			}
 		}
 	}
+	
+	private static String parseStringDouble(String value) {
+		
+		if(value.contains(",")) {
+			return value.toString().replace(".", "").replace(",", ".");
+		}
+	
+		return value;
+	}
+	
 }

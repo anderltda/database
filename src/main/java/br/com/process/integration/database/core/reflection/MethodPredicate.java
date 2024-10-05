@@ -54,7 +54,7 @@ public class MethodPredicate {
 	}
 
 	@Transactional
-	public void joinCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) throws UncheckedException {
+	public void joinCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, Object value) throws UncheckedException {
 
 		try {
 
@@ -64,7 +64,7 @@ public class MethodPredicate {
 			for (int i = 0; i < pathParts.length; i++) {
 				String part = pathParts[i];
 				if (i == pathParts.length - 1) {
-					MethodReflection.executeMethod(this, operatorJoin, criteriaBuilder, predicates, root, part, DynamicTypeConverter.convert(value));
+					MethodReflection.executeMethod(this, operatorJoin, criteriaBuilder, predicates, root, part, DynamicTypeConverter.convertCascade(value));
 					return;
 				} else {
 					if (join == null && root != null) {
@@ -83,12 +83,12 @@ public class MethodPredicate {
 	}
 	
 	@Transactional
-	public void equalCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+	public void equalCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, Object value) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 		
 		try {
 
 			Method invokeMethod = CriteriaBuilder.class.getMethod("equal", Expression.class, Object.class);
-			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convert(value));
+			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convertCascade(value));
 			predicates.add(predicate);
 
 		} catch (Exception ex) {
@@ -101,9 +101,9 @@ public class MethodPredicate {
 		
 		try {
 			
-			String[] split = value.toString().replaceAll("[\\[\\]]", "").split(",");
+			String[] split = processValuesForBetween(value.toString()).replaceAll("[\\[\\]]", "").split(",");
 			Method invokeMethod = CriteriaBuilder.class.getMethod("between", Expression.class, Comparable.class, Comparable.class);
-			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convert(split[0]), DynamicTypeConverter.convert(split[1]));
+			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convertCascade(split[0]), DynamicTypeConverter.convertCascade(split[1]));
 			predicates.add(predicate);
 			
 		} catch (Exception ex) {
@@ -113,22 +113,22 @@ public class MethodPredicate {
 	
 	
 	@Transactional
-	public void greaterThanOrEqualToCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) throws UncheckedException {
+	public void greaterThanOrEqualToCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, Object value) throws UncheckedException {
 		greaterThan("greaterThanOrEqualTo", criteriaBuilder, predicates, root, field, value);
 	}
 	
 	@Transactional
-	public void greaterThanCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) throws UncheckedException {
+	public void greaterThanCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, Object value) throws UncheckedException {
 		greaterThan("greaterThan", criteriaBuilder, predicates, root, field, value);
 	}
 
 	@Transactional
-	public void lessThanOrEqualToCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) throws UncheckedException {
+	public void lessThanOrEqualToCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, Object value) throws UncheckedException {
 		lessThan("lessThanOrEqualTo", criteriaBuilder, predicates, root, field, value);
 	}
 	
 	@Transactional
-	public void lessThanCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) throws UncheckedException {
+	public void lessThanCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, Object value) throws UncheckedException {
 		lessThan("lessThan", criteriaBuilder, predicates, root, field, value);
 	}
 	
@@ -138,7 +138,7 @@ public class MethodPredicate {
 		try {
 
 			Method invokeMethod = CriteriaBuilder.class.getMethod("like", Expression.class, String.class);
-			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convert(value.replace("*", "%")));
+			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convertCascade(value.replace("*", "%")));
 			predicates.add(predicate);
 
 		} catch (Exception ex) {
@@ -147,12 +147,12 @@ public class MethodPredicate {
 	}
 	
 	@Transactional
-	public void notEqualCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) throws UncheckedException {
+	public void notEqualCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, Object value) throws UncheckedException {
 		
 		try {
 
 			Method invokeMethod = CriteriaBuilder.class.getMethod("notEqual", Expression.class, Object.class);
-			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convert(value));
+			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convertCascade(value));
 			predicates.add(predicate);
 
 		} catch (Exception ex) {
@@ -169,7 +169,7 @@ public class MethodPredicate {
 			Object[] valuesObjects = new Object[values.length];
 			
 			for (int i = 0; i < values.length; i++) {
-				valuesObjects[i] = DynamicTypeConverter.convert(values[i]);
+				valuesObjects[i] = DynamicTypeConverter.convertCascade(values[i]);
 			}
 			
 			Predicate predicate = root.get(field).in(valuesObjects);
@@ -180,10 +180,10 @@ public class MethodPredicate {
 		}
 	}
 	
-	private void greaterThan(String method, CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) throws UncheckedException {
+	private void greaterThan(String method, CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, Object value) throws UncheckedException {
 		try {
 			Method invokeMethod = CriteriaBuilder.class.getMethod(method, Expression.class, Comparable.class);
-			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convert(value));
+			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convertCascade(value));
 			predicates.add(predicate);
 		} catch (InvocationTargetException ex) {
 			Throwable tex = ex.getTargetException();
@@ -193,10 +193,10 @@ public class MethodPredicate {
 		}
 	}
 	
-	public void lessThan(String method, CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) throws UncheckedException {
+	public void lessThan(String method, CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, Object value) throws UncheckedException {
 		try {
 			Method invokeMethod = CriteriaBuilder.class.getMethod(method, Expression.class, Comparable.class);
-			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convert(value));
+			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convertCascade(value));
 			predicates.add(predicate);
 		} catch (InvocationTargetException ex) {
 			Throwable tex = ex.getTargetException();
@@ -206,4 +206,51 @@ public class MethodPredicate {
 		}
 	}
 
+	// Método para separar e converter os valores numéricos
+	public String processValuesForBetween(String value) {
+
+		long count = value != null && !value.isEmpty() ? value.chars().filter(ch -> ch == ',').count() : 0;
+		
+		if(count == 0) {
+			value = value.replace(".", ",");
+		}
+		
+		if(count >= 3) {
+			
+			StringBuilder builder = new StringBuilder();
+			// Substituindo a vírgula decimal por um marcador temporário
+			value = value.replaceAll("(\\d+),(\\d{2})", "$1#$2");
+			
+			// Separando os valores com base na vírgula e espaço
+			String[] valoresArray = value.split(",\\s*");
+			
+			// Criando um array para armazenar os números convertidos
+			double[] numeros = new double[valoresArray.length];
+			
+			// Processando cada valor
+			for (int i = 0; i < valoresArray.length; i++) {
+				// Restaurando a vírgula decimal
+				String valorFormatado = valoresArray[i].replace("#", ",").replace(".", "").replace(",", ".");
+				
+				// Convertendo para número
+				try {
+					numeros[i] = Double.parseDouble(valorFormatado);
+				} catch (NumberFormatException e) {
+					System.err.println("Erro ao converter valor: " + valoresArray[i]);
+				}
+			}
+			
+			for (double numero : numeros) {
+				builder.append(numero);
+				builder.append(",");
+			}
+			
+			builder.deleteCharAt(builder.length() - 1);
+			
+			// Retornando o array de números
+			return builder.toString();
+		}
+
+		return value;
+	}
 }
