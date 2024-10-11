@@ -72,6 +72,21 @@ class CriteriaPaginatorJoinTests {
 		assertEquals(234, list.get(0).getEntityTwo().getHex());
 		assertEquals(144, list.get(1).getEntityTwo().getHex());
 	}
+	
+	@Test
+	void teste_busca_com_equal_pelo_entityTwo_por_cost_por_ordernacao_entityTwo_() {
+
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?entityTwo.cost=22,22,2.500,23&entityTwo.cost_op=bt&page=0&size=10&sortList=entityTwo.dateInclusion,entityTwo.hex&sortOrders=desc,asc";
+
+		List<EntityOne> list = getAll(url, new ErrorResponse());
+
+		assertNotNull(list);
+		assertEquals(8, list.size());
+		assertEquals("Renato", list.get(0).getName());
+		assertEquals("Carlos Alberto", list.get(1).getName());
+		assertEquals(8876, list.get(0).getEntityTwo().getHex());
+		assertEquals(234, list.get(1).getEntityTwo().getHex());
+	}
 
 	@Test
 	void teste_busca_com_in_pelo_entityTree_por_animal() {

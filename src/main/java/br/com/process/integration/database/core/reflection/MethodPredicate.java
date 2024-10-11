@@ -3,6 +3,7 @@ package br.com.process.integration.database.core.reflection;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -101,7 +102,11 @@ public class MethodPredicate {
 		
 		try {
 			
-			String[] split = processValuesForBetween(value.toString()).replaceAll("[\\[\\]]", "").split(",");
+			String[] split = Optional.ofNullable(processValuesForBetween(value))
+                    .filter(str -> !str.isEmpty())
+                    .map(str -> str.split(","))
+                    .orElse(new String[1]); 
+			
 			Method invokeMethod = CriteriaBuilder.class.getMethod("between", Expression.class, Comparable.class, Comparable.class);
 			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convertCascade(split[0]), DynamicTypeConverter.convertCascade(split[1]));
 			predicates.add(predicate);
@@ -206,51 +211,72 @@ public class MethodPredicate {
 		}
 	}
 
-	// Método para separar e converter os valores numéricos
-	public String processValuesForBetween(String value) {
-
-		long count = value != null && !value.isEmpty() ? value.chars().filter(ch -> ch == ',').count() : 0;
-		
-		if(count == 0) {
-			value = value.replace(".", ",");
+	private String processValuesForBetween(Object object) {
+		if (object == null) {
+			return "";
 		}
-		
-		if(count >= 3) {
-			
-			StringBuilder builder = new StringBuilder();
-			// Substituindo a vírgula decimal por um marcador temporário
-			value = value.replaceAll("(\\d+),(\\d{2})", "$1#$2");
-			
-			// Separando os valores com base na vírgula e espaço
-			String[] valoresArray = value.split(",\\s*");
-			
-			// Criando um array para armazenar os números convertidos
-			double[] numeros = new double[valoresArray.length];
-			
-			// Processando cada valor
-			for (int i = 0; i < valoresArray.length; i++) {
-				// Restaurando a vírgula decimal
-				String valorFormatado = valoresArray[i].replace("#", ",").replace(".", "").replace(",", ".");
-				
-				// Convertendo para número
-				try {
-					numeros[i] = Double.parseDouble(valorFormatado);
-				} catch (NumberFormatException e) {
-					System.err.println("Erro ao converter valor: " + valoresArray[i]);
-				}
-			}
-			
-			for (double numero : numeros) {
-				builder.append(numero);
-				builder.append(",");
-			}
-			
-			builder.deleteCharAt(builder.length() - 1);
-			
-			// Retornando o array de números
-			return builder.toString();
+
+		String value = formatObjectToString(object);
+
+		if (value.isEmpty()) {
+			return value;
+		}
+
+		long count = countCommas(value);
+
+		if (count == 0) {
+			return replaceDotsWithCommas(value);
+		} else if (count >= 3) {
+			return processMultipleValues(value);
 		}
 
 		return value;
+	}
+
+	private String formatObjectToString(Object object) {
+		return Optional.ofNullable(object).map(obj -> obj.toString().replaceAll("[\\[\\]]", "")).orElse("");
+	}
+
+	private long countCommas(String value) {
+		return value.chars().filter(ch -> ch == ',').count();
+	}
+
+	private String replaceDotsWithCommas(String value) {
+		return value.replace(".", ",");
+	}
+
+	private String processMultipleValues(String value) {
+		value = value.replaceAll("(\\d{1,10}),(\\d{2})", "$1#$2");
+		String[] valoresArray = value.split(",\\s*");
+
+		double[] numeros = parseValues(valoresArray);
+
+		StringBuilder builder = new StringBuilder();
+		for (double numero : numeros) {
+			builder.append(numero).append(",");
+		}
+
+		if (builder.length() > 0) {
+			builder.deleteCharAt(builder.length() - 1);
+		}
+
+		return builder.toString();
+	}
+
+	private double[] parseValues(String[] valoresArray) {
+		double[] numeros = new double[valoresArray.length];
+		for (int i = 0; i < valoresArray.length; i++) {
+			String valorFormatado = formatNumber(valoresArray[i]);
+			try {
+				numeros[i] = Double.parseDouble(valorFormatado);
+			} catch (NumberFormatException ex) {
+				throw new UncheckedException("Invalid number format: " + valorFormatado, ex);
+			}
+		}
+		return numeros;
+	}
+
+	private String formatNumber(String value) {
+		return value.replace("#", ",").replace(".", "").replace(",", ".");
 	}
 }
