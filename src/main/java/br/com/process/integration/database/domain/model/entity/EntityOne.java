@@ -41,8 +41,8 @@ public class EntityOne extends RepresentationModel<EntityOne> implements BeanEnt
 	@Column(name = "birth_date", nullable = false)
 	private LocalDate birthDate;
 
-	@Column(name = "prohibited", nullable = false)
-	private LocalDateTime prohibited;
+	@Column(name = "prohibited_date_time", nullable = false)
+	private LocalDateTime prohibitedDateTime;
 	
 	@Column(name = "code", nullable = false)
 	private Integer code = 1;
@@ -91,12 +91,12 @@ public class EntityOne extends RepresentationModel<EntityOne> implements BeanEnt
 		this.birthDate = birthDate;
 	}
 
-	public LocalDateTime getProhibited() {
-		return prohibited;
+	public LocalDateTime getProhibitedDateTime() {
+		return prohibitedDateTime;
 	}
 
-	public void setProhibited(LocalDateTime prohibited) {
-		this.prohibited = prohibited;
+	public void setProhibitedDateTime(LocalDateTime prohibitedDateTime) {
+		this.prohibitedDateTime = prohibitedDateTime;
 	}
 
 	public Integer getCode() {
@@ -119,7 +119,7 @@ public class EntityOne extends RepresentationModel<EntityOne> implements BeanEnt
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(age, birthDate, code, entityTwo, height, id, name, prohibited);
+		result = prime * result + Objects.hash(age, birthDate, code, entityTwo, height, id, name, prohibitedDateTime);
 		return result;
 	}
 
@@ -135,7 +135,7 @@ public class EntityOne extends RepresentationModel<EntityOne> implements BeanEnt
 		return Objects.equals(age, other.age) && Objects.equals(birthDate, other.birthDate)
 				&& Objects.equals(code, other.code) && Objects.equals(entityTwo, other.entityTwo)
 				&& Objects.equals(height, other.height) && Objects.equals(id, other.id)
-				&& Objects.equals(name, other.name) && Objects.equals(prohibited, other.prohibited);
+				&& Objects.equals(name, other.name) && Objects.equals(prohibitedDateTime, other.prohibitedDateTime);
 	}
 
 	

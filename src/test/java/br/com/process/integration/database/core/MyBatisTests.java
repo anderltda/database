@@ -116,7 +116,7 @@ class MyBatisTests {
 		assertEquals(1.93, data.getHeight());
 		assertEquals(LocalDate.parse("1983-03-29", DateTimeFormatter.ISO_LOCAL_DATE), data.getBirthDate());
 		assertEquals(LocalDateTime.parse("2024-02-01T02:52:54", DateTimeFormatter.ISO_LOCAL_DATE_TIME),
-				data.getProhibited());
+				data.getProhibitedDateTime());
 		assertNotEquals(0, data.hashCode());
 		assertNotNull(data.getEntityTwo());
 

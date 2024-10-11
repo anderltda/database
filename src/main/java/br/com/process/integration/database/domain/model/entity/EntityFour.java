@@ -28,11 +28,11 @@ public class EntityFour extends RepresentationModel<EntityFour> implements BeanE
 	@Column(name = "fruit", nullable = false, length = 100)
 	private String fruit;
 
-	@Column(name = "nutritiou", nullable = true)
-	private Integer nutritiou;
+	@Column(name = "attribute", nullable = true)
+	private Integer attribute;
 
-	@Column(name = "date_inclusion_time", nullable = false)
-	private LocalDateTime dateInclusionTime;
+	@Column(name = "inclusion_date_time", nullable = false)
+	private LocalDateTime inclusionDateTime;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_entity_five", nullable = false, referencedColumnName = "id_entity_five")
@@ -54,20 +54,20 @@ public class EntityFour extends RepresentationModel<EntityFour> implements BeanE
 		this.fruit = fruit;
 	}
 
-	public Integer getNutritiou() {
-		return nutritiou;
+	public Integer getAttribute() {
+		return attribute;
 	}
 
-	public void setNutritiou(Integer nutritiou) {
-		this.nutritiou = nutritiou;
+	public void setAttribute(Integer attribute) {
+		this.attribute = attribute;
 	}
 
-	public LocalDateTime getDateInclusionTime() {
-		return dateInclusionTime;
+	public LocalDateTime getInclusionDateTime() {
+		return inclusionDateTime;
 	}
 
-	public void setDateInclusionTime(LocalDateTime dateInclusionTime) {
-		this.dateInclusionTime = dateInclusionTime;
+	public void setInclusionDateTime(LocalDateTime inclusionDateTime) {
+		this.inclusionDateTime = inclusionDateTime;
 	}
 
 	public EntityFive getEntityFive() {
@@ -82,7 +82,7 @@ public class EntityFour extends RepresentationModel<EntityFour> implements BeanE
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(dateInclusionTime, entityFive, fruit, id, nutritiou);
+		result = prime * result + Objects.hash(inclusionDateTime, entityFive, fruit, id, attribute);
 		return result;
 	}
 
@@ -95,8 +95,8 @@ public class EntityFour extends RepresentationModel<EntityFour> implements BeanE
 		if (getClass() != obj.getClass())
 			return false;
 		EntityFour other = (EntityFour) obj;
-		return Objects.equals(dateInclusionTime, other.dateInclusionTime)
+		return Objects.equals(inclusionDateTime, other.inclusionDateTime)
 				&& Objects.equals(entityFive, other.entityFive) && Objects.equals(fruit, other.fruit)
-				&& Objects.equals(id, other.id) && Objects.equals(nutritiou, other.nutritiou);
+				&& Objects.equals(id, other.id) && Objects.equals(attribute, other.attribute);
 	}
 }

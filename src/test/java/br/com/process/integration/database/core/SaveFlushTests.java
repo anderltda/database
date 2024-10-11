@@ -463,22 +463,22 @@ class SaveFlushTests {
 		assertEquals(55, entity.getAge());
 		assertEquals(1.77, entity.getHeight());
 		assertEquals(LocalDate.parse("1970-09-22", DateTimeFormatter.ISO_LOCAL_DATE), entity.getBirthDate());
-		assertEquals(LocalDateTime.parse("2024-04-30T23:50:54", DateTimeFormatter.ISO_LOCAL_DATE_TIME), entity.getProhibited());
+		assertEquals(LocalDateTime.parse("2024-04-30T23:50:54", DateTimeFormatter.ISO_LOCAL_DATE_TIME), entity.getProhibitedDateTime());
 
 		assertEquals("Preto", entity.getEntityTwo().getColor());
 		assertEquals(234, entity.getEntityTwo().getHex());
 		assertEquals(25.5, entity.getEntityTwo().getCost());
-		assertEquals(LocalDate.parse("2024-01-10", DateTimeFormatter.ISO_LOCAL_DATE), entity.getEntityTwo().getDateInclusion());
+		assertEquals(LocalDate.parse("2024-01-10", DateTimeFormatter.ISO_LOCAL_DATE), entity.getEntityTwo().getInclusionDate());
 
 		assertEquals("Capivara", entity.getEntityTwo().getEntityTree().getAnimal());
-		assertEquals(72, entity.getEntityTwo().getEntityTree().getNumber());
+		assertEquals(72, entity.getEntityTwo().getEntityTree().getIndicator());
 
 		assertEquals("Damasco", entity.getEntityTwo().getEntityTree().getEntityFour().getFruit());
-		assertEquals(13, entity.getEntityTwo().getEntityTree().getEntityFour().getNutritiou());
-		assertEquals(LocalDateTime.parse("2024-04-09T18:23:21", DateTimeFormatter.ISO_LOCAL_DATE_TIME), entity.getEntityTwo().getEntityTree().getEntityFour().getDateInclusionTime());
+		assertEquals(13, entity.getEntityTwo().getEntityTree().getEntityFour().getAttribute());
+		assertEquals(LocalDateTime.parse("2024-04-09T18:23:21", DateTimeFormatter.ISO_LOCAL_DATE_TIME), entity.getEntityTwo().getEntityTree().getEntityFour().getInclusionDateTime());
 
-		assertEquals("Cama", entity.getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getObject());
-		assertEquals(55, entity.getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getValue());
+		assertEquals("Cama", entity.getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getReference());
+		assertEquals(55, entity.getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getFactor());
 	}
 	
 	@Test
@@ -626,36 +626,36 @@ class SaveFlushTests {
 		entityOne.setAge(inteiro[0]);
 		entityOne.setHeight(dobro[0]);
 		entityOne.setBirthDate(geraLocalDate(localDate[0]));
-		entityOne.setProhibited(geraDataLocalTime(localTime[0]));
+		entityOne.setProhibitedDateTime(geraDataLocalTime(localTime[0]));
 
 		EntityTwo entityTwo = new EntityTwo();
 		entityTwo.setId(UUID.randomUUID().toString());
 		entityTwo.setColor(text[1]);
 		entityTwo.setHex(inteiro[1]);
 		entityTwo.setCost(dobro[1]);
-		entityTwo.setDateInclusion(geraLocalDate(localDate[1]));
+		entityTwo.setInclusionDate(geraLocalDate(localDate[1]));
 		entityOne.setEntityTwo(entityTwo);
 
 		EntityTree entityTree = new EntityTree();
 		entityTree.setId(UUID.randomUUID().toString());
 		entityTree.setAnimal(text[2]);
-		entityTree.setNumber(inteiro[2]);
-		entityTree.setValue(dobro[2]);
-		entityTree.setDataLocal(geraLocalDate(localDate[2]));
-		entityTree.setDataLocalTime(geraDataLocalTime(localTime[2]));
+		entityTree.setIndicator(inteiro[2]);
+		entityTree.setAmount(dobro[2]);
+		entityTree.setLocalDate(geraLocalDate(localDate[2]));
+		entityTree.setLocalDateTime(geraDataLocalTime(localTime[2]));
 		entityTwo.setEntityTree(entityTree);
 
 		EntityFour entityFour = new EntityFour();
 		entityFour.setId(UUID.randomUUID().toString());
 		entityFour.setFruit(text[3]);
-		entityFour.setNutritiou(inteiro[3]);
-		entityFour.setDateInclusionTime(geraDataLocalTime(localTime[3]));
+		entityFour.setAttribute(inteiro[3]);
+		entityFour.setInclusionDateTime(geraDataLocalTime(localTime[3]));
 		entityTree.setEntityFour(entityFour);
 
 		EntityFive entityFive = new EntityFive();
 		entityFive.setId(UUID.randomUUID().toString());
-		entityFive.setObject(text[4]);
-		entityFive.setValue(inteiro[4]);
+		entityFive.setReference(text[4]);
+		entityFive.setFactor(inteiro[4]);
 		entityFour.setEntityFive(entityFive);
 
 		return entityOne;

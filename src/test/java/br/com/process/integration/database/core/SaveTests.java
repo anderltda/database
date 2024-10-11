@@ -621,33 +621,33 @@ class SaveTests {
 		entityOne.setAge(inteiro[0]);
 		entityOne.setHeight(dobro[0]);
 		entityOne.setBirthDate(geraLocalDate(localDate[0]));
-		entityOne.setProhibited(geraDataLocalTime(localTime[0]));
+		entityOne.setProhibitedDateTime(geraDataLocalTime(localTime[0]));
 
 		EntityTwo entityTwo = new EntityTwo();
 		entityTwo.setId(UUID.randomUUID().toString());
 		entityTwo.setColor(text[1]);
 		entityTwo.setHex(inteiro[1]);
 		entityTwo.setCost(dobro[1]);
-		entityTwo.setDateInclusion(geraLocalDate(localDate[1]));
+		entityTwo.setInclusionDate(geraLocalDate(localDate[1]));
 
 		EntityTree entityTree = new EntityTree();
 		entityTree.setId(UUID.randomUUID().toString());
 		entityTree.setAnimal(text[2]);
-		entityTree.setNumber(inteiro[2]);
-		entityTree.setValue(dobro[2]);
-		entityTree.setDataLocal(geraLocalDate(localDate[2]));
-		entityTree.setDataLocalTime(geraDataLocalTime(localTime[2]));
+		entityTree.setIndicator(inteiro[2]);
+		entityTree.setAmount(dobro[2]);
+		entityTree.setLocalDate(geraLocalDate(localDate[2]));
+		entityTree.setLocalDateTime(geraDataLocalTime(localTime[2]));
 
 		EntityFour entityFour = new EntityFour();
 		entityFour.setId(UUID.randomUUID().toString());
 		entityFour.setFruit(text[3]);
-		entityFour.setNutritiou(inteiro[3]);
-		entityFour.setDateInclusionTime(geraDataLocalTime(localTime[3]));
+		entityFour.setAttribute(inteiro[3]);
+		entityFour.setInclusionDateTime(geraDataLocalTime(localTime[3]));
 
 		EntityFive entityFive = new EntityFive();
 		entityFive.setId(UUID.randomUUID().toString());
-		entityFive.setObject(text[4]);
-		entityFive.setValue(inteiro[4]);
+		entityFive.setReference(text[4]);
+		entityFive.setFactor(inteiro[4]);
 
 		entityOne.setEntityTwo(entityTwo);
 		entityTwo.setEntityTree(entityTree);

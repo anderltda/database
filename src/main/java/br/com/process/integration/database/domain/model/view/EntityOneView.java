@@ -21,7 +21,7 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 	private Integer code;
 	private Double height;
 	private LocalDate birthDate;
-	private LocalDateTime prohibited;
+	private LocalDateTime prohibitedDateTime;
 	private Long count;
 
 	// EntityTwo
@@ -104,12 +104,12 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 		this.birthDate = birthDate;
 	}
 
-	public LocalDateTime getProhibited() {
-		return prohibited;
+	public LocalDateTime getProhibitedDateTime() {
+		return prohibitedDateTime;
 	}
 
-	public void setProhibited(LocalDateTime prohibited) {
-		this.prohibited = prohibited;
+	public void setProhibitedDateTime(LocalDateTime prohibitedDateTime) {
+		this.prohibitedDateTime = prohibitedDateTime;
 	}
 
 	public Long getCount() {
@@ -270,7 +270,7 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 		int result = super.hashCode();
 		result = prime * result + Objects.hash(age, animal, birthDate, code, color, cost, count, dataLocal,
 				dataLocalTime, dateInclusion, dateInclusionTime, fruit, height, hex, idEntityFive, idEntityFour,
-				idEntityOne, idEntityTree, idEntityTwo, name, number, nutritiou, object, prohibited, value3, value5);
+				idEntityOne, idEntityTree, idEntityTwo, name, number, nutritiou, object, prohibitedDateTime, value3, value5);
 		return result;
 	}
 
@@ -295,7 +295,7 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 				&& Objects.equals(idEntityOne, other.idEntityOne) && Objects.equals(idEntityTree, other.idEntityTree)
 				&& Objects.equals(idEntityTwo, other.idEntityTwo) && Objects.equals(name, other.name)
 				&& Objects.equals(number, other.number) && Objects.equals(nutritiou, other.nutritiou)
-				&& Objects.equals(object, other.object) && Objects.equals(prohibited, other.prohibited)
+				&& Objects.equals(object, other.object) && Objects.equals(prohibitedDateTime, other.prohibitedDateTime)
 				&& Objects.equals(value3, other.value3) && Objects.equals(value5, other.value5);
 	}
 

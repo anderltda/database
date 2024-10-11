@@ -21,11 +21,11 @@ public class EntityFive extends RepresentationModel<EntityFive> implements BeanE
 	@Column(name = "id_entity_five")
 	private String id;
 
-	@Column(name = "object", nullable = false, length = 100)
-	private String object;
+	@Column(name = "reference", nullable = false, length = 100)
+	private String reference;
 
-	@Column(name = "value", nullable = true)
-	private Integer value;
+	@Column(name = "factor", nullable = true)
+	private Integer factor;
 
 	public String getId() {
 		return id;
@@ -35,27 +35,27 @@ public class EntityFive extends RepresentationModel<EntityFive> implements BeanE
 		this.id = id;
 	}
 
-	public String getObject() {
-		return object;
+	public String getReference() {
+		return reference;
 	}
 
-	public void setObject(String object) {
-		this.object = object;
+	public void setReference(String reference) {
+		this.reference = reference;
 	}
 
-	public Integer getValue() {
-		return value;
+	public Integer getFactor() {
+		return factor;
 	}
 
-	public void setValue(Integer value) {
-		this.value = value;
+	public void setFactor(Integer factor) {
+		this.factor = factor;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(id, object, value);
+		result = prime * result + Objects.hash(id, reference, factor);
 		return result;
 	}
 
@@ -68,8 +68,8 @@ public class EntityFive extends RepresentationModel<EntityFive> implements BeanE
 		if (getClass() != obj.getClass())
 			return false;
 		EntityFive other = (EntityFive) obj;
-		return Objects.equals(id, other.id) && Objects.equals(object, other.object)
-				&& Objects.equals(value, other.value);
+		return Objects.equals(id, other.id) && Objects.equals(reference, other.reference)
+				&& Objects.equals(factor, other.factor);
 	}
 
 }

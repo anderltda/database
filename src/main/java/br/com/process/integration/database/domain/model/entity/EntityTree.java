@@ -29,17 +29,17 @@ public class EntityTree extends RepresentationModel<EntityTree> implements BeanE
 	@Column(name = "animal", nullable = false, length = 100)
 	private String animal;
 
-	@Column(name = "number", nullable = true)
-	private Integer number;
+	@Column(name = "indicator", nullable = true)
+	private Integer indicator;
 
-	@Column(name = "value", nullable = false, precision = 10, scale = 0)
-	private Double value;
+	@Column(name = "amount", nullable = false, precision = 10, scale = 0)
+	private Double amount;
 
-	@Column(name = "data_local", nullable = false)
-	private LocalDate dataLocal;
+	@Column(name = "local_date", nullable = false)
+	private LocalDate localDate;
 
-	@Column(name = "data_local_time", nullable = false)
-	private LocalDateTime dataLocalTime;
+	@Column(name = "local_date_time", nullable = false)
+	private LocalDateTime localDateTime;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_entity_four", nullable = false, referencedColumnName = "id_entity_four")
@@ -61,36 +61,36 @@ public class EntityTree extends RepresentationModel<EntityTree> implements BeanE
 		this.animal = animal;
 	}
 
-	public Integer getNumber() {
-		return number;
+	public Integer getIndicator() {
+		return indicator;
 	}
 
-	public void setNumber(Integer number) {
-		this.number = number;
+	public void setIndicator(Integer indicator) {
+		this.indicator = indicator;
 	}
 
-	public Double getValue() {
-		return value;
+	public Double getAmount() {
+		return amount;
 	}
 
-	public void setValue(Double value) {
-		this.value = value;
+	public void setAmount(Double amount) {
+		this.amount = amount;
 	}
 
-	public LocalDate getDataLocal() {
-		return dataLocal;
+	public LocalDate getLocalDate() {
+		return localDate;
 	}
 
-	public void setDataLocal(LocalDate dataLocal) {
-		this.dataLocal = dataLocal;
+	public void setLocalDate(LocalDate localDate) {
+		this.localDate = localDate;
 	}
 
-	public LocalDateTime getDataLocalTime() {
-		return dataLocalTime;
+	public LocalDateTime getLocalDateTime() {
+		return localDateTime;
 	}
 
-	public void setDataLocalTime(LocalDateTime dataLocalTime) {
-		this.dataLocalTime = dataLocalTime;
+	public void setLocalDateTime(LocalDateTime localDateTime) {
+		this.localDateTime = localDateTime;
 	}
 
 	public EntityFour getEntityFour() {
@@ -105,7 +105,7 @@ public class EntityTree extends RepresentationModel<EntityTree> implements BeanE
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(animal, dataLocal, dataLocalTime, entityFour, id, number, value);
+		result = prime * result + Objects.hash(animal, localDate, localDateTime, entityFour, id, indicator, amount);
 		return result;
 	}
 
@@ -118,9 +118,9 @@ public class EntityTree extends RepresentationModel<EntityTree> implements BeanE
 		if (getClass() != obj.getClass())
 			return false;
 		EntityTree other = (EntityTree) obj;
-		return Objects.equals(animal, other.animal) && Objects.equals(dataLocal, other.dataLocal)
-				&& Objects.equals(dataLocalTime, other.dataLocalTime) && Objects.equals(entityFour, other.entityFour)
-				&& Objects.equals(id, other.id) && Objects.equals(number, other.number)
-				&& Objects.equals(value, other.value);
+		return Objects.equals(animal, other.animal) && Objects.equals(localDate, other.localDate)
+				&& Objects.equals(localDateTime, other.localDateTime) && Objects.equals(entityFour, other.entityFour)
+				&& Objects.equals(id, other.id) && Objects.equals(indicator, other.indicator)
+				&& Objects.equals(amount, other.amount);
 	}
 }

@@ -34,8 +34,8 @@ public class EntityTwo extends RepresentationModel<EntityTwo> implements BeanEnt
 	@Column(name = "cost", nullable = false, precision = 10, scale = 0)
 	private Double cost;
 
-	@Column(name = "date_inclusion", nullable = false)
-	private LocalDate dateInclusion;
+	@Column(name = "inclusion_date", nullable = false)
+	private LocalDate inclusionDate;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_entity_tree", nullable = false, referencedColumnName = "id_entity_tree")
@@ -73,12 +73,12 @@ public class EntityTwo extends RepresentationModel<EntityTwo> implements BeanEnt
 		this.cost = cost;
 	}
 
-	public LocalDate getDateInclusion() {
-		return dateInclusion;
+	public LocalDate getInclusionDate() {
+		return inclusionDate;
 	}
 
-	public void setDateInclusion(LocalDate dateInclusion) {
-		this.dateInclusion = dateInclusion;
+	public void setInclusionDate(LocalDate inclusionDate) {
+		this.inclusionDate = inclusionDate;
 	}
 
 	public EntityTree getEntityTree() {
@@ -93,7 +93,7 @@ public class EntityTwo extends RepresentationModel<EntityTwo> implements BeanEnt
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(color, cost, dateInclusion, entityTree, hex, id);
+		result = prime * result + Objects.hash(color, cost, inclusionDate, entityTree, hex, id);
 		return result;
 	}
 
@@ -107,7 +107,7 @@ public class EntityTwo extends RepresentationModel<EntityTwo> implements BeanEnt
 			return false;
 		EntityTwo other = (EntityTwo) obj;
 		return Objects.equals(color, other.color) && Objects.equals(cost, other.cost)
-				&& Objects.equals(dateInclusion, other.dateInclusion) && Objects.equals(entityTree, other.entityTree)
+				&& Objects.equals(inclusionDate, other.inclusionDate) && Objects.equals(entityTree, other.entityTree)
 				&& Objects.equals(hex, other.hex) && Objects.equals(id, other.id);
 	}
 }

@@ -22,7 +22,7 @@ public class EntityOneData extends RepresentationModel<EntityOneData> implements
 	private Integer code;
 	private Double height;
 	private LocalDate birthDate;
-	private LocalDateTime prohibited;
+	private LocalDateTime prohibitedDateTime;
 
 	private EntityTwoData entityTwo;
 	private EntityTreeData entityTree;
@@ -77,12 +77,12 @@ public class EntityOneData extends RepresentationModel<EntityOneData> implements
 		this.birthDate = birthDate;
 	}
 
-	public LocalDateTime getProhibited() {
-		return prohibited;
+	public LocalDateTime getProhibitedDateTime() {
+		return prohibitedDateTime;
 	}
 
-	public void setProhibited(LocalDateTime prohibited) {
-		this.prohibited = prohibited;
+	public void setProhibitedDateTime(LocalDateTime prohibitedDateTime) {
+		this.prohibitedDateTime = prohibitedDateTime;
 	}
 
 	public EntityTwoData getEntityTwo() {
@@ -127,7 +127,7 @@ public class EntityOneData extends RepresentationModel<EntityOneData> implements
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + Objects.hash(age, birthDate, code, entityFive, entityFour, entityTree, entityTwo,
-				height, id, name, prohibited);
+				height, id, name, prohibitedDateTime);
 		return result;
 	}
 
@@ -145,6 +145,6 @@ public class EntityOneData extends RepresentationModel<EntityOneData> implements
 				&& Objects.equals(entityFour, other.entityFour) && Objects.equals(entityTree, other.entityTree)
 				&& Objects.equals(entityTwo, other.entityTwo) && Objects.equals(height, other.height)
 				&& Objects.equals(id, other.id) && Objects.equals(name, other.name)
-				&& Objects.equals(prohibited, other.prohibited);
+				&& Objects.equals(prohibitedDateTime, other.prohibitedDateTime);
 	}
 }

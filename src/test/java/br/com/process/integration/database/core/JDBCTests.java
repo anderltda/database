@@ -116,7 +116,7 @@ class JDBCTests {
 			assertEquals(41, entity.getAge());
 			assertEquals(1.93, entity.getHeight());
 			assertEquals(LocalDate.parse("1983-03-29", DateTimeFormatter.ISO_LOCAL_DATE), entity.getBirthDate());
-			assertEquals(LocalDateTime.parse("2024-02-01T02:52:54", DateTimeFormatter.ISO_LOCAL_DATE_TIME), entity.getProhibited());
+			assertEquals(LocalDateTime.parse("2024-02-01T02:52:54", DateTimeFormatter.ISO_LOCAL_DATE_TIME), entity.getProhibitedDateTime());
 			assertNotEquals(0, entity.hashCode()); 
 			assertNotNull(entity.getIdEntityTwo());
 			assertNotNull(entity.getIdEntityTree());
@@ -130,10 +130,10 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_busca_com_equal_pelo_age_e_birthDate_e_prohibited_ordernacao_name_asc() {
+	void teste_busca_com_equal_pelo_age_e_birthDate_e_prohibitedDateTime_ordernacao_name_asc() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?"
-				+ "age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&prohibited=2024-11-01T08:00:00&prohibited_op=eq&sortList=name,age&sortOrders=asc";
+				+ "age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=eq&sortList=name,age&sortOrders=asc";
 
 		List<EntityOneView> list = getAll(url, new ErrorResponse());
 
@@ -144,10 +144,10 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_notEqual_do_teste_busca_com_equal_pelo_age_e_birthDate_e_prohibited_ordernacao_name_asc() {
+	void teste_notEqual_do_teste_busca_com_equal_pelo_age_e_birthDate_e_prohibitedDateTime_ordernacao_name_asc() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?"
-				+ "age=22&age_op=ne&birthDate=1990-01-01&birthDate_op=ne&prohibited=2024-11-01T08:00:00&prohibited_op=ne&sortList=name&sortOrders=asc";
+				+ "age=22&age_op=ne&birthDate=1990-01-01&birthDate_op=ne&prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=ne&sortList=name&sortOrders=asc";
 		
 		List<EntityOneView> list = getAll(url, new ErrorResponse());
 
@@ -181,10 +181,10 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_busca_com_equal_e_prohibited_e_ordernado_por_name_asc() {
+	void teste_busca_com_equal_e_prohibitedDateTime_e_ordernado_por_name_asc() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?"
-				+ "prohibited=2024-11-01T08:00:00&prohibited_op=eq";
+				+ "prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=eq";
 		
 		List<EntityOneView> list = getAll(url, new ErrorResponse());
 		
@@ -281,9 +281,9 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_busca_por_between_com_prohibited_ordernado_por_birthDate_desc() {
+	void teste_busca_por_between_com_prohibitedDateTime_ordernado_por_birthDate_desc() {
 		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?prohibited=2024-02-01T08:50:00,2024-10-01T08:50:55&prohibited_op=bt&sortList=birthDate&sortOrders=desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?prohibitedDateTime=2024-02-01T08:50:00,2024-10-01T08:50:55&prohibitedDateTime_op=bt&sortList=birthDate&sortOrders=desc";
 		
 		List<EntityOneView> list = getAll(url, new ErrorResponse());
 
@@ -502,7 +502,7 @@ class JDBCTests {
 	@Test
 	void teste_um_exemplo_sem_order_by() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_um_exemplo_sem_order_by?prohibited=2024-11-01T08:00:00&prohibited_op=ge";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_um_exemplo_sem_order_by?prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=ge";
 		
 		List<EntityOneView> list = getAll(url, new ErrorResponse());
 		
@@ -514,7 +514,7 @@ class JDBCTests {
 	@Test
 	void teste_um_exemplo_sem_order_by_erro() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOne/teste_um_exemplo_sem_order_by?prohibited-=2024-11-01T08:00:00&prohibited_op=ge";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOne/teste_um_exemplo_sem_order_by?prohibitedDateTime-=2024-11-01T08:00:00&prohibitedDateTime_op=ge";
 		
 		ErrorResponse errorResponse = new ErrorResponse("Class not found EntityOne !", HttpStatus.BAD_REQUEST);
 		
@@ -525,7 +525,7 @@ class JDBCTests {
 	@Test
 	void teste_count_query_not_found() {
 		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/count/EntityOneView/teste?prohibited=2024-11-01T08:00:00&prohibited_op=ge";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/count/EntityOneView/teste?prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=ge";
 		
 		ErrorResponse errorResponse = new ErrorResponse("Query not found teste !", HttpStatus.BAD_REQUEST);
 		
@@ -542,17 +542,17 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_count_maior_prohibited_com_erro() {
+	void teste_count_maior_prohibitedDateTime_com_erro() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/count/EntityOneView/teste_um_exemplo_count?prohibited=2024-11-01T08:00:00&prohibited_op=ge";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/count/EntityOneView/teste_um_exemplo_count?prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=ge";
 		
 		teste_single_parameterized_one(url, "Query not found teste_um_exemplo_count !");
 	}
 
 	@Test
-	void teste_count_maior_prohibited() {
+	void teste_count_maior_prohibitedDateTime() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/count/EntityOneView/teste_busca_com_condicoes_diversars?prohibited=2024-11-01T08:00:00&prohibited_op=ge";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/count/EntityOneView/teste_busca_com_condicoes_diversars?prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=ge";
 		
 		Integer count = Integer.parseInt(getUniqueResult(url, new ErrorResponse()));
 		

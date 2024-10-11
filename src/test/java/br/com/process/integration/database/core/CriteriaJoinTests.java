@@ -57,7 +57,7 @@ class CriteriaJoinTests {
 	@Test
 	void teste_busca_com_equal_pelo_entityTwo_por_color_por_ordernacao_entityTwo() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?entityTwo.color=Preto&entityTwo.color_op=eq&sortList=entityTwo.dateInclusion, entityTwo.hex&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?entityTwo.color=Preto&entityTwo.color_op=eq&sortList=entityTwo.inclusionDate, entityTwo.hex&sortOrders=desc,asc";
 		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 		
@@ -129,12 +129,12 @@ class CriteriaJoinTests {
 	@Test
 	void teste_busca_com_equal_pelo_entityFive_por_fruit() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?entityTwo.entityTree.entityFour.entityFive.object=Cama&entityTwo.entityTree.entityFour.entityFive.object_op=eq";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?entityTwo.entityTree.entityFour.entityFive.reference=Cama&entityTwo.entityTree.entityFour.entityFive.reference_op=eq";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		list.forEach(entity -> {
-			assertEquals("Cama", entity.getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getObject());
+			assertEquals("Cama", entity.getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getReference());
 		});
 
 		assertNotNull(list);
@@ -145,7 +145,7 @@ class CriteriaJoinTests {
 	@Test
 	void teste_busca_com_like_pelo_entityFive_por_fruit() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?entityTwo.entityTree.entityFour.entityFive.object=c*&entityTwo.entityTree.entityFour.entityFive.object_op=lk";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?entityTwo.entityTree.entityFour.entityFive.reference=c*&entityTwo.entityTree.entityFour.entityFive.reference_op=lk";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 	

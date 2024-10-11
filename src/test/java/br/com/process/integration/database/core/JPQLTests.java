@@ -76,7 +76,7 @@ class JPQLTests {
 		assertEquals(1.93, entity.getHeight());
 		assertEquals(LocalDate.parse("1983-03-29", DateTimeFormatter.ISO_LOCAL_DATE), entity.getBirthDate());
 		assertEquals(LocalDateTime.parse("2024-02-01T02:52:54", DateTimeFormatter.ISO_LOCAL_DATE_TIME),
-				entity.getProhibited());
+				entity.getProhibitedDateTime());
 		assertNotEquals(0, entity.hashCode());
 		assertNotNull(entity.getEntityTwo());
 
@@ -223,10 +223,10 @@ class JPQLTests {
 	}
 
 	@Test
-	void teste_count_maior_prohibited() {
+	void teste_count_maior_prohibitedDateTime() {
 
 		String url = "http://localhost:" + port
-				+ Constants.API_NAME_REQUEST_MAPPING + "/jpql/count/EntityOne/countMaiorProhibited?prohibited=2024-11-01T08:00:00";
+				+ Constants.API_NAME_REQUEST_MAPPING + "/jpql/count/EntityOne/countMaiorProhibited?prohibitedDateTime=2024-11-01T08:00:00";
 
 		Long count = Long.parseLong(getUniqueResult(url, new ErrorResponse()));
 

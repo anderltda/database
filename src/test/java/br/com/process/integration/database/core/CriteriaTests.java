@@ -126,7 +126,7 @@ class CriteriaTests {
 			assertEquals(41, entity.getAge());
 			assertEquals(1.93, entity.getHeight());
 			assertEquals(LocalDate.parse("1983-03-29", DateTimeFormatter.ISO_LOCAL_DATE), entity.getBirthDate());
-			assertEquals(LocalDateTime.parse("2024-02-01T02:52:54", DateTimeFormatter.ISO_LOCAL_DATE_TIME), entity.getProhibited());
+			assertEquals(LocalDateTime.parse("2024-02-01T02:52:54", DateTimeFormatter.ISO_LOCAL_DATE_TIME), entity.getProhibitedDateTime());
 			assertNotEquals(0, entity.hashCode()); 
 			assertNotNull(entity.getEntityTwo());
 		});
@@ -136,9 +136,9 @@ class CriteriaTests {
 	}
 
 	@Test
-	void teste_busca_com_equal_pelo_age_e_birthDate_e_prohibited_ordernacao_name_asc() {
+	void teste_busca_com_equal_pelo_age_e_birthDate_e_prohibitedDateTime_ordernacao_name_asc() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&prohibited=2024-11-01T08:00:00&prohibited_op=eq&sortList=name&sortOrders=asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=eq&sortList=name&sortOrders=asc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -149,9 +149,9 @@ class CriteriaTests {
 	}
 
 	@Test
-	void teste_notEqual_do_teste_busca_com_equal_pelo_age_e_birthDate_e_prohibited_ordernacao_name_asc() {
+	void teste_notEqual_do_teste_busca_com_equal_pelo_age_e_birthDate_e_prohibitedDateTime_ordernacao_name_asc() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?age=22&age_op=ne&birthDate=1990-01-01&birthDate_op=ne&prohibited=2024-11-01T08:00:00&prohibited_op=ne&sortList=name&sortOrders=asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?age=22&age_op=ne&birthDate=1990-01-01&birthDate_op=ne&prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=ne&sortList=name&sortOrders=asc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -203,9 +203,9 @@ class CriteriaTests {
 	}
 
 	@Test
-	void teste_busca_com_equal_e_prohibited_e_ordernado_por_name_asc() {
+	void teste_busca_com_equal_e_prohibitedDateTime_e_ordernado_por_name_asc() {
 		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?prohibited=2024-11-01T08:00:00&prohibited_op=eq&sortList=name&sortOrders=asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=eq&sortList=name&sortOrders=asc";
 		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 		
@@ -217,9 +217,9 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_busca_com_equal_e_prohibited_e_ordernado_por_name_asc_com_erro() {
+	void teste_busca_com_equal_e_prohibitedDateTime_e_ordernado_por_name_asc_com_erro() {
 		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?prohibited=2024-11-01T08:00:00&prohibited_op=eq&sortList=name&sortOrder=asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=eq&sortList=name&sortOrder=asc";
 
 		testes_single_parameterized_one(url, "Could not resolve attribute 'sortOrder' of 'br.com.process.integration.database.domain.model.entity.EntityOne'");
 	}
@@ -317,9 +317,9 @@ class CriteriaTests {
 	}
 
 	@Test
-	void teste_busca_por_between_com_prohibited_ordernado_por_birthDate_desc() {
+	void teste_busca_por_between_com_prohibitedDateTime_ordernado_por_birthDate_desc() {
 		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?prohibited=2024-02-01T08:50:00,2024-10-01T08:50:55&prohibited_op=bt&sortList=birthDate&sortOrders=desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?prohibitedDateTime=2024-02-01T08:50:00,2024-10-01T08:50:55&prohibitedDateTime_op=bt&sortList=birthDate&sortOrders=desc";
 		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -582,9 +582,9 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_count_maior_prohibited() {
+	void teste_count_maior_prohibitedDateTime() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/count/EntityOne?prohibited=2024-11-01T08:00:00&prohibited_op=ge";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/count/EntityOne?prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=ge";
 		
 		Integer count = Integer.parseInt(getUniqueResult(url, new ErrorResponse()));
 		

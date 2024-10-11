@@ -1,5 +1,6 @@
 server:
   port: 8080
+
 spring:
   hateoas:
     use-hal-as-default-json-media-type: false
@@ -10,11 +11,14 @@ spring:
     url: jdbc:mysql://localhost:3306/root-database?allowPublicKeyRetrieval=true&useSSL=false
     username: anderson
     password: admin
-mybatis:
-  mapper-locations: classpath:mapper/*.xml	
+    driver-class-name: com.mysql.cj.jdbc.Driver # Certifique-se de que o driver MySQL está correto
+
   jpa:
     hibernate:
       ddl-auto: update
-    generate-ddl: false
+    generate-ddl: true
     show-sql: true
     open-in-view: false
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml

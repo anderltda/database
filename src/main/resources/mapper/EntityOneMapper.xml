@@ -45,7 +45,7 @@
 		<result property="code" column="code" />
 		<result property="height" column="height" />
 		<result property="birthDate" column="birth_date" />
-		<result property="prohibited" column="prohibited" />
+		<result property="prohibitedDateTime" column="prohibited_date_time" />
 		<association property="entityTwo" resultMap="EntityTwoMap" />
 		<association property="entityTree" resultMap="EntityTreeMap" />
 		<association property="entityFour" resultMap="EntityFourMap" />

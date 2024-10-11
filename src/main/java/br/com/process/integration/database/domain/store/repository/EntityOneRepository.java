@@ -19,7 +19,7 @@ public interface EntityOneRepository extends JpaRepository<EntityOne, Long>, Jpa
 	public static final String QUERY_1 = "select e from EntityOne e where e.name =(?1)";
 	public static final String QUERY_2 = "select e from EntityOne e";
 	public static final String QUERY_3 = "select e from EntityOne e where e.name like CONCAT('%',(?1),'%')";
-	public static final String QUERY_4 = "select count(e) from EntityOne e where e.prohibited >=(?1)";
+	public static final String QUERY_4 = "select count(e) from EntityOne e where e.prohibitedDateTime >=(?1)";
 	public static final String QUERY_5 = "select count(e) from EntityOne e where e.age >=(?1)";
 	public static final String QUERY_6 = "select e from EntityOne e where e.age =(?1)";
 
@@ -42,7 +42,7 @@ public interface EntityOneRepository extends JpaRepository<EntityOne, Long>, Jpa
 	Page<EntityOne> buscaComLikePeloName(String name, PageRequest pageRequest);
 	
 	@Query(value = QUERY_4)
-	int countMaiorProhibited(LocalDateTime prohibited);
+	int countMaiorProhibited(LocalDateTime prohibitedDateTime);
 	
 	@Query(value = QUERY_5)
 	int countMaiorAge(String age);

@@ -61,7 +61,7 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_busca_com_equal_pelo_entityTwo_por_color_por_ordernacao_entityTwo() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?entityTwo.color=Preto&entityTwo.color_op=eq&page=0&size=10&sortList=entityTwo.dateInclusion,entityTwo.hex&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?entityTwo.color=Preto&entityTwo.color_op=eq&page=0&size=10&sortList=entityTwo.inclusionDate,entityTwo.hex&sortOrders=desc,asc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -76,7 +76,7 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_busca_com_equal_pelo_entityTwo_por_cost_por_ordernacao_entityTwo_() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?entityTwo.cost=22,22,2.500,23&entityTwo.cost_op=bt&page=0&size=10&sortList=entityTwo.dateInclusion,entityTwo.hex&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?entityTwo.cost=22,22,2.500,23&entityTwo.cost_op=bt&page=0&size=10&sortList=entityTwo.inclusionDate,entityTwo.hex&sortOrders=desc,asc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -146,13 +146,13 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_busca_com_equal_pelo_entityFive_por_fruit() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?entityTwo.entityTree.entityFour.entityFive.object=Cama&entityTwo.entityTree.entityFour.entityFive.object_op=eq&page=0&size=10&sortList=name&sortOrders=desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?entityTwo.entityTree.entityFour.entityFive.reference=Cama&entityTwo.entityTree.entityFour.entityFive.reference_op=eq&page=0&size=10&sortList=name&sortOrders=desc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		list.forEach(entity -> {
 			assertEquals("Cama",
-					entity.getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getObject());
+					entity.getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getReference());
 		});
 
 		assertNotNull(list);
@@ -162,7 +162,7 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_busca_com_like_pelo_entityFive_por_fruit() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?entityTwo.entityTree.entityFour.entityFive.object=c*&entityTwo.entityTree.entityFour.entityFive.object_op=lk&page=0&size=10&sortList=entityTwo.dateInclusion,entityTwo.hex&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?entityTwo.entityTree.entityFour.entityFive.reference=c*&entityTwo.entityTree.entityFour.entityFive.reference_op=lk&page=0&size=10&sortList=entityTwo.inclusionDate,entityTwo.hex&sortOrders=desc,asc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
