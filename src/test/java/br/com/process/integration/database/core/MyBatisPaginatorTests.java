@@ -61,7 +61,7 @@ class MyBatisPaginatorTests {
 	};
 
 	@Test
-	void teste_busca_all() {
+	void teste_01() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/paginator/EntityOneData/findEntityOneByAll?code=1&page=0&size=10&sortList=name&sortOrders=desc";
 
@@ -82,7 +82,7 @@ class MyBatisPaginatorTests {
 	}
 	
 	@Test
-	void teste_busca_all_nenhum_registro_encontrado() {
+	void teste_02() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/paginator/EntityOneData/findEntityOneByAll?code=2&page=0&size=2&sortList=name&sortOrders=desc";
 
@@ -93,7 +93,7 @@ class MyBatisPaginatorTests {
 	
 	
 	@Test
-	void teste_busca_all_erro() {
+	void teste_03() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/paginator/EntityOneData/findEntityOneByAll?page=0&size=0";
 
@@ -103,10 +103,8 @@ class MyBatisPaginatorTests {
 	}
 	
 	private List<EntityOneData> getAll(String url, ErrorResponse compare) {
-
 		List<EntityOneData> list = null;
 		PagedModel<EntityOneData> page = getRestAll(url, compare);
-
 		if(page != null) {
 			list = convertToEntityOneDataList(page.getContent());
 			assertNotNull(list);
@@ -114,20 +112,14 @@ class MyBatisPaginatorTests {
 		} else {
 			assertNull(page);
 		}
-
 		return list;
 	}
 
 	private PagedModel<EntityOneData> getRestAll(String url, ErrorResponse compare) {
-
 		HttpHeaders headers = new HttpHeaders();
-
-		headers.set("Accept", "application/json");
-
+		headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(headers);
-
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
 		if (response.getStatusCode().is2xxSuccessful()) {
 			return convertResponseToPagedModel(response.getBody());
 		} else {

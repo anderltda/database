@@ -62,7 +62,7 @@ class JDBCTests {
 	};
 	
 	@Test
-	void teste_busca_por_single_age_name_birthDate_erro_mais_de_um_registro() {
+	void teste_01() {
 	    
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/single/EntityOneView/teste_busca_com_condicoes_diversars?age=41,38,32&age_op=eq&name=*ar*&name_op=lk&birthDate=1956-08-30&birthDate_op=ge";
 
@@ -70,7 +70,7 @@ class JDBCTests {
 	}
 	
 	@Test
-	void teste_busca_por_single_age_name_birthDate() {
+	void teste_02() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/single/EntityOneView/teste_busca_com_condicoes_diversars?age=41&age_op=eq&name=Anderson&name_op=eq&birthDate=1983-03-29&birthDate_op=ge";
 		
@@ -81,7 +81,7 @@ class JDBCTests {
 	}
 	
 	@Test
-	void teste_single_encontra_name() {
+	void teste_03() {
 	    
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/single/EntityOneView/teste_busca_com_condicoes_diversars?name=Paulo&name_op=eq";
 
@@ -93,7 +93,7 @@ class JDBCTests {
 	}
 	
 	@Test
-	void teste_single_nao_encontra_name() {
+	void teste_04() {
 	    
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/single/EntityOneView/teste_busca_com_condicoes_diversars?name=Pablo&name_op=eq";
 
@@ -104,7 +104,7 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_busca_com_equal_pelo_name() {
+	void teste_05() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_equal_validar_orderby?name=Anderson&name_op=eq";
 
@@ -130,7 +130,7 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_busca_com_equal_pelo_age_e_birthDate_e_prohibitedDateTime_ordernacao_name_asc() {
+	void teste_06() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?"
 				+ "age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=eq&sortList=name,age&sortOrders=asc";
@@ -144,7 +144,7 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_notEqual_do_teste_busca_com_equal_pelo_age_e_birthDate_e_prohibitedDateTime_ordernacao_name_asc() {
+	void teste_07() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?"
 				+ "age=22&age_op=ne&birthDate=1990-01-01&birthDate_op=ne&prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=ne&sortList=name&sortOrders=asc";
@@ -163,7 +163,7 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_notEqual_com_name() {
+	void teste_08() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?"
 				+ "name=Carlos&name_op=ne&sortList=name&sortOrders=asc";
@@ -172,7 +172,7 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_busca_com_equal_pelo_age_e_birthDate_e_height() {
+	void teste_09() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?"
 				+ "age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&height=1.80&height_op=eq";
@@ -181,7 +181,7 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_busca_com_equal_e_prohibitedDateTime_e_ordernado_por_name_asc() {
+	void teste_10() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?"
 				+ "prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=eq";
@@ -196,7 +196,7 @@ class JDBCTests {
 	}
 	
 	@Test
-	void teste_busca_com_like_pelo_name_asterico_esquerda_e_direita_ordernado_por_birthDate_desc_e_name_asc() {
+	void teste_11() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?"
 				+ "name=*ar*&name_op=lk&sortList=birthDate,name&sortOrders=desc,asc";
@@ -213,7 +213,7 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_busca_por_like_pelo_name_asterico_direita() {
+	void teste_12() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?name=ar*&name_op=lk";
 		
@@ -221,7 +221,7 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_busca_por_in_com_birthDate_ordernado_com_age_asc() {
+	void teste_13() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=1956-08-30,1986-09-09,1990-09-09&birthDate_op=in&sortList=age&sortOrders=asc";
 		
@@ -235,7 +235,7 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_busca_por_in_com_birthDate_ordernado_com_age_desc() {
+	void teste_14() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=1956-08-30,1990-01-01,1990-09-09&birthDate_op=in&sortList=age,height&sortOrders=desc,asc";
 		
@@ -250,7 +250,7 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_busca_por_in_com_age() {
+	void teste_15() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?age=55,12,22&age_op=in";
 
@@ -258,7 +258,7 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_busca_por_in_com_ids() {
+	void teste_16() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?idEntityOne=" + SaveTests.ids.get(0) +"," + SaveTests.ids.get(1) + "&idEntityOne_op=in&sortList=idEntityOne&sortOrders=asc";
 
@@ -266,7 +266,7 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_busca_por_between_com_height_ordernado_por_height_desc() {
+	void teste_17() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?height=1.40,1.78&height_op=bt&sortList=height&sortOrders=desc";
 
@@ -281,7 +281,7 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_busca_por_between_com_prohibitedDateTime_ordernado_por_birthDate_desc() {
+	void teste_18() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?prohibitedDateTime=2024-02-01T08:50:00,2024-10-01T08:50:55&prohibitedDateTime_op=bt&sortList=birthDate&sortOrders=desc";
 		
@@ -297,7 +297,7 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_busca_por_greaterThanOrEqualTo_com_height() {
+	void teste_19() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?height=1.86&height_op=ge&sortList=birthDate&sortOrders=desc";
 
@@ -305,7 +305,7 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_busca_por_greaterThan_com_height() {
+	void teste_20() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?height=1.87&height_op=gt&sortList=birthDate&sortOrders=desc";
 
@@ -313,7 +313,7 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_busca_por_greaterThan_com_birthDate() {
+	void teste_21() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=1990-09-09&birthDate_op=gt&sortList=birthDate&sortOrders=desc";
 
@@ -321,7 +321,7 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_busca_por_greaterThanOrEqualTo_e_lessThanOrEqualTo_com_birthDate() {
+	void teste_22() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=1990-01-02&birthDate_op=ge&birthDate=2016-01-01&birthDate_op=le&sortList=birthDate&sortOrders=desc";
 
@@ -329,7 +329,7 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_busca_por_lessThanOrEqualTo_com_birthDate() {
+	void teste_23() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=1990-01-02&birthDate_op=le";
 
@@ -337,7 +337,7 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_busca_por_lessThan_com_birthDate() {
+	void teste_24() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=1986-09-08&birthDate_op=lt";
 
@@ -345,7 +345,7 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_busca_por_lessThanOrEqualTo_com_age() {
+	void teste_25() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?age=21&age_op=le";
 
@@ -353,7 +353,7 @@ class JDBCTests {
 	}
 	
 	@Test
-	void teste_busca_por_greaterThanOrEqualTo_com_birthDate() {
+	void teste_26() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?birthDate=2016-01-01&birthDate_op=ge";
 
@@ -361,7 +361,7 @@ class JDBCTests {
 	}
 	
 	@Test
-	void teste_busca_por_lessThan_com_age() {
+	void teste_27() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?age=21&age_op=lt";
 		
@@ -369,7 +369,7 @@ class JDBCTests {
 	}
 	
 	@Test
-	void teste_utilizando_group_by() {
+	void teste_28() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "//query/EntityOneView/teste_utilizando_group_by";
 
@@ -379,7 +379,7 @@ class JDBCTests {
 	}
 	
 	@Test
-	void teste_utilizando_group_by_erro() {
+	void teste_29() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_utilizando_group_by_erro";
 
@@ -387,7 +387,7 @@ class JDBCTests {
 	}
 	
 	@Test
-	void teste_busca_all_ordernacao_birthDate_asc_name_desc() {
+	void teste_30() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?sortList=birthDate,name&sortOrders=asc,desc";
 
@@ -408,7 +408,7 @@ class JDBCTests {
 	}
 	
 	@Test
-	void teste_busca_all_ordernacao_birthDate_desc_name_asc() {
+	void teste_31() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?sortList=birthDate,name&sortOrders=desc,asc";
 
@@ -429,7 +429,7 @@ class JDBCTests {
 	}
 	
 	@Test
-	void teste_busca_all_ordernacao_name_asc_birthDate_desc() {
+	void teste_32() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?sortList=name,birthDate&sortOrders=asc,desc";
 
@@ -450,7 +450,7 @@ class JDBCTests {
 	}
 	
 	@Test
-	void teste_busca_all_ordernacao_name_desc_birthDate_asc() {
+	void teste_33() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?sortList=name,birthDate&sortOrders=desc,asc";
 
@@ -471,7 +471,7 @@ class JDBCTests {
 	}
 	
 	@Test
-	void teste_nenhum_registro_encontrado() {
+	void teste_34() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars?name=Silva&name_op=eq";
 
@@ -481,7 +481,7 @@ class JDBCTests {
 	}
 	
 	@Test
-	void teste_query_not_found() {
+	void teste_35() {
 	    
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/nao_existe_query";
 		
@@ -489,7 +489,7 @@ class JDBCTests {
 	}
 	
 	@Test
-	void teste_filter_empty() {
+	void teste_36() {
 	    
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_condicoes_diversars";
 
@@ -500,7 +500,7 @@ class JDBCTests {
 	}
 	
 	@Test
-	void teste_um_exemplo_sem_order_by() {
+	void teste_37() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_um_exemplo_sem_order_by?prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=ge";
 		
@@ -512,7 +512,7 @@ class JDBCTests {
 	}
 	
 	@Test
-	void teste_um_exemplo_sem_order_by_erro() {
+	void teste_38() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOne/teste_um_exemplo_sem_order_by?prohibitedDateTime-=2024-11-01T08:00:00&prohibitedDateTime_op=ge";
 		
@@ -523,7 +523,7 @@ class JDBCTests {
 	}
 	
 	@Test
-	void teste_count_query_not_found() {
+	void teste_39() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/count/EntityOneView/teste?prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=ge";
 		
@@ -534,7 +534,7 @@ class JDBCTests {
 	}
 	
 	@Test
-	void teste_gera_um_erro_single_query_nao_encontrada() {
+	void teste_40() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/single/EntityOneView/query_123?page=0&size=5&sortList=name&sortOrders=asc";
 		
@@ -542,7 +542,7 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_count_maior_prohibitedDateTime_com_erro() {
+	void teste_41() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/count/EntityOneView/teste_um_exemplo_count?prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=ge";
 		
@@ -550,7 +550,7 @@ class JDBCTests {
 	}
 
 	@Test
-	void teste_count_maior_prohibitedDateTime() {
+	void teste_42() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/count/EntityOneView/teste_busca_com_condicoes_diversars?prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=ge";
 		
@@ -585,15 +585,10 @@ class JDBCTests {
 	}
 	
 	public List<EntityOneView> getAll(String url, ErrorResponse compare) {
-		
 		HttpHeaders headers = new HttpHeaders();
-		
-		headers.set("Accept", "application/json");
-
+		headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(headers);
-
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
 		if (response.getStatusCode().is2xxSuccessful()) {
 			return convertResponseToEntityOneViewList(response.getBody());
 		} else {
@@ -605,15 +600,10 @@ class JDBCTests {
 	}
 
 	public EntityOneView getSingleResult(String url, ErrorResponse compare) {
-		
 	    HttpHeaders headers = new HttpHeaders();
-	    
-	    headers.set("Accept", "application/json");
-
+		headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
 	    HttpEntity<String> entity = new HttpEntity<>(headers);
-
 	    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
 	    if (response.getStatusCode().is2xxSuccessful()) {
 	        return convertResponseToEntityOneView(response.getBody());
 	    } else {
@@ -625,15 +615,10 @@ class JDBCTests {
 	}
 	
 	private String getUniqueResult(String url, ErrorResponse compare) {
-		
 		HttpHeaders headers = new HttpHeaders();
-		
-		headers.set("Accept", "application/json");
-
+		headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(headers);
-
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
 		if (response.getStatusCode().is2xxSuccessful()) {
 			return response.getBody();
 		} else {

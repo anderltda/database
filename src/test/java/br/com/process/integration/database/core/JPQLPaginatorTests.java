@@ -61,7 +61,7 @@ class JPQLPaginatorTests {
 	};
 
 	@Test
-	void teste_busca_all_ordernacao_birthDate_asc_name_desc() {
+	void teste_01() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/paginator/EntityOne/buscaAll?page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
 
@@ -82,7 +82,7 @@ class JPQLPaginatorTests {
 	}
 	
 	@Test
-	void teste_busca_com_like_pelo_name() {
+	void teste_02() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/paginator/EntityOne/buscaComLikePeloName?name=ar&page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
 
@@ -98,7 +98,7 @@ class JPQLPaginatorTests {
 	}
 	
 	@Test
-	void teste_busca_com_like_pelo_name_nao_encontrado() {
+	void teste_03() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/paginator/EntityOne/buscaComLikePeloName?name=Silva&page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
 
@@ -108,7 +108,7 @@ class JPQLPaginatorTests {
 	}
 	
 	@Test
-	void teste_busca_all_ordernacao_birthDate_desc_name_asc() {
+	void teste_04() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/paginator/EntityOne/buscaAll?page=0&size=20&sortList=birthDate,name&sortOrders=desc,asc";
 
@@ -129,7 +129,7 @@ class JPQLPaginatorTests {
 	}
 	
 	@Test
-	void teste_busca_all_ordernacao_name_asc_birthDate_desc() {
+	void teste_05() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/paginator/EntityOne/buscaAll?page=0&size=20&sortList=name,birthDate&sortOrders=asc,desc";
 
@@ -150,7 +150,7 @@ class JPQLPaginatorTests {
 	}
 	
 	@Test
-	void teste_busca_all_ordernacao_name_desc_birthDate_asc() {
+	void teste_06() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/paginator/EntityOne/buscaAll?page=0&size=20&sortList=name,birthDate&sortOrders=desc,asc";
 
@@ -170,9 +170,8 @@ class JPQLPaginatorTests {
 		assertEquals("Anderson", list.get(9).getName());
 	}
 	
-	
 	@Test
-	void teste_all_page_erro() {
+	void teste_07() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/paginator/EntityOne/buscaAll?age=Silva&sortList=name,birthDate&sortOrders=desc,asc";
 
@@ -183,10 +182,8 @@ class JPQLPaginatorTests {
 	}
 	
 	private List<EntityOne> getAll(String url, ErrorResponse compare) {
-
 		List<EntityOne> list = null;
 		PagedModel<EntityOne> page = getRestAll(url, compare);
-
 		if(page != null) {
 			list = convertToEntityOneList(page.getContent());
 			assertNotNull(list);
@@ -194,20 +191,14 @@ class JPQLPaginatorTests {
 		} else {
 			assertNull(page);
 		}
-
 		return list;
 	}
 
 	private PagedModel<EntityOne> getRestAll(String url, ErrorResponse compare) {
-
 		HttpHeaders headers = new HttpHeaders();
-
-		headers.set("Accept", "application/json");
-
+		headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(headers);
-
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
 		if (response.getStatusCode().is2xxSuccessful()) {
 			return convertResponseToEntityOnePagedModel(response.getBody());
 		} else {

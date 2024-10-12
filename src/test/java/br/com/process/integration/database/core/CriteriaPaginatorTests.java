@@ -65,7 +65,7 @@ class CriteriaPaginatorTests {
 	};
 	
 	@Test
-	void teste_sortList_sortOrders_com_erro() {
+	void teste_01() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?name=Anderson&name_op=lk&sortList=name,asc&sortOrders=asc,desc";
 		
@@ -73,7 +73,7 @@ class CriteriaPaginatorTests {
 	}
 
 	@Test
-	void teste_busca_com_equal_pelo_name() {
+	void teste_02() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?name=Anderson&name_op=eq&page=0&size=10&sortList=name&sortOrders=asc";
 
@@ -95,7 +95,7 @@ class CriteriaPaginatorTests {
 	}
 
 	@Test
-	void teste_busca_com_equal_pelo_age_e_birthDate_e_prohibitedDateTime_ordernacao_name_asc() {
+	void teste_03() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=eq&page=0&size=10&sortList=name&sortOrders=asc";
 
@@ -108,7 +108,7 @@ class CriteriaPaginatorTests {
 	}
 
 	@Test
-	void teste_notEqual_do_teste_busca_com_equal_pelo_age_e_birthDate_e_prohibitedDateTime_ordernacao_name_asc() {
+	void teste_04() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?age=22&age_op=ne&birthDate=1990-01-01&birthDate_op=ne&prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=ne&page=0&size=10&sortList=name,id&sortOrders=asc,desc";
 
@@ -126,7 +126,7 @@ class CriteriaPaginatorTests {
 	}
 
 	@Test
-	void teste_notEqual_com_name() {
+	void teste_05() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?name=Carlos&name_op=ne&page=0&size=10&sortList=name&sortOrders=asc";
 		
@@ -134,7 +134,7 @@ class CriteriaPaginatorTests {
 	}
 
 	@Test
-	void teste_busca_com_equal_pelo_age_e_birthDate_e_height() {
+	void teste_06() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&height=1.8&height_op=eq&page=0&size=10&sortList=name,height&sortOrders=asc,desc";
 
@@ -142,7 +142,7 @@ class CriteriaPaginatorTests {
 	}
 
 	@Test
-	void teste_busca_com_equal_e_prohibitedDateTime_e_ordernado_por_name_asc() {
+	void teste_07() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=eq&sortList=name&sortOrders=asc";
 		
@@ -156,7 +156,7 @@ class CriteriaPaginatorTests {
 	}
 	
 	@Test
-	void teste_busca_com_equal_e_prohibitedDateTime_e_ordernado_por_name_asc_com_erro() {
+	void teste_08() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=eq&sortList=name&sortOrder=asc";
 		
@@ -164,7 +164,7 @@ class CriteriaPaginatorTests {
 	}
 	
 	@Test
-	void teste_busca_com_like_pelo_name_asterico_esquerda_e_direita_ordernado_por_birthDate_desc_e_name_asc() {
+	void teste_09() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?name=*ar*&name_op=lk&page=0&size=10&sortList=birthDate,name&sortOrders=desc,asc";
 		
@@ -180,7 +180,7 @@ class CriteriaPaginatorTests {
 	}
 
 	@Test
-	void teste_busca_por_like_pelo_name_asterico_direita() {
+	void teste_10() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?name=ar*&name_op=lk&page=0&size=10&sortList=name&sortOrders=asc";
 		
@@ -188,7 +188,7 @@ class CriteriaPaginatorTests {
 	}
 
 	@Test
-	void teste_busca_por_in_com_birthDate_ordernado_com_age_asc() {
+	void teste_11() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?birthDate=1956-08-30,1986-09-09,1990-09-09&birthDate_op=in&page=0&size=10&sortList=age&sortOrders=asc";
 		
@@ -202,7 +202,7 @@ class CriteriaPaginatorTests {
 	}
 
 	@Test
-	void teste_busca_por_in_com_birthDate_ordernado_com_age_desc() {
+	void teste_12() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?birthDate=1956-08-30,1990-01-01,1990-09-09&birthDate_op=in&page=0&size=10&sortList=age,height&sortOrders=desc,asc";
 		
@@ -217,7 +217,7 @@ class CriteriaPaginatorTests {
 	}
 
 	@Test
-	void teste_busca_por_in_com_age() {
+	void teste_13() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?age=55,12,22&age_op=in&page=0&size=10&sortList=age&sortOrders=desc";
 
@@ -225,7 +225,7 @@ class CriteriaPaginatorTests {
 	}
 
 	@Test
-	void teste_busca_por_in_com_ids() {
+	void teste_14() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?id= " + SaveTests.ids.get(0) + "," + SaveTests.ids.get(1) + "&id_op=in&page=0&size=10&sortList=id&sortOrders=asc";
 
@@ -233,7 +233,7 @@ class CriteriaPaginatorTests {
 	}
 
 	@Test
-	void teste_busca_por_between_com_height_ordernado_por_height_desc() {
+	void teste_15() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?height=1.40,1.78&height_op=bt&page=0&size=10&sortList=height&sortOrders=desc";
 
@@ -248,7 +248,7 @@ class CriteriaPaginatorTests {
 	}
 
 	@Test
-	void teste_busca_por_between_com_prohibitedDateTime_ordernado_por_birthDate_desc() {
+	void teste_16() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?prohibitedDateTime=2024-02-01T08:50:00,2024-10-01T08:50:55&prohibitedDateTime_op=bt&page=0&size=10&sortList=birthDate&sortOrders=desc";
 		
@@ -264,7 +264,7 @@ class CriteriaPaginatorTests {
 	}
 
 	@Test
-	void teste_busca_por_greaterThanOrEqualTo_com_height_com_erro() {
+	void teste_17() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?height=1.86&height_op=ge&page=0&size=10&ortList=height&sortOrders=desc";
 		
@@ -272,7 +272,7 @@ class CriteriaPaginatorTests {
 	}
 	
 	@Test
-	void teste_busca_por_greaterThanOrEqualTo_com_height() {
+	void teste_18() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?height=1.86&height_op=ge&page=0&size=10&sortList=height&sortOrders=desc";
 		
@@ -280,7 +280,7 @@ class CriteriaPaginatorTests {
 	}
 
 	@Test
-	void teste_busca_por_greaterThan_com_height() {
+	void teste_19() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?height=1.87&height_op=gt&page=0&size=10&sortList=height&sortOrders=desc";
 
@@ -288,7 +288,7 @@ class CriteriaPaginatorTests {
 	}
 
 	@Test
-	void teste_busca_por_greaterThan_com_birthDate() {
+	void teste_20() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?birthDate=1990-09-09&birthDate_op=gt&page=0&size=10&sortList=birthDate&sortOrders=desc";
 
@@ -296,7 +296,7 @@ class CriteriaPaginatorTests {
 	}
 
 	@Test
-	void teste_busca_por_greaterThanOrEqualTo_e_lessThanOrEqualTo_com_birthDate() {
+	void teste_21() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?birthDate=1990-01-02&birthDate_op=ge&birthDate=2016-01-01&birthDate_op=le&page=0&size=10&sortList=birthDate&sortOrders=desc";
 
@@ -304,7 +304,7 @@ class CriteriaPaginatorTests {
 	}
 
 	@Test
-	void teste_busca_por_lessThanOrEqualTo_com_birthDate() {
+	void teste_22() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?birthDate=1990-01-02&birthDate_op=le&page=0&size=10&sortList=birthDate&sortOrders=desc";
 
@@ -312,7 +312,7 @@ class CriteriaPaginatorTests {
 	}
 
 	@Test
-	void teste_busca_por_lessThan_com_birthDate() {
+	void teste_23() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?birthDate=1986-09-08&birthDate_op=lt&page=0&size=10&sortList=birthDate&sortOrders=desc";
 
@@ -320,7 +320,7 @@ class CriteriaPaginatorTests {
 	}
 
 	@Test
-	void teste_busca_por_lessThanOrEqualTo_com_age() {
+	void teste_24() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?age=21&age_op=le&page=0&size=10&sortList=age&sortOrders=desc";
 
@@ -328,7 +328,7 @@ class CriteriaPaginatorTests {
 	}
 	
 	@Test
-	void teste_busca_por_greaterThanOrEqualTo_com_birthDate() {
+	void teste_25() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?birthDate=2016-01-01&birthDate_op=ge&page=0&size=10&sortList=birthDate&sortOrders=desc";
 
@@ -336,7 +336,7 @@ class CriteriaPaginatorTests {
 	}
 	
 	@Test
-	void teste_busca_por_lessThan_com_age() {
+	void teste_26() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?age=21&age_op=lt&page=0&size=10&sortList=age&sortOrders=desc";
 		
@@ -344,7 +344,7 @@ class CriteriaPaginatorTests {
 	}
 	
 	@Test
-	void teste_busca_all_ordernacao_birthDate_asc_name_desc() {
+	void teste_27() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
 
@@ -365,7 +365,7 @@ class CriteriaPaginatorTests {
 	}
 	
 	@Test
-	void teste_busca_all_ordernacao_birthDate_desc_name_asc() {
+	void teste_28() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?page=0&size=20&sortList=birthDate,name&sortOrders=desc,asc";
 
@@ -386,7 +386,7 @@ class CriteriaPaginatorTests {
 	}
 	
 	@Test
-	void teste_busca_all_ordernacao_name_asc_birthDate_desc() {
+	void teste_29() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?page=0&size=20&sortList=name,birthDate&sortOrders=asc,desc";
 
@@ -407,7 +407,7 @@ class CriteriaPaginatorTests {
 	}
 	
 	@Test
-	void teste_busca_all_ordernacao_name_desc_birthDate_asc() {
+	void teste_30() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?page=0&size=20&sortList=name, birthDate&sortOrders=desc, asc";
 
@@ -428,7 +428,7 @@ class CriteriaPaginatorTests {
 	}
 	
 	@Test
-	void teste_nenhum_registro_encontrado() {
+	void teste_31() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?page=0&size=20&name=Silva&name_op=eq";
 
@@ -438,7 +438,7 @@ class CriteriaPaginatorTests {
 	}
 	
 	@Test
-	void teste_busca_por_ids() {
+	void teste_32() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?id=" + SaveTests.ids.get(0) + "," + SaveTests.ids.get(1) + "," + SaveTests.ids.get(2) + "&id_op=in&page=0&size=20";
 
@@ -452,7 +452,7 @@ class CriteriaPaginatorTests {
 	}
 	
 	@Test
-	void teste_busca_por_ids_nao_encontrado() {
+	void teste_33() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?id=1,2,3&id_op=in&page=0&size=20&sortList=name&sortOrders=desc";
 
@@ -486,10 +486,8 @@ class CriteriaPaginatorTests {
 	}
 	
 	private List<EntityOne> getAll(String url, ErrorResponse compare) {
-
 		List<EntityOne> list = null;
 		PagedModel<EntityOne> page = getRestAll(url, compare);
-
 		if(page != null) {
 			list = convertToEntityOneList(page.getContent());
 			assertNotNull(list);
@@ -497,20 +495,14 @@ class CriteriaPaginatorTests {
 		} else {
 			assertNull(page);
 		}
-
 		return list;
 	}
 	
 	private PagedModel<EntityOne> getRestAll(String url, ErrorResponse compare) {
-		
         HttpHeaders headers = new HttpHeaders();
-      
-        headers.set("Accept", "application/json");
-
+		headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
         HttpEntity<String> entity = new HttpEntity<>(headers);
-
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
         if (response.getStatusCode().is2xxSuccessful()) {
             return convertResponseToEntityOnePagedModel(response.getBody());
         } else {
@@ -544,10 +536,7 @@ class CriteriaPaginatorTests {
     private ObjectMapper createObjectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-
-        // Ignorar propriedades desconhecidas
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
         return objectMapper;
     }
     

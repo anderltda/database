@@ -65,7 +65,7 @@ class JDBCPaginatorTests {
 	};
 	
 	@Test
-	void teste_paginacao_com_varios_parmetros_page_nulo() {
+	void teste_01() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?name=Anderson&name_op=eq&age=41&age_op=eq&size=10&sortList=age,name&sortOrders=asc,desc";
 
@@ -79,7 +79,7 @@ class JDBCPaginatorTests {
 	}
 	
 	@Test
-	void teste_paginacao_com_varios_parmetros_sem_nenhum_registro() {
+	void teste_02() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?name=Anderson&name_op=in&age=23&age_op=eq&birthDate=1983-03-29&birthDate_op=eq&height=1.7&height_op=gt&prohibitedDateTime=2024-02-01T02:52:54&prohibitedDateTime_op=gt&page=0&size=10&sortList=name&sortOrders=asc";
 
@@ -89,7 +89,7 @@ class JDBCPaginatorTests {
 	}
 	
 	@Test
-	void teste_gera_um_erro_paginacao() {
+	void teste_03() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?page=ee&size=10&sortList=name&sortOrders=asc";
 
@@ -97,7 +97,7 @@ class JDBCPaginatorTests {
 	}
 
 	@Test
-	void teste_gera_um_erro_paginacao_query_nao_encontrada() {
+	void teste_04() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOneView/query_123?page=0&size=5&sortList=name&sortOrders=asc";
 
@@ -105,7 +105,7 @@ class JDBCPaginatorTests {
 	}
 	
 	@Test
-	void teste_a_query_teste_busca_com_condicoes_diversars_paginada() {
+	void teste_05() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?page=0&size=10&sortList=name&sortOrders=asc";
 
@@ -116,7 +116,7 @@ class JDBCPaginatorTests {
 	}
 	
 	@Test
-	void teste_a_query_teste_busca_com_condicoes_diversars_paginada_com_size_2() {
+	void teste_06() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?page=0&size=2&sortList=name&sortOrders=asc";
 
@@ -127,7 +127,7 @@ class JDBCPaginatorTests {
 	}
 	
 	@Test
-	void teste_a_query_teste_busca_com_condicoes_diversars_paginada_com_id() {
+	void teste_07() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?idEntityOne="+ SaveTests.ids.get(0) +"&idEntityOne_op=eq&page=0&size=2&sortList=name&sortOrders=asc";
 
@@ -142,7 +142,7 @@ class JDBCPaginatorTests {
 	
 	
 	@Test
-	void teste_busca_com_equal_pelo_name() {
+	void teste_08() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?name=Anderson&name_op=eq&page=0&size=10&sortList=name&sortOrders=asc";
 
@@ -167,7 +167,7 @@ class JDBCPaginatorTests {
 	}
 	
 	@Test
-	void teste_busca_com_equal_pelo_age_e_birthDate_e_prohibitedDateTime_ordernacao_name_asc() {
+	void teste_09() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=eq&page=0&size=10&sortList=name&sortOrders=asc";
 
@@ -182,7 +182,7 @@ class JDBCPaginatorTests {
 	}
 	
 	@Test
-	void teste_notEqual_do_teste_busca_com_equal_pelo_age_e_birthDate_e_prohibitedDateTime_ordernacao_name_asc() {
+	void teste_10() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?age=22&age_op=ne&birthDate=1990-01-01&birthDate_op=ne&prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=ne&page=0&size=10&sortList=name&sortOrders=asc";
 
@@ -202,7 +202,7 @@ class JDBCPaginatorTests {
 	}
 	
 	@Test
-	void teste_utilizando_group_by() {
+	void teste_11() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOneView/teste_utilizando_group_by?page=0&size=10";
 
@@ -216,7 +216,7 @@ class JDBCPaginatorTests {
 	}
 	
 	@Test
-	void teste_utilizando_group_by_erro() {
+	void teste_12() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOne/teste_utilizando_group_by_erro?page=0&size=10";
 		
@@ -227,7 +227,7 @@ class JDBCPaginatorTests {
 	}
 	
 	@Test
-	void teste_busca_com_equal_pelo_age_e_birthDate_e_prohibitedDateTime_ordernacao_name_desc() {
+	void teste_13() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?age=22&age_op=ne&birthDate=1990-01-01&birthDate_op=ne&prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=ne&page=0&size=10&sortList=name&sortOrders=desc";
 
@@ -250,15 +250,10 @@ class JDBCPaginatorTests {
 	}
 	
 	private PagedModel<EntityOneView> getAll(String url, ErrorResponse compare) {
-		
         HttpHeaders headers = new HttpHeaders();
-      
-        headers.set("Accept", "application/json");
-
+		headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
         HttpEntity<String> entity = new HttpEntity<>(headers);
-
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
         if (response.getStatusCode().is2xxSuccessful()) {
             return convertResponseToPagedModel(response.getBody());
         } else {
@@ -273,7 +268,6 @@ class JDBCPaginatorTests {
     	if(body == null) return null;
         ObjectMapper objectMapper = createObjectMapper();
         try {
-            // Converte a string JSON para PagedModel<EntityOneView>
             return objectMapper.readValue(body, new TypeReference<PagedModel<EntityOneView>>() {});
         } catch (Exception e) {
             throw new RuntimeException("Error parsing PagedModel<EntityOneView> response", e);
@@ -292,10 +286,7 @@ class JDBCPaginatorTests {
     private ObjectMapper createObjectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-
-        // Ignorar propriedades desconhecidas
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
         return objectMapper;
     }
     

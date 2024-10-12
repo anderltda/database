@@ -63,7 +63,7 @@ class CriteriaTests {
 	};
 	
 	@Test
-	void teste_sortList_sortOrders() {
+	void teste_01() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?name=Anderson&name_op=lk&sortList=name,age&sortOrders=asc,desc";
 		
@@ -74,7 +74,7 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_sortList_sortOrders_com_erro_de_campo_que_nao_existe() {
+	void teste_02() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?name=Anderson&name_op=lk&sortList=teste,age&sortOrders=asc,desc";
 		
@@ -84,7 +84,7 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_count_no_entity() {
+	void teste_03() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/count/EntityOne?nome=*ar*&nome_op=lk";
 		
@@ -94,7 +94,7 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_busca_name_e_sortList_sortOrders() {
+	void teste_04() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?name=Anderson&name_op=lk&sortList=name,age";
 		
@@ -106,7 +106,7 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_sortList_sortOrders_com_erro() {
+	void teste_05() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?name=Anderson&name_op=lk&sortList=name,asc&sortOrders=asc,desc";
 		
@@ -114,7 +114,7 @@ class CriteriaTests {
 	}
 
 	@Test
-	void teste_busca_com_equal_pelo_name() {
+	void teste_06() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?name=Anderson&name_op=eq";
 
@@ -136,7 +136,7 @@ class CriteriaTests {
 	}
 
 	@Test
-	void teste_busca_com_equal_pelo_age_e_birthDate_e_prohibitedDateTime_ordernacao_name_asc() {
+	void teste_07() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=eq&sortList=name&sortOrders=asc";
 
@@ -149,7 +149,7 @@ class CriteriaTests {
 	}
 
 	@Test
-	void teste_notEqual_do_teste_busca_com_equal_pelo_age_e_birthDate_e_prohibitedDateTime_ordernacao_name_asc() {
+	void teste_08() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?age=22&age_op=ne&birthDate=1990-01-01&birthDate_op=ne&prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=ne&sortList=name&sortOrders=asc";
 
@@ -167,7 +167,7 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_no_content_single() {
+	void teste_09() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/single/EntityOne?age=41&age_op=eq&name=Pedro&name_op=eq&birthDate=1983-03-29&birthDate_op=ge";
 		
@@ -177,7 +177,7 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_single_mais_de_um_registro() {
+	void teste_10() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/single/EntityOne?age=22,41&age_op=in";
 		
@@ -187,7 +187,7 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_notEqual_com_name() {
+	void teste_11() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?name=Carlos&name_op=ne&sortList=name&sortOrders=asc";
 		
@@ -195,7 +195,7 @@ class CriteriaTests {
 	}
 
 	@Test
-	void teste_busca_com_equal_pelo_age_e_birthDate_e_height() {
+	void teste_12() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&height=1.8&height_op=eq";
 
@@ -203,7 +203,7 @@ class CriteriaTests {
 	}
 
 	@Test
-	void teste_busca_com_equal_e_prohibitedDateTime_e_ordernado_por_name_asc() {
+	void teste_13() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=eq&sortList=name&sortOrders=asc";
 		
@@ -217,7 +217,7 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_busca_com_equal_e_prohibitedDateTime_e_ordernado_por_name_asc_com_erro() {
+	void teste_14() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=eq&sortList=name&sortOrder=asc";
 
@@ -225,7 +225,7 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_busca_com_like_pelo_name_asterico_esquerda_e_direita_ordernado_por_birthDate_desc_e_name_asc() {
+	void teste_15() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?name=*ar*&name_op=lk&sortList=birthDate,name&sortOrders=desc,asc";
 		
@@ -241,7 +241,7 @@ class CriteriaTests {
 	}
 
 	@Test
-	void teste_busca_por_like_pelo_name_asterico_direita() {
+	void teste_16() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?name=ar*&name_op=lk";
 		
@@ -249,7 +249,7 @@ class CriteriaTests {
 	}
 
 	@Test
-	void teste_busca_por_in_com_birthDate_ordernado_com_age_asc() {
+	void teste_17() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?birthDate=1956-08-30,1986-09-09,1990-09-09&birthDate_op=in&sortList=age&sortOrders=asc";
 		
@@ -263,7 +263,7 @@ class CriteriaTests {
 	}
 
 	@Test
-	void teste_busca_por_in_com_birthDate_ordernado_com_age_desc() {
+	void teste_18() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?birthDate=1956-08-30,1990-01-01,1990-09-09&birthDate_op=in&sortList=age,height&sortOrders=desc,asc";
 		
@@ -278,7 +278,7 @@ class CriteriaTests {
 	}
 
 	@Test
-	void teste_busca_por_in_com_age() {
+	void teste_19() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?age=55,12,22&age_op=in";
 
@@ -286,7 +286,7 @@ class CriteriaTests {
 	}
 
 	@Test
-	void teste_busca_por_in_com_ids() {
+	void teste_20() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?id=" + SaveTests.ids.get(0) +"," + SaveTests.ids.get(1) + "&id_op=in&sortList=id&sortOrders=asc";
 
@@ -294,7 +294,7 @@ class CriteriaTests {
 	}
 
 	@Test
-	void teste_busca_por_between_com_height_ordernado_por_height_desc() {
+	void teste_21() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?height=1.40,1.78&height_op=bt&sortList=height&sortOrders=desc";
 
@@ -309,7 +309,7 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_busca_por_between_com_height_ordernado_por_height_desc_erro() {
+	void teste_22() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?height=1.40,&height_op=bt&sortList=height&sortOrders=desc";
 
@@ -317,7 +317,7 @@ class CriteriaTests {
 	}
 
 	@Test
-	void teste_busca_por_between_com_prohibitedDateTime_ordernado_por_birthDate_desc() {
+	void teste_23() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?prohibitedDateTime=2024-02-01T08:50:00,2024-10-01T08:50:55&prohibitedDateTime_op=bt&sortList=birthDate&sortOrders=desc";
 		
@@ -333,7 +333,7 @@ class CriteriaTests {
 	}
 
 	@Test
-	void teste_busca_por_greaterThanOrEqualTo_com_height() {
+	void teste_24() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?height=1.86&height_op=ge";
 
@@ -341,7 +341,7 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_busca_por_greaterThanOrEqualTo_com_height_com_erro() {
+	void teste_25() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?height=1.8A6&height_op=ge";
 
@@ -349,7 +349,7 @@ class CriteriaTests {
 	}
 
 	@Test
-	void teste_busca_por_greaterThan_com_height() {
+	void teste_26() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?height=1.87&height_op=gt";
 
@@ -357,7 +357,7 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_busca_por_greaterThan_com_height_erro() {
+	void teste_27() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?height=AWs&height_op=gt";
 
@@ -365,7 +365,7 @@ class CriteriaTests {
 	}
 
 	@Test
-	void teste_busca_por_greaterThan_com_birthDate() {
+	void teste_28() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?birthDate=1990-09-09&birthDate_op=gt";
 
@@ -373,7 +373,7 @@ class CriteriaTests {
 	}
 
 	@Test
-	void teste_busca_por_greaterThanOrEqualTo_e_lessThanOrEqualTo_com_birthDate() {
+	void teste_29() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?birthDate=1990-01-02&birthDate_op=ge&birthDate=2016-01-01&birthDate_op=le";
 
@@ -381,7 +381,7 @@ class CriteriaTests {
 	}
 
 	@Test
-	void teste_busca_por_lessThanOrEqualTo_com_birthDate() {
+	void teste_30() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?birthDate=1990-01-02&birthDate_op=le";
 
@@ -389,7 +389,7 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_busca_por_lessThanOrEqualTo_com_age_erro() {
+	void teste_31() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?age=Wre&age_op=le";
 
@@ -397,7 +397,7 @@ class CriteriaTests {
 	}
 
 	@Test
-	void teste_busca_por_lessThan_com_birthDate() {
+	void teste_32() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?birthDate=1986-09-08&birthDate_op=lt";
 
@@ -405,7 +405,7 @@ class CriteriaTests {
 	}
 
 	@Test
-	void teste_busca_por_lessThanOrEqualTo_com_age() {
+	void teste_33() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?age=21&age_op=le";
 
@@ -413,7 +413,7 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_busca_por_lessThan_com_age_erro() {
+	void teste_34() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?age=QW&age_op=lt";
 
@@ -421,7 +421,7 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_busca_por_greaterThanOrEqualTo_com_birthDate() {
+	void teste_35() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?birthDate=2016-01-01&birthDate_op=ge";
 
@@ -429,7 +429,7 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_busca_por_lessThan_com_age() {
+	void teste_36() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?age=21&age_op=lt";
 		
@@ -437,7 +437,7 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_busca_all_ordernacao_birthDate_asc_name_desc() {
+	void teste_37() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?sortList=birthDate,name&sortOrders=asc,desc";
 
@@ -458,7 +458,7 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_busca_all_ordernacao_birthDate_desc_name_asc() {
+	void teste_38() {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?sortList=birthDate,name&sortOrders=desc,asc";
 
@@ -479,7 +479,7 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_busca_all_ordernacao_name_asc_birthDate_desc() {
+	void teste_39() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?sortList=name,birthDate&sortOrders=asc,desc";
 
@@ -500,7 +500,7 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_busca_all_ordernacao_name_desc_birthDate_asc() {
+	void teste_40() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?sortList=name,birthDate&sortOrders=desc,asc";
 
@@ -521,7 +521,7 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_busca_por_ids() {
+	void teste_41() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne/ids/" + SaveTests.ids.get(0) + "," + SaveTests.ids.get(1) + "," + SaveTests.ids.get(2);
 
@@ -535,22 +535,22 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_no_content_list() {
+	void teste_42() {
 		testes_result_is_null("http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?name=Pedro&name_op=eq&sortList=name&sortOrders=asc");
 	}
 	
 	@Test
-	void teste_nenhum_registro_encontrado() {
+	void teste_43() {
 		testes_result_is_null("http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?name=Silva&name_op=eq");
 	}
 	
 	@Test
-	void teste_busca_por_ids_nao_encontrado() {
+	void teste_44() {
 		testes_result_is_null("http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne/ids/1,2,3");
 	}
 	
 	@Test
-	void teste_busca_por_single_age_name_birthDate() {
+	void teste_45() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/single/EntityOne?age=41&age_op=eq&name=Anderson&name_op=eq&birthDate=1983-03-29&birthDate_op=ge";
 		
@@ -561,7 +561,7 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_busca_por_id() {
+	void teste_46() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne/" + SaveTests.ids.get(1);
 		
@@ -572,7 +572,7 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_busca_por_id_nao_encontrado() {
+	void teste_47() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne/1";
 		
@@ -582,7 +582,7 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_count_maior_prohibitedDateTime() {
+	void teste_48() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/count/EntityOne?prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=ge";
 		
@@ -592,7 +592,7 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_existi_o_id() {
+	void teste_49() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/exist/EntityOne/" + SaveTests.ids.get(1);
 		
@@ -602,7 +602,7 @@ class CriteriaTests {
 	}
 	
 	@Test
-	void teste_nao_existi_o_id() {
+	void teste_50() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/exist/EntityOne/1";
 		
@@ -643,15 +643,10 @@ class CriteriaTests {
 	}
 	
 	public List<EntityOne> getAll(String url, ErrorResponse compare) {
-		
 		HttpHeaders headers = new HttpHeaders();
-		
-		headers.set("Accept", "application/json");
-
+		headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(headers);
-
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
 		if (response.getStatusCode().is2xxSuccessful()) {
 			return convertResponseToEntityOneList(response.getBody());
 		} else {
@@ -663,15 +658,10 @@ class CriteriaTests {
 	}
 
 	public EntityOne getSingleResult(String url, ErrorResponse compare) {
-		
 	    HttpHeaders headers = new HttpHeaders();
-	    
-	    headers.set("Accept", "application/json");
-
+		headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
 	    HttpEntity<String> entity = new HttpEntity<>(headers);
-
 	    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
 	    if (response.getStatusCode().is2xxSuccessful()) {
 	        return convertResponseToEntityOne(response.getBody());
 	    } else {
@@ -683,15 +673,10 @@ class CriteriaTests {
 	}
 	
 	private String getUniqueResult(String url, ErrorResponse compare) {
-		
 		HttpHeaders headers = new HttpHeaders();
-		
-		headers.set("Accept", "application/json");
-
+		headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(headers);
-
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
 		if (response.getStatusCode().is2xxSuccessful()) {
 			return response.getBody();
 		} else {
@@ -699,7 +684,6 @@ class CriteriaTests {
 			assertEquals(compare.getStatus(), errorResponse.getStatus());
 			assertTrue(errorResponse.getMessage().contains(compare.getMessage()));
 	        throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: " + errorResponse.getMessage());
-
 		}
 	}
 	

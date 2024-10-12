@@ -63,7 +63,7 @@ class JPQLTests {
 	};
 
 	@Test
-	void teste_busca_com_equal_pelo_name_unico_registro() {
+	void teste_01() {
 
 		String url = "http://localhost:" + port
 				+ Constants.API_NAME_REQUEST_MAPPING + "/jpql/single/EntityOne/buscaComEqualPeloName?name=Anderson";
@@ -84,7 +84,7 @@ class JPQLTests {
 	}
 
 	@Test
-	void teste_busca_com_equal_pelo_name_unico_registro_trazend_mais_de_um() {
+	void teste_02() {
 
 		String url = "http://localhost:" + port
 				+ Constants.API_NAME_REQUEST_MAPPING + "/jpql/single/EntityOne/buscaComLikePeloName?name=Paulo";
@@ -97,7 +97,7 @@ class JPQLTests {
 	}
 
 	@Test
-	void teste_busca_com_like_pelo_name() {
+	void teste_03() {
 
 		String url = "http://localhost:" + port
 				+ Constants.API_NAME_REQUEST_MAPPING + "/jpql/EntityOne/buscaComLikePeloName?name=ar&sortList=birthDate,name&sortOrders=asc,desc";
@@ -114,7 +114,7 @@ class JPQLTests {
 	}
 
 	@Test
-	void teste_busca_all_ordernacao_birthDate_asc_name_desc() {
+	void teste_04() {
 
 		String url = "http://localhost:" + port
 				+ Constants.API_NAME_REQUEST_MAPPING + "/jpql/EntityOne/buscaAll?sortList=birthDate,name&sortOrders=asc,desc";
@@ -136,7 +136,7 @@ class JPQLTests {
 	}
 
 	@Test
-	void teste_busca_all_ordernacao_birthDate_desc_name_asc() {
+	void teste_05() {
 
 		String url = "http://localhost:" + port
 				+ Constants.API_NAME_REQUEST_MAPPING + "/jpql/EntityOne/buscaAll?sortList=birthDate,name&sortOrders=desc,asc";
@@ -158,7 +158,7 @@ class JPQLTests {
 	}
 
 	@Test
-	void teste_busca_all_ordernacao_name_asc_birthDate_desc() {
+	void teste_06() {
 
 		String url = "http://localhost:" + port
 				+ Constants.API_NAME_REQUEST_MAPPING + "/jpql/EntityOne/buscaAll?sortList=name,birthDate&sortOrders=asc,desc";
@@ -180,7 +180,7 @@ class JPQLTests {
 	}
 
 	@Test
-	void teste_busca_all_ordernacao_name_desc_birthDate_asc() {
+	void teste_07() {
 
 		String url = "http://localhost:" + port
 				+ Constants.API_NAME_REQUEST_MAPPING + "/jpql/EntityOne/buscaAll?sortList=name,birthDate&sortOrders=desc,asc";
@@ -202,7 +202,7 @@ class JPQLTests {
 	}
 
 	@Test
-	void teste_single_nenhum_registro_encontrado() {
+	void teste_08() {
 
 		String url = "http://localhost:" + port
 				+ Constants.API_NAME_REQUEST_MAPPING + "/jpql/single/EntityOne/buscaComEqualPeloName?name=Pedro";
@@ -213,7 +213,7 @@ class JPQLTests {
 	}
 
 	@Test
-	void teste_all_nenhum_registro_encontrado() {
+	void teste_09() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/EntityOne/buscaComLikePeloName?name=Silva&sortList=name,birthDate&sortOrders=desc,asc";
 
@@ -223,7 +223,7 @@ class JPQLTests {
 	}
 
 	@Test
-	void teste_count_maior_prohibitedDateTime() {
+	void teste_10() {
 
 		String url = "http://localhost:" + port
 				+ Constants.API_NAME_REQUEST_MAPPING + "/jpql/count/EntityOne/countMaiorProhibited?prohibitedDateTime=2024-11-01T08:00:00";
@@ -234,7 +234,7 @@ class JPQLTests {
 	}
 
 	@Test
-	void teste_count_erro() {
+	void teste_11() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/count/EntityOne/countMaiorAge?age=AQ";
 
@@ -245,7 +245,7 @@ class JPQLTests {
 	}
 	
 	@Test
-	void teste_all_sem_ordernacao() {
+	void teste_12() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/EntityOne/buscaAll?age=22";
 
@@ -258,7 +258,7 @@ class JPQLTests {
 	}
 	
 	@Test
-	void teste_all_erro() {
+	void teste_13() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/EntityOne/buscaAll?age=Silva&sortList=name,birthDate&sortOrders=desc,asc";
 
@@ -269,15 +269,10 @@ class JPQLTests {
 	}
 
 	public List<EntityOne> getAll(String url, ErrorResponse compare) {
-		
 		HttpHeaders headers = new HttpHeaders();
-		
 		headers.set("Accept", "application/json");
-
 		HttpEntity<String> entity = new HttpEntity<>(headers);
-
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
 		if (response.getStatusCode().is2xxSuccessful()) {
 			return convertResponseToEntityOneList(response.getBody());
 		} else {
@@ -289,15 +284,10 @@ class JPQLTests {
 	}
 
 	public EntityOne getSingleResult(String url, ErrorResponse compare) {
-		
 	    HttpHeaders headers = new HttpHeaders();
-	    
 	    headers.set("Accept", "application/json");
-
 	    HttpEntity<String> entity = new HttpEntity<>(headers);
-
 	    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
 	    if (response.getStatusCode().is2xxSuccessful()) {
 	        return convertResponseToEntityOne(response.getBody());
 	    } else {
@@ -309,15 +299,10 @@ class JPQLTests {
 	}
 	
 	private String getUniqueResult(String url, ErrorResponse compare) {
-		
 		HttpHeaders headers = new HttpHeaders();
-		
-		headers.set("Accept", "application/json");
-
+		headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(headers);
-
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
 		if (response.getStatusCode().is2xxSuccessful()) {
 			return response.getBody();
 		} else {
@@ -325,7 +310,6 @@ class JPQLTests {
 			assertEquals(compare.getStatus(), errorResponse.getStatus());
 			assertTrue(errorResponse.getMessage().contains(compare.getMessage()));
 	        throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: " + errorResponse.getMessage());
-
 		}
 	}
 	

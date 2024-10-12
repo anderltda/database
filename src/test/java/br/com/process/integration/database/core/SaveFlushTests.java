@@ -92,7 +92,7 @@ class SaveFlushTests {
 	
 	@Test
 	@Order(2)
-	void testFlushSave() {
+	void teste_01() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/flush/EntityOne";
 
@@ -155,7 +155,7 @@ class SaveFlushTests {
 
 	@Test
 	@Order(3)
-	void teste_valida_o_save_anterior_order_2() {
+	void teste_02() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne/" + id;
 		
@@ -169,7 +169,7 @@ class SaveFlushTests {
 	
 	@Test
 	@Order(4)
-	void testFlushSaveUpdate() {
+	void teste_03() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/flush/EntityOne";
 
@@ -234,7 +234,7 @@ class SaveFlushTests {
 	
 	@Test
 	@Order(5)
-	void teste_valida_o_save_anterior_order_4() {
+	void teste_04() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne/" + id;
 		
@@ -248,7 +248,7 @@ class SaveFlushTests {
 	
 	@Test
 	@Order(6)
-	void testFlushSaveAll() {
+	void teste_05() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/all/flush/EntityOne";
 
@@ -453,7 +453,7 @@ class SaveFlushTests {
 	
 	@Test
 	@Order(7)
-	void teste_valida_o_save_anterior_order_7() {
+	void teste_06() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne/" + ids.get(0);
 		
@@ -483,7 +483,7 @@ class SaveFlushTests {
 	
 	@Test
 	@Order(8)
-	void testSaveComErroNameNull() {
+	void teste_07() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/flush/EntityOne";
 
@@ -537,7 +537,7 @@ class SaveFlushTests {
 	
 	@Test
 	@Order(9)
-	void teste_valida_o_save_anterior_order_8() {
+	void teste_08() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/single/EntityOne?name=Marcelo&name_op=eq";
 		
@@ -548,7 +548,7 @@ class SaveFlushTests {
 	
 	@Test
 	@Order(10)
-	void testSaveNameSucesso() {
+	void teste_09() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/flush/EntityOne";
 
@@ -609,7 +609,7 @@ class SaveFlushTests {
 	
 	@Test
 	@Order(11)
-	void teste_valida_o_save_anterior_order_11() {
+	void teste_10() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/single/EntityOne?name=Marcelo&name_op=eq";
 		
@@ -684,15 +684,10 @@ class SaveFlushTests {
 	}
 	
 	public List<EntityOne> getAll(String url, ErrorResponse compare) {
-		
 		HttpHeaders headers = new HttpHeaders();
-		
 		headers.set("Accept", "application/json");
-
 		HttpEntity<String> entity = new HttpEntity<>(headers);
-
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
 		if (response.getStatusCode().is2xxSuccessful()) {
 			return convertResponseToEntityOneList(response.getBody());
 		} else {
@@ -704,15 +699,10 @@ class SaveFlushTests {
 	}
 
 	public EntityOne getSingleResult(String url, ErrorResponse compare) {
-		
 	    HttpHeaders headers = new HttpHeaders();
-	    
-	    headers.set("Accept", "application/json");
-
+		headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
 	    HttpEntity<String> entity = new HttpEntity<>(headers);
-
 	    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
 	    if (response.getStatusCode().is2xxSuccessful()) {
 	        return convertResponseToEntityOne(response.getBody());
 	    } else {

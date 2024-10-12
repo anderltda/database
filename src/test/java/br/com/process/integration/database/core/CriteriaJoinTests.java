@@ -55,7 +55,7 @@ class CriteriaJoinTests {
 	};
 
 	@Test
-	void teste_busca_com_equal_pelo_entityTwo_por_color_por_ordernacao_entityTwo() {
+	void teste_01() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?entityTwo.color=Preto&entityTwo.color_op=eq&sortList=entityTwo.inclusionDate, entityTwo.hex&sortOrders=desc,asc";
 		
@@ -70,7 +70,7 @@ class CriteriaJoinTests {
 	}
 	
 	@Test
-	void teste_busca_com_in_pelo_entityTree_por_animal() {
+	void teste_02() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?entityTwo.entityTree.animal=Cavalo,Gato,Papagaio&entityTwo.entityTree.animal_op=in&page=0&size=10&sortList=entityTwo.color,entityTwo.entityTree.animal&sortOrders=desc,asc";
 
@@ -100,7 +100,7 @@ class CriteriaJoinTests {
 	}
 
 	@Test
-	void teste_busca_com_equal_pelo_entityTree_por_animal() {
+	void teste_03() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?entityTwo.entityTree.animal=Capivara&entityTwo.entityTree.animal_op=eq";
 
@@ -115,7 +115,7 @@ class CriteriaJoinTests {
 	}
 	
 	@Test
-	void teste_busca_com_equal_pelo_entityFour_por_fruit() {
+	void teste_04() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?entityTwo.entityTree.entityFour.fruit=Pitanga&entityTwo.entityTree.entityFour.fruit_op=eq";
 
@@ -127,7 +127,7 @@ class CriteriaJoinTests {
 	
 	
 	@Test
-	void teste_busca_com_equal_pelo_entityFive_por_fruit() {
+	void teste_05() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?entityTwo.entityTree.entityFour.entityFive.reference=Cama&entityTwo.entityTree.entityFour.entityFive.reference_op=eq";
 
@@ -143,7 +143,7 @@ class CriteriaJoinTests {
 	
 	
 	@Test
-	void teste_busca_com_like_pelo_entityFive_por_fruit() {
+	void teste_06() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?entityTwo.entityTree.entityFour.entityFive.reference=c*&entityTwo.entityTree.entityFour.entityFive.reference_op=lk";
 
@@ -154,15 +154,10 @@ class CriteriaJoinTests {
 	}
 
 	public List<EntityOne> getAll(String url, ErrorResponse compare) {
-		
 		HttpHeaders headers = new HttpHeaders();
-		
-		headers.set("Accept", "application/json");
-
+		headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(headers);
-
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
 		if (response.getStatusCode().is2xxSuccessful()) {
 			return convertResponseToEntityOneList(response.getBody());
 		} else {
@@ -174,15 +169,10 @@ class CriteriaJoinTests {
 	}
 
 	public EntityOne getSingleResult(String url, ErrorResponse compare) {
-		
 	    HttpHeaders headers = new HttpHeaders();
-	    
-	    headers.set("Accept", "application/json");
-
+		headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
 	    HttpEntity<String> entity = new HttpEntity<>(headers);
-
 	    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
 	    if (response.getStatusCode().is2xxSuccessful()) {
 	        return convertResponseToEntityOne(response.getBody());
 	    } else {

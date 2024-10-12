@@ -53,7 +53,7 @@ class DeleteTests {
 
 	@Test
 	@Order(2)
-	void testDeleteForAllId() {
+	void teste_01() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?id=" + SaveFlushTests.ids.get(0) + "," + SaveFlushTests.ids.get(1);
 
@@ -64,7 +64,7 @@ class DeleteTests {
 
 	@Test
 	@Order(3)
-	void testDeleteForId() {
+	void teste_02() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne/" + SaveFlushTests.id;
 
@@ -75,7 +75,7 @@ class DeleteTests {
 
 	@Test
 	@Order(4)
-	void testDeleteForAll() {
+	void teste_03() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne";
 
@@ -86,7 +86,7 @@ class DeleteTests {
 	
 	@Test
 	@Order(5)
-	void testDeleteComErro() {
+	void teste_04() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne/AQW";
 
@@ -96,15 +96,10 @@ class DeleteTests {
 	}
 
 	public String delete(String url, ErrorResponse compare) {
-		
 		HttpHeaders headers = new HttpHeaders();
-		
-		headers.set("Content-Type", "application/json");
-
+		headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
 		HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
-
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, String.class);
-
 	    if (response.getStatusCode().is2xxSuccessful()) {
 	    	System.out.println("Resource deleted successfully. Response: " + response.getBody());
 	        return response.getStatusCode().toString();
@@ -115,7 +110,6 @@ class DeleteTests {
 			assertTrue(errorResponse.getMessage().contains(compare.getMessage()));
 	        throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: " + errorResponse.getMessage());
 	    }
-
 	}
 
 	private ErrorResponse convertResponseToErrorResponse(String body) {

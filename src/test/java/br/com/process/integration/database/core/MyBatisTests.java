@@ -63,7 +63,7 @@ class MyBatisTests {
 	};
 	
 	@Test
-	void teste_count_like_by_name() {
+	void teste_01() {
 
 		String url = "http://localhost:" + port
 				+ Constants.API_NAME_REQUEST_MAPPING + "/mapper/count/EntityOneData/countEntitiesByName?name=ar";
@@ -74,7 +74,7 @@ class MyBatisTests {
 	}
 	
 	@Test
-	void teste_busca_com_equal_pelo_name_unico_registro_com_nenhum_resultado() {
+	void teste_02() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/single/EntityOneData/findEntityDataByName?name=Pedro";
 
@@ -85,7 +85,7 @@ class MyBatisTests {
 	}
 	
 	@Test
-	void teste_busca_com_equal_pelo_name_unico_registro_com_erro() {
+	void teste_03() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/single/EntityOneData/methodNoMapping?name=Anderson";
 
@@ -94,7 +94,7 @@ class MyBatisTests {
 	}
 	
 	@Test
-	void teste_count_com_erro() {
+	void teste_04() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/count/EntityOneData/methodNoMapping?id=1";
 
@@ -103,7 +103,7 @@ class MyBatisTests {
 	}
 	
 	@Test
-	void teste_busca_com_equal_pelo_name_unico_registro() {
+	void teste_05() {
 
 		String url = "http://localhost:" + port
 				+ Constants.API_NAME_REQUEST_MAPPING + "/mapper/single/EntityOneData/findEntityDataByName?name=Anderson";
@@ -124,7 +124,7 @@ class MyBatisTests {
 	}
 	
 	@Test
-	void teste_busca_com_like_pelo_name_nenhum_registro_encontrado() {
+	void teste_06() {
 
 		String url = "http://localhost:" + port
 				+ Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/findEntityOneByName?name=Pedro&sortList=name&sortOrders=asc";
@@ -135,7 +135,7 @@ class MyBatisTests {
 	}
 
 	@Test
-	void teste_busca_com_like_pelo_name_com_erro() {
+	void teste_07() {
 
 		String url = "http://localhost:" + port
 				+ Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/findEntityDataByName?name=ar";
@@ -144,7 +144,7 @@ class MyBatisTests {
 	}
 	
 	@Test
-	void teste_busca_com_like_pelo_name() {
+	void teste_08() {
 
 		String url = "http://localhost:" + port
 				+ Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/findEntityOneByName?name=ar&sortList=name&sortOrders=asc";
@@ -162,7 +162,7 @@ class MyBatisTests {
 
 	
 	@Test
-	void teste_all_registro_com_erro() {
+	void teste_09() {
 
 		String url = "http://localhost:" + port
 				+ Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/methodNoMapping?name=Pedro";
@@ -171,7 +171,7 @@ class MyBatisTests {
 	}
 	
 	@Test
-	void teste_busca_com_like_pelo_name_ordernando_desc_com_erro() {
+	void teste_10() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/findEntityDataByName?name=ar&sortList=name,age&sortOrders=asc,desc";
 
@@ -180,7 +180,7 @@ class MyBatisTests {
 	}
 	
 	@Test
-	void teste_busca_com_like_pelo_name_ordernando_desc() {
+	void teste_11() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/findEntityOneByName?name=ar&sortList=name,age&sortOrders=asc,desc";
 
@@ -208,15 +208,10 @@ class MyBatisTests {
 	}
 
 	public List<EntityOneData> getAll(String url, ErrorResponse compare) {
-		
 		HttpHeaders headers = new HttpHeaders();
-		
 		headers.set("Accept", "application/json");
-
 		HttpEntity<String> entity = new HttpEntity<>(headers);
-
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
 		if (response.getStatusCode().is2xxSuccessful()) {
 			return convertResponseToEntityOneDataList(response.getBody());
 		} else {
@@ -228,15 +223,10 @@ class MyBatisTests {
 	}
 
 	public EntityOneData getSingleResult(String url, ErrorResponse compare) {
-		
 	    HttpHeaders headers = new HttpHeaders();
-	    
 	    headers.set("Accept", "application/json");
-
 	    HttpEntity<String> entity = new HttpEntity<>(headers);
-
 	    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
 	    if (response.getStatusCode().is2xxSuccessful()) {
 	        return convertResponseToEntityOneData(response.getBody());
 	    } else {
@@ -248,15 +238,10 @@ class MyBatisTests {
 	}
 	
 	private String getUniqueResult(String url, ErrorResponse compare) {
-		
 		HttpHeaders headers = new HttpHeaders();
-		
-		headers.set("Accept", "application/json");
-
+		headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<>(headers);
-
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-
 		if (response.getStatusCode().is2xxSuccessful()) {
 			return response.getBody();
 		} else {
@@ -264,7 +249,6 @@ class MyBatisTests {
 			assertEquals(compare.getStatus(), errorResponse.getStatus());
 			assertTrue(errorResponse.getMessage().contains(compare.getMessage()));
 	        throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: " + errorResponse.getMessage());
-
 		}
 	}
 	

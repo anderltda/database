@@ -84,7 +84,7 @@ class SaveTests {
 	
 	@Test
 	@Order(2)
-	void testSave() {
+	void teste_01() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne";
 
@@ -147,7 +147,7 @@ class SaveTests {
 
 	@Test
 	@Order(3)
-	void testSaveFlush() {
+	void teste_02() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/flush/EntityOne";
 
@@ -208,7 +208,7 @@ class SaveTests {
 
 	@Test
 	@Order(4)
-	void testSaveAll() {
+	void teste_03() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/all/EntityOne";
 
@@ -413,7 +413,7 @@ class SaveTests {
 
 	@Test
 	@Order(5)
-	void testSaveAllFlush() {
+	void teste_04() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/all/flush/EntityOne";
 
@@ -658,17 +658,11 @@ class SaveTests {
 	}
 
 	public List<String> postJson(String url, String json) {
-
 		HttpHeaders headers = new HttpHeaders();
-		
 		headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
-		
 		HttpEntity<String> requestEntity = new HttpEntity<>(json, headers);
-
 		List<String> responses = new ArrayList<>();
-
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
-
 		if (response.getStatusCode() == HttpStatus.OK) {
 			responses.add(response.getStatusCode().toString());
 			responses.add(response.getBody());
