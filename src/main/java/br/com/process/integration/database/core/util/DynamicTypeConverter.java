@@ -125,50 +125,38 @@ public class DynamicTypeConverter {
 
 		if (clazz.getTypeName().equals(Integer.class.getName())) {
 			return Integer.parseInt(value.toString());
+		} else if (clazz.getTypeName().equals(BigInteger.class.getName())) {
+			return new BigInteger(value.toString());
+		} else if (clazz.getTypeName().equals(BigDecimal.class.getName())) {
+			return new BigDecimal(parseStringDouble(value.toString()));	
 		} else if (clazz.getTypeName().equals(Long.class.getName())) {
 			return Long.parseLong(value.toString());
 		} else if (clazz.getTypeName().equals(Short.class.getName())) {
 			return Short.parseShort(value.toString());
 		} else if (clazz.getTypeName().equals(Double.class.getName())) {
-			return Double.parseDouble(value.toString());
+			return Double.parseDouble(parseStringDouble(value.toString()));
 		} else if (clazz.getTypeName().equals(Float.class.getName())) {
 			return Float.parseFloat(value.toString());
 		} else if (clazz.getTypeName().equals(Byte.class.getName())) {
 			return Byte.parseByte(value.toString());
-		} else if (clazz.getTypeName().equals(PageRequest.class.getName())) {
-			return value;			
+		} else if (clazz.getTypeName().equals(Boolean.class.getName())) {
+			return Boolean.parseBoolean(value.toString());	
+		} else if (clazz.getTypeName().equals(LocalDate.class.getName())) {
+			try {
+				return LocalDate.parse(value.toString(), DateTimeFormatter.ISO_LOCAL_DATE);
+			} catch (Exception doubleEx) {
+				return LocalDateTime.parse(value.toString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+			}
+		} else if (clazz.getTypeName().equals(LocalDateTime.class.getName())) {
+			return LocalDateTime.parse(value.toString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 		} else if (clazz.getTypeName().equals(Sort.class.getName())) {
 			return value;
 		} else if (clazz.getTypeName().equals(List.class.getName())) {
 			return value;			
-		} else if (clazz.getTypeName().equals(LocalDate.class.getName())) {
-			return LocalDate.parse(value.toString(), DateTimeFormatter.ISO_LOCAL_DATE);
-		} else if (clazz.getTypeName().equals(LocalDateTime.class.getName())) {
-			return LocalDateTime.parse(value.toString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+		} else if (clazz.getTypeName().equals(PageRequest.class.getName())) {
+			return value;			
 		} else {
 			return value.toString();
-		}
-
-	}
-
-	public static Object convertCascade(Object value) {
-
-		try {
-			return LocalDate.parse(value.toString(), DateTimeFormatter.ISO_LOCAL_DATE);
-		} catch (Exception doubleEx) {
-			try {
-				return LocalDateTime.parse(value.toString(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-			} catch (Exception ix) {
-				try {
-					return Integer.parseInt(value.toString());
-				} catch (Exception localDateEx) {
-					try {
-						return Double.parseDouble(parseStringDouble(value.toString()));
-					} catch (Exception localDateTimeEx) {
-						return value;
-					}
-				}
-			}
 		}
 	}
 	

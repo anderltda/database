@@ -160,7 +160,7 @@ class CriteriaPaginatorTests {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=eq&sortList=name&sortOrder=asc";
 		
-		teste_single_parameterized_one(url, "Could not resolve attribute 'sortOrder' of 'br.com.process.integration.database.domain.model.entity.EntityOne'");
+		teste_single_parameterized_one(url, "Atributo não encontrado: sortOrder");
 	}
 	
 	@Test
@@ -227,7 +227,7 @@ class CriteriaPaginatorTests {
 	@Test
 	void teste_14() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?id= " + SaveTests.ids.get(0) + "," + SaveTests.ids.get(1) + "&id_op=in&page=0&size=10&sortList=id&sortOrders=asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?id=" + SaveTests.ids.get(0) + "," + SaveTests.ids.get(1) + "&id_op=in&page=0&size=10&sortList=id&sortOrders=asc";
 
 		testes_single_parameterized_one(url, 2);
 	}
@@ -268,7 +268,7 @@ class CriteriaPaginatorTests {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?height=1.86&height_op=ge&page=0&size=10&ortList=height&sortOrders=desc";
 		
-		teste_single_parameterized_one(url, "Could not resolve attribute 'ortList' of 'br.com.process.integration.database.domain.model.entity.EntityOne'");
+		teste_single_parameterized_one(url, "Atributo não encontrado: ortList");
 	}
 	
 	@Test

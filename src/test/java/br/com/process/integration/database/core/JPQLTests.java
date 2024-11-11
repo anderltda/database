@@ -26,6 +26,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -215,11 +216,25 @@ class JPQLTests {
 	@Test
 	void teste_09() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/EntityOne/buscaComLikePeloName?name=Silva&sortList=name,birthDate&sortOrders=desc,asc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/EntityOne/buscaComLikePeloName?"
+				+ "name=Silva&"
+				+ "sortList=name,birthDate&"
+				+ "sortOrders=desc,asc";
+
+		getRestAllNotfound(url, 204);
+	}
+	
+	@Test
+	void teste_09_1() {
+
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/EntityOne/buscaComLikePeloName?name=er&sortList=name,birthDate&sortOrders=desc,asc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
-		assertNull(list);
+		assertNotNull(list);
+		assertEquals(2, list.size());
+		assertEquals("Carlos Alberto", list.get(0).getName());
+		assertEquals("Anderson", list.get(1).getName());
 	}
 
 	@Test
@@ -282,6 +297,16 @@ class JPQLTests {
 			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: " + errorResponse.getMessage());
 		}
 	}
+	
+	private void getRestAllNotfound(String url, int code) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+		if (response.getStatusCode().is2xxSuccessful()) {
+			assertEquals(response.getStatusCode().value(), HttpStatusCode.valueOf(code).value());
+		} 
+	}
 
 	public EntityOne getSingleResult(String url, ErrorResponse compare) {
 	    HttpHeaders headers = new HttpHeaders();
@@ -323,11 +348,7 @@ class JPQLTests {
 	private List<EntityOne> convertResponseToEntityOneList(String body) {
 	    ObjectMapper objectMapper = createObjectMapper();
 	    try {
-	    	if(body != null) {
-	    		return objectMapper.readValue(body, new TypeReference<List<EntityOne>>(){});
-	    	} else {
-	    		return null;
-	    	}
+	    	return objectMapper.readValue(body, new TypeReference<List<EntityOne>>(){});
 	    } catch (JsonProcessingException e) {
 	        throw new RuntimeException("Error parsing EntityOne list response", e);
 	    }

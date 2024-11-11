@@ -88,7 +88,7 @@ class CriteriaTests {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/count/EntityOne?nome=*ar*&nome_op=lk";
 		
-		ErrorResponse errorResponse = new ErrorResponse("Could not resolve attribute 'nome' of 'br.com.process.integration.database.domain.model.entity.EntityOne'", HttpStatus.BAD_REQUEST);
+		ErrorResponse errorResponse = new ErrorResponse("Atributo não encontrado: nome", HttpStatus.BAD_REQUEST);
 		
 	    assertThrows(RuntimeException.class, () -> getUniqueResult(url, errorResponse));
 	}
@@ -221,7 +221,7 @@ class CriteriaTests {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=eq&sortList=name&sortOrder=asc";
 
-		testes_single_parameterized_one(url, "Could not resolve attribute 'sortOrder' of 'br.com.process.integration.database.domain.model.entity.EntityOne'");
+		testes_single_parameterized_one(url, "Atributo não encontrado: sortOrder");
 	}
 	
 	@Test
@@ -345,7 +345,7 @@ class CriteriaTests {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?height=1.8A6&height_op=ge";
 
-	    testes_single_parameterized_one(url, "Error coercing value");
+	    testes_single_parameterized_one(url, "For input string: \"1.8A6\"");
 	}
 
 	@Test
@@ -361,7 +361,7 @@ class CriteriaTests {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?height=AWs&height_op=gt";
 
-	    testes_single_parameterized_one(url, "Error coercing value");
+	    testes_single_parameterized_one(url, "For input string: \"AWs\"");
 	}
 
 	@Test
@@ -393,7 +393,7 @@ class CriteriaTests {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?age=Wre&age_op=le";
 
-	    testes_single_parameterized_one(url, "Error coercing value");
+	    testes_single_parameterized_one(url, "For input string: \"Wre\"");
 	}
 
 	@Test
@@ -417,7 +417,7 @@ class CriteriaTests {
 		
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne?age=QW&age_op=lt";
 
-	    testes_single_parameterized_one(url, "Error coercing value");
+	    testes_single_parameterized_one(url, "For input string: \"QW\"");
 	}
 	
 	@Test

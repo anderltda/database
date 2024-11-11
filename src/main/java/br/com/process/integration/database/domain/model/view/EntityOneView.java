@@ -18,7 +18,7 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 	private Long idEntityOne;
 	private String name;
 	private Integer age;
-	private Integer code;
+	private Boolean code;
 	private Double height;
 	private LocalDate birthDate;
 	private LocalDateTime prohibitedDateTime;
@@ -80,11 +80,11 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 		this.age = age;
 	}
 
-	public Integer getCode() {
+	public Boolean getCode() {
 		return code;
 	}
 
-	public void setCode(Integer code) {
+	public void setCode(Boolean code) {
 		this.code = code;
 	}
 

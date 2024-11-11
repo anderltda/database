@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -390,6 +392,26 @@ public class MethodReflection {
 			return true;
 		}
 		
+		if (isCompatibleTypeoBigDecimal(paramType, value)) {
+			return true;
+		}
+		
+		if (isCompatibleTypeoBigInteger(paramType, value)) {
+			return true;
+		}
+		
+		if (isCompatibleTypeFloat(paramType, value)) {
+			return true;
+		}
+		
+		if (isCompatibleTypeShort(paramType, value)) {
+			return true;
+		}
+		
+		if (isCompatibleTypeBoolean(paramType, value)) {
+			return true;
+		}
+		
 		return isCompatibleTypeByte(paramType, value);
 	}
 	
@@ -404,11 +426,71 @@ public class MethodReflection {
 		}
 		return false;
 	}
+	
+	public static boolean isCompatibleTypeoBigInteger(Class<?> paramType, Object value) {
+		if (paramType == BigInteger.class && value instanceof String string) {
+			try {
+				new BigInteger(string);
+				return true;
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		return false;
+	}
+	
+	public static boolean isCompatibleTypeoBigDecimal(Class<?> paramType, Object value) {
+		if (paramType == BigDecimal.class && value instanceof String string) {
+			try {
+				new BigDecimal(string);
+				return true;
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		return false;
+	}
+	
+	public static boolean isCompatibleTypeBoolean(Class<?> paramType, Object value) {
+		if (paramType == Boolean.class && value instanceof String string) {
+			try {
+				Boolean.parseBoolean(string);
+				return true;
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		return false;
+	}
 
 	public static boolean isCompatibleTypeDouble(Class<?> paramType, Object value) {
 		if (paramType == Double.class && value instanceof String string) {
 			try {
 				Double.parseDouble(string);
+				return true;
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		return false;
+	}
+	
+	public static boolean isCompatibleTypeShort(Class<?> paramType, Object value) {
+		if (paramType == Short.class && value instanceof String string) {
+			try {
+				Short.parseShort(string);
+				return true;
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		return false;
+	}
+	
+	public static boolean isCompatibleTypeFloat(Class<?> paramType, Object value) {
+		if (paramType == Float.class && value instanceof String string) {
+			try {
+				Float.parseFloat(string);
 				return true;
 			} catch (Exception e) {
 				return false;
@@ -452,6 +534,20 @@ public class MethodReflection {
 		}
 		return false;
 	}
+	
+    public static Class<?> getAttributeType(String classPath, String attributeName) {
+        try {
+            Class<?> clazz = Class.forName(classPath);
+            Field field = clazz.getDeclaredField(attributeName);
+            return field.getType();
+        } catch (ClassNotFoundException e) {
+            throw new UncheckedException("Classe não encontrada: " + classPath);
+        } catch (NoSuchFieldException e) {
+            throw new UncheckedException("Atributo não encontrado: " + attributeName);
+        } catch (Exception e) {
+            throw new UncheckedException("Erro inesperado ao obter o tipo do atributo.", e);
+        }
+    }
 
 	private static boolean isPrimitiveMatch(Class<?> paramType, Object value) {
 
@@ -461,5 +557,4 @@ public class MethodReflection {
 
 		return paramType.isPrimitive() && primitiveToWrapper.get(paramType).isInstance(value);
 	}
-
 }

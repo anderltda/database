@@ -63,7 +63,7 @@ class MyBatisPaginatorTests {
 	@Test
 	void teste_01() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/paginator/EntityOneData/findEntityOneByAll?code=1&page=0&size=10&sortList=name&sortOrders=desc";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/paginator/EntityOneData/findEntityOneByAll?code=true&page=0&size=10&sortList=name&sortOrders=desc";
 
 		List<EntityOneData> list = getAll(url, new ErrorResponse());
 

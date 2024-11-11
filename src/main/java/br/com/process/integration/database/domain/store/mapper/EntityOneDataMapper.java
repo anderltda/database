@@ -24,12 +24,12 @@ public interface EntityOneDataMapper extends DataMapper<EntityOneData> {
 			@Param(Constants.SORT_ORDERS) List<String> sortOrders);
 	
 	List<EntityOneData> findEntityOneByAll(
-			@Param("code") Integer code, 
+			@Param("code") Boolean code, 
 			@Param(Constants.NAME_PAGE) Integer page, 
 			@Param(Constants.NAME_SIZE) Integer size,
 			@Param(Constants.SORT_LIST) List<String> sortList,
 			@Param(Constants.SORT_ORDERS) List<String> sortOrders);
 
-	int countFindEntityOneByAll(@Param("code") Integer code);
+	int countFindEntityOneByAll(@Param("code") Boolean code);
 	
 }

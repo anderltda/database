@@ -45,7 +45,7 @@ public class EntityOne extends RepresentationModel<EntityOne> implements BeanEnt
 	private LocalDateTime prohibitedDateTime;
 	
 	@Column(name = "code", nullable = false)
-	private Integer code = 1;
+	private Boolean code = true;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_entity_two", nullable = false, referencedColumnName = "id_entity_two")
@@ -99,11 +99,11 @@ public class EntityOne extends RepresentationModel<EntityOne> implements BeanEnt
 		this.prohibitedDateTime = prohibitedDateTime;
 	}
 
-	public Integer getCode() {
+	public Boolean getCode() {
 		return code;
 	}
 
-	public void setCode(Integer code) {
+	public void setCode(Boolean code) {
 		this.code = code;
 	}
 

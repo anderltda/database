@@ -106,7 +106,9 @@ class JDBCTests {
 	@Test
 	void teste_05() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_equal_validar_orderby?name=Anderson&name_op=eq";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/EntityOneView/teste_busca_com_equal_validar_orderby?"
+				+ "name=Anderson&"
+				+ "name_op=eq";
 
 		List<EntityOneView> list = getAll(url, new ErrorResponse());
 		

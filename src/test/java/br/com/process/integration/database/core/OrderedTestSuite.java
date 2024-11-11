@@ -20,5 +20,15 @@ import org.junit.platform.suite.api.Suite;
 	MyBatisPaginatorTests.class
 })
 public class OrderedTestSuite {
+	
+	public static void sysout(String url) {
+		
+        String formatted = url.substring(url.indexOf("?")).replace("&", "&\n")
+                .lines()
+                .map(line -> "    + \"" + line + "\"")
+                .reduce("", (acc, line) -> acc + line + "\n");
+
+        System.out.println(formatted);
+	}
 
 }

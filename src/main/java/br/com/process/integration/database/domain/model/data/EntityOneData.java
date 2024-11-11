@@ -19,7 +19,7 @@ public class EntityOneData extends RepresentationModel<EntityOneData> implements
 	private Long id;
 	private String name;
 	private Integer age;
-	private Integer code;
+	private Boolean code;
 	private Double height;
 	private LocalDate birthDate;
 	private LocalDateTime prohibitedDateTime;
@@ -53,11 +53,11 @@ public class EntityOneData extends RepresentationModel<EntityOneData> implements
 		this.age = age;
 	}
 
-	public Integer getCode() {
+	public Boolean getCode() {
 		return code;
 	}
 
-	public void setCode(Integer code) {
+	public void setCode(Boolean code) {
 		this.code = code;
 	}
 

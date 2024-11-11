@@ -1,3 +1,4 @@
+
 package br.com.process.integration.database.core.reflection;
 
 import java.lang.reflect.InvocationTargetException;
@@ -65,7 +66,7 @@ public class MethodPredicate {
 			for (int i = 0; i < pathParts.length; i++) {
 				String part = pathParts[i];
 				if (i == pathParts.length - 1) {
-					MethodReflection.executeMethod(this, operatorJoin, criteriaBuilder, predicates, root, part, DynamicTypeConverter.convertCascade(value));
+					MethodReflection.executeMethod(this, operatorJoin, criteriaBuilder, predicates, root, part, value);
 					return;
 				} else {
 					if (join == null && root != null) {
@@ -87,9 +88,10 @@ public class MethodPredicate {
 	public void equalCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, Object value) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 		
 		try {
-
+			
+	        Class<?> type = MethodReflection.getAttributeType(root.getJavaType().getName(), field);
 			Method invokeMethod = CriteriaBuilder.class.getMethod("equal", Expression.class, Object.class);
-			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convertCascade(value));
+			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convert(type, value));
 			predicates.add(predicate);
 
 		} catch (Exception ex) {
@@ -107,8 +109,10 @@ public class MethodPredicate {
                     .map(str -> str.split(","))
                     .orElse(new String[1]); 
 			
+	        Class<?> type = MethodReflection.getAttributeType(root.getJavaType().getName(), field);
+	        
 			Method invokeMethod = CriteriaBuilder.class.getMethod("between", Expression.class, Comparable.class, Comparable.class);
-			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convertCascade(split[0]), DynamicTypeConverter.convertCascade(split[1]));
+			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convert(type, split[0]), DynamicTypeConverter.convert(type, split[1]));
 			predicates.add(predicate);
 			
 		} catch (Exception ex) {
@@ -142,8 +146,9 @@ public class MethodPredicate {
 		
 		try {
 
+	        Class<?> type = MethodReflection.getAttributeType(root.getJavaType().getName(), field);
 			Method invokeMethod = CriteriaBuilder.class.getMethod("like", Expression.class, String.class);
-			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convertCascade(value.replace("*", "%")));
+			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convert(type, value.replace("*", "%")));
 			predicates.add(predicate);
 
 		} catch (Exception ex) {
@@ -156,8 +161,9 @@ public class MethodPredicate {
 		
 		try {
 
+	        Class<?> type = MethodReflection.getAttributeType(root.getJavaType().getName(), field);
 			Method invokeMethod = CriteriaBuilder.class.getMethod("notEqual", Expression.class, Object.class);
-			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convertCascade(value));
+			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convert(type, value));
 			predicates.add(predicate);
 
 		} catch (Exception ex) {
@@ -173,8 +179,10 @@ public class MethodPredicate {
 			String[] values = value.split(",");
 			Object[] valuesObjects = new Object[values.length];
 			
+	        Class<?> type = MethodReflection.getAttributeType(root.getJavaType().getName(), field);
+			
 			for (int i = 0; i < values.length; i++) {
-				valuesObjects[i] = DynamicTypeConverter.convertCascade(values[i]);
+				valuesObjects[i] = DynamicTypeConverter.convert(type, values[i]);
 			}
 			
 			Predicate predicate = root.get(field).in(valuesObjects);
@@ -187,8 +195,9 @@ public class MethodPredicate {
 	
 	private void greaterThan(String method, CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, Object value) throws UncheckedException {
 		try {
+	        Class<?> type = MethodReflection.getAttributeType(root.getJavaType().getName(), field);
 			Method invokeMethod = CriteriaBuilder.class.getMethod(method, Expression.class, Comparable.class);
-			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convertCascade(value));
+			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convert(type, value));
 			predicates.add(predicate);
 		} catch (InvocationTargetException ex) {
 			Throwable tex = ex.getTargetException();
@@ -200,8 +209,9 @@ public class MethodPredicate {
 	
 	public void lessThan(String method, CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, Object value) throws UncheckedException {
 		try {
+	        Class<?> type = MethodReflection.getAttributeType(root.getJavaType().getName(), field);
 			Method invokeMethod = CriteriaBuilder.class.getMethod(method, Expression.class, Comparable.class);
-			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convertCascade(value));
+			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), DynamicTypeConverter.convert(type, value));
 			predicates.add(predicate);
 		} catch (InvocationTargetException ex) {
 			Throwable tex = ex.getTargetException();
