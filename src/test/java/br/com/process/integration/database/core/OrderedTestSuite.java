@@ -5,6 +5,8 @@ import org.junit.platform.suite.api.Suite;
 
 @Suite
 @SelectClasses({ 
+	SaveInsertsFlushTests.class,
+	DeleteAllTests.class, 
 	SaveFlushTests.class, 
 	DeleteTests.class, 
 	SaveTests.class,
