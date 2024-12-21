@@ -7,9 +7,12 @@ import org.springframework.hateoas.RepresentationModel;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import br.com.process.integration.database.core.domain.BeanEntity;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -26,6 +29,10 @@ public class EntityFive extends RepresentationModel<EntityFive> implements BeanE
 
 	@Column(name = "factor", nullable = true)
 	private Integer factor;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_entity_status", nullable = false, referencedColumnName = "id_entity_status")
+	private EntityStatus entityStatus;
 
 	public String getId() {
 		return id;
@@ -51,11 +58,19 @@ public class EntityFive extends RepresentationModel<EntityFive> implements BeanE
 		this.factor = factor;
 	}
 
+	public EntityStatus getEntityStatus() {
+		return entityStatus;
+	}
+
+	public void setEntityStatus(EntityStatus entityStatus) {
+		this.entityStatus = entityStatus;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(id, reference, factor);
+		result = prime * result + Objects.hash(entityStatus, factor, id, reference);
 		return result;
 	}
 
@@ -68,8 +83,7 @@ public class EntityFive extends RepresentationModel<EntityFive> implements BeanE
 		if (getClass() != obj.getClass())
 			return false;
 		EntityFive other = (EntityFive) obj;
-		return Objects.equals(id, other.id) && Objects.equals(reference, other.reference)
-				&& Objects.equals(factor, other.factor);
+		return Objects.equals(entityStatus, other.entityStatus) && Objects.equals(factor, other.factor)
+				&& Objects.equals(id, other.id) && Objects.equals(reference, other.reference);
 	}
-
 }

@@ -38,6 +38,10 @@ public class EntityFour extends RepresentationModel<EntityFour> implements BeanE
 	@JoinColumn(name = "id_entity_five", nullable = false, referencedColumnName = "id_entity_five")
 	private EntityFive entityFive;
 
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_entity_status", nullable = false, referencedColumnName = "id_entity_status")
+	private EntityStatus entityStatus;
+
 	public String getId() {
 		return id;
 	}
@@ -78,11 +82,19 @@ public class EntityFour extends RepresentationModel<EntityFour> implements BeanE
 		this.entityFive = entityFive;
 	}
 
+	public EntityStatus getEntityStatus() {
+		return entityStatus;
+	}
+
+	public void setEntityStatus(EntityStatus entityStatus) {
+		this.entityStatus = entityStatus;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(inclusionDateTime, entityFive, fruit, id, attribute);
+		result = prime * result + Objects.hash(attribute, entityFive, entityStatus, fruit, id, inclusionDateTime);
 		return result;
 	}
 
@@ -95,8 +107,9 @@ public class EntityFour extends RepresentationModel<EntityFour> implements BeanE
 		if (getClass() != obj.getClass())
 			return false;
 		EntityFour other = (EntityFour) obj;
-		return Objects.equals(inclusionDateTime, other.inclusionDateTime)
-				&& Objects.equals(entityFive, other.entityFive) && Objects.equals(fruit, other.fruit)
-				&& Objects.equals(id, other.id) && Objects.equals(attribute, other.attribute);
+		return Objects.equals(attribute, other.attribute) && Objects.equals(entityFive, other.entityFive)
+				&& Objects.equals(entityStatus, other.entityStatus) && Objects.equals(fruit, other.fruit)
+				&& Objects.equals(id, other.id) && Objects.equals(inclusionDateTime, other.inclusionDateTime);
 	}
+
 }

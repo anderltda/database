@@ -39,6 +39,7 @@ import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.domain.model.entity.EntityFive;
 import br.com.process.integration.database.domain.model.entity.EntityFour;
 import br.com.process.integration.database.domain.model.entity.EntityOne;
+import br.com.process.integration.database.domain.model.entity.EntityStatus;
 import br.com.process.integration.database.domain.model.entity.EntityTree;
 import br.com.process.integration.database.domain.model.entity.EntityTwo;
 
@@ -616,12 +617,14 @@ class SaveTests {
 	public EntityOne gerarEntity(String[] text, Integer[] inteiro, Double[] dobro, String[] localDate,
 			String[] localTime) {
 
+		EntityStatus entityStatus = gerarEntityStatus("entityOne status", true, 1, "1993-10-10T19:14:10");
 		EntityOne entityOne = new EntityOne();
 		entityOne.setName(text[0]);
 		entityOne.setAge(inteiro[0]);
 		entityOne.setHeight(dobro[0]);
 		entityOne.setBirthDate(geraLocalDate(localDate[0]));
 		entityOne.setProhibitedDateTime(geraDataLocalTime(localTime[0]));
+		entityOne.setEntityStatus(entityStatus);
 
 		EntityTwo entityTwo = new EntityTwo();
 		entityTwo.setId(UUID.randomUUID().toString());
@@ -629,6 +632,7 @@ class SaveTests {
 		entityTwo.setHex(inteiro[1]);
 		entityTwo.setCost(dobro[1]);
 		entityTwo.setInclusionDate(geraLocalDate(localDate[1]));
+		entityTwo.setEntityStatus(entityStatus);
 
 		EntityTree entityTree = new EntityTree();
 		entityTree.setId(UUID.randomUUID().toString());
@@ -637,17 +641,20 @@ class SaveTests {
 		entityTree.setAmount(dobro[2]);
 		entityTree.setLocalDate(geraLocalDate(localDate[2]));
 		entityTree.setLocalDateTime(geraDataLocalTime(localTime[2]));
+		entityTree.setEntityStatus(entityStatus);
 
 		EntityFour entityFour = new EntityFour();
 		entityFour.setId(UUID.randomUUID().toString());
 		entityFour.setFruit(text[3]);
 		entityFour.setAttribute(inteiro[3]);
 		entityFour.setInclusionDateTime(geraDataLocalTime(localTime[3]));
+		entityFour.setEntityStatus(entityStatus);
 
 		EntityFive entityFive = new EntityFive();
 		entityFive.setId(UUID.randomUUID().toString());
 		entityFive.setReference(text[4]);
 		entityFive.setFactor(inteiro[4]);
+		entityFive.setEntityStatus(entityStatus);
 
 		entityOne.setEntityTwo(entityTwo);
 		entityTwo.setEntityTree(entityTree);
@@ -657,6 +664,18 @@ class SaveTests {
 		return entityOne;
 	}
 
+	
+	public EntityStatus gerarEntityStatus(String name, Boolean ativo, Integer status, String localTime) {
+
+		EntityStatus entityStatus = new EntityStatus();
+		entityStatus.setAtivo(ativo);
+		entityStatus.setName(name);
+		entityStatus.setStartDateTime(geraDataLocalTime(localTime));
+		entityStatus.setStatus(status);
+
+		return entityStatus;
+	}
+	
 	public List<String> postJson(String url, String json) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);

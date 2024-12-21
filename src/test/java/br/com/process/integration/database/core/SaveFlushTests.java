@@ -47,6 +47,7 @@ import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.domain.model.entity.EntityFive;
 import br.com.process.integration.database.domain.model.entity.EntityFour;
 import br.com.process.integration.database.domain.model.entity.EntityOne;
+import br.com.process.integration.database.domain.model.entity.EntityStatus;
 import br.com.process.integration.database.domain.model.entity.EntityTree;
 import br.com.process.integration.database.domain.model.entity.EntityTwo;
 
@@ -620,6 +621,8 @@ class SaveFlushTests {
 
 	public EntityOne gerarEntity(String[] text, Integer[] inteiro, Double[] dobro, String[] localDate,
 			String[] localTime) {
+		
+		EntityStatus entityStatus = gerarEntityStatus("entityOne status", true, 1, "1993-10-10T19:14:10");
 
 		EntityOne entityOne = new EntityOne();
 		entityOne.setName(text[0]);
@@ -627,6 +630,7 @@ class SaveFlushTests {
 		entityOne.setHeight(dobro[0]);
 		entityOne.setBirthDate(geraLocalDate(localDate[0]));
 		entityOne.setProhibitedDateTime(geraDataLocalTime(localTime[0]));
+		entityOne.setEntityStatus(entityStatus);
 
 		EntityTwo entityTwo = new EntityTwo();
 		entityTwo.setId(UUID.randomUUID().toString());
@@ -634,6 +638,7 @@ class SaveFlushTests {
 		entityTwo.setHex(inteiro[1]);
 		entityTwo.setCost(dobro[1]);
 		entityTwo.setInclusionDate(geraLocalDate(localDate[1]));
+		entityTwo.setEntityStatus(entityStatus);
 		entityOne.setEntityTwo(entityTwo);
 
 		EntityTree entityTree = new EntityTree();
@@ -643,6 +648,7 @@ class SaveFlushTests {
 		entityTree.setAmount(dobro[2]);
 		entityTree.setLocalDate(geraLocalDate(localDate[2]));
 		entityTree.setLocalDateTime(geraDataLocalTime(localTime[2]));
+		entityTree.setEntityStatus(entityStatus);
 		entityTwo.setEntityTree(entityTree);
 
 		EntityFour entityFour = new EntityFour();
@@ -650,15 +656,28 @@ class SaveFlushTests {
 		entityFour.setFruit(text[3]);
 		entityFour.setAttribute(inteiro[3]);
 		entityFour.setInclusionDateTime(geraDataLocalTime(localTime[3]));
+		entityFour.setEntityStatus(entityStatus);
 		entityTree.setEntityFour(entityFour);
 
 		EntityFive entityFive = new EntityFive();
 		entityFive.setId(UUID.randomUUID().toString());
 		entityFive.setReference(text[4]);
 		entityFive.setFactor(inteiro[4]);
+		entityFive.setEntityStatus(entityStatus);
 		entityFour.setEntityFive(entityFive);
 
 		return entityOne;
+	}
+	
+	public EntityStatus gerarEntityStatus(String name, Boolean ativo, Integer status, String localTime) {
+
+		EntityStatus entityStatus = new EntityStatus();
+		entityStatus.setAtivo(ativo);
+		entityStatus.setName(name);
+		entityStatus.setStartDateTime(geraDataLocalTime(localTime));
+		entityStatus.setStatus(status);
+
+		return entityStatus;
 	}
 
 	public List<String> postJson(String url, String json, ErrorResponse compare) {

@@ -43,13 +43,17 @@ public class EntityOne extends RepresentationModel<EntityOne> implements BeanEnt
 
 	@Column(name = "prohibited_date_time", nullable = false)
 	private LocalDateTime prohibitedDateTime;
-	
+
 	@Column(name = "code", nullable = false)
 	private Boolean code = true;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_entity_two", nullable = false, referencedColumnName = "id_entity_two")
 	private EntityTwo entityTwo;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_entity_status", nullable = false, referencedColumnName = "id_entity_status")
+	private EntityStatus entityStatus;
 
 	public Long getId() {
 		return id;
@@ -115,11 +119,20 @@ public class EntityOne extends RepresentationModel<EntityOne> implements BeanEnt
 		this.entityTwo = entityTwo;
 	}
 
+	public EntityStatus getEntityStatus() {
+		return entityStatus;
+	}
+
+	public void setEntityStatus(EntityStatus entityStatus) {
+		this.entityStatus = entityStatus;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(age, birthDate, code, entityTwo, height, id, name, prohibitedDateTime);
+		result = prime * result
+				+ Objects.hash(age, birthDate, code, entityStatus, entityTwo, height, id, name, prohibitedDateTime);
 		return result;
 	}
 
@@ -133,11 +146,10 @@ public class EntityOne extends RepresentationModel<EntityOne> implements BeanEnt
 			return false;
 		EntityOne other = (EntityOne) obj;
 		return Objects.equals(age, other.age) && Objects.equals(birthDate, other.birthDate)
-				&& Objects.equals(code, other.code) && Objects.equals(entityTwo, other.entityTwo)
-				&& Objects.equals(height, other.height) && Objects.equals(id, other.id)
-				&& Objects.equals(name, other.name) && Objects.equals(prohibitedDateTime, other.prohibitedDateTime);
+				&& Objects.equals(code, other.code) && Objects.equals(entityStatus, other.entityStatus)
+				&& Objects.equals(entityTwo, other.entityTwo) && Objects.equals(height, other.height)
+				&& Objects.equals(id, other.id) && Objects.equals(name, other.name)
+				&& Objects.equals(prohibitedDateTime, other.prohibitedDateTime);
 	}
-
-	
 
 }

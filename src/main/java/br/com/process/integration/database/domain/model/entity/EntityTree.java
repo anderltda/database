@@ -45,6 +45,10 @@ public class EntityTree extends RepresentationModel<EntityTree> implements BeanE
 	@JoinColumn(name = "id_entity_four", nullable = false, referencedColumnName = "id_entity_four")
 	private EntityFour entityFour;
 
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_entity_status", nullable = false, referencedColumnName = "id_entity_status")
+	private EntityStatus entityStatus;
+
 	public String getId() {
 		return id;
 	}
@@ -101,11 +105,20 @@ public class EntityTree extends RepresentationModel<EntityTree> implements BeanE
 		this.entityFour = entityFour;
 	}
 
+	public EntityStatus getEntityStatus() {
+		return entityStatus;
+	}
+
+	public void setEntityStatus(EntityStatus entityStatus) {
+		this.entityStatus = entityStatus;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(animal, localDate, localDateTime, entityFour, id, indicator, amount);
+		result = prime * result
+				+ Objects.hash(amount, animal, entityFour, entityStatus, id, indicator, localDate, localDateTime);
 		return result;
 	}
 
@@ -118,9 +131,9 @@ public class EntityTree extends RepresentationModel<EntityTree> implements BeanE
 		if (getClass() != obj.getClass())
 			return false;
 		EntityTree other = (EntityTree) obj;
-		return Objects.equals(animal, other.animal) && Objects.equals(localDate, other.localDate)
-				&& Objects.equals(localDateTime, other.localDateTime) && Objects.equals(entityFour, other.entityFour)
+		return Objects.equals(amount, other.amount) && Objects.equals(animal, other.animal)
+				&& Objects.equals(entityFour, other.entityFour) && Objects.equals(entityStatus, other.entityStatus)
 				&& Objects.equals(id, other.id) && Objects.equals(indicator, other.indicator)
-				&& Objects.equals(amount, other.amount);
+				&& Objects.equals(localDate, other.localDate) && Objects.equals(localDateTime, other.localDateTime);
 	}
 }
