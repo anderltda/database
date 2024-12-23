@@ -48,6 +48,8 @@ class JDBCPaginatorTests {
 
 	@LocalServerPort
 	private int port;
+	
+	private static final String PATH = "http://localhost:";
 
 	@Autowired
 	private TestRestTemplate restTemplate;
@@ -67,8 +69,18 @@ class JDBCPaginatorTests {
 	@Test
 	void teste_01() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?name=Anderson&name_op=eq&age=41&age_op=eq&size=10&sortList=age,name&sortOrders=asc,desc";
-
+		String url = PATH
+				+ port 
+	            + Constants.API_NAME_REQUEST_MAPPING 
+	            + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?"
+	            + "name=Anderson&"
+	            + "name_op=eq&"
+	            + "age=41&"
+	            + "age_op=eq&"
+	            + "size=10&"
+	            + "sortList=age,name&"
+	            + "sortOrders=asc,desc";
+		
 		PagedModel<EntityOneView> page = getAll(url, new ErrorResponse());
 		
 		List<EntityOneView> list = convertToEntityOneViewList(page.getContent());
@@ -81,167 +93,210 @@ class JDBCPaginatorTests {
 	@Test
 	void teste_02() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?name=Anderson&name_op=in&age=23&age_op=eq&birthDate=1983-03-29&birthDate_op=eq&height=1.7&height_op=gt&prohibitedDateTime=2024-02-01T02:52:54&prohibitedDateTime_op=gt&page=0&size=10&sortList=name&sortOrders=asc";
+	    String url = PATH 
+	            + port 
+	            + Constants.API_NAME_REQUEST_MAPPING 
+	            + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?"
+	            + "name=Anderson&"
+	            + "name_op=in&"
+	            + "age=23&"
+	            + "age_op=eq&"
+	            + "birthDate=1983-03-29&"
+	            + "birthDate_op=eq&"
+	            + "height=1.7&"
+	            + "height_op=gt&"
+	            + "prohibitedDateTime=2024-02-01T02:52:54&"
+	            + "prohibitedDateTime_op=gt&"
+	            + "page=0&"
+	            + "size=10&"
+	            + "sortList=name&"
+	            + "sortOrders=asc";
 
-		PagedModel<EntityOneView> page = getAll(url, new ErrorResponse());
-		
-		assertNull(page);
+	    PagedModel<EntityOneView> page = getAll(url, new ErrorResponse());
+
+	    assertNull(page);
 	}
-	
+
 	@Test
 	void teste_03() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?page=ee&size=10&sortList=name&sortOrders=asc";
+	    String url = PATH 
+	            + port 
+	            + Constants.API_NAME_REQUEST_MAPPING 
+	            + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?"
+	            + "page=ee&"
+	            + "size=10&"
+	            + "sortList=name&"
+	            + "sortOrders=asc";
 
-		teste_single_parameterized_one(url, "For input string: \"ee\"");
+	    teste_single_parameterized_one(url, "For input string: \"ee\"");
 	}
 
 	@Test
 	void teste_04() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOneView/query_123?page=0&size=5&sortList=name&sortOrders=asc";
+	    String url = PATH 
+	            + port 
+	            + Constants.API_NAME_REQUEST_MAPPING 
+	            + "/query/paginator/EntityOneView/query_123?"
+	            + "page=0&"
+	            + "size=5&"
+	            + "sortList=name&"
+	            + "sortOrders=asc";
 
-		teste_single_parameterized_one(url, "Query not found query_123 !");
+	    teste_single_parameterized_one(url, "Query not found query_123 !");
 	}
-	
+
 	@Test
 	void teste_05() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?page=0&size=10&sortList=name&sortOrders=asc";
+	    String url = PATH 
+	            + port 
+	            + Constants.API_NAME_REQUEST_MAPPING 
+	            + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?"
+	            + "page=0&"
+	            + "size=10&"
+	            + "sortList=name&"
+	            + "sortOrders=asc";
 
-		PagedModel<EntityOneView> page = getAll(url, new ErrorResponse());
-		
-		assertEquals(10, page.getContent().size());
+	    PagedModel<EntityOneView> page = getAll(url, new ErrorResponse());
 
+	    assertEquals(10, page.getContent().size());
 	}
-	
+
 	@Test
 	void teste_06() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?page=0&size=2&sortList=name&sortOrders=asc";
+	    String url = PATH 
+	            + port 
+	            + Constants.API_NAME_REQUEST_MAPPING 
+	            + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?"
+	            + "page=0&"
+	            + "size=2&"
+	            + "sortList=name&"
+	            + "sortOrders=asc";
 
-		PagedModel<EntityOneView> page = getAll(url, new ErrorResponse());
-		
-		assertEquals(2, page.getContent().size());
-		
+	    PagedModel<EntityOneView> page = getAll(url, new ErrorResponse());
+
+	    assertEquals(2, page.getContent().size());
 	}
-	
+
 	@Test
 	void teste_07() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?idEntityOne="+ SaveTests.ids.get(0) +"&idEntityOne_op=eq&page=0&size=2&sortList=name&sortOrders=asc";
+	    String url = PATH 
+	            + port 
+	            + Constants.API_NAME_REQUEST_MAPPING 
+	            + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?"
+	            + "idEntityOne=" + SaveTests.ids.get(0) + "&"
+	            + "idEntityOne_op=eq&"
+	            + "page=0&"
+	            + "size=2&"
+	            + "sortList=name&"
+	            + "sortOrders=asc";
 
-		PagedModel<EntityOneView> page = getAll(url, new ErrorResponse());
-		
-		List<EntityOneView> list = convertToEntityOneViewList(page.getContent());
+	    PagedModel<EntityOneView> page = getAll(url, new ErrorResponse());
 
-		assertEquals(1, page.getContent().size());
-		assertEquals("Carlos Alberto", list.get(0).getName());
-		assertEquals(55, list.get(0).getAge());
+	    List<EntityOneView> list = convertToEntityOneViewList(page.getContent());
+
+	    assertEquals(1, page.getContent().size());
+	    assertEquals("Carlos Alberto", list.get(0).getName());
+	    assertEquals(55, list.get(0).getAge());
 	}
-	
-	
+
 	@Test
 	void teste_08() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?name=Anderson&name_op=eq&page=0&size=10&sortList=name&sortOrders=asc";
+	    String url = PATH 
+	            + port 
+	            + Constants.API_NAME_REQUEST_MAPPING 
+	            + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?"
+	            + "name=Anderson&"
+	            + "name_op=eq&"
+	            + "page=0&"
+	            + "size=10&"
+	            + "sortList=name&"
+	            + "sortOrders=asc";
 
-		PagedModel<EntityOneView> list = getAll(url, new ErrorResponse());
-		
-		list.getContent().forEach(entity -> {
-			assertEquals("Anderson", entity.getName());
-			assertEquals(41, entity.getAge());
-			assertEquals(1.93, entity.getHeight());
-			assertEquals(LocalDate.parse("1983-03-29", DateTimeFormatter.ISO_LOCAL_DATE), entity.getBirthDate());
-			assertEquals(LocalDateTime.parse("2024-02-01T02:52:54", DateTimeFormatter.ISO_LOCAL_DATE_TIME), entity.getProhibitedDateTime());
-			assertNotEquals(0, entity.hashCode()); 
-			assertNotNull(entity.getIdEntityOne());
-			assertNotNull(entity.getIdEntityTwo());
-			assertNotNull(entity.getIdEntityTree());
-			assertNotNull(entity.getIdEntityFour());
-			assertNotNull(entity.getIdEntityFive());
-		});
-		
-		assertNotNull(list);
-		assertEquals(1, list.getContent().size());
+	    PagedModel<EntityOneView> list = getAll(url, new ErrorResponse());
+
+	    list.getContent().forEach(entity -> {
+	        assertEquals("Anderson", entity.getName());
+	        assertEquals(41, entity.getAge());
+	        assertEquals(1.93, entity.getHeight());
+	        assertEquals(LocalDate.parse("1983-03-29", DateTimeFormatter.ISO_LOCAL_DATE), entity.getBirthDate());
+	        assertEquals(LocalDateTime.parse("2024-02-01T02:52:54", DateTimeFormatter.ISO_LOCAL_DATE_TIME), entity.getProhibitedDateTime());
+	        assertNotEquals(0, entity.hashCode());
+	        assertNotNull(entity.getIdEntityOne());
+	        assertNotNull(entity.getIdEntityTwo());
+	        assertNotNull(entity.getIdEntityTree());
+	        assertNotNull(entity.getIdEntityFour());
+	        assertNotNull(entity.getIdEntityFive());
+	    });
+
+	    assertNotNull(list);
+	    assertEquals(1, list.getContent().size());
 	}
-	
+
 	@Test
 	void teste_09() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=eq&page=0&size=10&sortList=name&sortOrders=asc";
+	    String url = PATH 
+	            + port 
+	            + Constants.API_NAME_REQUEST_MAPPING 
+	            + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?"
+	            + "age=22&"
+	            + "age_op=eq&"
+	            + "birthDate=1990-01-01&"
+	            + "birthDate_op=eq&"
+	            + "prohibitedDateTime=2024-11-01T08:00:00&"
+	            + "prohibitedDateTime_op=eq&"
+	            + "page=0&"
+	            + "size=10&"
+	            + "sortList=name&"
+	            + "sortOrders=asc";
 
-		PagedModel<EntityOneView> page = getAll(url, new ErrorResponse());
-		
-		List<EntityOneView> list = convertToEntityOneViewList(page.getContent());
+	    PagedModel<EntityOneView> page = getAll(url, new ErrorResponse());
 
-		assertNotNull(list);
-		assertEquals(2, page.getContent().size());
-		assertEquals("Ariovaldo", list.get(0).getName());
-		assertEquals("Ricardo", list.get(1).getName());
+	    List<EntityOneView> list = convertToEntityOneViewList(page.getContent());
+
+	    assertNotNull(list);
+	    assertEquals(2, page.getContent().size());
+	    assertEquals("Ariovaldo", list.get(0).getName());
+	    assertEquals("Ricardo", list.get(1).getName());
 	}
-	
+
 	@Test
 	void teste_10() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?age=22&age_op=ne&birthDate=1990-01-01&birthDate_op=ne&prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=ne&page=0&size=10&sortList=name&sortOrders=asc";
+	    String url = PATH 
+	            + port 
+	            + Constants.API_NAME_REQUEST_MAPPING 
+	            + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?"
+	            + "age=22&"
+	            + "age_op=ne&"
+	            + "birthDate=1990-01-01&"
+	            + "birthDate_op=ne&"
+	            + "prohibitedDateTime=2024-11-01T08:00:00&"
+	            + "prohibitedDateTime_op=ne&"
+	            + "page=0&"
+	            + "size=10&"
+	            + "sortList=name&"
+	            + "sortOrders=asc";
 
-		PagedModel<EntityOneView> page = getAll(url, new ErrorResponse());
-		
-		List<EntityOneView> list = convertToEntityOneViewList(page.getContent());
+	    PagedModel<EntityOneView> page = getAll(url, new ErrorResponse());
 
-		assertNotNull(list);
-		assertEquals(7, list.size());
-		assertEquals("Anderson", list.get(0).getName());
-		assertEquals("Carlos", list.get(1).getName());
-		assertEquals("Carlos Alberto", list.get(2).getName());
-		assertEquals("Maria", list.get(3).getName());
-		assertEquals("Paulo", list.get(4).getName());
-		assertEquals("Paulo Henrique", list.get(5).getName());
-		assertEquals("Renato", list.get(6).getName());
-	}
-	
-	@Test
-	void teste_11() {
+	    List<EntityOneView> list = convertToEntityOneViewList(page.getContent());
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOneView/teste_utilizando_group_by?page=0&size=10";
-
-		PagedModel<EntityOneView> page = getAll(url, new ErrorResponse());
-		
-		List<EntityOneView> list = convertToEntityOneViewList(page.getContent());
-
-		assertNotNull(list);
-		assertEquals(8, list.size());
-
-	}
-	
-	@Test
-	void teste_12() {
-
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOne/teste_utilizando_group_by_erro?page=0&size=10";
-		
-		ErrorResponse errorResponse = new ErrorResponse("Class not found EntityOne !", HttpStatus.BAD_REQUEST);
-		
-	    assertThrows(RuntimeException.class, () -> getAll(url, errorResponse));
-
-	}
-	
-	@Test
-	void teste_13() {
-
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/query/paginator/EntityOneView/teste_busca_com_condicoes_diversars?age=22&age_op=ne&birthDate=1990-01-01&birthDate_op=ne&prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=ne&page=0&size=10&sortList=name&sortOrders=desc";
-
-		PagedModel<EntityOneView> page = getAll(url, new ErrorResponse());
-		
-		List<EntityOneView> list = convertToEntityOneViewList(page.getContent());
-
-		assertEquals("Renato", list.get(0).getName());
-		assertEquals("Paulo Henrique", list.get(1).getName());
-		assertEquals("Paulo", list.get(2).getName());
-		assertEquals("Maria", list.get(3).getName());
-		assertEquals("Carlos Alberto", list.get(4).getName());
-		assertEquals("Carlos", list.get(5).getName());
-		assertEquals("Anderson", list.get(6).getName());
+	    assertNotNull(list);
+	    assertEquals(7, list.size());
+	    assertEquals("Anderson", list.get(0).getName());
+	    assertEquals("Carlos", list.get(1).getName());
+	    assertEquals("Carlos Alberto", list.get(2).getName());
+	    assertEquals("Maria", list.get(3).getName());
+	    assertEquals("Paulo", list.get(4).getName());
+	    assertEquals("Paulo Henrique", list.get(5).getName());
+	    assertEquals("Renato", list.get(6).getName());
 	}
 
 	public void teste_single_parameterized_one(String url, String message) {

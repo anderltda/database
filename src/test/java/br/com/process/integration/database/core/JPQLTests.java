@@ -46,6 +46,8 @@ class JPQLTests {
 
 	@LocalServerPort
 	private int port;
+	
+	private static final String PATH = "http://localhost:";
 
 	@Autowired
 	private TestRestTemplate restTemplate;
@@ -66,8 +68,11 @@ class JPQLTests {
 	@Test
 	void teste_01() {
 
-		String url = "http://localhost:" + port
-				+ Constants.API_NAME_REQUEST_MAPPING + "/jpql/single/EntityOne/buscaComEqualPeloName?name=Anderson";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/jpql/single/EntityOne/buscaComEqualPeloName?"
+		        + "name=Anderson";
 
 		EntityOne entity = getSingleResult(url, new ErrorResponse());
 
@@ -76,8 +81,7 @@ class JPQLTests {
 		assertEquals(41, entity.getAge());
 		assertEquals(1.93, entity.getHeight());
 		assertEquals(LocalDate.parse("1983-03-29", DateTimeFormatter.ISO_LOCAL_DATE), entity.getBirthDate());
-		assertEquals(LocalDateTime.parse("2024-02-01T02:52:54", DateTimeFormatter.ISO_LOCAL_DATE_TIME),
-				entity.getProhibitedDateTime());
+		assertEquals(LocalDateTime.parse("2024-02-01T02:52:54", DateTimeFormatter.ISO_LOCAL_DATE_TIME), entity.getProhibitedDateTime());
 		assertNotEquals(0, entity.hashCode());
 		assertNotNull(entity.getEntityTwo());
 
@@ -87,8 +91,11 @@ class JPQLTests {
 	@Test
 	void teste_02() {
 
-		String url = "http://localhost:" + port
-				+ Constants.API_NAME_REQUEST_MAPPING + "/jpql/single/EntityOne/buscaComLikePeloName?name=Paulo";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/jpql/single/EntityOne/buscaComLikePeloName?"
+		        + "name=Paulo";
 
 		ErrorResponse errorResponse = new ErrorResponse("Query did not return a unique result: 2 results were returned",
 				HttpStatus.BAD_REQUEST);
@@ -100,25 +107,33 @@ class JPQLTests {
 	@Test
 	void teste_03() {
 
-		String url = "http://localhost:" + port
-				+ Constants.API_NAME_REQUEST_MAPPING + "/jpql/EntityOne/buscaComLikePeloName?name=ar&sortList=birthDate,name&sortOrders=asc,desc";
-
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/jpql/EntityOne/buscaComLikePeloName?"
+		        + "name=ar&"
+		        + "sortList=birthDate,name&"
+		        + "sortOrders=asc,desc";
+		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
-		assertEquals(5, list.size());
+		assertEquals(4, list.size());
 		assertEquals("Carlos", list.get(0).getName());
 		assertEquals("Carlos Alberto", list.get(1).getName());
 		assertEquals("Ricardo", list.get(2).getName());
-		assertEquals("Ariovaldo", list.get(3).getName());
-		assertEquals("Maria", list.get(4).getName());
+		assertEquals("Maria", list.get(3).getName());
 	}
 
 	@Test
 	void teste_04() {
 
-		String url = "http://localhost:" + port
-				+ Constants.API_NAME_REQUEST_MAPPING + "/jpql/EntityOne/buscaAll?sortList=birthDate,name&sortOrders=asc,desc";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/jpql/EntityOne/buscaAll?"
+		        + "sortList=birthDate,name&"
+		        + "sortOrders=asc,desc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -139,8 +154,12 @@ class JPQLTests {
 	@Test
 	void teste_05() {
 
-		String url = "http://localhost:" + port
-				+ Constants.API_NAME_REQUEST_MAPPING + "/jpql/EntityOne/buscaAll?sortList=birthDate,name&sortOrders=desc,asc";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/jpql/EntityOne/buscaAll?"
+		        + "sortList=birthDate,name&"
+		        + "sortOrders=desc,asc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -161,8 +180,12 @@ class JPQLTests {
 	@Test
 	void teste_06() {
 
-		String url = "http://localhost:" + port
-				+ Constants.API_NAME_REQUEST_MAPPING + "/jpql/EntityOne/buscaAll?sortList=name,birthDate&sortOrders=asc,desc";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/jpql/EntityOne/buscaAll?"
+		        + "sortList=name,birthDate&"
+		        + "sortOrders=asc,desc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -183,8 +206,12 @@ class JPQLTests {
 	@Test
 	void teste_07() {
 
-		String url = "http://localhost:" + port
-				+ Constants.API_NAME_REQUEST_MAPPING + "/jpql/EntityOne/buscaAll?sortList=name,birthDate&sortOrders=desc,asc";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/jpql/EntityOne/buscaAll?"
+		        + "sortList=name,birthDate&"
+		        + "sortOrders=desc,asc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -205,8 +232,11 @@ class JPQLTests {
 	@Test
 	void teste_08() {
 
-		String url = "http://localhost:" + port
-				+ Constants.API_NAME_REQUEST_MAPPING + "/jpql/single/EntityOne/buscaComEqualPeloName?name=Pedro";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/jpql/single/EntityOne/buscaComEqualPeloName?"
+		        + "name=Pedro";
 
 		EntityOne entity = getSingleResult(url, new ErrorResponse());
 
@@ -216,10 +246,13 @@ class JPQLTests {
 	@Test
 	void teste_09() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/EntityOne/buscaComLikePeloName?"
-				+ "name=Silva&"
-				+ "sortList=name,birthDate&"
-				+ "sortOrders=desc,asc";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/jpql/EntityOne/buscaComLikePeloName?"
+		        + "name=Silva&"
+		        + "sortList=name,birthDate&"
+		        + "sortOrders=desc,asc";
 
 		getRestAllNotfound(url, 204);
 	}
@@ -227,8 +260,14 @@ class JPQLTests {
 	@Test
 	void teste_09_1() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/EntityOne/buscaComLikePeloName?name=er&sortList=name,birthDate&sortOrders=desc,asc";
-
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/jpql/EntityOne/buscaComLikePeloName?"
+		        + "name=er&"
+		        + "sortList=name,birthDate&"
+		        + "sortOrders=desc,asc";
+		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
@@ -240,8 +279,11 @@ class JPQLTests {
 	@Test
 	void teste_10() {
 
-		String url = "http://localhost:" + port
-				+ Constants.API_NAME_REQUEST_MAPPING + "/jpql/count/EntityOne/countMaiorProhibited?prohibitedDateTime=2024-11-01T08:00:00";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/jpql/count/EntityOne/countMaiorProhibited?"
+		        + "prohibitedDateTime=2024-11-01T08:00:00";
 
 		Long count = Long.parseLong(getUniqueResult(url, new ErrorResponse()));
 
@@ -251,8 +293,12 @@ class JPQLTests {
 	@Test
 	void teste_11() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/count/EntityOne/countMaiorAge?age=AQ";
-
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/jpql/count/EntityOne/countMaiorAge?"
+		        + "age=AQ";
+		
 		ErrorResponse errorResponse = new ErrorResponse("Parameter value [AQ] did not match expected type [SqmBasicValuedSimplePath(br.com.process.integration.database.domain.model.entity.EntityOne(e).age)]",
 				HttpStatus.BAD_REQUEST);
 
@@ -262,8 +308,12 @@ class JPQLTests {
 	@Test
 	void teste_12() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/EntityOne/buscaAll?age=22";
-
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/jpql/EntityOne/buscaAll?"
+		        + "age=22";
+		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
@@ -275,7 +325,13 @@ class JPQLTests {
 	@Test
 	void teste_13() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/EntityOne/buscaAll?age=Silva&sortList=name,birthDate&sortOrders=desc,asc";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/jpql/EntityOne/buscaAll?"
+		        + "age=Silva&"
+		        + "sortList=name,birthDate&"
+		        + "sortOrders=desc,asc";
 
 		ErrorResponse errorResponse = new ErrorResponse("Parameter value [Silva] did not match expected type [SqmBasicValuedSimplePath(br.com.process.integration.database.domain.model.entity.EntityOne(e).age)]",
 				HttpStatus.BAD_REQUEST);

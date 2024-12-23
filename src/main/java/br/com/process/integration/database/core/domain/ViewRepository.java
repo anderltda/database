@@ -7,7 +7,7 @@ import br.com.process.integration.database.core.exception.UncheckedException;
 
 public interface ViewRepository<V> {
 
-	public int count(Map<String, Object> filter, String fileQuery, String query) throws UncheckedException;
+	public int count(V view, Map<String, Object> filter, String fileQuery, String query) throws UncheckedException;
 
 	public V findSingle(V view, Map<String, Object> filter, String fileQuery, String query) throws UncheckedException;
 

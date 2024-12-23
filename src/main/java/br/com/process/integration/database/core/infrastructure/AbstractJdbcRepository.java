@@ -44,7 +44,7 @@ public abstract class AbstractJdbcRepository<M extends RepresentationModel<M>> e
 
 			rowMapper = new BeanPropertyRowMapper<>((Class<M>) view.getClass());
 
-			String sql = configQuery.executeSQL(filters, fileQuery, query, mapSqlParameterSource);
+			String sql = configQuery.executeSQL(view.getClass(), filters, fileQuery, query, mapSqlParameterSource);
 
 			return namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, rowMapper);
 
@@ -67,8 +67,8 @@ public abstract class AbstractJdbcRepository<M extends RepresentationModel<M>> e
 			MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 
 			rowMapper = new BeanPropertyRowMapper<>((Class<M>) view.getClass());
-
-			String sql = configQuery.executeSQL(filter, fileQuery, query, mapSqlParameterSource);
+			
+			String sql = configQuery.executeSQL(view.getClass(), filter, fileQuery, query, mapSqlParameterSource);
 
 			return namedParameterJdbcTemplate.query(sql, mapSqlParameterSource,
 					new DynamicRowMapper<>((Class<M>) view.getClass()));
@@ -91,7 +91,7 @@ public abstract class AbstractJdbcRepository<M extends RepresentationModel<M>> e
 
 			StringBuilder sql = new StringBuilder();
 
-			sql.append(configQuery.executeSQL(filter, fileQuery, query, mapSqlParameterSource));
+			sql.append(configQuery.executeSQL(view.getClass(), filter, fileQuery, query, mapSqlParameterSource));
 
 			sql.append(Constants.LIMIT);
 			sql.append(Constants.WRITERSPACE);
@@ -108,13 +108,13 @@ public abstract class AbstractJdbcRepository<M extends RepresentationModel<M>> e
 	}
 
 	@Override
-	public int count(Map<String, Object> filter, String fileQuery, String query) throws UncheckedException {
+	public int count(M view, Map<String, Object> filter, String fileQuery, String query) throws UncheckedException {
 
 		try {
 
 			MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 
-			String sql = configQuery.executeCountSQL(filter, fileQuery, query, mapSqlParameterSource);
+			String sql = configQuery.executeCountSQL(view.getClass(), filter, fileQuery, query, mapSqlParameterSource);
 
 			return namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, Integer.class);
 

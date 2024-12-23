@@ -24,7 +24,7 @@ import br.com.process.integration.database.core.ui.adapter.EmptyLinksExclusionSt
 import br.com.process.integration.database.core.ui.adapter.LocalDateAdapter;
 import br.com.process.integration.database.core.ui.adapter.LocalDateTimeAdapter;
 import br.com.process.integration.database.core.util.Constants;
-import br.com.process.integration.database.core.util.DynamicTypeConverter;
+import br.com.process.integration.database.core.util.DynamicFoundType;
 
 @Component
 public abstract class AbstractController {
@@ -107,7 +107,7 @@ public abstract class AbstractController {
 	
 	protected void setId(String nameEntity, String id) throws CheckedException {
 		BeanEntity<?> entity = (BeanEntity<?>) MethodReflection.findEntityUsingClassLoader(nameEntity);
-		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameEntity), Constants.METHOD_SET_ID, DynamicTypeConverter.convert(entity, id));
+		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameEntity), Constants.METHOD_SET_ID, DynamicFoundType.getTypeValue(entity, id));
 	}
 	
 	protected void setEntity(String nameEntity, BeanEntity<?> entity) throws CheckedException {

@@ -48,6 +48,8 @@ class CriteriaPaginatorTests {
 
 	@LocalServerPort
 	private int port;
+	
+	private static final String PATH = "http://localhost:";
 
 	@Autowired
 	private TestRestTemplate restTemplate;
@@ -67,130 +69,233 @@ class CriteriaPaginatorTests {
 	@Test
 	void teste_01() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?name=Anderson&name_op=lk&sortList=name,asc&sortOrders=asc,desc";
-		
-		teste_single_parameterized_one(url, "Could not resolve attribute 'asc' of 'br.com.process.integration.database.domain.model.entity.EntityOne'");
+	    String url = PATH
+	    		+ port + Constants.API_NAME_REQUEST_MAPPING 
+	    		+ "/paginator/EntityOne?"
+	            + "name=Anderson&"
+	            + "name_op=lk&"
+	            + "sortList=name,asc&"
+	            + "sortOrders=asc,desc";
+
+	    teste_single_parameterized_one(url, "Could not resolve attribute 'asc' of 'br.com.process.integration.database.domain.model.entity.EntityOne'");
 	}
 
 	@Test
 	void teste_02() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?name=Anderson&name_op=eq&page=0&size=10&sortList=name&sortOrders=asc";
+	    String url = PATH 
+	    		+ port 
+	    		+ Constants.API_NAME_REQUEST_MAPPING 
+	    		+ "/paginator/EntityOne?"
+	            + "name=Anderson&"
+	            + "name_op=eq&"
+	            + "page=0&"
+	            + "size=10&"
+	            + "sortList=name&"
+	            + "sortOrders=asc";
 
-		List<EntityOne> list = getAll(url, new ErrorResponse());
-		
-		list.forEach(entity -> {
-			assertNotNull(entity.getId());
-			assertEquals("Anderson", entity.getName());
-			assertEquals(41, entity.getAge());
-			assertEquals(1.93, entity.getHeight());
-			assertEquals(LocalDate.parse("1983-03-29", DateTimeFormatter.ISO_LOCAL_DATE), entity.getBirthDate());
-			assertEquals(LocalDateTime.parse("2024-02-01T02:52:54", DateTimeFormatter.ISO_LOCAL_DATE_TIME), entity.getProhibitedDateTime());
-			assertNotEquals(0, entity.hashCode()); 
-			assertNotNull(entity.getEntityTwo());
-		});
-		
-		assertNotNull(list);
-		assertEquals(1, list.size());
+	    List<EntityOne> list = getAll(url, new ErrorResponse());
+
+	    list.forEach(entity -> {
+	        assertNotNull(entity.getId());
+	        assertEquals("Anderson", entity.getName());
+	        assertEquals(41, entity.getAge());
+	        assertEquals(1.93, entity.getHeight());
+	        assertEquals(LocalDate.parse("1983-03-29", DateTimeFormatter.ISO_LOCAL_DATE), entity.getBirthDate());
+	        assertEquals(LocalDateTime.parse("2024-02-01T02:52:54", DateTimeFormatter.ISO_LOCAL_DATE_TIME), entity.getProhibitedDateTime());
+	        assertNotEquals(0, entity.hashCode());
+	        assertNotNull(entity.getEntityTwo());
+	    });
+
+	    assertNotNull(list);
+	    assertEquals(1, list.size());
 	}
 
 	@Test
 	void teste_03() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=eq&page=0&size=10&sortList=name&sortOrders=asc";
+	    String url = PATH 
+	    		+ port 
+	    		+ Constants.API_NAME_REQUEST_MAPPING 
+	    		+ "/paginator/EntityOne?"
+	            + "age=22&"
+	            + "age_op=eq&"
+	            + "birthDate=1990-01-01&"
+	            + "birthDate_op=eq&"
+	            + "prohibitedDateTime=2024-11-01T08:00:00&"
+	            + "prohibitedDateTime_op=eq&"
+	            + "page=0&"
+	            + "size=10&"
+	            + "sortList=name&"
+	            + "sortOrders=asc";
 
-		List<EntityOne> list = getAll(url, new ErrorResponse());
+	    List<EntityOne> list = getAll(url, new ErrorResponse());
 
-		assertNotNull(list);
-		assertEquals(2, list.size());
-		assertEquals("Ariovaldo", list.get(0).getName());
-		assertEquals("Ricardo", list.get(1).getName());
+	    assertNotNull(list);
+	    assertEquals(2, list.size());
+	    assertEquals("Ariovaldo", list.get(0).getName());
+	    assertEquals("Ricardo", list.get(1).getName());
 	}
 
 	@Test
 	void teste_04() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?age=22&age_op=ne&birthDate=1990-01-01&birthDate_op=ne&prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=ne&page=0&size=10&sortList=name,id&sortOrders=asc,desc";
+	    String url = PATH 
+	    		+ port 
+	    		+ Constants.API_NAME_REQUEST_MAPPING 
+	    		+ "/paginator/EntityOne?"
+	            + "age=22&"
+	            + "age_op=ne&"
+	            + "birthDate=1990-01-01&"
+	            + "birthDate_op=ne&"
+	            + "prohibitedDateTime=2024-11-01T08:00:00&"
+	            + "prohibitedDateTime_op=ne&"
+	            + "page=0&"
+	            + "size=10&"
+	            + "sortList=name,id&"
+	            + "sortOrders=asc,desc";
 
-		List<EntityOne> list = getAll(url, new ErrorResponse());
+	    List<EntityOne> list = getAll(url, new ErrorResponse());
 
-		assertNotNull(list);
-		assertEquals(7, list.size());
-		assertEquals("Anderson", list.get(0).getName());
-		assertEquals("Carlos", list.get(1).getName());
-		assertEquals("Carlos Alberto", list.get(2).getName());
-		assertEquals("Maria", list.get(3).getName());
-		assertEquals("Paulo", list.get(4).getName());
-		assertEquals("Paulo Henrique", list.get(5).getName());
-		assertEquals("Renato", list.get(6).getName());
+	    assertNotNull(list);
+	    assertEquals(7, list.size());
+	    assertEquals("Anderson", list.get(0).getName());
+	    assertEquals("Carlos", list.get(1).getName());
+	    assertEquals("Carlos Alberto", list.get(2).getName());
+	    assertEquals("Maria", list.get(3).getName());
+	    assertEquals("Paulo", list.get(4).getName());
+	    assertEquals("Paulo Henrique", list.get(5).getName());
+	    assertEquals("Renato", list.get(6).getName());
 	}
 
 	@Test
 	void teste_05() {
-		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?name=Carlos&name_op=ne&page=0&size=10&sortList=name&sortOrders=asc";
-		
-		testes_single_parameterized_one(url, 9);
+
+	    String url = PATH 
+	    		+ port 
+	    		+ Constants.API_NAME_REQUEST_MAPPING 
+	    		+ "/paginator/EntityOne?"
+	            + "name=Carlos&"
+	            + "name_op=ne&"
+	            + "page=0&"
+	            + "size=10&"
+	            + "sortList=name&"
+	            + "sortOrders=asc";
+
+	    testes_single_parameterized_one(url, 9);
 	}
 
 	@Test
 	void teste_06() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?age=22&age_op=eq&birthDate=1990-01-01&birthDate_op=eq&height=1.8&height_op=eq&page=0&size=10&sortList=name,height&sortOrders=asc,desc";
+	    String url = PATH 
+	    		+ port 
+	    		+ Constants.API_NAME_REQUEST_MAPPING 
+	    		+ "/paginator/EntityOne?"
+	            + "age=22&"
+	            + "age_op=eq&"
+	            + "birthDate=1990-01-01&"
+	            + "birthDate_op=eq&"
+	            + "height=1.8&"
+	            + "height_op=eq&"
+	            + "page=0&"
+	            + "size=10&"
+	            + "sortList=name,height&"
+	            + "sortOrders=asc,desc";
 
-		testes_single_parameterized_other(url, "Ricardo", 1);
+	    testes_single_parameterized_other(url, "Ricardo", 1);
 	}
 
 	@Test
 	void teste_07() {
-		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=eq&sortList=name&sortOrders=asc";
-		
-		List<EntityOne> list = getAll(url, new ErrorResponse());
-		
-		assertNotNull(list);
-		assertEquals(3, list.size());
-		assertEquals("Ariovaldo", list.get(0).getName());
-		assertEquals("Joana", list.get(1).getName());
-		assertEquals("Ricardo", list.get(2).getName());
+
+	    String url = PATH 
+	    		+ port 
+	    		+ Constants.API_NAME_REQUEST_MAPPING 
+	    		+ "/paginator/EntityOne?"
+	            + "prohibitedDateTime=2024-11-01T08:00:00&"
+	            + "prohibitedDateTime_op=eq&"
+	            + "sortList=name&"
+	            + "sortOrders=asc";
+
+	    List<EntityOne> list = getAll(url, new ErrorResponse());
+
+	    assertNotNull(list);
+	    assertEquals(3, list.size());
+	    assertEquals("Ariovaldo", list.get(0).getName());
+	    assertEquals("Joana", list.get(1).getName());
+	    assertEquals("Ricardo", list.get(2).getName());
 	}
-	
+
 	@Test
 	void teste_08() {
-		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?prohibitedDateTime=2024-11-01T08:00:00&prohibitedDateTime_op=eq&sortList=name&sortOrder=asc";
-		
-		teste_single_parameterized_one(url, "Atributo não encontrado: sortOrder");
+
+	    String url = PATH 
+			    + port 
+			    + Constants.API_NAME_REQUEST_MAPPING 
+			    + "/paginator/EntityOne?"
+	            + "prohibitedDateTime=2024-11-01T08:00:00&"
+	            + "prohibitedDateTime_op=eq&"
+	            + "sortList=name&"
+	            + "sortOrder=asc";
+
+	    teste_single_parameterized_one(url, "Atributo não encontrado: sortOrder");
 	}
-	
+
 	@Test
 	void teste_09() {
-		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?name=*ar*&name_op=lk&page=0&size=10&sortList=birthDate,name&sortOrders=desc,asc";
-		
-		List<EntityOne> list = getAll(url, new ErrorResponse());
 
-		assertNotNull(list);
-		assertEquals(5, list.size());
-		assertEquals("Maria", list.get(0).getName());
-		assertEquals("Ariovaldo", list.get(1).getName());
-		assertEquals("Ricardo", list.get(2).getName());
-		assertEquals("Carlos Alberto", list.get(3).getName());
-		assertEquals("Carlos", list.get(4).getName());
+	    String url = PATH 
+	    		+ port 
+	    		+ Constants.API_NAME_REQUEST_MAPPING 
+	    		+ "/paginator/EntityOne?"
+	            + "name=*ar*&"
+	            + "name_op=lk&"
+	            + "page=0&"
+	            + "size=10&"
+	            + "sortList=birthDate,name&"
+	            + "sortOrders=desc,asc";
+
+	    List<EntityOne> list = getAll(url, new ErrorResponse());
+
+	    assertNotNull(list);
+	    assertEquals(4, list.size());
+	    assertEquals("Maria", list.get(0).getName());
+	    assertEquals("Ricardo", list.get(1).getName());
+	    assertEquals("Carlos Alberto", list.get(2).getName());
+	    assertEquals("Carlos", list.get(3).getName());
 	}
 
 	@Test
 	void teste_10() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?name=ar*&name_op=lk&page=0&size=10&sortList=name&sortOrders=asc";
-		
-		testes_single_parameterized_other(url, "Ariovaldo", 1);
+	    String url = PATH 
+	    		+ port 
+	    		+ Constants.API_NAME_REQUEST_MAPPING 
+	    		+ "/paginator/EntityOne?"
+	            + "name=Ar*&"
+	            + "name_op=lk&"
+	            + "page=0&"
+	            + "size=10&"
+	            + "sortList=name&"
+	            + "sortOrders=asc";
+
+	    testes_single_parameterized_other(url, "Ariovaldo", 1);
 	}
 
 	@Test
 	void teste_11() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?birthDate=1956-08-30,1986-09-09,1990-09-09&birthDate_op=in&page=0&size=10&sortList=age&sortOrders=asc";
+		String url = PATH 
+			    + port 
+			    + Constants.API_NAME_REQUEST_MAPPING 
+			    + "/paginator/EntityOne?"
+			    + "birthDate=1956-08-30,1986-09-09,1990-09-09&"
+			    + "birthDate_op=in&"
+			    + "page=0&"
+			    + "size=10&"
+			    + "sortList=age&"
+			    + "sortOrders=asc";
 		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -204,7 +309,16 @@ class CriteriaPaginatorTests {
 	@Test
 	void teste_12() {
 		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?birthDate=1956-08-30,1990-01-01,1990-09-09&birthDate_op=in&page=0&size=10&sortList=age,height&sortOrders=desc,asc";
+		String url = PATH 
+			    + port 
+			    + Constants.API_NAME_REQUEST_MAPPING 
+			    + "/paginator/EntityOne?"
+			    + "birthDate=1956-08-30,1990-01-01,1990-09-09&"
+			    + "birthDate_op=in&"
+			    + "page=0&"
+			    + "size=10&"
+			    + "sortList=age,height&"
+			    + "sortOrders=desc,asc";
 		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -218,247 +332,406 @@ class CriteriaPaginatorTests {
 
 	@Test
 	void teste_13() {
-		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?age=55,12,22&age_op=in&page=0&size=10&sortList=age&sortOrders=desc";
+	    String url = PATH 
+	        + port 
+	        + Constants.API_NAME_REQUEST_MAPPING 
+	        + "/paginator/EntityOne?"
+	        + "age=55,12,22&"
+	        + "age_op=in&"
+	        + "page=0&"
+	        + "size=10&"
+	        + "sortList=age&"
+	        + "sortOrders=desc";
 
-		testes_single_parameterized_one(url, 4);
+	    testes_single_parameterized_one(url, 4);
 	}
 
 	@Test
 	void teste_14() {
+	    String url = PATH 
+	        + port 
+	        + Constants.API_NAME_REQUEST_MAPPING 
+	        + "/paginator/EntityOne?"
+	        + "id=" + SaveTests.ids.get(0) + "," + SaveTests.ids.get(1) + "&"
+	        + "id_op=in&"
+	        + "page=0&"
+	        + "size=10&"
+	        + "sortList=id&"
+	        + "sortOrders=asc";
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?id=" + SaveTests.ids.get(0) + "," + SaveTests.ids.get(1) + "&id_op=in&page=0&size=10&sortList=id&sortOrders=asc";
-
-		testes_single_parameterized_one(url, 2);
+	    testes_single_parameterized_one(url, 2);
 	}
 
 	@Test
 	void teste_15() {
-		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?height=1.40,1.78&height_op=bt&page=0&size=10&sortList=height&sortOrders=desc";
+	    String url = PATH 
+	        + port 
+	        + Constants.API_NAME_REQUEST_MAPPING 
+	        + "/paginator/EntityOne?"
+	        + "height=1.40,1.78&"
+	        + "height_op=bt&"
+	        + "page=0&"
+	        + "size=10&"
+	        + "sortList=height&"
+	        + "sortOrders=desc";
 
-		List<EntityOne> list = getAll(url, new ErrorResponse());
+	    List<EntityOne> list = getAll(url, new ErrorResponse());
 
-		assertNotNull(list);
-		assertEquals(4, list.size());
-		assertEquals("Paulo", list.get(0).getName());
-		assertEquals("Carlos Alberto", list.get(1).getName());
-		assertEquals("Carlos", list.get(2).getName());
-		assertEquals("Maria", list.get(3).getName());
+	    assertNotNull(list);
+	    assertEquals(4, list.size());
+	    assertEquals("Paulo", list.get(0).getName());
+	    assertEquals("Carlos Alberto", list.get(1).getName());
+	    assertEquals("Carlos", list.get(2).getName());
+	    assertEquals("Maria", list.get(3).getName());
 	}
 
 	@Test
 	void teste_16() {
-		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?prohibitedDateTime=2024-02-01T08:50:00,2024-10-01T08:50:55&prohibitedDateTime_op=bt&page=0&size=10&sortList=birthDate&sortOrders=desc";
-		
-		List<EntityOne> list = getAll(url, new ErrorResponse());
+	    String url = PATH 
+	        + port 
+	        + Constants.API_NAME_REQUEST_MAPPING 
+	        + "/paginator/EntityOne?"
+	        + "prohibitedDateTime=2024-02-01T08:50:00,2024-10-01T08:50:55&"
+	        + "prohibitedDateTime_op=bt&"
+	        + "page=0&"
+	        + "size=10&"
+	        + "sortList=birthDate&"
+	        + "sortOrders=desc";
 
-		assertNotNull(list);
-		assertEquals(5, list.size());
-		assertEquals("Maria", list.get(0).getName());
-		assertEquals("Paulo", list.get(1).getName());
-		assertEquals("Paulo Henrique", list.get(2).getName());
-		assertEquals("Carlos Alberto", list.get(3).getName());
-		assertEquals("Carlos", list.get(4).getName());
+	    List<EntityOne> list = getAll(url, new ErrorResponse());
+
+	    assertNotNull(list);
+	    assertEquals(5, list.size());
+	    assertEquals("Maria", list.get(0).getName());
+	    assertEquals("Paulo", list.get(1).getName());
+	    assertEquals("Paulo Henrique", list.get(2).getName());
+	    assertEquals("Carlos Alberto", list.get(3).getName());
+	    assertEquals("Carlos", list.get(4).getName());
 	}
 
 	@Test
 	void teste_17() {
-		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?height=1.86&height_op=ge&page=0&size=10&ortList=height&sortOrders=desc";
-		
-		teste_single_parameterized_one(url, "Atributo não encontrado: ortList");
+	    String url = PATH 
+	        + port 
+	        + Constants.API_NAME_REQUEST_MAPPING 
+	        + "/paginator/EntityOne?"
+	        + "height=1.86&"
+	        + "height_op=ge&"
+	        + "page=0&"
+	        + "size=10&"
+	        + "ortList=height&"
+	        + "sortOrders=desc";
+
+	    teste_single_parameterized_one(url, "Atributo não encontrado: ortList");
 	}
-	
+
 	@Test
 	void teste_18() {
-		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?height=1.86&height_op=ge&page=0&size=10&sortList=height&sortOrders=desc";
-		
-		testes_single_parameterized_one(url, 3);
+	    String url = PATH 
+	        + port 
+	        + Constants.API_NAME_REQUEST_MAPPING 
+	        + "/paginator/EntityOne?"
+	        + "height=1.86&"
+	        + "height_op=ge&"
+	        + "page=0&"
+	        + "size=10&"
+	        + "sortList=height&"
+	        + "sortOrders=desc";
+
+	    testes_single_parameterized_one(url, 3);
 	}
 
 	@Test
 	void teste_19() {
-		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?height=1.87&height_op=gt&page=0&size=10&sortList=height&sortOrders=desc";
+	    String url = PATH 
+	        + port 
+	        + Constants.API_NAME_REQUEST_MAPPING 
+	        + "/paginator/EntityOne?"
+	        + "height=1.87&"
+	        + "height_op=gt&"
+	        + "page=0&"
+	        + "size=10&"
+	        + "sortList=height&"
+	        + "sortOrders=desc";
 
-		testes_single_parameterized_one(url, 2);
+	    testes_single_parameterized_one(url, 2);
 	}
 
 	@Test
 	void teste_20() {
+	    String url = PATH 
+	        + port 
+	        + Constants.API_NAME_REQUEST_MAPPING 
+	        + "/paginator/EntityOne?"
+	        + "birthDate=1990-09-09&"
+	        + "birthDate_op=gt&"
+	        + "page=0&"
+	        + "size=10&"
+	        + "sortList=birthDate&"
+	        + "sortOrders=desc";
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?birthDate=1990-09-09&birthDate_op=gt&page=0&size=10&sortList=birthDate&sortOrders=desc";
-
-		testes_single_parameterized_one(url, 3);
+	    testes_single_parameterized_one(url, 3);
 	}
 
+	
 	@Test
 	void teste_21() {
-		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?birthDate=1990-01-02&birthDate_op=ge&birthDate=2016-01-01&birthDate_op=le&page=0&size=10&sortList=birthDate&sortOrders=desc";
+	    String url = PATH 
+	        + port 
+	        + Constants.API_NAME_REQUEST_MAPPING 
+	        + "/paginator/EntityOne?"
+	        + "birthDate=1990-01-02&"
+	        + "birthDate_op=ge&"
+	        + "birthDate=2016-01-01&"
+	        + "birthDate_op=le&"
+	        + "page=0&"
+	        + "size=10&"
+	        + "sortList=birthDate&"
+	        + "sortOrders=desc";
 
-		testes_single_parameterized_one(url, 4);
+	    testes_single_parameterized_one(url, 4);
 	}
 
 	@Test
 	void teste_22() {
-		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?birthDate=1990-01-02&birthDate_op=le&page=0&size=10&sortList=birthDate&sortOrders=desc";
+	    String url = PATH 
+	        + port 
+	        + Constants.API_NAME_REQUEST_MAPPING 
+	        + "/paginator/EntityOne?"
+	        + "birthDate=1990-01-02&"
+	        + "birthDate_op=le&"
+	        + "page=0&"
+	        + "size=10&"
+	        + "sortList=birthDate&"
+	        + "sortOrders=desc";
 
-		testes_single_parameterized_one(url, 6);
+	    testes_single_parameterized_one(url, 6);
 	}
 
 	@Test
 	void teste_23() {
-		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?birthDate=1986-09-08&birthDate_op=lt&page=0&size=10&sortList=birthDate&sortOrders=desc";
+	    String url = PATH 
+	        + port 
+	        + Constants.API_NAME_REQUEST_MAPPING 
+	        + "/paginator/EntityOne?"
+	        + "birthDate=1986-09-08&"
+	        + "birthDate_op=lt&"
+	        + "page=0&"
+	        + "size=10&"
+	        + "sortList=birthDate&"
+	        + "sortOrders=desc";
 
-		testes_single_parameterized_one(url, 3);
+	    testes_single_parameterized_one(url, 3);
 	}
 
 	@Test
 	void teste_24() {
-		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?age=21&age_op=le&page=0&size=10&sortList=age&sortOrders=desc";
+	    String url = PATH 
+	        + port 
+	        + Constants.API_NAME_REQUEST_MAPPING 
+	        + "/paginator/EntityOne?"
+	        + "age=21&"
+	        + "age_op=le&"
+	        + "page=0&"
+	        + "size=10&"
+	        + "sortList=age&"
+	        + "sortOrders=desc";
 
-		testes_single_parameterized_one(url, 2);
+	    testes_single_parameterized_one(url, 2);
 	}
-	
+
 	@Test
 	void teste_25() {
+	    String url = PATH 
+	        + port 
+	        + Constants.API_NAME_REQUEST_MAPPING 
+	        + "/paginator/EntityOne?"
+	        + "birthDate=2016-01-01&"
+	        + "birthDate_op=ge&"
+	        + "page=0&"
+	        + "size=10&"
+	        + "sortList=birthDate&"
+	        + "sortOrders=desc";
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?birthDate=2016-01-01&birthDate_op=ge&page=0&size=10&sortList=birthDate&sortOrders=desc";
-
-		testes_single_parameterized_other(url, "Maria", 1);
+	    testes_single_parameterized_other(url, "Maria", 1);
 	}
-	
+
 	@Test
 	void teste_26() {
-		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?age=21&age_op=lt&page=0&size=10&sortList=age&sortOrders=desc";
-		
-		testes_single_parameterized_other(url, "Maria", 1);
+	    String url = PATH 
+	        + port 
+	        + Constants.API_NAME_REQUEST_MAPPING 
+	        + "/paginator/EntityOne?"
+	        + "age=21&"
+	        + "age_op=lt&"
+	        + "page=0&"
+	        + "size=10&"
+	        + "sortList=age&"
+	        + "sortOrders=desc";
+
+	    testes_single_parameterized_other(url, "Maria", 1);
 	}
-	
+
 	@Test
 	void teste_27() {
-		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
+	    String url = PATH 
+	        + port 
+	        + Constants.API_NAME_REQUEST_MAPPING 
+	        + "/paginator/EntityOne?"
+	        + "page=0&"
+	        + "size=20&"
+	        + "sortList=birthDate,name&"
+	        + "sortOrders=asc,desc";
 
-		List<EntityOne> list = getAll(url, new ErrorResponse());
+	    List<EntityOne> list = getAll(url, new ErrorResponse());
 
-		assertNotNull(list);
-		assertEquals(10, list.size());
-		assertEquals("Carlos", list.get(0).getName());
-		assertEquals("Carlos Alberto", list.get(1).getName());
-		assertEquals("Anderson", list.get(2).getName());
-		assertEquals("Paulo Henrique", list.get(3).getName());
-		assertEquals("Ricardo", list.get(4).getName());
-		assertEquals("Ariovaldo", list.get(5).getName());
-		assertEquals("Paulo", list.get(6).getName());
-		assertEquals("Joana", list.get(7).getName());
-		assertEquals("Renato", list.get(8).getName());
-		assertEquals("Maria", list.get(9).getName());
+	    assertNotNull(list);
+	    assertEquals(10, list.size());
+	    assertEquals("Carlos", list.get(0).getName());
+	    assertEquals("Carlos Alberto", list.get(1).getName());
+	    assertEquals("Anderson", list.get(2).getName());
+	    assertEquals("Paulo Henrique", list.get(3).getName());
+	    assertEquals("Ricardo", list.get(4).getName());
+	    assertEquals("Ariovaldo", list.get(5).getName());
+	    assertEquals("Paulo", list.get(6).getName());
+	    assertEquals("Joana", list.get(7).getName());
+	    assertEquals("Renato", list.get(8).getName());
+	    assertEquals("Maria", list.get(9).getName());
 	}
-	
+
 	@Test
 	void teste_28() {
-		
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?page=0&size=20&sortList=birthDate,name&sortOrders=desc,asc";
+	    String url = PATH 
+	        + port 
+	        + Constants.API_NAME_REQUEST_MAPPING 
+	        + "/paginator/EntityOne?"
+	        + "page=0&"
+	        + "size=20&"
+	        + "sortList=birthDate,name&"
+	        + "sortOrders=desc,asc";
 
-		List<EntityOne> list = getAll(url, new ErrorResponse());
+	    List<EntityOne> list = getAll(url, new ErrorResponse());
 
-		assertNotNull(list);
-		assertEquals(10, list.size());
-		assertEquals("Maria", list.get(0).getName());
-		assertEquals("Renato", list.get(1).getName());
-		assertEquals("Joana", list.get(2).getName());
-		assertEquals("Paulo", list.get(3).getName());
-		assertEquals("Ariovaldo", list.get(4).getName());
-		assertEquals("Ricardo", list.get(5).getName());
-		assertEquals("Paulo Henrique", list.get(6).getName());
-		assertEquals("Anderson", list.get(7).getName());
-		assertEquals("Carlos Alberto", list.get(8).getName());
-		assertEquals("Carlos", list.get(9).getName());
+	    assertNotNull(list);
+	    assertEquals(10, list.size());
+	    assertEquals("Maria", list.get(0).getName());
+	    assertEquals("Renato", list.get(1).getName());
+	    assertEquals("Joana", list.get(2).getName());
+	    assertEquals("Paulo", list.get(3).getName());
+	    assertEquals("Ariovaldo", list.get(4).getName());
+	    assertEquals("Ricardo", list.get(5).getName());
+	    assertEquals("Paulo Henrique", list.get(6).getName());
+	    assertEquals("Anderson", list.get(7).getName());
+	    assertEquals("Carlos Alberto", list.get(8).getName());
+	    assertEquals("Carlos", list.get(9).getName());
 	}
 	
 	@Test
 	void teste_29() {
+	    String url = PATH 
+	        + port 
+	        + Constants.API_NAME_REQUEST_MAPPING 
+	        + "/paginator/EntityOne?"
+	        + "page=0&"
+	        + "size=20&"
+	        + "sortList=name,birthDate&"
+	        + "sortOrders=asc,desc";
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?page=0&size=20&sortList=name,birthDate&sortOrders=asc,desc";
+	    List<EntityOne> list = getAll(url, new ErrorResponse());
 
-		List<EntityOne> list = getAll(url, new ErrorResponse());
-		
-		assertNotNull(list);
-		assertEquals(10, list.size());
-		assertEquals("Anderson", list.get(0).getName());
-		assertEquals("Ariovaldo", list.get(1).getName());
-		assertEquals("Carlos", list.get(2).getName());
-		assertEquals("Carlos Alberto", list.get(3).getName());
-		assertEquals("Joana", list.get(4).getName());
-		assertEquals("Maria", list.get(5).getName());
-		assertEquals("Paulo", list.get(6).getName());
-		assertEquals("Paulo Henrique", list.get(7).getName());
-		assertEquals("Renato", list.get(8).getName());
-		assertEquals("Ricardo", list.get(9).getName());
+	    assertNotNull(list);
+	    assertEquals(10, list.size());
+	    assertEquals("Anderson", list.get(0).getName());
+	    assertEquals("Ariovaldo", list.get(1).getName());
+	    assertEquals("Carlos", list.get(2).getName());
+	    assertEquals("Carlos Alberto", list.get(3).getName());
+	    assertEquals("Joana", list.get(4).getName());
+	    assertEquals("Maria", list.get(5).getName());
+	    assertEquals("Paulo", list.get(6).getName());
+	    assertEquals("Paulo Henrique", list.get(7).getName());
+	    assertEquals("Renato", list.get(8).getName());
+	    assertEquals("Ricardo", list.get(9).getName());
 	}
-	
+
 	@Test
 	void teste_30() {
+	    String url = PATH 
+	        + port 
+	        + Constants.API_NAME_REQUEST_MAPPING 
+	        + "/paginator/EntityOne?"
+	        + "page=0&"
+	        + "size=20&"
+	        + "sortList=name, birthDate&"
+	        + "sortOrders=desc, asc";
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?page=0&size=20&sortList=name, birthDate&sortOrders=desc, asc";
+	    List<EntityOne> list = getAll(url, new ErrorResponse());
 
-		List<EntityOne> list = getAll(url, new ErrorResponse());
-		
-		assertNotNull(list);
-		assertEquals(10, list.size());
-		assertEquals("Ricardo", list.get(0).getName());
-		assertEquals("Renato", list.get(1).getName());
-		assertEquals("Paulo Henrique", list.get(2).getName());
-		assertEquals("Paulo", list.get(3).getName());
-		assertEquals("Maria", list.get(4).getName());
-		assertEquals("Joana", list.get(5).getName());
-		assertEquals("Carlos Alberto", list.get(6).getName());
-		assertEquals("Carlos", list.get(7).getName());
-		assertEquals("Ariovaldo", list.get(8).getName());
-		assertEquals("Anderson", list.get(9).getName());
+	    assertNotNull(list);
+	    assertEquals(10, list.size());
+	    assertEquals("Ricardo", list.get(0).getName());
+	    assertEquals("Renato", list.get(1).getName());
+	    assertEquals("Paulo Henrique", list.get(2).getName());
+	    assertEquals("Paulo", list.get(3).getName());
+	    assertEquals("Maria", list.get(4).getName());
+	    assertEquals("Joana", list.get(5).getName());
+	    assertEquals("Carlos Alberto", list.get(6).getName());
+	    assertEquals("Carlos", list.get(7).getName());
+	    assertEquals("Ariovaldo", list.get(8).getName());
+	    assertEquals("Anderson", list.get(9).getName());
 	}
-	
+
 	@Test
 	void teste_31() {
+	    String url = PATH 
+	        + port 
+	        + Constants.API_NAME_REQUEST_MAPPING 
+	        + "/paginator/EntityOne?"
+	        + "page=0&"
+	        + "size=20&"
+	        + "name=Silva&"
+	        + "name_op=eq";
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?page=0&size=20&name=Silva&name_op=eq";
+	    List<EntityOne> list = getAll(url, new ErrorResponse());
 
-		List<EntityOne> list = getAll(url, new ErrorResponse());
-		
-		assertNull(list);
+	    assertNull(list);
 	}
-	
+
 	@Test
 	void teste_32() {
+	    String url = PATH 
+	        + port 
+	        + Constants.API_NAME_REQUEST_MAPPING 
+	        + "/paginator/EntityOne?"
+	        + "id=" + SaveTests.ids.get(0) + "," + SaveTests.ids.get(1) + "," + SaveTests.ids.get(2) + "&"
+	        + "id_op=in&"
+	        + "page=0&"
+	        + "size=20";
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?id=" + SaveTests.ids.get(0) + "," + SaveTests.ids.get(1) + "," + SaveTests.ids.get(2) + "&id_op=in&page=0&size=20";
+	    List<EntityOne> list = getAll(url, new ErrorResponse());
 
-		List<EntityOne> list = getAll(url, new ErrorResponse());
-		
-		assertNotNull(list);
-		assertEquals(3, list.size());
-		assertEquals("Carlos Alberto", list.get(0).getName());
-		assertEquals("Paulo", list.get(1).getName());
-		assertEquals("Maria", list.get(2).getName());
+	    assertNotNull(list);
+	    assertEquals(3, list.size());
+	    assertEquals("Carlos Alberto", list.get(0).getName());
+	    assertEquals("Paulo", list.get(1).getName());
+	    assertEquals("Maria", list.get(2).getName());
 	}
-	
+
 	@Test
 	void teste_33() {
+	    String url = PATH 
+	        + port 
+	        + Constants.API_NAME_REQUEST_MAPPING 
+	        + "/paginator/EntityOne?"
+	        + "id=1,2,3&"
+	        + "id_op=in&"
+	        + "page=0&"
+	        + "size=20&"
+	        + "sortList=name&"
+	        + "sortOrders=desc";
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?id=1,2,3&id_op=in&page=0&size=20&sortList=name&sortOrders=desc";
+	    List<EntityOne> list = getAll(url, new ErrorResponse());
 
-		List<EntityOne> list = getAll(url, new ErrorResponse());
-		
-		assertNull(list);
+	    assertNull(list);
 	}
 	
 	public void teste_single_parameterized_one(String url, String message) {

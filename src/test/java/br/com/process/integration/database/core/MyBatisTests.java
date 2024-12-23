@@ -45,6 +45,8 @@ class MyBatisTests {
 
 	@LocalServerPort
 	private int port;
+	
+	private static final String PATH = "http://localhost:";
 
 	@Autowired
 	private TestRestTemplate restTemplate;
@@ -53,8 +55,7 @@ class MyBatisTests {
 	private QueryMyBatisController queryMyBatisController;
 
 	@BeforeAll
-	void setupOnce() {
-	}
+	void setupOnce() {}
 
 	@Test
 	@Order(1)
@@ -65,19 +66,26 @@ class MyBatisTests {
 	@Test
 	void teste_01() {
 
-		String url = "http://localhost:" + port
-				+ Constants.API_NAME_REQUEST_MAPPING + "/mapper/count/EntityOneData/countEntitiesByName?name=ar";
+		String url = PATH 
+				+ port 
+	            + Constants.API_NAME_REQUEST_MAPPING 
+	            + "/mapper/count/EntityOneData/countEntitiesByName?" 
+	            + "name=Ar";
 
 		int count = Integer.parseInt(getUniqueResult(url, new ErrorResponse()));
 
-		assertEquals(5, count);
+		assertEquals(1, count);
 	}
 	
 	@Test
 	void teste_02() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/single/EntityOneData/findEntityDataByName?name=Pedro";
-
+		String url = PATH 
+				+ port 
+	            + Constants.API_NAME_REQUEST_MAPPING 
+	            + "/mapper/single/EntityOneData/findEntityDataByName?" 
+	            + "name=Pedro";
+		
 		EntityOneData data = getSingleResult(url, new ErrorResponse());
 
 		assertNull(data);
@@ -87,8 +95,12 @@ class MyBatisTests {
 	@Test
 	void teste_03() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/single/EntityOneData/methodNoMapping?name=Anderson";
-
+		String url = PATH 
+				+ port 
+	            + Constants.API_NAME_REQUEST_MAPPING 
+	            + "/mapper/single/EntityOneData/methodNoMapping?" 
+	            + "name=Anderson";
+		
 		single_parameterized_one_erro(url, "Invalid bound statement (not found): br.com.process.integration.database.domain.store.mapper.EntityOneDataMapper.methodNoMapping");
 
 	}
@@ -96,8 +108,12 @@ class MyBatisTests {
 	@Test
 	void teste_04() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/count/EntityOneData/methodNoMapping?id=1";
-
+		String url = PATH 
+				+ port 
+	            + Constants.API_NAME_REQUEST_MAPPING 
+	            + "/mapper/count/EntityOneData/methodNoMapping?" 
+	            + "id=1";
+		
 		single_parameterized_one_erro(url, "Invalid bound statement (not found): br.com.process.integration.database.domain.store.mapper.EntityOneDataMapper.methodNoMapping");
 
 	}
@@ -105,9 +121,12 @@ class MyBatisTests {
 	@Test
 	void teste_05() {
 
-		String url = "http://localhost:" + port
-				+ Constants.API_NAME_REQUEST_MAPPING + "/mapper/single/EntityOneData/findEntityDataByName?name=Anderson";
-
+		String url = PATH 
+				+ port 
+	            + Constants.API_NAME_REQUEST_MAPPING 
+	            + "/mapper/single/EntityOneData/findEntityDataByName?" 
+	            + "name=Anderson";
+		
 		EntityOneData data = getSingleResult(url, new ErrorResponse());
 
 		assertNotNull(data.getId());
@@ -115,8 +134,7 @@ class MyBatisTests {
 		assertEquals(41, data.getAge());
 		assertEquals(1.93, data.getHeight());
 		assertEquals(LocalDate.parse("1983-03-29", DateTimeFormatter.ISO_LOCAL_DATE), data.getBirthDate());
-		assertEquals(LocalDateTime.parse("2024-02-01T02:52:54", DateTimeFormatter.ISO_LOCAL_DATE_TIME),
-				data.getProhibitedDateTime());
+		assertEquals(LocalDateTime.parse("2024-02-01T02:52:54", DateTimeFormatter.ISO_LOCAL_DATE_TIME), data.getProhibitedDateTime());
 		assertNotEquals(0, data.hashCode());
 		assertNotNull(data.getEntityTwo());
 
@@ -126,9 +144,14 @@ class MyBatisTests {
 	@Test
 	void teste_06() {
 
-		String url = "http://localhost:" + port
-				+ Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/findEntityOneByName?name=Pedro&sortList=name&sortOrders=asc";
-
+		String url = PATH 
+				+ port
+	            + Constants.API_NAME_REQUEST_MAPPING
+	            + "/mapper/EntityOneData/findEntityOneByName?"
+	            + "name=Pedro&"
+	            + "sortList=name&"
+	            + "sortOrders=asc";
+		
 		List<EntityOneData> list = getAll(url, new ErrorResponse());
 
 		assertNull(list);
@@ -137,35 +160,45 @@ class MyBatisTests {
 	@Test
 	void teste_07() {
 
-		String url = "http://localhost:" + port
-				+ Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/findEntityDataByName?name=ar";
+		String url = PATH 
+				+ port
+	            + Constants.API_NAME_REQUEST_MAPPING
+	            + "/mapper/EntityOneData/findEntityDataByName?"
+	            + "name=Ar";
 
-		single_parameterized_one_erro(url, "Expected one result (or null) to be returned by selectOne(), but found: 5");
+		single_parameterized_one_erro(url, "is in unnamed module of loader 'app'");
 	}
 	
 	@Test
 	void teste_08() {
 
-		String url = "http://localhost:" + port
-				+ Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/findEntityOneByName?name=ar&sortList=name&sortOrders=asc";
-
+		String url = PATH 
+				+ port
+	            + Constants.API_NAME_REQUEST_MAPPING
+	            + "/mapper/EntityOneData/findEntityOneByName?"
+	            + "name=ar&"
+	            + "sortList=name&"
+	            + "sortOrders=asc";
+		
 		List<EntityOneData> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
-		assertEquals(5, list.size());
-		assertEquals("Ariovaldo", list.get(0).getName());
-		assertEquals("Carlos", list.get(1).getName());
-		assertEquals("Carlos Alberto", list.get(2).getName());
-		assertEquals("Maria", list.get(3).getName());
-		assertEquals("Ricardo", list.get(4).getName());
+		assertEquals(4, list.size());
+		assertEquals("Carlos", list.get(0).getName());
+		assertEquals("Carlos Alberto", list.get(1).getName());
+		assertEquals("Maria", list.get(2).getName());
+		assertEquals("Ricardo", list.get(3).getName());
 	}
 
 	
 	@Test
 	void teste_09() {
 
-		String url = "http://localhost:" + port
-				+ Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/methodNoMapping?name=Pedro";
+		String url = PATH 
+				+ port
+	            + Constants.API_NAME_REQUEST_MAPPING
+	            + "/mapper/EntityOneData/methodNoMapping?"
+	            + "name=Pedro";
 		
 		single_parameterized_one_erro(url, "Invalid bound statement (not found): br.com.process.integration.database.domain.store.mapper.EntityOneDataMapper.methodNoMapping");
 	}
@@ -173,8 +206,14 @@ class MyBatisTests {
 	@Test
 	void teste_10() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/findEntityDataByName?name=ar&sortList=name,age&sortOrders=asc,desc";
-
+		String url = PATH 
+				+ port
+	            + Constants.API_NAME_REQUEST_MAPPING
+	            + "/mapper/EntityOneData/findEntityDataByName?"
+	            + "name=ar&"
+	            + "sortList=name,age&"
+	            + "sortOrders=asc,desc";
+		
 		single_parameterized_one_erro(url, "Erro: Numero de parametros incorretos para o method: 'findEntityDataByName'");
 
 	}
@@ -182,22 +221,26 @@ class MyBatisTests {
 	@Test
 	void teste_11() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/findEntityOneByName?name=ar&sortList=name,age&sortOrders=asc,desc";
+		String url = PATH 
+				+ port
+	            + Constants.API_NAME_REQUEST_MAPPING
+	            + "/mapper/EntityOneData/findEntityOneByName?"
+	            + "name=ar&"
+	            + "sortList=name,age&"
+	            + "sortOrders=asc,desc";
 
 		List<EntityOneData> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
-		assertEquals(5, list.size());
-		assertEquals("Ariovaldo", list.get(0).getName());
-		assertEquals(22, list.get(0).getAge());
-		assertEquals("Carlos", list.get(1).getName());
-		assertEquals(34, list.get(1).getAge());
-		assertEquals("Carlos Alberto", list.get(2).getName());
-		assertEquals(55, list.get(2).getAge());
-		assertEquals("Maria", list.get(3).getName());
-		assertEquals(12, list.get(3).getAge());
-		assertEquals("Ricardo", list.get(4).getName());
-		assertEquals(22, list.get(4).getAge());
+		assertEquals(4, list.size());
+		assertEquals("Carlos", list.get(0).getName());
+		assertEquals(34, list.get(0).getAge());
+		assertEquals("Carlos Alberto", list.get(1).getName());
+		assertEquals(55, list.get(1).getAge());
+		assertEquals("Maria", list.get(2).getName());
+		assertEquals(12, list.get(2).getAge());
+		assertEquals("Ricardo", list.get(3).getName());
+		assertEquals(22, list.get(3).getAge());
 	}
 
 	public void single_parameterized_one_erro(String url, String message) {

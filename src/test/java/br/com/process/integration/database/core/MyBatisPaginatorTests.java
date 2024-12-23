@@ -44,6 +44,8 @@ class MyBatisPaginatorTests {
 
 	@LocalServerPort
 	private int port;
+	
+	private static final String PATH = "http://localhost:";
 
 	@Autowired
 	private TestRestTemplate restTemplate;
@@ -62,8 +64,16 @@ class MyBatisPaginatorTests {
 
 	@Test
 	void teste_01() {
-
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/paginator/EntityOneData/findEntityOneByAll?code=true&page=0&size=10&sortList=name&sortOrders=desc";
+		
+		String url = PATH 
+				+ port 
+	            + Constants.API_NAME_REQUEST_MAPPING 
+	            + "/mapper/paginator/EntityOneData/findEntityOneByAll?"
+	            + "code=true&"
+	            + "page=0&"
+	            + "size=10&"
+	            + "sortList=name&"
+	            + "sortOrders=desc";
 
 		List<EntityOneData> list = getAll(url, new ErrorResponse());
 
@@ -84,8 +94,16 @@ class MyBatisPaginatorTests {
 	@Test
 	void teste_02() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/paginator/EntityOneData/findEntityOneByAll?code=2&page=0&size=2&sortList=name&sortOrders=desc";
-
+		String url = PATH 
+				+ port 
+	            + Constants.API_NAME_REQUEST_MAPPING 
+	            + "/mapper/paginator/EntityOneData/findEntityOneByAll?"
+	            + "code=2&"
+	            + "page=0&"
+	            + "size=2&"
+	            + "sortList=name&"
+	            + "sortOrders=desc";
+		
 		List<EntityOneData> list = getAll(url, new ErrorResponse());
 
 		assertNull(list);
@@ -95,8 +113,13 @@ class MyBatisPaginatorTests {
 	@Test
 	void teste_03() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/paginator/EntityOneData/findEntityOneByAll?page=0&size=0";
-
+		String url = PATH
+				+ port 
+	            + Constants.API_NAME_REQUEST_MAPPING 
+	            + "/mapper/paginator/EntityOneData/findEntityOneByAll?"
+	            + "page=0&"
+	            + "size=0";
+		
 		ErrorResponse errorResponse = new ErrorResponse("Page size must not be less than one", HttpStatus.BAD_REQUEST);
 
 		assertThrows(RuntimeException.class, () -> getAll(url, errorResponse));

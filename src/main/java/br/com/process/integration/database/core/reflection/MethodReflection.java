@@ -27,7 +27,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import br.com.process.integration.database.core.exception.CheckedException;
 import br.com.process.integration.database.core.exception.UncheckedException;
 import br.com.process.integration.database.core.util.Constants;
-import br.com.process.integration.database.core.util.DynamicTypeConverter;
+import br.com.process.integration.database.core.util.DynamicFoundType;
 import jakarta.persistence.JoinColumn;
 
 @Service
@@ -47,7 +47,7 @@ public class MethodReflection {
 						executeMethod(object, setMethod(field.getName()), objectTemp);
 					} else {
 						executeMethod(object, setMethod(field.getName()),
-								DynamicTypeConverter.convert(field, jsonNode));
+								DynamicFoundType.getTypeJsonValue(field, jsonNode));
 					}
 				}
 			}
@@ -298,7 +298,7 @@ public class MethodReflection {
 			for (Field field : fields) {
 				if (params.get(field.getName()) != null) {
 					executeMethod(entity, setMethod(field.getName()),
-							DynamicTypeConverter.convert(field, params.get(field.getName())));
+							DynamicFoundType.getTypeValue(field, params.get(field.getName())));
 				}
 			}
 		} catch (Exception ex) {
@@ -357,7 +357,7 @@ public class MethodReflection {
 			Object[] methodArgs = new Object[parameterTypes.length];
 			int index = 0;
 			for (Object value : param.values()) {
-				methodArgs[index] = DynamicTypeConverter.convert(parameterTypes[index], value);
+				methodArgs[index] = DynamicFoundType.getTypeValue(parameterTypes[index], value);
 				index++;
 			}
 			return methodArgs;
@@ -535,7 +535,7 @@ public class MethodReflection {
 		return false;
 	}
 	
-    public static Class<?> getAttributeType(String classPath, String attributeName) {
+    public static Class<?> getAttributeType(String classPath, String attributeName, boolean notFound) {
         try {
             Class<?> clazz = Class.forName(classPath);
             Field field = clazz.getDeclaredField(attributeName);
@@ -543,6 +543,9 @@ public class MethodReflection {
         } catch (ClassNotFoundException e) {
             throw new UncheckedException("Classe não encontrada: " + classPath);
         } catch (NoSuchFieldException e) {
+        	if(notFound) {
+        		return String.class;
+        	}
             throw new UncheckedException("Atributo não encontrado: " + attributeName);
         } catch (Exception e) {
             throw new UncheckedException("Erro inesperado ao obter o tipo do atributo.", e);

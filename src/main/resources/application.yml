@@ -8,10 +8,10 @@ spring:
     rest:
       defaultMediaType: application/json       
   datasource:
-    url: jdbc:mysql://localhost:3306/root-database?allowPublicKeyRetrieval=true&useSSL=false
+    #url: jdbc:mysql://localhost:3306/root-database?allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:postgresql://localhost:5432/root-database
     username: anderson
     password: admin
-    driver-class-name: com.mysql.cj.jdbc.Driver # Certifique-se de que o driver MySQL está correto
 
   jpa:
     hibernate:

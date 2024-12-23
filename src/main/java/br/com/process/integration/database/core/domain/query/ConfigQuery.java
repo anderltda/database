@@ -1,11 +1,19 @@
 package br.com.process.integration.database.core.domain.query;
 
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -20,6 +28,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.process.integration.database.core.exception.UncheckedException;
+import br.com.process.integration.database.core.reflection.MethodReflection;
 import br.com.process.integration.database.core.util.Constants;
 
 @Configuration
@@ -44,15 +53,15 @@ public class ConfigQuery {
 		OPERADORES.put(Constants.HTML_BETWEEN, Constants.BETWEEN);
 	}
 
-	public String executeSQL(Map<String, Object> filters, String fileQuery, String invokerQuery, MapSqlParameterSource mapSqlParameterSource) {
-		return executeQuery(filters, fileQuery, invokerQuery, mapSqlParameterSource, false);
+	public String executeSQL(Class<?> view, Map<String, Object> filters, String fileQuery, String invokerQuery, MapSqlParameterSource mapSqlParameterSource) {
+		return executeQuery(view, filters, fileQuery, invokerQuery, mapSqlParameterSource, false);
 	}
 
-	public String executeCountSQL(Map<String, Object> filters, String fileQuery, String invokerQuery, MapSqlParameterSource mapSqlParameterSource) {
-		return executeQuery(filters, fileQuery, invokerQuery, mapSqlParameterSource, true);
+	public String executeCountSQL(Class<?> view, Map<String, Object> filters, String fileQuery, String invokerQuery, MapSqlParameterSource mapSqlParameterSource) {
+		return executeQuery(view, filters, fileQuery, invokerQuery, mapSqlParameterSource, true);
 	}
 
-	private String executeQuery(Map<String, Object> filters, String fileQuery, String invokerQuery, MapSqlParameterSource mapSqlParameterSource, boolean isCount) {
+	private String executeQuery(Class<?> view, Map<String, Object> filters, String fileQuery, String invokerQuery, MapSqlParameterSource mapSqlParameterSource, boolean isCount) {
 
 		StringBuilder sql = new StringBuilder();
 
@@ -71,9 +80,123 @@ public class ConfigQuery {
 		if (isCount && query.getGroupby() != null) {
 			sql.append(") AS VALUE" + Constants.WRITERSPACE);
 		}
+		
+		/*
+		 * MySQL 
+		 */
+		//filters.forEach((key, value) -> mapSqlParameterSource.addValue(key,
+		//		value.toString().contains("*") ? value.toString().replace("*", "%") : value));
 
-		filters.forEach((key, value) -> mapSqlParameterSource.addValue(key,
-				value.toString().contains("*") ? value.toString().replace("*", "%") : value));
+		Map<String, Object> keys = filters.entrySet().stream()
+				.filter(entry -> entry.getValue().toString().contains(Constants.HTML_BETWEEN))
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+		keys.forEach((key, value) -> {
+			filters.remove(key.replace(Constants.IDENTITY_OPERATOR, ""));
+		});
+
+		filters.forEach((key, value) -> {
+
+			Class<?> type = MethodReflection.getAttributeType(view.getName(),
+					key.replace(Constants.BETWEEN_START, "").replace(Constants.BETWEEN_END, ""), true);
+
+			String[] values = value.toString().replaceAll("[\\[\\]]", "").split(", ");
+
+			if (type.equals(Long.class)) {
+
+				List<Long> longs = Arrays.stream(values).map(v -> Long.valueOf(v.toString()))
+						.collect(Collectors.toList());
+
+				mapSqlParameterSource.addValue(key, longs);
+
+			} else if (type.equals(Integer.class)) {
+
+				List<Integer> integers = Arrays.stream(values).map(v -> Integer.valueOf(v.toString()))
+						.collect(Collectors.toList());
+
+				mapSqlParameterSource.addValue(key, integers);
+
+			} else if (type.equals(Short.class)) {
+
+				List<Short> shorts = Arrays.stream(values).map(v -> Short.valueOf(v.toString()))
+						.collect(Collectors.toList());
+
+				mapSqlParameterSource.addValue(key, shorts);
+
+			} else if (type.equals(Float.class)) {
+
+				List<Float> floats = Arrays.stream(values).map(v -> Float.valueOf(v.toString()))
+						.collect(Collectors.toList());
+
+				mapSqlParameterSource.addValue(key, floats);
+
+			} else if (type.equals(Byte.class)) {
+
+				List<Byte> bytes = Arrays.stream(values).map(v -> Byte.valueOf(v.toString()))
+						.collect(Collectors.toList());
+
+				mapSqlParameterSource.addValue(key, bytes);
+
+			} else if (type.equals(Double.class)) {
+
+				List<Double> doubles = Arrays.stream(values).map(v -> Double.valueOf(v.toString()))
+						.collect(Collectors.toList());
+
+				mapSqlParameterSource.addValue(key, doubles);
+
+			} else if (type.equals(BigDecimal.class)) {
+
+				List<BigDecimal> bigDecimals = Arrays.stream(values).map(v -> new BigDecimal(v.toString()))
+						.collect(Collectors.toList());
+
+				mapSqlParameterSource.addValue(key, bigDecimals);
+
+			} else if (type.equals(BigInteger.class)) {
+
+				List<BigInteger> bigIntegers = Arrays.stream(values).map(v -> new BigInteger(v.toString()))
+						.collect(Collectors.toList());
+
+				mapSqlParameterSource.addValue(key, bigIntegers);
+
+			} else if (type.equals(LocalDate.class)) {
+
+				List<LocalDate> localDates = Arrays.stream(values)
+						.map(date -> LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE))
+						.collect(Collectors.toList());
+
+				mapSqlParameterSource.addValue(key, localDates);
+
+			} else if (type.equals(LocalDateTime.class)) {
+
+				List<LocalDateTime> localDates = Arrays.stream(values)
+						.map(date -> LocalDateTime.parse(date, DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+						.collect(Collectors.toList());
+
+				mapSqlParameterSource.addValue(key, localDates);
+
+			} else if (type.equals(Date.class)) {
+
+				List<Date> localDates = Arrays.stream(values).map(date -> new java.util.Date(((Date) value).getTime()))
+						.collect(Collectors.toList());
+
+				mapSqlParameterSource.addValue(key, localDates);
+
+			} else if (type.equals(Boolean.class)) {
+
+				mapSqlParameterSource.addValue(key, Boolean.valueOf(value.toString()));
+
+			} else {
+
+				if (value.toString().contains("*")) {
+					mapSqlParameterSource.addValue(key, value.toString().replace("*", "%"));
+				} else {
+
+					List<String> strings = Arrays.stream(values).map(v -> v.toString()).collect(Collectors.toList());
+
+					mapSqlParameterSource.addValue(key, strings);
+				}
+			}
+		});
 
 		return sql.toString().trim() + Constants.WRITERSPACE;
 	}
@@ -114,7 +237,7 @@ public class ConfigQuery {
 		for (int i = 0; i < sortLists.length; i++) {
 			orderby.append(sortLists[i]);
 			orderby.append(" ");
-			orderby.append(sortOrders.length > i ? sortOrders[i].toUpperCase() : sortOrders[i-1].toUpperCase());
+			orderby.append(sortOrders.length > i ? sortOrders[i].toUpperCase() : sortOrders[i - 1].toUpperCase());
 			orderby.append(",");
 		}
 		

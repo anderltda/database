@@ -44,6 +44,8 @@ class JPQLPaginatorTests {
 
 	@LocalServerPort
 	private int port;
+	
+	private static final String PATH = "http://localhost:";
 
 	@Autowired
 	private TestRestTemplate restTemplate;
@@ -63,7 +65,14 @@ class JPQLPaginatorTests {
 	@Test
 	void teste_01() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/paginator/EntityOne/buscaAll?page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/jpql/paginator/EntityOne/buscaAll?"
+		        + "page=0&"
+		        + "size=20&"
+		        + "sortList=birthDate,name&"
+		        + "sortOrders=asc,desc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -84,23 +93,38 @@ class JPQLPaginatorTests {
 	@Test
 	void teste_02() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/paginator/EntityOne/buscaComLikePeloName?name=ar&page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
-
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/jpql/paginator/EntityOne/buscaComLikePeloName?"
+		        + "name=ar&"
+		        + "page=0&"
+		        + "size=20&"
+		        + "sortList=birthDate,name&"
+		        + "sortOrders=asc,desc";
+		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
-		assertEquals(5, list.size());
+		assertEquals(4, list.size());
 		assertEquals("Carlos", list.get(0).getName());
 		assertEquals("Carlos Alberto", list.get(1).getName());
 		assertEquals("Ricardo", list.get(2).getName());
-		assertEquals("Ariovaldo", list.get(3).getName());
-		assertEquals("Maria", list.get(4).getName());
+		assertEquals("Maria", list.get(3).getName());
 	}
 	
 	@Test
 	void teste_03() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/paginator/EntityOne/buscaComLikePeloName?name=Silva&page=0&size=20&sortList=birthDate,name&sortOrders=asc,desc";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/jpql/paginator/EntityOne/buscaComLikePeloName?"
+		        + "name=Silva&"
+		        + "page=0&"
+		        + "size=20&"
+		        + "sortList=birthDate,name&"
+		        + "sortOrders=asc,desc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -110,8 +134,15 @@ class JPQLPaginatorTests {
 	@Test
 	void teste_04() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/paginator/EntityOne/buscaAll?page=0&size=20&sortList=birthDate,name&sortOrders=desc,asc";
-
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/jpql/paginator/EntityOne/buscaAll?"
+		        + "page=0&"
+		        + "size=20&"
+		        + "sortList=birthDate,name&"
+		        + "sortOrders=desc,asc";
+		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
@@ -131,8 +162,15 @@ class JPQLPaginatorTests {
 	@Test
 	void teste_05() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/paginator/EntityOne/buscaAll?page=0&size=20&sortList=name,birthDate&sortOrders=asc,desc";
-
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/jpql/paginator/EntityOne/buscaAll?"
+		        + "page=0&"
+		        + "size=20&"
+		        + "sortList=name,birthDate&"
+		        + "sortOrders=asc,desc";
+		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
@@ -152,8 +190,15 @@ class JPQLPaginatorTests {
 	@Test
 	void teste_06() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/paginator/EntityOne/buscaAll?page=0&size=20&sortList=name,birthDate&sortOrders=desc,asc";
-
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/jpql/paginator/EntityOne/buscaAll?"
+		        + "page=0&"
+		        + "size=20&"
+		        + "sortList=name,birthDate&"
+		        + "sortOrders=desc,asc";
+		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 		
 		assertNotNull(list);
@@ -173,8 +218,14 @@ class JPQLPaginatorTests {
 	@Test
 	void teste_07() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/jpql/paginator/EntityOne/buscaAll?age=Silva&sortList=name,birthDate&sortOrders=desc,asc";
-
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/jpql/paginator/EntityOne/buscaAll?"
+		        + "age=Silva&"
+		        + "sortList=name,birthDate&"
+		        + "sortOrders=desc,asc";
+		
 		ErrorResponse errorResponse = new ErrorResponse("Parameter value [Silva] did not match expected type [SqmBasicValuedSimplePath(br.com.process.integration.database.domain.model.entity.EntityOne(e).age)]",
 				HttpStatus.BAD_REQUEST);
 

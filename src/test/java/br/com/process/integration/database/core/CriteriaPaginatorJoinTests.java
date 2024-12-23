@@ -1,6 +1,5 @@
 package br.com.process.integration.database.core;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -42,6 +41,8 @@ class CriteriaPaginatorJoinTests {
 
 	@LocalServerPort
 	private int port;
+	
+	private static final String PATH = "http://localhost:";
 
 	@Autowired
 	private TestRestTemplate restTemplate;
@@ -62,8 +63,16 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_01() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "name=Anderson&code=true&page=0&size=10&sortList=age,height&sortOrders=asc,asc";
+		String url = PATH
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "name=Anderson&"
+		        + "code=true&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=age,height&"
+		        + "sortOrders=asc,asc";
 
 		singleParameterizedOne("Anderson", url);
 	}
@@ -71,8 +80,17 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_02() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "name_op=eq&name=Anderson&code=true&page=0&size=10&sortList=age,height&sortOrders=asc,asc";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "name_op=eq&"
+		        + "name=Anderson&"
+		        + "code=true&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=age,height&"
+		        + "sortOrders=asc,asc";
 
 		singleParameterizedOne("Anderson", url);
 	}
@@ -80,8 +98,18 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_03() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "name_op=ne&name=Anderson&code=true&page=0&size=10&sortList=age,height&sortOrders=asc,asc";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "name_op=ne&"
+		        + "name=Anderson&"
+		        + "code=true&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=age,height&"
+		        + "sortOrders=asc,asc";
+		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
@@ -100,8 +128,17 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_04() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "name_op=in&name=Anderson,Paulo,Joana&code=true&page=0&size=10&sortList=age,height,name,birthDate&sortOrders=asc,asc,asc,asc";
+		String url = PATH 
+				+ port 
+				+ Constants.API_NAME_REQUEST_MAPPING 
+				+ "/paginator/EntityOne?"
+				+ "name_op=in&name=Anderson,Paulo,Joana&"
+				+ "code=true&"
+				+ "page=0&"
+				+ "size=10&"
+				+ "sortList=age,height,name,birthDate&"
+				+ "sortOrders=asc,asc,asc,asc";
+		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
@@ -114,8 +151,19 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_05() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "name_op=in&name=Anderson,Paulo,Joana&code=true&entityTwo.color_op=in&entityTwo.color=roxo,amarelo,azul&entityTwo.hex_op=bt&entityTwo.hex=523,3133&page=0&size=10&sortList=age,height,name,birthDate&sortOrders=asc,asc,asc,asc";
+		String url = PATH 
+				+ port 
+				+ Constants.API_NAME_REQUEST_MAPPING 
+				+ "/paginator/EntityOne?"
+				+ "name_op=in&name=Anderson,Paulo,Joana&"
+				+ "code=true&"
+				+ "entityTwo.color_op=in&"
+				+ "entityTwo.color=Roxo,Amarelo,Azul&"
+				+ "entityTwo.hex_op=bt&entityTwo.hex=523,3133&"
+				+ "page=0&"
+				+ "size=10&"
+				+ "sortList=age,height,name,birthDate&"
+				+ "sortOrders=asc,asc,asc,asc";
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
@@ -128,8 +176,22 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_06() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "name_op=in&name=Anderson,Paulo,Joana,Ricardo&code=true&entityTwo.color_op=in&entityTwo.color=roxo,amarelo,verde,azul,preto,laranja&entityTwo.hex_op=ne&entityTwo.hex=0&page=0&size=10&sortList=age,height,name,birthDate,code&sortOrders=asc,desc,asc,asc,asc";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "name_op=in&"
+		        + "name=Anderson,Paulo,Joana,Ricardo&"
+		        + "code=true&"
+		        + "entityTwo.color_op=in&"
+		        + "entityTwo.color=Roxo,Amarelo,Verde,Azul,Preto,Laranja&"
+		        + "entityTwo.hex_op=ne&"
+		        + "entityTwo.hex=0&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=age,height,name,birthDate,code&"
+		        + "sortOrders=asc,desc,asc,asc,asc";
+		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
@@ -143,8 +205,24 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_07() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "name_op=in&name=Anderson,Paulo,Joana,Ricardo&age_op=bt&age=20,45&code=true&entityTwo.color_op=in&entityTwo.color=roxo,amarelo,verde,azul,preto,laranja&entityTwo.hex_op=ne&entityTwo.hex=0&page=0&size=10&sortList=code,entityTwo.hex,prohibitedDateTime&sortOrders=asc,desc,desc";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "name_op=in&"
+		        + "name=Anderson,Paulo,Joana,Ricardo&"
+		        + "age_op=bt&"
+		        + "age=20,45&"
+		        + "code=true&"
+		        + "entityTwo.color_op=in&"
+		        + "entityTwo.color=Roxo,Amarelo,Verde,Azul,Preto,Laranja&"
+		        + "entityTwo.hex_op=ne&"
+		        + "entityTwo.hex=0&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=code,entityTwo.hex,prohibitedDateTime&"
+		        + "sortOrders=asc,desc,desc";
+		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
@@ -158,8 +236,24 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_08() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "name_op=in&name=Anderson,Paulo,Joana,Ricardo&age_op=bt&age=20,45&code=true&entityTwo.color_op=in&entityTwo.color=roxo,amarelo,verde,azul,preto,laranja&entityTwo.hex_op=bt&entityTwo.hex=523,12345&page=0&size=10&sortList=code,entityTwo.hex,prohibitedDateTime&sortOrders=asc,desc,desc";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "name_op=in&"
+		        + "name=Anderson,Paulo,Joana,Ricardo&"
+		        + "age_op=bt&"
+		        + "age=20,45&"
+		        + "code=true&"
+		        + "entityTwo.color_op=in&"
+		        + "entityTwo.color=Roxo,Amarelo,Verde,Azul,Preto,Laranja&"
+		        + "entityTwo.hex_op=bt&"
+		        + "entityTwo.hex=523,12345&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=code,entityTwo.hex,prohibitedDateTime&"
+		        + "sortOrders=asc,desc,desc";
+		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
@@ -173,8 +267,26 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_09() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "name_op=in&name=Anderson,Paulo,Joana,Ricardo&age_op=bt&age=20,45&code=true&entityTwo.color_op=in&entityTwo.color=roxo,amarelo,verde,azul,preto,laranja&entityTwo.hex_op=bt&entityTwo.hex=523,12345&entityTwo.cost_op=ge&entityTwo.cost=12,00&page=0&size=10&sortList=code,entityTwo.hex,prohibitedDateTime&sortOrders=asc,desc,desc";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "name_op=in&"
+		        + "name=Anderson,Paulo,Joana,Ricardo&"
+		        + "age_op=bt&"
+		        + "age=20,45&"
+		        + "code=true&"
+		        + "entityTwo.color_op=in&"
+		        + "entityTwo.color=Roxo,Amarelo,Verde,Azul,Preto,Laranja&"
+		        + "entityTwo.hex_op=bt&"
+		        + "entityTwo.hex=523,12345&"
+		        + "entityTwo.cost_op=ge&"
+		        + "entityTwo.cost=12,00&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=code,entityTwo.hex,prohibitedDateTime&"
+		        + "sortOrders=asc,desc,desc";
+		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
@@ -188,8 +300,28 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_10() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "name_op=in&name=Anderson,Paulo,Joana,Ricardo&age_op=bt&age=20,45&code=true&entityTwo.color_op=in&entityTwo.color=roxo,amarelo,verde,azul,preto,laranja&entityTwo.hex_op=bt&entityTwo.hex=523,12345&entityTwo.cost_op=ge&entityTwo.cost=12,00&entityTwo.inclusionDate_op=ge&entityTwo.inclusionDate=2024-01-07T00:00:00&page=0&size=10&sortList=code,entityTwo.hex,prohibitedDateTime&sortOrders=asc,desc,desc";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "name_op=in&"
+		        + "name=Anderson,Paulo,Joana,Ricardo&"
+		        + "age_op=bt&"
+		        + "age=20,45&"
+		        + "code=true&"
+		        + "entityTwo.color_op=in&"
+		        + "entityTwo.color=Roxo,Amarelo,Verde,Azul,Preto,Laranja&"
+		        + "entityTwo.hex_op=bt&"
+		        + "entityTwo.hex=523,12345&"
+		        + "entityTwo.cost_op=ge&"
+		        + "entityTwo.cost=12,00&"
+		        + "entityTwo.inclusionDate_op=ge&"
+		        + "entityTwo.inclusionDate=2024-01-07T00:00:00&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=code,entityTwo.hex,prohibitedDateTime&"
+		        + "sortOrders=asc,desc,desc";
+		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
@@ -203,8 +335,30 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_11() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "name_op=in&name=Anderson,Paulo,Joana,Ricardo&age_op=bt&age=20,45&entityTwo.color_op=in&entityTwo.color=roxo,amarelo,verde,azul,preto,laranja&entityTwo.hex_op=bt&entityTwo.hex=523,12345&entityTwo.cost_op=ge&entityTwo.cost=12,00&entityTwo.inclusionDate_op=ge&entityTwo.inclusionDate=2024-01-07T00:00:00&entityTwo.entityTree.animal_op=in&entityTwo.entityTree.animal=Macado,Avestruz,Gato,Cavalo&page=0&size=10&sortList=age&sortOrders=asc";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "name_op=in&"
+		        + "name=Anderson,Paulo,Joana,Ricardo&"
+		        + "age_op=bt&"
+		        + "age=20,45&"
+		        + "entityTwo.color_op=in&"
+		        + "entityTwo.color=Roxo,Amarelo,Verde,Azul,Preto,Laranja&"
+		        + "entityTwo.hex_op=bt&"
+		        + "entityTwo.hex=523,12345&"
+		        + "entityTwo.cost_op=ge&"
+		        + "entityTwo.cost=12,00&"
+		        + "entityTwo.inclusionDate_op=ge&"
+		        + "entityTwo.inclusionDate=2024-01-07T00:00:00&"
+		        + "entityTwo.entityTree.animal_op=in&"
+		        + "entityTwo.entityTree.animal=Macado,Avestruz,Gato,Cavalo&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=age&"
+		        + "sortOrders=asc";
+		
+		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
@@ -218,8 +372,31 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_12() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "name_op=in&name=Anderson,Paulo,Joana,Ricardo&age_op=bt&age=20,45&entityTwo.color_op=in&entityTwo.color=roxo,amarelo,verde,azul,preto,laranja&entityTwo.hex_op=bt&entityTwo.hex=523,12345&entityTwo.cost_op=ge&entityTwo.cost=12,00&entityTwo.inclusionDate_op=ge&entityTwo.inclusionDate=2024-01-07T00:00:00&entityTwo.entityTree.animal_op=in&entityTwo.entityTree.animal=Macado,Avestruz,Gato,Cavalo&entityTwo.entityTree.indicator_op=ge&entityTwo.entityTree.indicator=5&page=0&size=10&sortList=age&sortOrders=asc";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "name_op=in&"
+		        + "name=Anderson,Paulo,Joana,Ricardo&"
+		        + "age_op=bt&"
+		        + "age=20,45&"
+		        + "entityTwo.color_op=in&"
+		        + "entityTwo.color=Roxo,Amarelo,Verde,Azul,Preto,Laranja&"
+		        + "entityTwo.hex_op=bt&"
+		        + "entityTwo.hex=523,12345&"
+		        + "entityTwo.cost_op=ge&"
+		        + "entityTwo.cost=12,00&"
+		        + "entityTwo.inclusionDate_op=ge&"
+		        + "entityTwo.inclusionDate=2024-01-07T00:00:00&"
+		        + "entityTwo.entityTree.animal_op=in&"
+		        + "entityTwo.entityTree.animal=Macado,Avestruz,Gato,Cavalo&"
+		        + "entityTwo.entityTree.indicator_op=ge&"
+		        + "entityTwo.entityTree.indicator=5&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=age&"
+		        + "sortOrders=asc";
+		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
@@ -233,13 +410,15 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_13() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING 
+		String url = PATH 
+				+ port 
+				+ Constants.API_NAME_REQUEST_MAPPING 
 				+ "/paginator/EntityOne?"
 				+ "name_op=in&"
 				+ "name=Anderson,Paulo,Joana,Ricardo&"
 				+ "age_op=bt&age=20,45&"
 				+ "entityTwo.color_op=in&"
-				+ "entityTwo.color=roxo,amarelo,verde,azul,preto,laranja&"
+				+ "entityTwo.color=Roxo,Amarelo,Verde,Azul,Preto,Laranja&"
 				+ "entityTwo.hex_op=bt&"
 				+ "entityTwo.hex=523,12345&"
 				+ "entityTwo.cost_op=ge&"
@@ -254,6 +433,7 @@ class CriteriaPaginatorJoinTests {
 				+ "size=10&"
 				+ "sortList=age&"
 				+ "sortOrders=asc";
+		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
@@ -267,7 +447,9 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_13_1() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING 
+		String url = PATH 
+				+ port 
+				+ Constants.API_NAME_REQUEST_MAPPING 
 				+ "/paginator/EntityOne?"
 				+ "name_op=in&"
 				+ "name=Anderson,Paulo,Joana,Ricardo&"
@@ -297,8 +479,16 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_14() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "entityTwo.color=Preto&entityTwo.color_op=eq&page=0&size=10&sortList=entityTwo.inclusionDate,entityTwo.hex&sortOrders=desc,asc";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "entityTwo.color=Preto&"
+		        + "entityTwo.color_op=eq&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=entityTwo.inclusionDate,entityTwo.hex&"
+		        + "sortOrders=desc,asc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -313,8 +503,16 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_15() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "entityTwo.cost=22,22,2.500,23&entityTwo.cost_op=bt&page=0&size=10&sortList=entityTwo.inclusionDate,entityTwo.hex&sortOrders=desc,asc";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "entityTwo.cost=22,22,2.500,23&"
+		        + "entityTwo.cost_op=bt&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=entityTwo.inclusionDate,entityTwo.hex&"
+		        + "sortOrders=desc,asc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -329,9 +527,17 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_16() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "entityTwo.entityTree.animal=Cavalo,Gato,Papagaio&entityTwo.entityTree.animal_op=in&page=0&size=10&sortList=entityTwo.color,entityTwo.entityTree.animal&sortOrders=desc,asc";
-
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "entityTwo.entityTree.animal=Cavalo,Gato,Papagaio&"
+		        + "entityTwo.entityTree.animal_op=in&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=entityTwo.color,entityTwo.entityTree.animal&"
+		        + "sortOrders=desc,asc";
+		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
@@ -359,8 +565,12 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_17() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "entityTwo.entityTree.animal=Capivara&entityTwo.entityTree.animal_op=eq";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "entityTwo.entityTree.animal=Capivara&"
+		        + "entityTwo.entityTree.animal_op=eq";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -375,8 +585,14 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_18() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "entityTwo.entityTree.entityFour.fruit=Pitanga&entityTwo.entityTree.entityFour.fruit_op=eq&page=0&size=10";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "entityTwo.entityTree.entityFour.fruit=Pitanga&"
+		        + "entityTwo.entityTree.entityFour.fruit_op=eq&"
+		        + "page=0&"
+		        + "size=10";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -387,9 +603,17 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_19() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "entityTwo.entityTree.entityFour.entityFive.reference=Cama&entityTwo.entityTree.entityFour.entityFive.reference_op=eq&page=0&size=10&sortList=name&sortOrders=desc";
-
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "entityTwo.entityTree.entityFour.entityFive.reference=Cama&"
+		        + "entityTwo.entityTree.entityFour.entityFive.reference_op=eq&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=name&"
+		        + "sortOrders=desc";
+		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		list.forEach(entity -> {
@@ -403,19 +627,29 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_20() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "entityTwo.entityTree.entityFour.entityFive.reference=c*&entityTwo.entityTree.entityFour.entityFive.reference_op=lk&page=0&size=10&sortList=entityTwo.inclusionDate,entityTwo.hex&sortOrders=desc,asc";
-
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "entityTwo.entityTree.entityFour.entityFive.reference=*as*&"
+		        + "entityTwo.entityTree.entityFour.entityFive.reference_op=lk&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=entityTwo.inclusionDate,entityTwo.hex&"
+		        + "sortOrders=desc,asc";
+		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
-		assertEquals(4, list.size());
+		assertEquals(2, list.size());
 	}
 
 	@Test
 	void teste_21() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING 
+		String url = PATH 
+				+ port 
+				+ Constants.API_NAME_REQUEST_MAPPING 
 				+ "/paginator/EntityOne?"
 				+ "name_op=in&"
 				+ "name=Anderson,Paulo,Joana,Ricardo&"
@@ -424,7 +658,8 @@ class CriteriaPaginatorJoinTests {
 				+ "code_op=eq&"
 				+ "code=true&"
 				+ "entityTwo.color_op=in&"
-				+ "entityTwo.color=roxo,amarelo,verde,azul,preto,laranja&entityTwo.hex_op=bt&"
+				+ "entityTwo.color=Roxo,Amarelo,Verde,azul,Preto,Laranja&"
+				+ "entityTwo.hex_op=bt&"
 				+ "entityTwo.hex=523,12345&"
 				+ "entityTwo.cost_op=ge&"
 				+ "entityTwo.cost=12,00&"
@@ -446,18 +681,19 @@ class CriteriaPaginatorJoinTests {
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
-		assertEquals(4, list.size());
+		assertEquals(3, list.size());
 		assertEquals("Paulo", list.get(0).getName());
 		assertEquals("Ricardo", list.get(1).getName());
 		assertEquals("Joana", list.get(2).getName());
-		assertEquals("Anderson", list.get(3).getName());
 
 	}
 	
 	@Test
 	void teste_21_1() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING 
+		String url = PATH 
+				+ port 
+				+ Constants.API_NAME_REQUEST_MAPPING 
 				+ "/paginator/EntityOne?"
 				+ "name_op=in&"
 				+ "name=Anderson,Paulo,Joana,Ricardo&"
@@ -493,58 +729,109 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_22() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "name_op=lk&name=*ar*&code=true&page=0&size=10&sortList=prohibitedDateTime&sortOrders=asc";
-
-		List<EntityOne> list = getAll(url, new ErrorResponse());
-
-		assertNotNull(list);
-		assertEquals(5, list.size());
-		assertEquals("Carlos", list.get(0).getName());
-		assertEquals("Carlos Alberto", list.get(1).getName());
-		assertEquals("Maria", list.get(2).getName());
-		assertEquals("Ricardo", list.get(3).getName());
-		assertEquals("Ariovaldo", list.get(4).getName());
-	}
-
-	@Test
-	void teste_23() {
-
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "name_op=lk&name=*ar*&age_op=bt&age=12,55&code=true&height_op=gt&height=1.40&page=0&size=10&sortList=name,age&sortOrders=asc,asc";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "name_op=lk&"
+		        + "name=*ar*&"
+		        + "code=true&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=prohibitedDateTime&"
+		        + "sortOrders=asc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(4, list.size());
-		assertEquals("Ariovaldo", list.get(0).getName());
-		assertEquals("Carlos", list.get(1).getName());
-		assertEquals("Carlos Alberto", list.get(2).getName());
+		assertEquals("Carlos", list.get(0).getName());
+		assertEquals("Carlos Alberto", list.get(1).getName());
+		assertEquals("Maria", list.get(2).getName());
 		assertEquals("Ricardo", list.get(3).getName());
+
+	}
+
+	@Test
+	void teste_23() {
+
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "name_op=lk&"
+		        + "name=*ar*&"
+		        + "age_op=bt&"
+		        + "age=12,55&"
+		        + "code=true&"
+		        + "height_op=gt&"
+		        + "height=1.40&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=name,age&"
+		        + "sortOrders=asc,asc";
+		
+		List<EntityOne> list = getAll(url, new ErrorResponse());
+
+		assertNotNull(list);
+		assertEquals(3, list.size());
+		assertEquals("Carlos", list.get(0).getName());
+		assertEquals("Carlos Alberto", list.get(1).getName());
+		assertEquals("Ricardo", list.get(2).getName());
+		
 	}
 
 	@Test
 	void teste_24() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "name_op=lk&name=*ar*&age_op=bt&age=12,55&code=true&height_op=ge&height=1.40&page=0&size=10&sortList=name,age&sortOrders=asc,asc";
-
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "name_op=lk&"
+		        + "name=*ar*&"
+		        + "age_op=bt&"
+		        + "age=12,55&"
+		        + "code=true&"
+		        + "height_op=ge&"
+		        + "height=1.40&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=name,age&"
+		        + "sortOrders=asc,asc";
+		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
-		assertEquals(5, list.size());
-		assertEquals("Ariovaldo", list.get(0).getName());
-		assertEquals("Carlos", list.get(1).getName());
-		assertEquals("Carlos Alberto", list.get(2).getName());
-		assertEquals("Maria", list.get(3).getName());
-		assertEquals("Ricardo", list.get(4).getName());
+		assertEquals(4, list.size());
+		assertEquals("Carlos", list.get(0).getName());
+		assertEquals("Carlos Alberto", list.get(1).getName());
+		assertEquals("Maria", list.get(2).getName());
+		assertEquals("Ricardo", list.get(3).getName());
+
 	}
 
 	@Test
 	void teste_25() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "name_op=lk&name=*ar*&age_op=bt&age=12,55&code_op=ge&code=true&height_op=ge&height=1.40&birthDate_op=eq&birthDate=1956-08-30T00:00:00&page=0&size=10&sortList=name,age&sortOrders=asc,asc";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "name_op=lk&"
+		        + "name=*ar*&"
+		        + "age_op=bt&"
+		        + "age=12,55&"
+		        + "code_op=ge&"
+		        + "code=true&"
+		        + "height_op=ge&"
+		        + "height=1.40&"
+		        + "birthDate_op=eq&"
+		        + "birthDate=1956-08-30T00:00:00&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=name,age&"
+		        + "sortOrders=asc,asc";
 
 		singleParameterizedOne("Carlos", url);
 	}
@@ -552,8 +839,26 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_26() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "name_op=lk&name=*ar*&age_op=bt&age=12,55&code_op=ge&code=true&height_op=ge&height=1.40&birthDate_op=ge&birthDate=1956-08-30T00:00:00&prohibitedDateTime_op=bt&prohibitedDateTime=2024-04-01T08:50:00,2024-04-30T23:51:00&page=0&size=10&sortList=prohibitedDateTime&sortOrders=asc";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "name_op=lk&"
+		        + "name=*ar*&"
+		        + "age_op=bt&"
+		        + "age=12,55&"
+		        + "code_op=ge&"
+		        + "code=true&"
+		        + "height_op=ge&"
+		        + "height=1.40&"
+		        + "birthDate_op=ge&"
+		        + "birthDate=1956-08-30T00:00:00&"
+		        + "prohibitedDateTime_op=bt&"
+		        + "prohibitedDateTime=2024-04-01T08:50:00,2024-04-30T23:51:00&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=prohibitedDateTime&"
+		        + "sortOrders=asc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -566,8 +871,26 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_27() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "name_op=lk&name=*ar*&age_op=bt&age=12,55&code_op=ge&code=true&height_op=ge&height=1.40&birthDate_op=ge&birthDate=1956-08-30T00:00:00&prohibitedDateTime_op=bt&prohibitedDateTime=2024-04-01T08:50:00,2024-09-01T08:51:00&page=0&size=10&sortList=prohibitedDateTime&sortOrders=asc";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "name_op=lk&"
+		        + "name=*ar*&"
+		        + "age_op=bt&"
+		        + "age=12,55&"
+		        + "code_op=ge&"
+		        + "code=true&"
+		        + "height_op=ge&"
+		        + "height=1.40&"
+		        + "birthDate_op=ge&"
+		        + "birthDate=1956-08-30T00:00:00&"
+		        + "prohibitedDateTime_op=bt&"
+		        + "prohibitedDateTime=2024-04-01T08:50:00,2024-09-01T08:51:00&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=prohibitedDateTime&"
+		        + "sortOrders=asc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
@@ -581,26 +904,68 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_28() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "name_op=lk&name=*ar*&age_op=bt&age=12,55&code_op=ge&code=true&height_op=ge&height=1.40&birthDate_op=ge&birthDate=1956-08-30T00:00:00&prohibitedDateTime_op=bt&prohibitedDateTime=2024-04-01T08:50:00,2024-11-01T08:00:00&page=0&size=10&sortList=age,height&sortOrders=desc,asc";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "name_op=lk&"
+		        + "name=*ar*&"
+		        + "age_op=bt&"
+		        + "age=12,55&"
+		        + "code_op=ge&"
+		        + "code=true&"
+		        + "height_op=ge&"
+		        + "height=1.40&"
+		        + "birthDate_op=ge&"
+		        + "birthDate=1956-08-30T00:00:00&"
+		        + "prohibitedDateTime_op=bt&"
+		        + "prohibitedDateTime=2024-04-01T08:50:00,2024-11-01T08:00:00&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=age,height&"
+		        + "sortOrders=desc,asc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
-		assertEquals(5, list.size());
+		assertEquals(4, list.size());
 		assertEquals("Carlos Alberto", list.get(0).getName());
 		assertEquals("Carlos", list.get(1).getName());
 		assertEquals("Ricardo", list.get(2).getName());
-		assertEquals("Ariovaldo", list.get(3).getName());
-		assertEquals("Maria", list.get(4).getName());
+		assertEquals("Maria", list.get(3).getName());
+
 	}
 
 	@Test
 	void teste_29() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "name_op=lk&name=*ar*&age_op=bt&age=12,55&code_op=ge&code=true&height_op=ge&height=1.40&birthDate_op=ge&birthDate=1956-08-30T00:00:00&prohibitedDateTime_op=bt&prohibitedDateTime=2024-04-01T08:50:00,2024-11-01T08:00:00&entityTwo.color_op=in&entityTwo.color=preto,verde,amarelo&entityTwo.hex_op=bt&entityTwo.hex=23,12344&entityTwo.cost_op=eq&entityTwo.cost=25,50&page=0&size=10&sortList=age,height&sortOrders=desc,asc";
-
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "name_op=lk&"
+		        + "name=*ar*&"
+		        + "age_op=bt&"
+		        + "age=12,55&"
+		        + "code_op=ge&"
+		        + "code=true&"
+		        + "height_op=ge&"
+		        + "height=1.40&"
+		        + "birthDate_op=ge&"
+		        + "birthDate=1956-08-30T00:00:00&"
+		        + "prohibitedDateTime_op=bt&"
+		        + "prohibitedDateTime=2024-04-01T08:50:00,2024-11-01T08:00:00&"
+		        + "entityTwo.color_op=in&"
+		        + "entityTwo.color=Preto,Verde,Amarelo&"
+		        + "entityTwo.hex_op=bt&"
+		        + "entityTwo.hex=23,12344&"
+		        + "entityTwo.cost_op=eq&"
+		        + "entityTwo.cost=25,50&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=age,height&"
+		        + "sortOrders=desc,asc";
+		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
@@ -614,9 +979,35 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_30() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "name_op=lk&name=*ar*&age_op=bt&age=12,55&code_op=ge&code=true&height_op=ge&height=1.40&birthDate_op=ge&birthDate=1956-08-30T00:00:00&prohibitedDateTime_op=bt&prohibitedDateTime=2024-04-01T08:50:00,2024-11-01T08:00:00&entityTwo.color_op=in&entityTwo.color=preto,verde,amarelo&entityTwo.hex_op=bt&entityTwo.hex=23,12344&entityTwo.cost_op=eq&entityTwo.cost=25,50&entityTwo.inclusionDate_op=lt&entityTwo.inclusionDate=2024-01-10T00:00:00&page=0&size=10&sortList=age,height,entityTwo.inclusionDate&sortOrders=desc,asc,asc";
-
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "name_op=lk&"
+		        + "name=*ar*&"
+		        + "age_op=bt&"
+		        + "age=12,55&"
+		        + "code_op=ge&"
+		        + "code=true&"
+		        + "height_op=ge&"
+		        + "height=1.40&"
+		        + "birthDate_op=ge&"
+		        + "birthDate=1956-08-30T00:00:00&"
+		        + "prohibitedDateTime_op=bt&"
+		        + "prohibitedDateTime=2024-04-01T08:50:00,2024-11-01T08:00:00&"
+		        + "entityTwo.color_op=in&"
+		        + "entityTwo.color=Preto,Verde,Amarelo&"
+		        + "entityTwo.hex_op=bt&"
+		        + "entityTwo.hex=23,12344&"
+		        + "entityTwo.cost_op=eq&"
+		        + "entityTwo.cost=25,50&"
+		        + "entityTwo.inclusionDate_op=lt&"
+		        + "entityTwo.inclusionDate=2024-01-10T00:00:00&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=age,height,entityTwo.inclusionDate&"
+		        + "sortOrders=desc,asc,asc";
+		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
@@ -629,9 +1020,37 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_31() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "name_op=lk&name=*ar*&age_op=bt&age=12,55&code_op=ge&code=true&height_op=ge&height=1.40&birthDate_op=ge&birthDate=1956-08-30T00:00:00&prohibitedDateTime_op=bt&prohibitedDateTime=2024-04-01T08:50:00,2024-11-01T08:00:00&entityTwo.color_op=in&entityTwo.color=preto,verde,amarelo&entityTwo.hex_op=bt&entityTwo.hex=23,12344&entityTwo.cost_op=eq&entityTwo.cost=25,50&entityTwo.inclusionDate_op=lt&entityTwo.inclusionDate=2024-01-10T00:00:00&entityTwo.entityTree.animal_op=in&entityTwo.entityTree.animal=Porco,Gato,Baleia&page=0&size=10&sortList=age,height,entityTwo.inclusionDate&sortOrders=desc,asc,asc";
-
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "name_op=lk&"
+		        + "name=*ar*&"
+		        + "age_op=bt&"
+		        + "age=12,55&"
+		        + "code_op=ge&"
+		        + "code=true&"
+		        + "height_op=ge&"
+		        + "height=1.40&"
+		        + "birthDate_op=ge&"
+		        + "birthDate=1956-08-30T00:00:00&"
+		        + "prohibitedDateTime_op=bt&"
+		        + "prohibitedDateTime=2024-04-01T08:50:00,2024-11-01T08:00:00&"
+		        + "entityTwo.color_op=in&"
+		        + "entityTwo.color=Preto,Verde,Amarelo&"
+		        + "entityTwo.hex_op=bt&"
+		        + "entityTwo.hex=23,12344&"
+		        + "entityTwo.cost_op=eq&"
+		        + "entityTwo.cost=25,50&"
+		        + "entityTwo.inclusionDate_op=lt&"
+		        + "entityTwo.inclusionDate=2024-01-10T00:00:00&"
+		        + "entityTwo.entityTree.animal_op=in&"
+		        + "entityTwo.entityTree.animal=Porco,Gato,Baleia&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=age,height,entityTwo.inclusionDate&"
+		        + "sortOrders=desc,asc,asc";
+		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
@@ -644,18 +1063,84 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_31_1() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "name_op=lk&name=*ar*&age_op=bt&age=12,55&code_op=eq&code=true&height_op=ge&height=1.40&birthDate_op=ge&birthDate=1956-08-30T00:00:00&prohibitedDateTime_op=bt&prohibitedDateTime=2024-04-01T08:50:00,2024-11-01T08:00:00&entityTwo.color_op=in&entityTwo.color=preto,verde,amarelo&entityTwo.hex_op=bt&entityTwo.hex=23,12344&entityTwo.cost_op=eq&entityTwo.cost=25,50&entityTwo.inclusionDate_op=lt&entityTwo.inclusionDate=2024-01-10T00:00:00&entityTwo.entityTree.animal_op=in&entityTwo.entityTree.animal=Porco, Gato, Baleia&page=0&size=10&sortList=age,height,entityTwo.inclusionDate&sortOrders=desc,asc,asc";
-
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "name_op=lk&"
+		        + "name=*ar*&"
+		        + "code_op=eq&"
+		        + "code=true&"
+		        + "age_op=bt&"
+		        + "age=12,55&"
+		        + "height_op=ge&"
+		        + "height=1.40&"
+		        + "birthDate_op=ge&"
+		        + "birthDate=1956-08-30T00:00:00&"
+		        + "prohibitedDateTime_op=bt&"
+		        + "prohibitedDateTime=2024-04-01T08:50:00,2024-11-01T08:00:00&"
+		        + "entityTwo.color_op=in&"
+		        + "entityTwo.color=Preto,Verde,Amarelo&"
+		        + "entityTwo.hex_op=bt&"
+		        + "entityTwo.hex=23,12344&"
+		        + "entityTwo.cost_op=eq&"
+		        + "entityTwo.cost=25,50&"
+		        + "entityTwo.inclusionDate_op=lt&"
+		        + "entityTwo.inclusionDate=2024-01-10T00:00:00&"
+		        + "entityTwo.entityTree.animal_op=in&"
+		        + "entityTwo.entityTree.animal=Porco, Gato, Baleia&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=age,height,entityTwo.inclusionDate&"
+		        + "sortOrders=desc,asc,asc";
+		
 		singleParameterizedOne("Carlos", url);
 	}
 
 	@Test
 	void teste_32() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "name_op=lk&name=*ar*&age_op=bt&age=12,55&code_op=ge&code=true&height_op=ge&height=1.40&birthDate_op=ge&birthDate=1956-08-30T00:00:00&prohibitedDateTime_op=bt&prohibitedDateTime=2024-04-01T08:50:00,2024-11-01T08:00:00&entityTwo.color_op=in&entityTwo.color=preto,verde,amarelo&entityTwo.hex_op=bt&entityTwo.hex=23,12344&entityTwo.cost_op=eq&entityTwo.cost=25,50&entityTwo.inclusionDate_op=lt&entityTwo.inclusionDate=2024-01-10T00:00:00&entityTwo.entityTree.animal_op=in&entityTwo.entityTree.animal=Porco,Gato,Baleia&entityTwo.entityTree.indicator_op=gt&entityTwo.entityTree.indicator=23&entityTwo.entityTree.amount_op=bt&entityTwo.entityTree.amount=14,60,24,60&entityTwo.entityTree.localDate_op=eq&entityTwo.entityTree.localDate=2024-01-08T00:00:00&entityTwo.entityTree.localDateTime_op=gt&entityTwo.entityTree.localDateTime=2024-01-08T17:31:00&entityTwo.entityTree.entityFour.fruit_op=in&entityTwo.entityTree.entityFour.fruit=caju,banana,melao&page=0&size=10&sortList=age,height,entityTwo.inclusionDate&sortOrders=desc,asc,asc";
-
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "name_op=lk&"
+		        + "name=*ar*&"
+		        + "age_op=bt&"
+		        + "age=12,55&"
+		        + "code_op=ge&"
+		        + "code=true&"
+		        + "height_op=ge&"
+		        + "height=1.40&"
+		        + "birthDate_op=ge&"
+		        + "birthDate=1956-08-30T00:00:00&"
+		        + "prohibitedDateTime_op=bt&"
+		        + "prohibitedDateTime=2024-04-01T08:50:00,2024-11-01T08:00:00&"
+		        + "entityTwo.color_op=in&"
+		        + "entityTwo.color=Preto,Verde,Amarelo&"
+		        + "entityTwo.hex_op=bt&"
+		        + "entityTwo.hex=23,12344&"
+		        + "entityTwo.cost_op=eq&"
+		        + "entityTwo.cost=25,50&"
+		        + "entityTwo.inclusionDate_op=lt&"
+		        + "entityTwo.inclusionDate=2024-01-10T00:00:00&"
+		        + "entityTwo.entityTree.animal_op=in&"
+		        + "entityTwo.entityTree.animal=Porco,Gato,Baleia&"
+		        + "entityTwo.entityTree.indicator_op=gt&"
+		        + "entityTwo.entityTree.indicator=23&"
+		        + "entityTwo.entityTree.amount_op=bt&"
+		        + "entityTwo.entityTree.amount=14,60,24,60&"
+		        + "entityTwo.entityTree.localDate_op=eq&"
+		        + "entityTwo.entityTree.localDate=2024-01-08T00:00:00&"
+		        + "entityTwo.entityTree.localDateTime_op=gt&"
+		        + "entityTwo.entityTree.localDateTime=2024-01-08T17:31:00&"
+		        + "entityTwo.entityTree.entityFour.fruit_op=in&"
+		        + "entityTwo.entityTree.entityFour.fruit=Caju,Banana,Melao&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=age,height,entityTwo.inclusionDate&"
+		        + "sortOrders=desc,asc,asc";
+		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
@@ -668,8 +1153,54 @@ class CriteriaPaginatorJoinTests {
 	@Test
 	void teste_33() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/paginator/EntityOne?"
-				+ "name_op=lk&name=*ar*&age_op=bt&age=12,55&code_op=ge&code=true&height_op=ge&height=1.40&birthDate_op=ge&birthDate=1956-08-30T00:00:00&prohibitedDateTime_op=bt&prohibitedDateTime=2024-04-01T08:50:00,2024-11-01T08:00:00&entityTwo.color_op=in&entityTwo.color=preto,verde,amarelo&entityTwo.hex_op=bt&entityTwo.hex=23,12344&entityTwo.cost_op=eq&entityTwo.cost=25,50&entityTwo.inclusionDate_op=lt&entityTwo.inclusionDate=2024-01-10T00:00:00&entityTwo.entityTree.animal_op=in&entityTwo.entityTree.animal=Porco,Gato,Baleia&entityTwo.entityTree.indicator_op=gt&entityTwo.entityTree.indicator=23&entityTwo.entityTree.amount_op=bt&entityTwo.entityTree.amount=14,60,24,60&entityTwo.entityTree.localDate_op=eq&entityTwo.entityTree.localDate=2024-01-08T00:00:00&entityTwo.entityTree.localDateTime_op=gt&entityTwo.entityTree.localDateTime=2024-01-08T17:31:00&entityTwo.entityTree.entityFour.fruit_op=in&entityTwo.entityTree.entityFour.fruit=caju,banana,melao&entityTwo.entityTree.entityFour.attribute_op=bt&entityTwo.entityTree.entityFour.attribute=1,45&entityTwo.entityTree.entityFour.inclusionDateTime_op=ne&entityTwo.entityTree.entityFour.inclusionDateTime=2024-10-07T19:03:00&entityTwo.entityTree.entityFour.entityFive.reference_op=lk&entityTwo.entityTree.entityFour.entityFive.reference=*a&entityTwo.entityTree.entityFour.entityFive.factor_op=bt&entityTwo.entityTree.entityFour.entityFive.factor=10,26&page=0&size=10&sortList=age,height,entityTwo.inclusionDate&sortOrders=desc,asc,asc";
+		String url = PATH 
+		        + port 
+		        + Constants.API_NAME_REQUEST_MAPPING 
+		        + "/paginator/EntityOne?"
+		        + "name_op=lk&"
+		        + "name=*ar*&"
+		        + "age_op=bt&"
+		        + "age=12,55&"
+		        + "code_op=ge&"
+		        + "code=true&"
+		        + "height_op=ge&"
+		        + "height=1.40&"
+		        + "birthDate_op=ge&"
+		        + "birthDate=1956-08-30T00:00:00&"
+		        + "prohibitedDateTime_op=bt&"
+		        + "prohibitedDateTime=2024-04-01T08:50:00,2024-11-01T08:00:00&"
+		        + "entityTwo.color_op=in&"
+		        + "entityTwo.color=Preto,Verde,Amarelo&"
+		        + "entityTwo.hex_op=bt&"
+		        + "entityTwo.hex=23,12344&"
+		        + "entityTwo.cost_op=eq&"
+		        + "entityTwo.cost=25,50&"
+		        + "entityTwo.inclusionDate_op=lt&"
+		        + "entityTwo.inclusionDate=2024-01-10T00:00:00&"
+		        + "entityTwo.entityTree.animal_op=in&"
+		        + "entityTwo.entityTree.animal=Porco,Gato,Baleia&"
+		        + "entityTwo.entityTree.indicator_op=gt&"
+		        + "entityTwo.entityTree.indicator=23&"
+		        + "entityTwo.entityTree.amount_op=bt&"
+		        + "entityTwo.entityTree.amount=14,60,24,60&"
+		        + "entityTwo.entityTree.localDate_op=eq&"
+		        + "entityTwo.entityTree.localDate=2024-01-08T00:00:00&"
+		        + "entityTwo.entityTree.localDateTime_op=gt&"
+		        + "entityTwo.entityTree.localDateTime=2024-01-08T17:31:00&"
+		        + "entityTwo.entityTree.entityFour.fruit_op=in&"
+		        + "entityTwo.entityTree.entityFour.fruit=Caju,Banana,Melao&"
+		        + "entityTwo.entityTree.entityFour.attribute_op=bt&"
+		        + "entityTwo.entityTree.entityFour.attribute=1,45&"
+		        + "entityTwo.entityTree.entityFour.inclusionDateTime_op=ne&"
+		        + "entityTwo.entityTree.entityFour.inclusionDateTime=2024-10-07T19:03:00&"
+		        + "entityTwo.entityTree.entityFour.entityFive.reference_op=lk&"
+		        + "entityTwo.entityTree.entityFour.entityFive.reference=*a&"
+		        + "entityTwo.entityTree.entityFour.entityFive.factor_op=bt&"
+		        + "entityTwo.entityTree.entityFour.entityFive.factor=10,26&"
+		        + "page=0&"
+		        + "size=10&"
+		        + "sortList=age,height,entityTwo.inclusionDate&"
+		        + "sortOrders=desc,asc,asc";
 
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 

@@ -110,8 +110,8 @@ public class Constants {
 	public static final String IS_NULL = "IS NULL";
 	public static final String IS_NOT_NULL = "IS NOT NULL";
 	public static final String BETWEEN = "BETWEEN";
-	public static final String BETWEEN_START = "Start";
-	public static final String BETWEEN_END = "End";
+	public static final String BETWEEN_START = "$Start";
+	public static final String BETWEEN_END = "$End";
 	public static final String DOIS_PONTOS = ":";
 	
 	/**

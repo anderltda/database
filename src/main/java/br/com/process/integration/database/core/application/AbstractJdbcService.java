@@ -35,7 +35,7 @@ public abstract class AbstractJdbcService<V extends RepresentationModel<V>> exte
 	@Override
 	public int executeQueryNativeCount(Map<String, Object> filter, String query) throws CheckedException {
 		try {
-			return count(filter, this.getClass().getSimpleName(), query);
+			return count(view, filter, this.getClass().getSimpleName(), query);
 		} catch (UncheckedException cuex) {
 			throw new CheckedException(cuex.getMessage(),
 					String.format("Falha ao executar metodo 'count' na classe %s com filters: %s e query-name: %s",
@@ -74,7 +74,7 @@ public abstract class AbstractJdbcService<V extends RepresentationModel<V>> exte
 			int size = filter.get(Constants.NAME_SIZE) != null ? Integer.parseInt((String) filter.get(Constants.NAME_SIZE)) : Constants.NUMBER_SIZE_DEFAULT;
 
 			List<V> models = findAll(view, filter, this.getClass().getSimpleName(), query, page, size);
-			int totalElements = count(filter, this.getClass().getSimpleName(), query);
+			int totalElements = count(view, filter, this.getClass().getSimpleName(), query);
 			Pageable pageable = PageRequest.of(page, size);
 			pages = new PageImpl<>(models, pageable, totalElements);
 
