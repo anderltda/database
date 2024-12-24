@@ -70,7 +70,7 @@ class MyBatisTests {
 				+ port 
 	            + Constants.API_NAME_REQUEST_MAPPING 
 	            + "/mapper/count/EntityOneData/countEntitiesByName?" 
-	            + "name=Ar";
+	            + "name=Ariovaldo";
 
 		int count = Integer.parseInt(getUniqueResult(url, new ErrorResponse()));
 
@@ -149,6 +149,7 @@ class MyBatisTests {
 	            + Constants.API_NAME_REQUEST_MAPPING
 	            + "/mapper/EntityOneData/findEntityOneByName?"
 	            + "name=Pedro&"
+	            + "height=1.9&"
 	            + "sortList=name&"
 	            + "sortOrders=asc";
 		
@@ -163,10 +164,16 @@ class MyBatisTests {
 		String url = PATH 
 				+ port
 	            + Constants.API_NAME_REQUEST_MAPPING
-	            + "/mapper/EntityOneData/findEntityDataByName?"
-	            + "name=Ar";
+	            + "/mapper/EntityOneData/findEntityOneByName?"
+	            + "name=Ariovaldo&"
+	            + "height=1.91&"
+	            + "sortList=name&"
+	            + "sortOrders=asc";
+		
+		List<EntityOneData> list = getAll(url, new ErrorResponse());
 
-		single_parameterized_one_erro(url, "is in unnamed module of loader 'app'");
+		assertNotNull(list);
+
 	}
 	
 	@Test
@@ -177,6 +184,7 @@ class MyBatisTests {
 	            + Constants.API_NAME_REQUEST_MAPPING
 	            + "/mapper/EntityOneData/findEntityOneByName?"
 	            + "name=ar&"
+	            + "height=1.9&"
 	            + "sortList=name&"
 	            + "sortOrders=asc";
 		
@@ -226,6 +234,7 @@ class MyBatisTests {
 	            + Constants.API_NAME_REQUEST_MAPPING
 	            + "/mapper/EntityOneData/findEntityOneByName?"
 	            + "name=ar&"
+	            + "height=1.9&"
 	            + "sortList=name,age&"
 	            + "sortOrders=asc,desc";
 

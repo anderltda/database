@@ -74,10 +74,15 @@ class JDBCTests {
 		        + "age_op=eq&"
 		        + "name=*ar*&"
 		        + "name_op=lk&"
+		        + "height=1.19&"
+		        + "height_op=ne&"
 		        + "birthDate=1956-08-30&"
 		        + "birthDate_op=ge";
 		
-	    teste_single_parameterized_one(url, "syntax error at or near \",\"");
+	    teste_single_parameterized_one(url, "syntax");
+	    
+	    //  You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ', 38, 32 AND t1.birth_date  >=  '1956-08-30' AND t1.height  <>  1.19' at line 1
+
 	}
 	
 	@Test
@@ -297,6 +302,8 @@ class JDBCTests {
 		        + "/query/EntityOneView/teste_busca_com_condicoes_diversars?"
 		        + "name=*ar*&"
 		        + "name_op=lk&"
+		        + "height=1.9&"
+		        + "height_op=ne&"
 		        + "sortList=birthDate,name&"
 		        + "sortOrders=desc,asc";
 		

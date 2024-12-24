@@ -85,6 +85,7 @@
 			INNER JOIN entity_four t4 ON t4.id_entity_four = t3.id_entity_four
 			INNER JOIN entity_five t5 ON t5.id_entity_five = t4.id_entity_five
 		WHERE t1.name LIKE CONCAT('%', #{name}, '%')
+		  AND t1.height != #{height}
 		
 	    <if test="sortList != null and sortOrders != null and sortList.size() == sortOrders.size()">
 	        ORDER BY 

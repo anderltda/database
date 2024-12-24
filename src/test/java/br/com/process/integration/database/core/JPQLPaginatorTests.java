@@ -98,6 +98,7 @@ class JPQLPaginatorTests {
 		        + Constants.API_NAME_REQUEST_MAPPING 
 		        + "/jpql/paginator/EntityOne/buscaComLikePeloName?"
 		        + "name=ar&"
+		        + "height=1.9&"
 		        + "page=0&"
 		        + "size=20&"
 		        + "sortList=birthDate,name&"
@@ -121,6 +122,7 @@ class JPQLPaginatorTests {
 		        + Constants.API_NAME_REQUEST_MAPPING 
 		        + "/jpql/paginator/EntityOne/buscaComLikePeloName?"
 		        + "name=Silva&"
+		        + "height=1.91&"
 		        + "page=0&"
 		        + "size=20&"
 		        + "sortList=birthDate,name&"

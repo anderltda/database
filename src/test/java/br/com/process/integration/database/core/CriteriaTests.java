@@ -338,6 +338,8 @@ class CriteriaTests {
 	                + "/EntityOne?" 
 	                + "name=*ar*&"
 	                + "name_op=lk&"
+	                + "height=1.9&"
+	                + "height_op=ne&"
 	                + "sortList=birthDate,name&"
 	                + "sortOrders=desc,asc";
 	    

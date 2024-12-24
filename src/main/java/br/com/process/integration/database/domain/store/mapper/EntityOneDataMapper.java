@@ -20,6 +20,7 @@ public interface EntityOneDataMapper extends DataMapper<EntityOneData> {
 
 	List<EntityOneData> findEntityOneByName(
 			@Param("name") String name, 
+			@Param("height") Double height,
 			@Param(Constants.SORT_LIST) List<String> sortList,
 			@Param(Constants.SORT_ORDERS) List<String> sortOrders);
 	

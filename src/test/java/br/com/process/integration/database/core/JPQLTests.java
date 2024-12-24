@@ -95,7 +95,8 @@ class JPQLTests {
 		        + port 
 		        + Constants.API_NAME_REQUEST_MAPPING 
 		        + "/jpql/single/EntityOne/buscaComLikePeloName?"
-		        + "name=Paulo";
+		        + "name=Paulo&"
+		        + "height=1.9";
 
 		ErrorResponse errorResponse = new ErrorResponse("Query did not return a unique result: 2 results were returned",
 				HttpStatus.BAD_REQUEST);
@@ -112,6 +113,7 @@ class JPQLTests {
 		        + Constants.API_NAME_REQUEST_MAPPING 
 		        + "/jpql/EntityOne/buscaComLikePeloName?"
 		        + "name=ar&"
+		        + "height=1.9&"
 		        + "sortList=birthDate,name&"
 		        + "sortOrders=asc,desc";
 		
@@ -265,6 +267,7 @@ class JPQLTests {
 		        + Constants.API_NAME_REQUEST_MAPPING 
 		        + "/jpql/EntityOne/buscaComLikePeloName?"
 		        + "name=er&"
+		        + "height=1.9&"
 		        + "sortList=name,birthDate&"
 		        + "sortOrders=desc,asc";
 		

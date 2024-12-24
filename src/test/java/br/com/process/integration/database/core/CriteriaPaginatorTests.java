@@ -251,6 +251,8 @@ class CriteriaPaginatorTests {
 	    		+ "/paginator/EntityOne?"
 	            + "name=*ar*&"
 	            + "name_op=lk&"
+	            + "height=1.9&"
+	            + "height_op=ne&"
 	            + "page=0&"
 	            + "size=10&"
 	            + "sortList=birthDate,name&"
