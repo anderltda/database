@@ -1,7 +1,5 @@
 package br.com.process.integration.database.core.ui;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,20 +7,10 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
 import br.com.process.integration.database.core.domain.BeanEntity;
 import br.com.process.integration.database.core.exception.CheckedException;
 import br.com.process.integration.database.core.reflection.MethodInvoker;
 import br.com.process.integration.database.core.reflection.MethodReflection;
-import br.com.process.integration.database.core.ui.adapter.EmptyLinksExclusionStrategy;
-import br.com.process.integration.database.core.ui.adapter.LocalDateAdapter;
-import br.com.process.integration.database.core.ui.adapter.LocalDateTimeAdapter;
 import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.core.util.DynamicFoundType;
 
@@ -32,26 +20,6 @@ public abstract class AbstractController {
 	@Autowired
 	protected MethodInvoker methodInvoker;
 
-	protected Gson gson = null;
-	
-	protected AbstractController() {
-		gson = new GsonBuilder()
-				.setExclusionStrategies(new EmptyLinksExclusionStrategy())
-				.registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
-	}
-	
-	protected String removeEmptyLinks(String json) {
-		JsonArray jsonArray = JsonParser.parseString(json).getAsJsonArray();
-		for (JsonElement element : jsonArray) {
-			JsonObject jsonObject = element.getAsJsonObject();
-			if (jsonObject.has(Constants.HATEOAS_LINKS) && jsonObject.get(Constants.HATEOAS_LINKS).getAsJsonArray().size() == 0) {
-				jsonObject.remove(Constants.HATEOAS_LINKS);
-			}
-		}
-		return jsonArray.toString();
-	}
-	
 	protected void removeTrashFilter(Map<String, Object> params) {
 		params.remove(Constants.NAME_PAGE);
 		params.remove(Constants.NAME_SIZE);

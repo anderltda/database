@@ -3,7 +3,6 @@ package br.com.process.integration.database.core;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -12,7 +11,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -28,13 +26,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.process.integration.database.core.ui.CrudJpaController;
-import br.com.process.integration.database.core.ui.adapter.LocalDateAdapter;
-import br.com.process.integration.database.core.ui.adapter.LocalDateTimeAdapter;
 import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.domain.model.entity.EntityFive;
 import br.com.process.integration.database.domain.model.entity.EntityFour;
@@ -57,24 +52,18 @@ class SaveTests {
 	@Autowired
 	private CrudJpaController crudJpaController;
 
+	@Autowired
+	private ObjectMapper objectMapper;
+
 	public static Long id;
 	public static List<Long> ids;
-	
+
 	@BeforeAll
 	void setupOnce() {
-		
-		if(ids == null) {
+
+		if (ids == null) {
 			ids = new ArrayList<>();
 		}
-	}
-
-	@BeforeEach
-	void setup() { 
-		
-		if(id == null) {
-			id = 0l;
-		}
-		
 	}
 
 	@Test
@@ -82,10 +71,10 @@ class SaveTests {
 	void contextLoads() {
 		assertNotNull(crudJpaController);
 	}
-	
+
 	@Test
 	@Order(2)
-	void teste_01() {
+	void teste_01() throws Exception {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne";
 
@@ -127,17 +116,14 @@ class SaveTests {
 
 		EntityOne entityOne = gerarEntity(text, inteiro, dobro, localDate, localTime);
 
-		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
-
-		String json = gson.toJson(entityOne);
+		String json = objectMapper.writeValueAsString(entityOne);
 
 		List<String> responses = postJson(url, json);
 
-		EntityOne entity = gson.fromJson(responses.get(1), EntityOne.class);
+		EntityOne entity = objectMapper.readValue(responses.get(1), EntityOne.class);
 
 		id = entity.getId();
-				
+
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
 		assertNotNull(entity.getId());
 		assertNotNull(entity.getEntityTwo().getId());
@@ -148,7 +134,7 @@ class SaveTests {
 
 	@Test
 	@Order(3)
-	void teste_02() {
+	void teste_02() throws Exception {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/flush/EntityOne";
 
@@ -190,14 +176,11 @@ class SaveTests {
 
 		EntityOne entity1 = gerarEntity(text, inteiro, dobro, localDate, localTime);
 
-		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
-
-		String json = gson.toJson(entity1);
+		String json = objectMapper.writeValueAsString(entity1);
 
 		List<String> responses = postJson(url, json);
 
-		EntityOne entity = gson.fromJson(responses.get(1), EntityOne.class);
+		EntityOne entity = objectMapper.readValue(responses.get(1), EntityOne.class);
 
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
 		assertNotNull(entity.getId());
@@ -209,7 +192,7 @@ class SaveTests {
 
 	@Test
 	@Order(4)
-	void teste_03() {
+	void teste_03() throws Exception {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/all/EntityOne";
 
@@ -328,13 +311,13 @@ class SaveTests {
 		localTime[4] = "2024-01-10T19:14:10";
 
 		list.add(gerarEntity(text, inteiro, dobro, localDate, localTime));
-		
+
 		text = new String[5];
 		inteiro = new Integer[5];
 		dobro = new Double[5];
 		localDate = new String[5];
 		localTime = new String[5];
-		
+
 		text[0] = "Renato";
 		inteiro[0] = 38;
 		dobro[0] = 1.85;
@@ -364,19 +347,16 @@ class SaveTests {
 		inteiro[4] = 24;
 		localDate[4] = "06-10-2024";
 		localTime[4] = "2024-04-10T18:14:10";
-		
+
 		list.add(gerarEntity(text, inteiro, dobro, localDate, localTime));
 
-		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
-
-		String json = gson.toJson(list);
+		String json = objectMapper.writeValueAsString(list);
 
 		List<String> responses = postJson(url, json);
 
-		Type userListType = new TypeToken<List<EntityOne>>(){}.getType();
+		JavaType type = objectMapper.getTypeFactory().constructCollectionType(List.class, EntityOne.class);
 
-		List<EntityOne> lists = gson.fromJson(responses.get(1), userListType);
+		List<EntityOne> lists = objectMapper.readValue(responses.get(1), type);
 
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
 
@@ -386,7 +366,7 @@ class SaveTests {
 		assertNotNull(lists.get(1).getId());
 		assertNotNull(lists.get(2).getId());
 		assertNotNull(lists.get(3).getId());
-		
+
 		assertNotNull(lists.get(0).getEntityTwo().getId());
 		assertNotNull(lists.get(0).getEntityTwo().getEntityTree().getId());
 		assertNotNull(lists.get(0).getEntityTwo().getEntityTree().getEntityFour().getId());
@@ -401,12 +381,12 @@ class SaveTests {
 		assertNotNull(lists.get(2).getEntityTwo().getEntityTree().getId());
 		assertNotNull(lists.get(2).getEntityTwo().getEntityTree().getEntityFour().getId());
 		assertNotNull(lists.get(2).getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getId());
-		
+
 		assertNotNull(lists.get(3).getEntityTwo().getId());
 		assertNotNull(lists.get(3).getEntityTwo().getEntityTree().getId());
 		assertNotNull(lists.get(3).getEntityTwo().getEntityTree().getEntityFour().getId());
 		assertNotNull(lists.get(3).getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getId());
-		
+
 		ids.add(lists.get(0).getId());
 		ids.add(lists.get(1).getId());
 		ids.add(lists.get(2).getId());
@@ -414,7 +394,7 @@ class SaveTests {
 
 	@Test
 	@Order(5)
-	void teste_04() {
+	void teste_04() throws Exception {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/all/flush/EntityOne";
 
@@ -533,13 +513,13 @@ class SaveTests {
 		localTime[4] = "2024-01-10T19:14:10";
 
 		list.add(gerarEntity(text, inteiro, dobro, localDate, localTime));
-		
+
 		text = new String[5];
 		inteiro = new Integer[5];
 		dobro = new Double[5];
 		localDate = new String[5];
 		localTime = new String[5];
-		
+
 		text[0] = "Ariovaldo";
 		inteiro[0] = 22;
 		dobro[0] = 1.90;
@@ -569,19 +549,16 @@ class SaveTests {
 		inteiro[4] = 26;
 		localDate[4] = "01-10-2024";
 		localTime[4] = "2024-01-10T19:14:10";
-		
+
 		list.add(gerarEntity(text, inteiro, dobro, localDate, localTime));
 
-		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
-
-		String json = gson.toJson(list);
+		String json = objectMapper.writeValueAsString(list);
 
 		List<String> responses = postJson(url, json);
+		
+		JavaType type = objectMapper.getTypeFactory().constructCollectionType(List.class, EntityOne.class);
 
-		Type userListType = new TypeToken<List<EntityOne>>() {}.getType();
-
-		List<EntityOne> lists = gson.fromJson(responses.get(1), userListType);
+		List<EntityOne> lists = objectMapper.readValue(responses.get(1), type);
 
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
 
@@ -591,7 +568,7 @@ class SaveTests {
 		assertNotNull(lists.get(1).getId());
 		assertNotNull(lists.get(2).getId());
 		assertNotNull(lists.get(3).getId());
-		
+
 		assertNotNull(lists.get(0).getEntityTwo().getId());
 		assertNotNull(lists.get(0).getEntityTwo().getEntityTree().getId());
 		assertNotNull(lists.get(0).getEntityTwo().getEntityTree().getEntityFour().getId());
@@ -606,12 +583,12 @@ class SaveTests {
 		assertNotNull(lists.get(2).getEntityTwo().getEntityTree().getId());
 		assertNotNull(lists.get(2).getEntityTwo().getEntityTree().getEntityFour().getId());
 		assertNotNull(lists.get(2).getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getId());
-		
+
 		assertNotNull(lists.get(3).getEntityTwo().getId());
 		assertNotNull(lists.get(3).getEntityTwo().getEntityTree().getId());
 		assertNotNull(lists.get(3).getEntityTwo().getEntityTree().getEntityFour().getId());
 		assertNotNull(lists.get(3).getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getId());
-		
+
 	}
 
 	public EntityOne gerarEntity(String[] text, Integer[] inteiro, Double[] dobro, String[] localDate,
@@ -664,7 +641,6 @@ class SaveTests {
 		return entityOne;
 	}
 
-	
 	public EntityStatus gerarEntityStatus(String name, Boolean ativo, Integer status, String localTime) {
 
 		EntityStatus entityStatus = new EntityStatus();
@@ -675,7 +651,7 @@ class SaveTests {
 
 		return entityStatus;
 	}
-	
+
 	public List<String> postJson(String url, String json) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);

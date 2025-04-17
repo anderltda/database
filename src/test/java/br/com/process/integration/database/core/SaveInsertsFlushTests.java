@@ -4,7 +4,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,7 +12,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -30,16 +28,12 @@ import org.springframework.http.ResponseEntity;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import br.com.process.integration.database.core.exception.ErrorResponse;
 import br.com.process.integration.database.core.ui.CrudJpaController;
-import br.com.process.integration.database.core.ui.adapter.LocalDateAdapter;
-import br.com.process.integration.database.core.ui.adapter.LocalDateTimeAdapter;
 import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.domain.model.entity.EntityFive;
 import br.com.process.integration.database.domain.model.entity.EntityFour;
@@ -61,25 +55,18 @@ class SaveInsertsFlushTests {
 
 	@Autowired
 	private CrudJpaController crudJpaController;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	static Long id;
 	static List<Long> ids;
 
 	@BeforeAll
 	void setupOnce() {
-
 		if (ids == null) {
 			ids = new ArrayList<>();
 		}
-	}
-
-	@BeforeEach
-	void setup() {
-
-		if (id == null) {
-			id = 0l;
-		}
-
 	}
 
 	@Test
@@ -88,7 +75,7 @@ class SaveInsertsFlushTests {
 	}
 
 	@Test
-	void teste_01() {
+	void teste_01() throws Exception {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/flush/EntityOne";
 
@@ -132,14 +119,11 @@ class SaveInsertsFlushTests {
 
 		entityOne.setId(id);
 
-		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
-
-		String json = gson.toJson(entityOne);
+		String json = objectMapper.writeValueAsString(entityOne);
 
 		List<String> responses = postJson(url, json, new ErrorResponse());
 
-		EntityOne entity = gson.fromJson(responses.get(1), EntityOne.class);
+		EntityOne entity = objectMapper.readValue(responses.get(1), EntityOne.class);
 
 		id = entity.getId();
 
@@ -152,7 +136,7 @@ class SaveInsertsFlushTests {
 	}
 
 	@Test
-	void teste_02() {
+	void teste_02() throws Exception {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/all/flush/EntityOne";
 
@@ -310,17 +294,13 @@ class SaveInsertsFlushTests {
 
 		list.add(gerarEntity(text, inteiro, dobro, localDate, localTime));
 
-		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
-
-		String json = gson.toJson(list);
+		String json = objectMapper.writeValueAsString(list);
 
 		List<String> responses = postJson(url, json, new ErrorResponse());
 
-		Type userListType = new TypeToken<List<EntityOne>>() {
-		}.getType();
+		JavaType type = objectMapper.getTypeFactory().constructCollectionType(List.class, EntityOne.class);
 
-		List<EntityOne> lists = gson.fromJson(responses.get(1), userListType);
+		List<EntityOne> lists = objectMapper.readValue(responses.get(1), type);
 
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
 
@@ -357,7 +337,7 @@ class SaveInsertsFlushTests {
 	}
 
 	@Test
-	void teste_03() {
+	void teste_03() throws Exception {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/flush/EntityOne";
 
@@ -399,14 +379,11 @@ class SaveInsertsFlushTests {
 
 		EntityOne entityOne = gerarEntity(text, inteiro, dobro, localDate, localTime);
 
-		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
-
-		String json = gson.toJson(entityOne);
+		String json = objectMapper.writeValueAsString(entityOne);
 
 		List<String> responses = postJson(url, json, new ErrorResponse());
 
-		EntityOne entity = gson.fromJson(responses.get(1), EntityOne.class);
+		EntityOne entity = objectMapper.readValue(responses.get(1), EntityOne.class);
 
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
 		assertNotNull(entity.getId());
@@ -417,7 +394,7 @@ class SaveInsertsFlushTests {
 	}
 
 	@Test
-	void teste_04() {
+	void teste_04() throws Exception {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/flush/EntityOne";
 
@@ -459,14 +436,11 @@ class SaveInsertsFlushTests {
 
 		EntityOne entityOne = gerarEntity(text, inteiro, dobro, localDate, localTime);
 
-		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
-
-		String json = gson.toJson(entityOne);
+		String json = objectMapper.writeValueAsString(entityOne);
 
 		List<String> responses = postJson(url, json, new ErrorResponse());
 
-		EntityOne entity = gson.fromJson(responses.get(1), EntityOne.class);
+		EntityOne entity = objectMapper.readValue(responses.get(1), EntityOne.class);
 
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
 		assertNotNull(entity.getId());
@@ -477,7 +451,7 @@ class SaveInsertsFlushTests {
 	}
 
 	@Test
-	void teste_05() {
+	void teste_05() throws Exception {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/flush/EntityOne";
 
@@ -519,14 +493,11 @@ class SaveInsertsFlushTests {
 
 		EntityOne entityOne = gerarEntity(text, inteiro, dobro, localDate, localTime);
 
-		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
-
-		String json = gson.toJson(entityOne);
+		String json = objectMapper.writeValueAsString(entityOne);
 
 		List<String> responses = postJson(url, json, new ErrorResponse());
 
-		EntityOne entity = gson.fromJson(responses.get(1), EntityOne.class);
+		EntityOne entity = objectMapper.readValue(responses.get(1), EntityOne.class);
 
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
 		assertNotNull(entity.getId());
@@ -537,7 +508,7 @@ class SaveInsertsFlushTests {
 	}
 
 	@Test
-	void teste_06() {
+	void teste_06() throws Exception {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/flush/EntityOne";
 
@@ -579,14 +550,11 @@ class SaveInsertsFlushTests {
 
 		EntityOne entityOne = gerarEntity(text, inteiro, dobro, localDate, localTime);
 
-		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
-
-		String json = gson.toJson(entityOne);
+		String json = objectMapper.writeValueAsString(entityOne);
 
 		List<String> responses = postJson(url, json, new ErrorResponse());
 
-		EntityOne entity = gson.fromJson(responses.get(1), EntityOne.class);
+		EntityOne entity = objectMapper.readValue(responses.get(1), EntityOne.class);
 
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
 		assertNotNull(entity.getId());
@@ -597,7 +565,7 @@ class SaveInsertsFlushTests {
 	}
 
 	@Test
-	void teste_07() {
+	void teste_07() throws Exception {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/flush/EntityOne";
 
@@ -639,14 +607,11 @@ class SaveInsertsFlushTests {
 
 		EntityOne entityOne = gerarEntity(text, inteiro, dobro, localDate, localTime);
 
-		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
-
-		String json = gson.toJson(entityOne);
+		String json = objectMapper.writeValueAsString(entityOne);
 
 		List<String> responses = postJson(url, json, new ErrorResponse());
 
-		EntityOne entity = gson.fromJson(responses.get(1), EntityOne.class);
+		EntityOne entity = objectMapper.readValue(responses.get(1), EntityOne.class);
 
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
 		assertNotNull(entity.getId());
@@ -657,7 +622,7 @@ class SaveInsertsFlushTests {
 	}
 
 	@Test
-	void teste_08() {
+	void teste_08() throws Exception {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/flush/EntityOne";
 
@@ -699,14 +664,11 @@ class SaveInsertsFlushTests {
 
 		EntityOne entityOne = gerarEntity(text, inteiro, dobro, localDate, localTime);
 
-		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
-
-		String json = gson.toJson(entityOne);
+		String json = objectMapper.writeValueAsString(entityOne);
 
 		List<String> responses = postJson(url, json, new ErrorResponse());
 
-		EntityOne entity = gson.fromJson(responses.get(1), EntityOne.class);
+		EntityOne entity = objectMapper.readValue(responses.get(1), EntityOne.class);
 
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
 		assertNotNull(entity.getId());
@@ -717,7 +679,7 @@ class SaveInsertsFlushTests {
 	}
 
 	@Test
-	void teste_09() {
+	void teste_09() throws Exception {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/flush/EntityOne";
 
@@ -759,14 +721,11 @@ class SaveInsertsFlushTests {
 
 		EntityOne entityOne = gerarEntity(text, inteiro, dobro, localDate, localTime);
 
-		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
-
-		String json = gson.toJson(entityOne);
+		String json = objectMapper.writeValueAsString(entityOne);
 
 		List<String> responses = postJson(url, json, new ErrorResponse());
 
-		EntityOne entity = gson.fromJson(responses.get(1), EntityOne.class);
+		EntityOne entity = objectMapper.readValue(responses.get(1), EntityOne.class);
 
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
 		assertNotNull(entity.getId());
@@ -777,7 +736,7 @@ class SaveInsertsFlushTests {
 	}
 
 	@Test
-	void teste_10() {
+	void teste_10() throws Exception {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/flush/EntityOne";
 
@@ -819,14 +778,11 @@ class SaveInsertsFlushTests {
 
 		EntityOne entityOne = gerarEntity(text, inteiro, dobro, localDate, localTime);
 
-		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
-
-		String json = gson.toJson(entityOne);
+		String json = objectMapper.writeValueAsString(entityOne);
 
 		List<String> responses = postJson(url, json, new ErrorResponse());
 
-		EntityOne entity = gson.fromJson(responses.get(1), EntityOne.class);
+		EntityOne entity = objectMapper.readValue(responses.get(1), EntityOne.class);
 
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
 		assertNotNull(entity.getId());
@@ -837,7 +793,7 @@ class SaveInsertsFlushTests {
 	}
 
 	@Test
-	void teste_11() {
+	void teste_11() throws Exception {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/flush/EntityOne";
 
@@ -879,14 +835,11 @@ class SaveInsertsFlushTests {
 
 		EntityOne entityOne = gerarEntity(text, inteiro, dobro, localDate, localTime);
 
-		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
-
-		String json = gson.toJson(entityOne);
+		String json = objectMapper.writeValueAsString(entityOne);
 
 		List<String> responses = postJson(url, json, new ErrorResponse());
 
-		EntityOne entity = gson.fromJson(responses.get(1), EntityOne.class);
+		EntityOne entity = objectMapper.readValue(responses.get(1), EntityOne.class);
 
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
 		assertNotNull(entity.getId());

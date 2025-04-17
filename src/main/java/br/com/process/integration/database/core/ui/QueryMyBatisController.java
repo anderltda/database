@@ -23,23 +23,21 @@ import br.com.process.integration.database.core.util.Constants;
 public class QueryMyBatisController extends AbstractController {
 	
 	@GetMapping(value = "/mapper/count/{data}/{method}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> count(
+	public ResponseEntity<Integer> count(
 			@PathVariable String data, 
 			@PathVariable String method,
 			@RequestParam(defaultValue = "") Map<String, Object> filter) throws CheckedException {
 
 		setData(data);
 
-		int count = (int) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(data),
+		Integer count = (int) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(data),
 				Constants.METHOD_EXECUTE__MAPPER_COUNT, filter, method);
 
-		final String body = gson.toJson(count);
-
-		return new ResponseEntity<>(body, HttpStatus.OK);
+		return new ResponseEntity<>(count, HttpStatus.OK);
 	}	
 
 	@GetMapping(value = "/mapper/single/{data}/{method}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> findBySingle(
+	public ResponseEntity<BeanData<?>> findBySingle(
 			@PathVariable String data, 
 			@PathVariable String method,
 			@RequestParam(defaultValue = "") Map<String, Object> filter) throws CheckedException {
@@ -51,9 +49,7 @@ public class QueryMyBatisController extends AbstractController {
 
 		if (beanData != null) {
 
-			final String body = gson.toJson(beanData, beanData.getClass());
-
-			return new ResponseEntity<>(body, HttpStatus.OK);
+			return new ResponseEntity<>(beanData, HttpStatus.OK);
 		}
 
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -61,7 +57,7 @@ public class QueryMyBatisController extends AbstractController {
 	
 	@SuppressWarnings("unchecked")
 	@GetMapping(value = "/mapper/{data}/{method}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> findAll(
+	public ResponseEntity<List<BeanData<?>>> findAll(
 			@PathVariable String data, 
 			@PathVariable String method,
 			@RequestParam(defaultValue = "") Map<String, Object> filter) throws CheckedException {
@@ -75,9 +71,7 @@ public class QueryMyBatisController extends AbstractController {
 
 		if (!list.isEmpty()) {
 
-			final String body = gson.toJson(list);
-
-			return new ResponseEntity<>(body, HttpStatus.OK);
+			return new ResponseEntity<>(list, HttpStatus.OK);
 		}
 
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);

@@ -25,102 +25,108 @@ import br.com.process.integration.database.core.util.Constants;
 @RestController
 @RequestMapping("/v1/database")
 public class CrudJpaController extends AbstractController {
-	
+
 	@DeleteMapping(value = "/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> deleteAllOrById(@PathVariable String entity, @RequestParam(defaultValue = "") List<String> id) throws CheckedException {
-		
-		if(id.isEmpty()) {
-			methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_DELETE_ALL);
+	public ResponseEntity<String> deleteAllOrById(@PathVariable String entity,
+			@RequestParam(defaultValue = "") List<String> id) throws CheckedException {
+
+		if (id.isEmpty()) {
+			methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity),
+					Constants.METHOD_DELETE_ALL);
 		} else {
-			methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_DELETE_ALL_BY_ID, id);
+			methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity),
+					Constants.METHOD_DELETE_ALL_BY_ID, id);
 		}
 
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
 	@DeleteMapping(value = "/{entity}/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> deleteById(@PathVariable String entity, @PathVariable String id) throws CheckedException {
+	public ResponseEntity<String> deleteById(@PathVariable String entity, @PathVariable String id)
+			throws CheckedException {
 
 		setId(entity, id);
-		
-		methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_DELETE_BY_ID);
+
+		methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity),
+				Constants.METHOD_DELETE_BY_ID);
 
 		return new ResponseEntity<>(HttpStatus.OK);
 
 	}
-	
+
 	@PostMapping(value = "/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> save(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws CheckedException {
+	public ResponseEntity<BeanEntity<?>> save(@PathVariable String entity, @RequestBody JsonNode jsonNode)
+			throws CheckedException {
 
 		BeanEntity<?> entityFound = createEntity(entity, jsonNode);
 
 		methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_SAVE);
 
-		final String body = gson.toJson(entityFound);
-
-		return new ResponseEntity<>(body, HttpStatus.OK);
+		return new ResponseEntity<>(entityFound, HttpStatus.OK);
 
 	}
-	
+
 	@PostMapping(value = "/flush/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> saveAndFlush(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws CheckedException {
+	public ResponseEntity<BeanEntity<?>> saveAndFlush(@PathVariable String entity, @RequestBody JsonNode jsonNode)
+			throws CheckedException {
 
 		BeanEntity<?> entityFound = createEntity(entity, jsonNode);
 
-		methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_SAVE_AND_FLUSH);
+		methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity),
+				Constants.METHOD_SAVE_AND_FLUSH);
 
-		final String body = gson.toJson(entityFound);
-
-		return new ResponseEntity<>(body, HttpStatus.OK);
+		return new ResponseEntity<>(entityFound, HttpStatus.OK);
 
 	}
-	
+
 	@PostMapping(value = "/all/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> saveAll(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws CheckedException {
+	public ResponseEntity<List<BeanEntity<?>>> saveAll(@PathVariable String entity, @RequestBody JsonNode jsonNode)
+			throws CheckedException {
 
-		String body = persisteAll(Constants.METHOD_SAVE_ALL, entity, jsonNode);
+		List<BeanEntity<?>> list = persisteAll(Constants.METHOD_SAVE_ALL, entity, jsonNode);
 
-		return new ResponseEntity<>(body, HttpStatus.OK);
+		return new ResponseEntity<>(list, HttpStatus.OK);
 
 	}
-	
+
 	@PostMapping(value = "/all/flush/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> saveAllAndFlush(@PathVariable String entity, @RequestBody JsonNode jsonNode) throws CheckedException {
+	public ResponseEntity<List<BeanEntity<?>>> saveAllAndFlush(@PathVariable String entity,
+			@RequestBody JsonNode jsonNode) throws CheckedException {
 
-		String body = persisteAll(Constants.METHOD_SAVE_ALL_AND_FLUSH, entity, jsonNode);
+		List<BeanEntity<?>> list = persisteAll(Constants.METHOD_SAVE_ALL_AND_FLUSH, entity, jsonNode);
 
-		return new ResponseEntity<>(body, HttpStatus.OK);
+		return new ResponseEntity<>(list, HttpStatus.OK);
 
 	}
-	
+
 	private BeanEntity<?> createEntity(String entity, JsonNode jsonNode) throws CheckedException {
-		
+
 		BeanEntity<?> entityFound = (BeanEntity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
 		MethodReflection.transformsJsonModel(jsonNode, entityFound);
-		
+
 		setEntity(entity, entityFound);
-		
+
 		return entityFound;
 	}
-	
-	private String persisteAll(String method, String entity, JsonNode jsonNode) throws CheckedException {
+
+	private List<BeanEntity<?>> persisteAll(String method, String entity, JsonNode jsonNode) throws CheckedException {
 
 		BeanEntity<?> entityFound = null;
-		
+
 		List<BeanEntity<?>> list = new ArrayList<>();
 
 		for (Iterator<JsonNode> iterator = jsonNode.elements(); iterator.hasNext();) {
-			
+
 			entityFound = (BeanEntity<?>) MethodReflection.findEntityUsingClassLoader(entity);
-		
+
 			MethodReflection.transformsJsonModel(iterator.next(), entityFound);
-		
+
 			list.add(entityFound);
 		}
-		
+
 		methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity), method, list);
-		
-		return gson.toJson(list);
+
+		return list;
 	}
 }

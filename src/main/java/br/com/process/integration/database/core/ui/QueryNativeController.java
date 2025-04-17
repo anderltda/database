@@ -23,7 +23,7 @@ import br.com.process.integration.database.core.util.Constants;
 public class QueryNativeController extends AbstractController {
 	
 	@GetMapping(value = "/query/count/{view}/{queryName}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> count(
+	public ResponseEntity<Integer> count(
 			@PathVariable String view, 
 			@RequestParam Map<String, Object> filter, 
 			@PathVariable String queryName) throws CheckedException {
@@ -32,16 +32,14 @@ public class QueryNativeController extends AbstractController {
 
 		setView(view);
 
-		int count = (int) methodInvoker.invokeMethodReturnObjectWithParameters(
+		Integer count = (int) methodInvoker.invokeMethodReturnObjectWithParameters(
 				MethodReflection.getNameService(view), Constants.METHOD_EXECUTE_QUERY_NATIVE_COUNT, filter, queryName);
 
-		final String body = gson.toJson(count);
-
-		return new ResponseEntity<>(body, HttpStatus.OK);
+		return new ResponseEntity<>(count, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/query/single/{view}/{queryName}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> findSingle(
+	public ResponseEntity<?> findSingle(
 			@PathVariable String view, 
 			@RequestParam Map<String, Object> filter, 
 			@PathVariable String queryName) throws CheckedException {
@@ -56,9 +54,7 @@ public class QueryNativeController extends AbstractController {
 
 		if (beanView != null) {
 
-			final String body = gson.toJson(beanView, beanView.getClass());
-
-			return new ResponseEntity<>(body, HttpStatus.OK);
+			return new ResponseEntity<>(beanView, HttpStatus.OK);
 		}
 
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -66,7 +62,7 @@ public class QueryNativeController extends AbstractController {
 
 	@SuppressWarnings("unchecked")
 	@GetMapping(value = "/query/{view}/{queryName}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<String> findAll(
+	public ResponseEntity<List<BeanView<?>>> findAll(
 			@PathVariable String view, 
 			@RequestParam Map<String, Object> filter, 
 			@PathVariable String queryName) throws CheckedException {
@@ -82,9 +78,7 @@ public class QueryNativeController extends AbstractController {
 
 		if (!list.isEmpty()) {
 
-			final String body = gson.toJson(list);
-
-			return new ResponseEntity<>(body, HttpStatus.OK);
+			return new ResponseEntity<>(list, HttpStatus.OK);
 		}
 
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);

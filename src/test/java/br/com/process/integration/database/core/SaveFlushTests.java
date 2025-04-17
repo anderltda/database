@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -15,7 +14,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -33,16 +31,12 @@ import org.springframework.http.ResponseEntity;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import br.com.process.integration.database.core.exception.ErrorResponse;
 import br.com.process.integration.database.core.ui.CrudJpaController;
-import br.com.process.integration.database.core.ui.adapter.LocalDateAdapter;
-import br.com.process.integration.database.core.ui.adapter.LocalDateTimeAdapter;
 import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.domain.model.entity.EntityFive;
 import br.com.process.integration.database.domain.model.entity.EntityFour;
@@ -65,24 +59,18 @@ class SaveFlushTests {
 	@Autowired
 	private CrudJpaController crudJpaController;
 
+	@Autowired
+	private ObjectMapper objectMapper;
+
 	static Long id;
 	static List<Long> ids;
-	
+
 	@BeforeAll
 	void setupOnce() {
-		
-		if(ids == null) {
+
+		if (ids == null) {
 			ids = new ArrayList<>();
 		}
-	}
-
-	@BeforeEach
-	void setup() { 
-		
-		if(id == null) {
-			id = 0l;
-		}
-		
 	}
 
 	@Test
@@ -90,10 +78,10 @@ class SaveFlushTests {
 	void contextLoads() {
 		assertNotNull(crudJpaController);
 	}
-	
+
 	@Test
 	@Order(2)
-	void teste_01() {
+	void teste_01() throws Exception {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/flush/EntityOne";
 
@@ -135,17 +123,14 @@ class SaveFlushTests {
 
 		EntityOne entityOne = gerarEntity(text, inteiro, dobro, localDate, localTime);
 
-		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
-
-		String json = gson.toJson(entityOne);
+		String json = objectMapper.writeValueAsString(entityOne);
 
 		List<String> responses = postJson(url, json, new ErrorResponse());
 
-		EntityOne entity = gson.fromJson(responses.get(1), EntityOne.class);
+		EntityOne entity = objectMapper.readValue(responses.get(1), EntityOne.class);
 
 		id = entity.getId();
-				
+
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
 		assertNotNull(entity.getId());
 		assertNotNull(entity.getEntityTwo().getId());
@@ -159,18 +144,18 @@ class SaveFlushTests {
 	void teste_02() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne/" + id;
-		
+
 		EntityOne entity = getSingleResult(url, new ErrorResponse());
-		
+
 		assertNotNull(entity);
 		assertEquals("Ricardo", entity.getName());
 		assertEquals(22, entity.getAge());
 		assertEquals(1.80, entity.getHeight());
 	}
-	
+
 	@Test
 	@Order(4)
-	void teste_03() {
+	void teste_03() throws Exception {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/flush/EntityOne";
 
@@ -211,20 +196,17 @@ class SaveFlushTests {
 		localTime[4] = "2024-01-10T19:14:10";
 
 		EntityOne entityOne = gerarEntity(text, inteiro, dobro, localDate, localTime);
-		
+
 		entityOne.setId(id);
 
-		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
-
-		String json = gson.toJson(entityOne);
+		String json = objectMapper.writeValueAsString(entityOne);
 
 		List<String> responses = postJson(url, json, new ErrorResponse());
 
-		EntityOne entity = gson.fromJson(responses.get(1), EntityOne.class);
+		EntityOne entity = objectMapper.readValue(responses.get(1), EntityOne.class);
 
 		id = entity.getId();
-				
+
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
 		assertNotNull(entity.getId());
 		assertNotNull(entity.getEntityTwo().getId());
@@ -232,24 +214,24 @@ class SaveFlushTests {
 		assertNotNull(entity.getEntityTwo().getEntityTree().getEntityFour().getId());
 		assertNotNull(entity.getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getId());
 	}
-	
+
 	@Test
 	@Order(5)
 	void teste_04() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne/" + id;
-		
+
 		EntityOne entity = getSingleResult(url, new ErrorResponse());
-		
+
 		assertNotNull(entity);
 		assertEquals("Manolo", entity.getName());
 		assertEquals(70, entity.getAge());
 		assertEquals(1.40, entity.getHeight());
 	}
-	
+
 	@Test
 	@Order(6)
-	void teste_05() {
+	void teste_05() throws Exception {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/all/flush/EntityOne";
 
@@ -368,13 +350,13 @@ class SaveFlushTests {
 		localTime[4] = "2024-01-10T19:14:10";
 
 		list.add(gerarEntity(text, inteiro, dobro, localDate, localTime));
-		
+
 		text = new String[5];
 		inteiro = new Integer[5];
 		dobro = new Double[5];
 		localDate = new String[5];
 		localTime = new String[5];
-		
+
 		text[0] = "Renato";
 		inteiro[0] = 38;
 		dobro[0] = 1.85;
@@ -404,19 +386,16 @@ class SaveFlushTests {
 		inteiro[4] = 24;
 		localDate[4] = "06-10-2024";
 		localTime[4] = "2024-04-10T18:14:10";
-		
+
 		list.add(gerarEntity(text, inteiro, dobro, localDate, localTime));
 
-		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
-
-		String json = gson.toJson(list);
+		String json = objectMapper.writeValueAsString(list);
 
 		List<String> responses = postJson(url, json, new ErrorResponse());
 
-		Type userListType = new TypeToken<List<EntityOne>>(){}.getType();
+		JavaType type = objectMapper.getTypeFactory().constructCollectionType(List.class, EntityOne.class);
 
-		List<EntityOne> lists = gson.fromJson(responses.get(1), userListType);
+		List<EntityOne> lists = objectMapper.readValue(responses.get(1), type);
 
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
 
@@ -426,7 +405,7 @@ class SaveFlushTests {
 		assertNotNull(lists.get(1).getId());
 		assertNotNull(lists.get(2).getId());
 		assertNotNull(lists.get(3).getId());
-		
+
 		assertNotNull(lists.get(0).getEntityTwo().getId());
 		assertNotNull(lists.get(0).getEntityTwo().getEntityTree().getId());
 		assertNotNull(lists.get(0).getEntityTwo().getEntityTree().getEntityFour().getId());
@@ -441,50 +420,53 @@ class SaveFlushTests {
 		assertNotNull(lists.get(2).getEntityTwo().getEntityTree().getId());
 		assertNotNull(lists.get(2).getEntityTwo().getEntityTree().getEntityFour().getId());
 		assertNotNull(lists.get(2).getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getId());
-		
+
 		assertNotNull(lists.get(3).getEntityTwo().getId());
 		assertNotNull(lists.get(3).getEntityTwo().getEntityTree().getId());
 		assertNotNull(lists.get(3).getEntityTwo().getEntityTree().getEntityFour().getId());
 		assertNotNull(lists.get(3).getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getId());
-		
+
 		ids.add(lists.get(0).getId());
 		ids.add(lists.get(1).getId());
 		ids.add(lists.get(2).getId());
 	}
-	
+
 	@Test
 	@Order(7)
 	void teste_06() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne/" + ids.get(0);
-		
+
 		EntityOne entity = getSingleResult(url, new ErrorResponse());
-		
+
 		assertEquals("Carlos Alberto", entity.getName());
 		assertEquals(55, entity.getAge());
 		assertEquals(1.77, entity.getHeight());
 		assertEquals(LocalDate.parse("1970-09-22", DateTimeFormatter.ISO_LOCAL_DATE), entity.getBirthDate());
-		assertEquals(LocalDateTime.parse("2024-04-30T23:50:54", DateTimeFormatter.ISO_LOCAL_DATE_TIME), entity.getProhibitedDateTime());
+		assertEquals(LocalDateTime.parse("2024-04-30T23:50:54", DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+				entity.getProhibitedDateTime());
 
 		assertEquals("Preto", entity.getEntityTwo().getColor());
 		assertEquals(234, entity.getEntityTwo().getHex());
 		assertEquals(25.5, entity.getEntityTwo().getCost());
-		assertEquals(LocalDate.parse("2024-01-10", DateTimeFormatter.ISO_LOCAL_DATE), entity.getEntityTwo().getInclusionDate());
+		assertEquals(LocalDate.parse("2024-01-10", DateTimeFormatter.ISO_LOCAL_DATE),
+				entity.getEntityTwo().getInclusionDate());
 
 		assertEquals("Capivara", entity.getEntityTwo().getEntityTree().getAnimal());
 		assertEquals(72, entity.getEntityTwo().getEntityTree().getIndicator());
 
 		assertEquals("Damasco", entity.getEntityTwo().getEntityTree().getEntityFour().getFruit());
 		assertEquals(13, entity.getEntityTwo().getEntityTree().getEntityFour().getAttribute());
-		assertEquals(LocalDateTime.parse("2024-04-09T18:23:21", DateTimeFormatter.ISO_LOCAL_DATE_TIME), entity.getEntityTwo().getEntityTree().getEntityFour().getInclusionDateTime());
+		assertEquals(LocalDateTime.parse("2024-04-09T18:23:21", DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+				entity.getEntityTwo().getEntityTree().getEntityFour().getInclusionDateTime());
 
 		assertEquals("Cama", entity.getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getReference());
 		assertEquals(55, entity.getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getFactor());
 	}
-	
+
 	@Test
 	@Order(8)
-	void teste_07() {
+	void teste_07() throws Exception {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/flush/EntityOne";
 
@@ -525,31 +507,31 @@ class SaveFlushTests {
 		localTime[4] = "2024-01-10T19:14:10";
 
 		EntityOne entityOne = gerarEntity(text, inteiro, dobro, localDate, localTime);
-		
-		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
 
-		String json = gson.toJson(entityOne);
-		
-		ErrorResponse errorResponse = new ErrorResponse("not-null property references a null or transient value : br.com.process.integration.database.domain.model.entity.EntityOne.name", HttpStatus.BAD_REQUEST);
-		
-	    assertThrows(RuntimeException.class, () -> postJson(url, json, errorResponse));
+		String json = objectMapper.writeValueAsString(entityOne);
+
+		ErrorResponse errorResponse = new ErrorResponse(
+				"not-null property references a null or transient value: br.com.process.integration.database.domain.model.entity.EntityOne.name",
+				HttpStatus.BAD_REQUEST);
+
+		assertThrows(RuntimeException.class, () -> postJson(url, json, errorResponse));
 	}
-	
+
 	@Test
 	@Order(9)
 	void teste_08() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/single/EntityOne?name=Marcelo&name_op=eq";
-		
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING
+				+ "/single/EntityOne?name=Marcelo&name_op=eq";
+
 		EntityOne entity = getSingleResult(url, new ErrorResponse());
-		
+
 		assertNull(entity);
 	}
-	
+
 	@Test
 	@Order(10)
-	void teste_09() {
+	void teste_09() throws Exception {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/flush/EntityOne";
 
@@ -590,16 +572,13 @@ class SaveFlushTests {
 		localTime[4] = "2024-01-10T19:14:10";
 
 		EntityOne entityOne = gerarEntity(text, inteiro, dobro, localDate, localTime);
-		
-		Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
-				.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).create();
 
-		String json = gson.toJson(entityOne);
-		
+		String json = objectMapper.writeValueAsString(entityOne);
+
 		List<String> responses = postJson(url, json, new ErrorResponse());
 
-		EntityOne entity = gson.fromJson(responses.get(1), EntityOne.class);
-		
+		EntityOne entity = objectMapper.readValue(responses.get(1), EntityOne.class);
+
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
 		assertNotNull(entity.getId());
 		assertNotNull(entity.getEntityTwo().getId());
@@ -607,21 +586,22 @@ class SaveFlushTests {
 		assertNotNull(entity.getEntityTwo().getEntityTree().getEntityFour().getId());
 		assertNotNull(entity.getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getId());
 	}
-	
+
 	@Test
 	@Order(11)
 	void teste_10() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/single/EntityOne?name=Marcelo&name_op=eq";
-		
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING
+				+ "/single/EntityOne?name=Marcelo&name_op=eq";
+
 		EntityOne entity = getSingleResult(url, new ErrorResponse());
-		
+
 		assertNotNull(entity);
 	}
 
 	public EntityOne gerarEntity(String[] text, Integer[] inteiro, Double[] dobro, String[] localDate,
 			String[] localTime) {
-		
+
 		EntityStatus entityStatus = gerarEntityStatus("entityOne status", true, 1, "1993-10-10T19:14:10");
 
 		EntityOne entityOne = new EntityOne();
@@ -668,7 +648,7 @@ class SaveFlushTests {
 
 		return entityOne;
 	}
-	
+
 	public EntityStatus gerarEntityStatus(String name, Boolean ativo, Integer status, String localTime) {
 
 		EntityStatus entityStatus = new EntityStatus();
@@ -698,10 +678,11 @@ class SaveFlushTests {
 			ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
 			assertEquals(compare.getStatus(), errorResponse.getStatus());
 			assertTrue(errorResponse.getMessage().contains(compare.getMessage()));
-			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: " + errorResponse.getMessage());
+			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: "
+					+ errorResponse.getMessage());
 		}
 	}
-	
+
 	public List<EntityOne> getAll(String url, ErrorResponse compare) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", "application/json");
@@ -713,65 +694,68 @@ class SaveFlushTests {
 			ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
 			assertEquals(compare.getStatus(), errorResponse.getStatus());
 			assertTrue(errorResponse.getMessage().contains(compare.getMessage()));
-			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: " + errorResponse.getMessage());
+			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: "
+					+ errorResponse.getMessage());
 		}
 	}
 
 	public EntityOne getSingleResult(String url, ErrorResponse compare) {
-	    HttpHeaders headers = new HttpHeaders();
+		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
-	    HttpEntity<String> entity = new HttpEntity<>(headers);
-	    ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-	    if (response.getStatusCode().is2xxSuccessful()) {
-	        return convertResponseToEntityOne(response.getBody());
-	    } else {
-	    	ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+		if (response.getStatusCode().is2xxSuccessful()) {
+			return convertResponseToEntityOne(response.getBody());
+		} else {
+			ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
 			assertEquals(compare.getStatus(), errorResponse.getStatus());
 			assertTrue(errorResponse.getMessage().contains(compare.getMessage()));
-	        throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: " + errorResponse.getMessage());
-	    }
+			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: "
+					+ errorResponse.getMessage());
+		}
 	}
-	
+
 	private ObjectMapper createObjectMapper() {
-	    ObjectMapper objectMapper = new ObjectMapper();
-	    objectMapper.registerModule(new JavaTimeModule());
-	    objectMapper.findAndRegisterModules(); 
-	    return objectMapper;
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.registerModule(new JavaTimeModule());
+		objectMapper.findAndRegisterModules();
+		return objectMapper;
 	}
 
 	private List<EntityOne> convertResponseToEntityOneList(String body) {
-	    ObjectMapper objectMapper = createObjectMapper();
-	    try {
-	    	if(body != null) {
-	    		return objectMapper.readValue(body, new TypeReference<List<EntityOne>>(){});
-	    	} else {
-	    		return null;
-	    	}
-	    } catch (JsonProcessingException e) {
-	        throw new RuntimeException("Error parsing EntityOne list response", e);
-	    }
+		ObjectMapper objectMapper = createObjectMapper();
+		try {
+			if (body != null) {
+				return objectMapper.readValue(body, new TypeReference<List<EntityOne>>() {
+				});
+			} else {
+				return null;
+			}
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException("Error parsing EntityOne list response", e);
+		}
 	}
 
 	private EntityOne convertResponseToEntityOne(String body) {
-	    ObjectMapper objectMapper = createObjectMapper();
-	    try {
-	    	if(body != null) {
-	    		return objectMapper.readValue(body, EntityOne.class);
-	    	} else {
-	    		return null;
-	    	}
-	    } catch (JsonProcessingException e) {
-	        throw new RuntimeException("Error parsing EntityOne response", e);
-	    }
+		ObjectMapper objectMapper = createObjectMapper();
+		try {
+			if (body != null) {
+				return objectMapper.readValue(body, EntityOne.class);
+			} else {
+				return null;
+			}
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException("Error parsing EntityOne response", e);
+		}
 	}
 
 	private ErrorResponse convertResponseToErrorResponse(String body) {
-	    ObjectMapper objectMapper = new ObjectMapper();
-	    try {
-	        return objectMapper.readValue(body, ErrorResponse.class);
-	    } catch (JsonProcessingException e) {
-	        throw new RuntimeException("Error parsing ErrorResponse", e);
-	    }
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			return objectMapper.readValue(body, ErrorResponse.class);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException("Error parsing ErrorResponse", e);
+		}
 	}
 
 	public LocalDate geraLocalDate(String dateString) {
