@@ -5,9 +5,11 @@ import java.util.Objects;
 
 import org.springframework.hateoas.RepresentationModel;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import br.com.process.integration.database.core.domain.BeanEntity;
+import br.com.process.integration.database.core.util.Constants;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,6 +37,7 @@ public class EntityTwo extends RepresentationModel<EntityTwo> implements BeanEnt
 	private Double cost;
 
 	@Column(name = "inclusion_date", nullable = false)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_FORMAT)
 	private LocalDate inclusionDate;
 
 	@OneToOne(cascade = CascadeType.ALL)

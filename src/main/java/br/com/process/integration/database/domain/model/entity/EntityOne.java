@@ -6,9 +6,11 @@ import java.util.Objects;
 
 import org.springframework.hateoas.RepresentationModel;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import br.com.process.integration.database.core.domain.BeanEntity;
+import br.com.process.integration.database.core.util.Constants;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -39,9 +41,11 @@ public class EntityOne extends RepresentationModel<EntityOne> implements BeanEnt
 	private Double height;
 
 	@Column(name = "birth_date", nullable = false)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_FORMAT)
 	private LocalDate birthDate;
 
 	@Column(name = "prohibited_date_time", nullable = false)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_TIME_FORMAT)
 	private LocalDateTime prohibitedDateTime;
 
 	@Column(name = "code", nullable = false)

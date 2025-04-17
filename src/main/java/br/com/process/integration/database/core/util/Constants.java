@@ -4,6 +4,9 @@ public class Constants {
 	
 	private Constants() {}
 	
+	/**
+	 *  Url api
+	 */
 	public static final String API_NAME_REQUEST_MAPPING = "/v1/database";
 	
 	/**
@@ -15,6 +18,16 @@ public class Constants {
 	 *  Inicio do nome do diretorio
 	 */
 	public static final String DIRECTORY_RESOURCES = "src.main.resources";
+	
+	/**
+	 *  Pattern para aplicar no JSON mapper @JsonFormat - Date Time
+	 */
+	public static final String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+	
+	/**
+	 *  Pattern para aplicar no JSON mapper @JsonFormat - Date
+	 */
+	public static final String DATE_FORMAT = "yyyy-MM-dd";	
 
 	/**
 	 *  Nome do pacote onde estao as classes das entidades (entitys)
