@@ -391,7 +391,7 @@ class CriteriaPaginatorJoinTests {
 		        + "entityTwo.entityTree.animal_op=in&"
 		        + "entityTwo.entityTree.animal=Macado,Avestruz,Gato,Cavalo&"
 		        + "entityTwo.entityTree.indicator_op=ge&"
-		        + "entityTwo.entityTree.indicator=5&"
+		        + "entityTwo.entityTree.indicator=11&"
 		        + "page=0&"
 		        + "size=10&"
 		        + "sortList=age&"
@@ -428,7 +428,7 @@ class CriteriaPaginatorJoinTests {
 				+ "entityTwo.entityTree.animal_op=in&"
 				+ "entityTwo.entityTree.animal=Macado,Avestruz,Gato,Cavalo&"
 				+ "entityTwo.entityTree.indicator_op=ge&"
-				+ "entityTwo.entityTree.indicator=5&"
+				+ "entityTwo.entityTree.indicator=11&"
 				+ "page=0&"
 				+ "size=10&"
 				+ "sortList=age&"
@@ -465,7 +465,7 @@ class CriteriaPaginatorJoinTests {
 				+ "entityTwo.entityTree.animal_op=in&"
 				+ "entityTwo.entityTree.animal=Macado,Avestruz,Gato,Cavalo&"
 				+ "entityTwo.entityTree.indicator_op=ge&"
-				+ "entityTwo.entityTree.indicator=5&"
+				+ "entityTwo.entityTree.indicator=11&"
 				+ "entityTwo.entityTree.amount_op=bt&"
 				+ "entityTwo.entityTree.amount=12.00,6.011&"
 				+ "page=0&"
@@ -670,7 +670,7 @@ class CriteriaPaginatorJoinTests {
 				+ "entityTwo.entityTree.animal_op=in&"
 				+ "entityTwo.entityTree.animal=Macado,Avestruz,Gato,Cavalo&"
 				+ "entityTwo.entityTree.indicator_op=ge&"
-				+ "entityTwo.entityTree.indicator=5&"
+				+ "entityTwo.entityTree.indicator=11&"
 				+ "entityTwo.entityTree.amount_op=bt&"
 				+ "entityTwo.entityTree.amount=12,60&"
 				+ "entityTwo.entityTree.localDate_op=ne&"
@@ -713,7 +713,7 @@ class CriteriaPaginatorJoinTests {
 				+ "entityTwo.entityTree.animal_op=in&"
 				+ "entityTwo.entityTree.animal=Macado,Avestruz,Gato,Cavalo&"
 				+ "entityTwo.entityTree.indicator_op=ge&"
-				+ "entityTwo.entityTree.indicator=5&"
+				+ "entityTwo.entityTree.indicator=44&"
 				+ "entityTwo.entityTree.amount_op=bt&"
 				+ "entityTwo.entityTree.amount=12,6.011&"
 				+ "entityTwo.entityTree.localDate_op=ne&"
@@ -1131,7 +1131,7 @@ class CriteriaPaginatorJoinTests {
 		        + "entityTwo.entityTree.animal_op=in&"
 		        + "entityTwo.entityTree.animal=Porco,Gato,Baleia&"
 		        + "entityTwo.entityTree.indicator_op=gt&"
-		        + "entityTwo.entityTree.indicator=23&"
+		        + "entityTwo.entityTree.indicator=22&"
 		        + "entityTwo.entityTree.amount_op=bt&"
 		        + "entityTwo.entityTree.amount=14,60,24,60&"
 		        + "entityTwo.entityTree.localDate_op=eq&"
@@ -1148,10 +1148,9 @@ class CriteriaPaginatorJoinTests {
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
-		assertEquals(3, list.size());
+		assertEquals(2, list.size());
 		assertEquals("Carlos", list.get(0).getName());
-		assertEquals("Ricardo", list.get(1).getName());
-		assertEquals("Maria", list.get(2).getName());
+		assertEquals("Maria", list.get(1).getName());
 	}
 
 	@Test
@@ -1183,8 +1182,8 @@ class CriteriaPaginatorJoinTests {
 		        + "entityTwo.inclusionDate=2024-01-10T00:00:00&"
 		        + "entityTwo.entityTree.animal_op=in&"
 		        + "entityTwo.entityTree.animal=Porco,Gato,Baleia&"
-		        + "entityTwo.entityTree.indicator_op=gt&"
-		        + "entityTwo.entityTree.indicator=23&"
+		        + "entityTwo.entityTree.indicator_op=eq&"
+		        + "entityTwo.entityTree.indicator=11&"
 		        + "entityTwo.entityTree.amount_op=bt&"
 		        + "entityTwo.entityTree.amount=14,60,24,60&"
 		        + "entityTwo.entityTree.localDate_op=eq&"
@@ -1209,10 +1208,8 @@ class CriteriaPaginatorJoinTests {
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
-		assertEquals(3, list.size());
-		assertEquals("Carlos", list.get(0).getName());
-		assertEquals("Ricardo", list.get(1).getName());
-		assertEquals("Maria", list.get(2).getName());
+		assertEquals(1, list.size());
+		assertEquals("Ricardo", list.get(0).getName());
 	}
 
 	public void singleParameterizedOne(String value, String url) {

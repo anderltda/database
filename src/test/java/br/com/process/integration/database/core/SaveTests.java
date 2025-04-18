@@ -140,7 +140,7 @@ class SaveTests {
 		localTime[1] = "2024-01-07T16:41:43";
 
 		text[2] = "Gato";
-		inteiro[2] = 24;
+		inteiro[2] = 11;
 		dobro[2] = 24.6;
 		localDate[2] = "01-08-2024";
 		localTime[2] = "2024-01-08T17:32:32";
@@ -200,7 +200,7 @@ class SaveTests {
 		localTime[1] = "2024-01-01T16:41:43";
 
 		text[2] = "Avestruz";
-		inteiro[2] = 5;
+		inteiro[2] = 22;
 		dobro[2] = 55.6;
 		localDate[2] = "10-09-2024";
 		localTime[2] = "2024-10-18T13:32:32";
@@ -260,7 +260,7 @@ class SaveTests {
 		localTime[1] = "2024-10-07T16:40:43";
 
 		text[2] = "Capivara";
-		inteiro[2] = 72;
+		inteiro[2] = 33;
 		dobro[2] = 20.6;
 		localDate[2] = "01-05-2024";
 		localTime[2] = "2024-06-08T17:32:32";
@@ -374,7 +374,7 @@ class SaveTests {
 		localTime[1] = "2024-12-07T16:40:43";
 
 		text[2] = "Papagaio";
-		inteiro[2] = 13;
+		inteiro[2] = 11;
 		dobro[2] = 564.61;
 		localDate[2] = "12-08-2024";
 		localTime[2] = "2024-12-08T17:44:32";
@@ -462,7 +462,7 @@ class SaveTests {
 		localTime[1] = "2024-01-07T16:41:43";
 
 		text[2] = "Porco";
-		inteiro[2] = 72;
+		inteiro[2] = 44;
 		dobro[2] = 20.6;
 		localDate[2] = "01-08-2024";
 		localTime[2] = "2024-01-08T17:32:32";
@@ -538,7 +538,7 @@ class SaveTests {
 		localTime[1] = "2024-01-07T16:41:43";
 
 		text[2] = "Macado";
-		inteiro[2] = 87;
+		inteiro[2] = 22;
 		dobro[2] = 14.6;
 		localDate[2] = "01-08-2024";
 		localTime[2] = "2024-01-08T17:32:32";
@@ -576,7 +576,7 @@ class SaveTests {
 		localTime[1] = "2024-01-07T16:41:43";
 
 		text[2] = "Gato";
-		inteiro[2] = 24;
+		inteiro[2] = 22;
 		dobro[2] = 24.6;
 		localDate[2] = "01-08-2024";
 		localTime[2] = "2024-01-08T17:32:32";

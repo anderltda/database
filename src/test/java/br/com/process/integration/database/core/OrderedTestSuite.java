@@ -20,8 +20,7 @@ import org.junit.platform.suite.api.Suite;
 	JDBCPaginatorTests.class,
 	MyBatisTests.class,
 	MyBatisPaginatorTests.class,
-	DeleteTests.class, 
-	SaveTests.class
+	ClearAllTests.class
 })
 public class OrderedTestSuite {
 	

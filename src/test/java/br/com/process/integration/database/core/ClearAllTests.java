@@ -30,7 +30,7 @@ import br.com.process.integration.database.core.util.Constants;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class DeleteAllTests {
+class ClearAllTests {
 
 	@LocalServerPort
 	private int port;
@@ -40,9 +40,10 @@ class DeleteAllTests {
 
 	@Autowired
 	private CrudJpaController crudJpaController;
-	
+
 	@BeforeAll
-	void setupOnce() { }
+	void setupOnce() {
+	}
 
 	@Test
 	@Order(1)
@@ -51,7 +52,7 @@ class DeleteAllTests {
 	}
 
 	@Test
-	@Order(1)
+	@Order(2)
 	void teste_01() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne";
@@ -60,9 +61,9 @@ class DeleteAllTests {
 
 		assertEquals(statusCode, HttpStatus.OK.toString());
 	}
-	
+
 	@Test
-	@Order(2)
+	@Order(3)
 	void teste_02() {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityStatus";
@@ -71,30 +72,31 @@ class DeleteAllTests {
 
 		assertEquals(statusCode, HttpStatus.OK.toString());
 	}
-	
+
 	public String delete(String url, ErrorResponse compare) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
 		HttpEntity<String> requestEntity = new HttpEntity<>(null, headers);
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, String.class);
-	    if (response.getStatusCode().is2xxSuccessful()) {
-	    	System.out.println("Resource deleted successfully. Response: " + response.getBody());
-	        return response.getStatusCode().toString();
-	    } else {
-	    	System.err.println("Failed to delete resource. Status code: " + response.getStatusCode());
-	    	ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
+		if (response.getStatusCode().is2xxSuccessful()) {
+			System.out.println("Resource deleted successfully. Response: " + response.getBody());
+			return response.getStatusCode().toString();
+		} else {
+			System.err.println("Failed to delete resource. Status code: " + response.getStatusCode());
+			ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
 			assertEquals(compare.getStatus(), errorResponse.getStatus());
 			assertTrue(errorResponse.getMessage().contains(compare.getMessage()));
-	        throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: " + errorResponse.getMessage());
-	    }
+			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: "
+					+ errorResponse.getMessage());
+		}
 	}
 
 	private ErrorResponse convertResponseToErrorResponse(String body) {
-	    ObjectMapper objectMapper = new ObjectMapper();
-	    try {
-	        return objectMapper.readValue(body, ErrorResponse.class);
-	    } catch (JsonProcessingException e) {
-	        throw new RuntimeException("Error parsing ErrorResponse", e);
-	    }
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			return objectMapper.readValue(body, ErrorResponse.class);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException("Error parsing ErrorResponse", e);
+		}
 	}
 }
