@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
@@ -64,6 +63,13 @@ class SaveFlushTests {
 
 	static Long id;
 	static List<Long> ids;
+	
+	public EntityOne entityOne;
+	public EntityStatus entityStatusOne;
+	public EntityStatus entityStatusTwo;
+	public EntityStatus entityStatusTree;
+	public EntityStatus entityStatusFour;
+	public EntityStatus entityStatusFive;
 
 	@BeforeAll
 	void setupOnce() {
@@ -75,8 +81,46 @@ class SaveFlushTests {
 
 	@Test
 	@Order(1)
-	void contextLoads() {
+	void contextLoads() throws Exception {
+
 		assertNotNull(crudJpaController);
+
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityStatus";
+
+		entityStatusOne = gerarEntityStatus("Status One", true, 0);
+		String json = objectMapper.writeValueAsString(entityStatusOne);
+		List<String> responses = postJson(url, json, null);
+		entityStatusOne = objectMapper.readValue(responses.get(1), EntityStatus.class);
+		assertEquals(responses.get(0), HttpStatus.OK.toString());
+		assertNotNull(entityStatusOne.getId());
+
+		entityStatusTwo = gerarEntityStatus("Status Two", false, 1);
+		json = objectMapper.writeValueAsString(entityStatusTwo);
+		responses = postJson(url, json, null);
+		entityStatusTwo = objectMapper.readValue(responses.get(1), EntityStatus.class);
+		assertEquals(responses.get(0), HttpStatus.OK.toString());
+		assertNotNull(entityStatusTwo.getId());
+
+		entityStatusTree = gerarEntityStatus("Status Tree", true, 0);
+		json = objectMapper.writeValueAsString(entityStatusTree);
+		responses = postJson(url, json, null);
+		entityStatusTree = objectMapper.readValue(responses.get(1), EntityStatus.class);
+		assertEquals(responses.get(0), HttpStatus.OK.toString());
+		assertNotNull(entityStatusTree.getId());
+
+		entityStatusFour = gerarEntityStatus("Status Four", false, 1);
+		json = objectMapper.writeValueAsString(entityStatusFour);
+		responses = postJson(url, json, null);
+		entityStatusFour = objectMapper.readValue(responses.get(1), EntityStatus.class);
+		assertEquals(responses.get(0), HttpStatus.OK.toString());
+		assertNotNull(entityStatusFour.getId());
+
+		entityStatusFive = gerarEntityStatus("Status Five", false, 0);
+		json = objectMapper.writeValueAsString(entityStatusFive);
+		responses = postJson(url, json, null);
+		entityStatusFive = objectMapper.readValue(responses.get(1), EntityStatus.class);
+		assertEquals(responses.get(0), HttpStatus.OK.toString());
+		assertNotNull(entityStatusFive.getId());
 	}
 
 	@Test
@@ -145,12 +189,12 @@ class SaveFlushTests {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne/" + id;
 
-		EntityOne entity = getSingleResult(url, new ErrorResponse());
+		entityOne = getSingleResult(url, new ErrorResponse());
 
-		assertNotNull(entity);
-		assertEquals("Ricardo", entity.getName());
-		assertEquals(22, entity.getAge());
-		assertEquals(1.80, entity.getHeight());
+		assertNotNull(entityOne);
+		assertEquals("Ricardo", entityOne.getName());
+		assertEquals(22, entityOne.getAge());
+		assertEquals(1.80, entityOne.getHeight());
 	}
 
 	@Test
@@ -196,16 +240,18 @@ class SaveFlushTests {
 		localTime[4] = "2024-01-10T19:14:10";
 
 		EntityOne entityOne = gerarEntity(text, inteiro, dobro, localDate, localTime);
-
-		entityOne.setId(id);
+		
+		entityOne.setId(this.entityOne.getId()); 
+		entityOne.getEntityTwo().setId(this.entityOne.getEntityTwo().getId()); 
+		entityOne.getEntityTwo().getEntityTree().setId(this.entityOne.getEntityTwo().getEntityTree().getId()); 
+		entityOne.getEntityTwo().getEntityTree().getEntityFour().setId(this.entityOne.getEntityTwo().getEntityTree().getEntityFour().getId()); 
+		entityOne.getEntityTwo().getEntityTree().getEntityFour().getEntityFive().setId(this.entityOne.getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getId()); 
 
 		String json = objectMapper.writeValueAsString(entityOne);
 
 		List<String> responses = postJson(url, json, new ErrorResponse());
 
 		EntityOne entity = objectMapper.readValue(responses.get(1), EntityOne.class);
-
-		id = entity.getId();
 
 		assertEquals(responses.get(0), HttpStatus.OK.toString());
 		assertNotNull(entity.getId());
@@ -219,14 +265,14 @@ class SaveFlushTests {
 	@Order(5)
 	void teste_04() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne/" + id;
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne/" + entityOne.getId();
 
-		EntityOne entity = getSingleResult(url, new ErrorResponse());
+		entityOne = getSingleResult(url, new ErrorResponse());
 
-		assertNotNull(entity);
-		assertEquals("Manolo", entity.getName());
-		assertEquals(70, entity.getAge());
-		assertEquals(1.40, entity.getHeight());
+		assertNotNull(entityOne);
+		assertEquals("Manolo", entityOne.getName());
+		assertEquals(70, entityOne.getAge());
+		assertEquals(1.40, entityOne.getHeight());
 	}
 
 	@Test
@@ -521,8 +567,7 @@ class SaveFlushTests {
 	@Order(9)
 	void teste_08() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING
-				+ "/single/EntityOne?name=Marcelo&name_op=eq";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/single/EntityOne?name=Malaquias&name_op=eq";
 
 		EntityOne entity = getSingleResult(url, new ErrorResponse());
 
@@ -591,8 +636,7 @@ class SaveFlushTests {
 	@Order(11)
 	void teste_10() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING
-				+ "/single/EntityOne?name=Marcelo&name_op=eq";
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/single/EntityOne?name=Maria&name_op=eq";
 
 		EntityOne entity = getSingleResult(url, new ErrorResponse());
 
@@ -602,59 +646,54 @@ class SaveFlushTests {
 	public EntityOne gerarEntity(String[] text, Integer[] inteiro, Double[] dobro, String[] localDate,
 			String[] localTime) {
 
-		EntityStatus entityStatus = gerarEntityStatus("entityOne status", true, 1, "1993-10-10T19:14:10");
-
 		EntityOne entityOne = new EntityOne();
 		entityOne.setName(text[0]);
 		entityOne.setAge(inteiro[0]);
 		entityOne.setHeight(dobro[0]);
 		entityOne.setBirthDate(geraLocalDate(localDate[0]));
 		entityOne.setProhibitedDateTime(geraDataLocalTime(localTime[0]));
-		entityOne.setEntityStatus(entityStatus);
+		entityOne.setEntityStatus(entityStatusOne);
 
 		EntityTwo entityTwo = new EntityTwo();
-		entityTwo.setId(UUID.randomUUID().toString());
 		entityTwo.setColor(text[1]);
 		entityTwo.setHex(inteiro[1]);
 		entityTwo.setCost(dobro[1]);
 		entityTwo.setInclusionDate(geraLocalDate(localDate[1]));
-		entityTwo.setEntityStatus(entityStatus);
-		entityOne.setEntityTwo(entityTwo);
+		entityTwo.setEntityStatus(entityStatusTwo);
 
 		EntityTree entityTree = new EntityTree();
-		entityTree.setId(UUID.randomUUID().toString());
 		entityTree.setAnimal(text[2]);
 		entityTree.setIndicator(inteiro[2]);
 		entityTree.setAmount(dobro[2]);
 		entityTree.setLocalDate(geraLocalDate(localDate[2]));
 		entityTree.setLocalDateTime(geraDataLocalTime(localTime[2]));
-		entityTree.setEntityStatus(entityStatus);
-		entityTwo.setEntityTree(entityTree);
+		entityTree.setEntityStatus(entityStatusTree);
 
 		EntityFour entityFour = new EntityFour();
-		entityFour.setId(UUID.randomUUID().toString());
 		entityFour.setFruit(text[3]);
 		entityFour.setAttribute(inteiro[3]);
 		entityFour.setInclusionDateTime(geraDataLocalTime(localTime[3]));
-		entityFour.setEntityStatus(entityStatus);
-		entityTree.setEntityFour(entityFour);
+		entityFour.setEntityStatus(entityStatusFour);
 
 		EntityFive entityFive = new EntityFive();
-		entityFive.setId(UUID.randomUUID().toString());
 		entityFive.setReference(text[4]);
 		entityFive.setFactor(inteiro[4]);
-		entityFive.setEntityStatus(entityStatus);
+		entityFive.setEntityStatus(entityStatusFive);
+
+		entityOne.setEntityTwo(entityTwo);
+		entityTwo.setEntityTree(entityTree);
+		entityTree.setEntityFour(entityFour);
 		entityFour.setEntityFive(entityFive);
 
 		return entityOne;
 	}
 
-	public EntityStatus gerarEntityStatus(String name, Boolean ativo, Integer status, String localTime) {
+	public EntityStatus gerarEntityStatus(String name, Boolean ativo, Integer status) {
 
 		EntityStatus entityStatus = new EntityStatus();
 		entityStatus.setAtivo(ativo);
 		entityStatus.setName(name);
-		entityStatus.setStartDateTime(geraDataLocalTime(localTime));
+		entityStatus.setStartDateTime(LocalDateTime.now());
 		entityStatus.setStatus(status);
 
 		return entityStatus;

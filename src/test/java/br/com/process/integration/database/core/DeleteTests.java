@@ -94,6 +94,17 @@ class DeleteTests {
 		
 	    assertThrows(RuntimeException.class, () -> delete(url, errorResponse));
 	}
+	
+	@Test
+	@Order(6)
+	void teste_05() {
+
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityStatus";
+
+		String statusCode = delete(url, new ErrorResponse());
+
+		assertEquals(statusCode, HttpStatus.OK.toString());
+	}
 
 	public String delete(String url, ErrorResponse compare) {
 		HttpHeaders headers = new HttpHeaders();

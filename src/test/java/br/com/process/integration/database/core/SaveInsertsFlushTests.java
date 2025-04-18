@@ -9,10 +9,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -59,22 +59,69 @@ class SaveInsertsFlushTests {
 	@Autowired
 	private ObjectMapper objectMapper;
 
-	static Long id;
-	static List<Long> ids;
+	public static Long id;
+	public static List<Long> ids;
+
+	public EntityStatus entityStatusOne;
+	public EntityStatus entityStatusTwo;
+	public EntityStatus entityStatusTree;
+	public EntityStatus entityStatusFour;
+	public EntityStatus entityStatusFive;
 
 	@BeforeAll
 	void setupOnce() {
+
 		if (ids == null) {
 			ids = new ArrayList<>();
 		}
 	}
 
 	@Test
-	void contextLoads() {
+	@Order(1)
+	void contextLoads() throws Exception {
+
 		assertNotNull(crudJpaController);
+
+		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityStatus";
+
+		entityStatusOne = gerarEntityStatus("Status One", true, 0);
+		String json = objectMapper.writeValueAsString(entityStatusOne);
+		List<String> responses = postJson(url, json, null);
+		entityStatusOne = objectMapper.readValue(responses.get(1), EntityStatus.class);
+		assertEquals(responses.get(0), HttpStatus.OK.toString());
+		assertNotNull(entityStatusOne.getId());
+
+		entityStatusTwo = gerarEntityStatus("Status Two", false, 1);
+		json = objectMapper.writeValueAsString(entityStatusTwo);
+		responses = postJson(url, json, null);
+		entityStatusTwo = objectMapper.readValue(responses.get(1), EntityStatus.class);
+		assertEquals(responses.get(0), HttpStatus.OK.toString());
+		assertNotNull(entityStatusTwo.getId());
+
+		entityStatusTree = gerarEntityStatus("Status Tree", true, 0);
+		json = objectMapper.writeValueAsString(entityStatusTree);
+		responses = postJson(url, json, null);
+		entityStatusTree = objectMapper.readValue(responses.get(1), EntityStatus.class);
+		assertEquals(responses.get(0), HttpStatus.OK.toString());
+		assertNotNull(entityStatusTree.getId());
+
+		entityStatusFour = gerarEntityStatus("Status Four", false, 1);
+		json = objectMapper.writeValueAsString(entityStatusFour);
+		responses = postJson(url, json, null);
+		entityStatusFour = objectMapper.readValue(responses.get(1), EntityStatus.class);
+		assertEquals(responses.get(0), HttpStatus.OK.toString());
+		assertNotNull(entityStatusFour.getId());
+
+		entityStatusFive = gerarEntityStatus("Status Five", false, 0);
+		json = objectMapper.writeValueAsString(entityStatusFive);
+		responses = postJson(url, json, null);
+		entityStatusFive = objectMapper.readValue(responses.get(1), EntityStatus.class);
+		assertEquals(responses.get(0), HttpStatus.OK.toString());
+		assertNotNull(entityStatusFive.getId());
 	}
 
 	@Test
+	@Order(2)
 	void teste_01() throws Exception {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/flush/EntityOne";
@@ -136,6 +183,7 @@ class SaveInsertsFlushTests {
 	}
 
 	@Test
+	@Order(3)
 	void teste_02() throws Exception {
 
 		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/all/flush/EntityOne";
@@ -852,63 +900,54 @@ class SaveInsertsFlushTests {
 	public EntityOne gerarEntity(String[] text, Integer[] inteiro, Double[] dobro, String[] localDate,
 			String[] localTime) {
 
-		EntityStatus entityStatus = gerarEntityStatus("entityOne status", true, 1, "1993-10-10T19:14:10");
-		
 		EntityOne entityOne = new EntityOne();
 		entityOne.setName(text[0]);
 		entityOne.setAge(inteiro[0]);
 		entityOne.setHeight(dobro[0]);
 		entityOne.setBirthDate(geraLocalDate(localDate[0]));
 		entityOne.setProhibitedDateTime(geraDataLocalTime(localTime[0]));
-		entityOne.setEntityStatus(entityStatus);
-		
-		entityStatus = gerarEntityStatus("entityTwo status", false, 2, "1994-11-15T21:14:10");
+		entityOne.setEntityStatus(entityStatusOne);
+
 		EntityTwo entityTwo = new EntityTwo();
-		entityTwo.setId(UUID.randomUUID().toString());
 		entityTwo.setColor(text[1]);
 		entityTwo.setHex(inteiro[1]);
 		entityTwo.setCost(dobro[1]);
 		entityTwo.setInclusionDate(geraLocalDate(localDate[1]));
-		entityTwo.setEntityStatus(entityStatus);
-		entityOne.setEntityTwo(entityTwo);
+		entityTwo.setEntityStatus(entityStatusTwo);
 
-		entityStatus = gerarEntityStatus("entityTree status", true, 3, "1993-10-10T19:14:10");
 		EntityTree entityTree = new EntityTree();
-		entityTree.setId(UUID.randomUUID().toString());
 		entityTree.setAnimal(text[2]);
 		entityTree.setIndicator(inteiro[2]);
 		entityTree.setAmount(dobro[2]);
 		entityTree.setLocalDate(geraLocalDate(localDate[2]));
 		entityTree.setLocalDateTime(geraDataLocalTime(localTime[2]));
-		entityTree.setEntityStatus(entityStatus);
-		entityTwo.setEntityTree(entityTree);
+		entityTree.setEntityStatus(entityStatusTree);
 
-		entityStatus = gerarEntityStatus("entityFour status", true, 4, "2015-09-10T19:31:10");
 		EntityFour entityFour = new EntityFour();
-		entityFour.setId(UUID.randomUUID().toString());
 		entityFour.setFruit(text[3]);
 		entityFour.setAttribute(inteiro[3]);
 		entityFour.setInclusionDateTime(geraDataLocalTime(localTime[3]));
-		entityFour.setEntityStatus(entityStatus);
-		entityTree.setEntityFour(entityFour);
+		entityFour.setEntityStatus(entityStatusFour);
 
-		entityStatus = gerarEntityStatus("entityFive status", false, 5, "2011-05-14T07:11:10");
 		EntityFive entityFive = new EntityFive();
-		entityFive.setId(UUID.randomUUID().toString());
 		entityFive.setReference(text[4]);
 		entityFive.setFactor(inteiro[4]);
-		entityFive.setEntityStatus(entityStatus);
+		entityFive.setEntityStatus(entityStatusFive);
+
+		entityOne.setEntityTwo(entityTwo);
+		entityTwo.setEntityTree(entityTree);
+		entityTree.setEntityFour(entityFour);
 		entityFour.setEntityFive(entityFive);
 
 		return entityOne;
 	}
 
-	public EntityStatus gerarEntityStatus(String name, Boolean ativo, Integer status, String localTime) {
+	public EntityStatus gerarEntityStatus(String name, Boolean ativo, Integer status) {
 
 		EntityStatus entityStatus = new EntityStatus();
 		entityStatus.setAtivo(ativo);
 		entityStatus.setName(name);
-		entityStatus.setStartDateTime(geraDataLocalTime(localTime));
+		entityStatus.setStartDateTime(LocalDateTime.now());
 		entityStatus.setStatus(status);
 
 		return entityStatus;
@@ -919,11 +958,8 @@ class SaveInsertsFlushTests {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
 		HttpEntity<String> requestEntity = new HttpEntity<>(json, headers);
-
 		List<String> responses = new ArrayList<>();
-
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
-
 		if (response.getStatusCode().is2xxSuccessful()) {
 			responses.add(response.getStatusCode().toString());
 			responses.add(response.getBody());

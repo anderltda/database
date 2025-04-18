@@ -13,8 +13,11 @@ import br.com.process.integration.database.core.util.Constants;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -24,6 +27,7 @@ import jakarta.persistence.Table;
 public class EntityFour extends RepresentationModel<EntityFour> implements BeanEntity<String> {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.UUID) 
 	@Column(name = "id_entity_four")
 	private String id;
 
@@ -41,7 +45,7 @@ public class EntityFour extends RepresentationModel<EntityFour> implements BeanE
 	@JoinColumn(name = "id_entity_five", nullable = false, referencedColumnName = "id_entity_five")
 	private EntityFive entityFive;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "id_entity_status", nullable = false, referencedColumnName = "id_entity_status")
 	private EntityStatus entityStatus;
 

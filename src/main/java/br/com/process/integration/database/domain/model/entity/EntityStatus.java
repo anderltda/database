@@ -23,7 +23,7 @@ import jakarta.persistence.Table;
 public class EntityStatus extends RepresentationModel<EntityStatus> implements BeanEntity<Long> {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_entity_status")
 	private Long id;
 

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.process.integration.database.core.domain.BeanEntity;
 import br.com.process.integration.database.core.exception.CheckedException;
@@ -25,6 +26,15 @@ import br.com.process.integration.database.core.util.Constants;
 @RestController
 @RequestMapping("/v1/database")
 public class CrudJpaController extends AbstractController {
+	
+	private final ObjectMapper objectMapper;
+
+	/**
+	 * @param objectMapper
+	 */
+	public CrudJpaController(ObjectMapper objectMapper) {
+		this.objectMapper = objectMapper;
+	}
 
 	@DeleteMapping(value = "/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<String> deleteAllOrById(@PathVariable String entity,
@@ -72,8 +82,7 @@ public class CrudJpaController extends AbstractController {
 
 		BeanEntity<?> entityFound = createEntity(entity, jsonNode);
 
-		methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity),
-				Constants.METHOD_SAVE_AND_FLUSH);
+		methodInvoker.invokeMethodWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_SAVE_AND_FLUSH);
 
 		return new ResponseEntity<>(entityFound, HttpStatus.OK);
 
@@ -103,7 +112,7 @@ public class CrudJpaController extends AbstractController {
 
 		BeanEntity<?> entityFound = (BeanEntity<?>) MethodReflection.findEntityUsingClassLoader(entity);
 
-		MethodReflection.transformsJsonModel(jsonNode, entityFound);
+		entityFound = (BeanEntity<?>) objectMapper.convertValue(jsonNode, entityFound.getClass());
 
 		setEntity(entity, entityFound);
 

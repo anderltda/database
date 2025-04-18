@@ -18,6 +18,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -27,7 +28,7 @@ import jakarta.persistence.Table;
 public class EntityOne extends RepresentationModel<EntityOne> implements BeanEntity<Long> {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_entity_one")
 	private Long id;
 
@@ -55,7 +56,7 @@ public class EntityOne extends RepresentationModel<EntityOne> implements BeanEnt
 	@JoinColumn(name = "id_entity_two", nullable = false, referencedColumnName = "id_entity_two")
 	private EntityTwo entityTwo;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "id_entity_status", nullable = false, referencedColumnName = "id_entity_status")
 	private EntityStatus entityStatus;
 
