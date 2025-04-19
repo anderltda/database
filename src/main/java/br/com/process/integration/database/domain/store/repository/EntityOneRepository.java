@@ -22,6 +22,7 @@ public interface EntityOneRepository extends JpaRepository<EntityOne, Long>, Jpa
 	public static final String QUERY_4 = "select count(e) from EntityOne e where e.prohibitedDateTime >=(?1)";
 	public static final String QUERY_5 = "select count(e) from EntityOne e where e.age >=(?1)";
 	public static final String QUERY_6 = "select e from EntityOne e where e.age =(?1)";
+	public static final String QUERY_7 = "select e from EntityOne e where e.code =(?1)";
 
 	@Query(QUERY_1)
 	EntityOne buscaComEqualPeloName(String name);
@@ -31,6 +32,9 @@ public interface EntityOneRepository extends JpaRepository<EntityOne, Long>, Jpa
 	
 	@Query(value = QUERY_2)
 	Page<EntityOne> buscaAll(PageRequest pageRequest);
+	
+	@Query(value = QUERY_7)
+	Page<EntityOne> buscaAllParam(Boolean code, PageRequest pageRequest);
 
 	@Query(QUERY_3)
 	EntityOne buscaComLikePeloName(String name, Double height);

@@ -269,8 +269,18 @@ public abstract class AbstractJpaService<E extends BeanEntity<?>, M extends Repr
 	
 	private static Sort createSortOrder(List<String> sortList, List<String> sortOrders) {
 		List<Sort.Order> orders = IntStream.range(0, sortList.size())
-				.mapToObj(i -> new Sort.Order(Sort.Direction.fromString(sortOrders.get(i)), sortList.get(i)))
-				.toList();
+			.filter(i -> {
+				boolean hasProperty = sortList.get(i) != null && !sortList.get(i).trim().isEmpty();
+				boolean hasDirection = sortOrders.size() > i && sortOrders.get(i) != null && !sortOrders.get(i).trim().isEmpty();
+				return hasProperty && hasDirection;
+			})
+			.mapToObj(i -> {
+				String property = sortList.get(i);
+				String direction = sortOrders.get(i);
+				return new Sort.Order(Sort.Direction.fromString(direction), property);
+			})
+			.toList();
+
 		return Sort.by(orders);
 	}
 }
