@@ -41,7 +41,7 @@ public abstract class AbstractDataService<D extends RepresentationModel<D>> exte
 	}
 
 	@Override
-	public int executeCount(Map<String, Object> filter, String method) {
+	public int count(Map<String, Object> filter, String method) {
 		try {
 			Object[] args = MethodReflection.getMethodArgs(mapper.getClass(), method, filter);
 			return (int) methodInvoker.invokeMethodReturnObjectWithParameters(
@@ -53,7 +53,7 @@ public abstract class AbstractDataService<D extends RepresentationModel<D>> exte
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public D executeSingle(Map<String, Object> filter, String method) {
+	public D findBySingle(Map<String, Object> filter, String method) {
 		try {
 			Object[] args = MethodReflection.getMethodArgs(mapper.getClass(), method, filter);
 			return (D) methodInvoker.invokeMethodReturnObjectWithParameters(
@@ -65,7 +65,7 @@ public abstract class AbstractDataService<D extends RepresentationModel<D>> exte
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<D> executeAll(Map<String, Object> filter, String method) {
+	public List<D> findAll(Map<String, Object> filter, String method) {
 		try {
 			
 			Object[] args = MethodReflection.getMethodArgs(mapper.getClass(), method, filter);
@@ -84,7 +84,7 @@ public abstract class AbstractDataService<D extends RepresentationModel<D>> exte
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public PagedModel executePaginator(Map<String, Object> filter, String method) {
+	public PagedModel findPaginator(Map<String, Object> filter, String method) {
 		try {
 			
 			int page = Integer.parseInt(filter.get(Constants.NAME_PAGE).toString());
@@ -94,14 +94,14 @@ public abstract class AbstractDataService<D extends RepresentationModel<D>> exte
 			
 			Pageable pageable = PageRequest.of(page, size);
 			
-	        List<D> entities = executeAll(filter, method);
+	        List<D> entities = findAll(filter, method);
 	        
 			filter.remove(Constants.NAME_PAGE);
 			filter.remove(Constants.NAME_SIZE);
 			filter.remove(Constants.SORT_LIST);
 			filter.remove(Constants.SORT_ORDERS);
 	        
-	        int count = executeCount(filter, getCountMethod(method));
+	        int count = count(filter, getCountMethod(method));
 	        
 	        pages = new PageImpl<>(entities, pageable, count);
 	        

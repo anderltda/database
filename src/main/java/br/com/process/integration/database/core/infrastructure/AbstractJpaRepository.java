@@ -30,6 +30,12 @@ import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
+/**
+ * @param <E>
+ * @param <I>
+ * @param <M>
+ * @param <R>
+ */
 @Repository
 public abstract class AbstractJpaRepository<E extends BeanEntity<?>, I, M extends RepresentationModel<M>, R extends JpaRepository<E, I>> extends AbstractAssembler<M> implements EntityRepository<E> {
 
@@ -58,12 +64,19 @@ public abstract class AbstractJpaRepository<E extends BeanEntity<?>, I, M extend
 	@PersistenceContext
 	private EntityManager entityManager;
 	
+	/**
+	 * @param controllerClass
+	 * @param resourceType
+	 */
 	protected AbstractJpaRepository(Class<?> controllerClass, Class<M> resourceType) {
 		super(controllerClass, resourceType);
 	}
 
-	@SuppressWarnings("unchecked")
+	/**
+	 *
+	 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<E> findByAll(Map<String, Object> filter, List<String> sortList, List<String> sortOrders) throws UncheckedException {
 
 		try {
@@ -88,8 +101,11 @@ public abstract class AbstractJpaRepository<E extends BeanEntity<?>, I, M extend
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	/**
+	 *
+	 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public Page<E> findByPageAll(Map<String, Object> filter, Pageable pageable) throws UncheckedException {
 
 		try {
@@ -119,8 +135,11 @@ public abstract class AbstractJpaRepository<E extends BeanEntity<?>, I, M extend
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	/**
+	 *
+	 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public Long countable(Map<String, Object> filter) {
 		try {
 			CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -134,8 +153,11 @@ public abstract class AbstractJpaRepository<E extends BeanEntity<?>, I, M extend
 		}
 	}
 
-	@SuppressWarnings("unchecked")
+	/**
+	 *
+	 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public E findSingle(Map<String, Object> filter) throws UncheckedException {
 		try {
 			CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -151,6 +173,13 @@ public abstract class AbstractJpaRepository<E extends BeanEntity<?>, I, M extend
 		}
 	}
 
+	/**
+	 * @param filter
+	 * @param criteriaBuilder
+	 * @param path
+	 * @return
+	 * @throws UncheckedException
+	 */
 	private List<Predicate> buildPredicates(Map<String, Object> filter, CriteriaBuilder criteriaBuilder, Path<E> path) throws UncheckedException {
 		List<Predicate> predicates = new ArrayList<>();
 		filter.forEach((key, value) -> {

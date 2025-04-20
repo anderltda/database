@@ -282,7 +282,9 @@ class JDBCTests {
 		        + Constants.API_NAME_REQUEST_MAPPING 
 		        + "/query/EntityOneView/teste_busca_com_condicoes_diversars?"
 		        + "prohibitedDateTime=2024-11-01T08:00:00&"
-		        + "prohibitedDateTime_op=eq";
+		        + "prohibitedDateTime_op=eq&"
+		        + "sortList=name&"
+		        + "sortOrders=desc";
 		
 		List<EntityOneView> list = getAll(url, new ErrorResponse());
 		
@@ -589,11 +591,11 @@ class JDBCTests {
 	    String url = PATH 
 	            + port 
 	            + Constants.API_NAME_REQUEST_MAPPING 
-	            + "//query/EntityOneView/teste_utilizando_group_by";
+	            + "/query/EntityOneView/teste_utilizando_group_by";
 	    
 	    List<EntityOneView> list = getAll(url, new ErrorResponse());
 	    
-	    assertNotNull(list);
+	    assertEquals(8, list.size());
 	}
 
 	@Test

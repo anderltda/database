@@ -7,12 +7,12 @@ import org.springframework.hateoas.PagedModel;
 
 public interface DataMapper<D> {
 	
-	int executeCount(Map<String, Object> filter, String method);
+	int count(Map<String, Object> filter, String method);
 
-	D executeSingle(Map<String, Object> filter, String method);
+	D findBySingle(Map<String, Object> filter, String method);
 	
-	List<D> executeAll(Map<String, Object> filter, String method);
+	List<D> findAll(Map<String, Object> filter, String method);
 
-	PagedModel<D> executePaginator(Map<String, Object> filter, String method);
+	PagedModel<D> findPaginator(Map<String, Object> filter, String method);
 
 }

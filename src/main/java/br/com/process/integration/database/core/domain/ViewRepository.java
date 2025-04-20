@@ -9,7 +9,7 @@ public interface ViewRepository<V> {
 
 	public int count(V view, Map<String, Object> filter, String fileQuery, String query) throws UncheckedException;
 
-	public V findSingle(V view, Map<String, Object> filter, String fileQuery, String query) throws UncheckedException;
+	public V findBySingle(V view, Map<String, Object> filter, String fileQuery, String query) throws UncheckedException;
 
 	public List<V> findAll(V view, Map<String, Object> filter, String fileQuery, String query) throws UncheckedException;
 

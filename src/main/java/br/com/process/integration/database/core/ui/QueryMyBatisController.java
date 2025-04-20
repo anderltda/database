@@ -31,7 +31,7 @@ public class QueryMyBatisController extends AbstractController {
 		setData(data);
 
 		Integer count = (int) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(data),
-				Constants.METHOD_EXECUTE__MAPPER_COUNT, filter, method);
+				Constants.METHOD_EXECUTE_MAPPER_COUNT, filter, method);
 
 		return new ResponseEntity<>(count, HttpStatus.OK);
 	}	

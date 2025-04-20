@@ -31,6 +31,9 @@ import br.com.process.integration.database.core.exception.UncheckedException;
 import br.com.process.integration.database.core.reflection.MethodReflection;
 import br.com.process.integration.database.core.util.Constants;
 
+/**
+ * 
+ */
 @Configuration
 @EnableConfigurationProperties
 @ConfigurationProperties("database")
@@ -53,14 +56,39 @@ public class ConfigQuery {
 		OPERADORES.put(Constants.HTML_BETWEEN, Constants.BETWEEN);
 	}
 
+	/**
+	 * @param view
+	 * @param filters
+	 * @param fileQuery
+	 * @param invokerQuery
+	 * @param mapSqlParameterSource
+	 * @return
+	 */
 	public String executeSQL(Class<?> view, Map<String, Object> filters, String fileQuery, String invokerQuery, MapSqlParameterSource mapSqlParameterSource) {
 		return executeQuery(view, filters, fileQuery, invokerQuery, mapSqlParameterSource, false);
 	}
 
+	/**
+	 * @param view
+	 * @param filters
+	 * @param fileQuery
+	 * @param invokerQuery
+	 * @param mapSqlParameterSource
+	 * @return
+	 */
 	public String executeCountSQL(Class<?> view, Map<String, Object> filters, String fileQuery, String invokerQuery, MapSqlParameterSource mapSqlParameterSource) {
 		return executeQuery(view, filters, fileQuery, invokerQuery, mapSqlParameterSource, true);
 	}
 
+	/**
+	 * @param view
+	 * @param filters
+	 * @param fileQuery
+	 * @param invokerQuery
+	 * @param mapSqlParameterSource
+	 * @param isCount
+	 * @return
+	 */
 	private String executeQuery(Class<?> view, Map<String, Object> filters, String fileQuery, String invokerQuery, MapSqlParameterSource mapSqlParameterSource, boolean isCount) {
 
 		StringBuilder sql = new StringBuilder();
@@ -201,6 +229,12 @@ public class ConfigQuery {
 		return sql.toString().trim() + Constants.WRITERSPACE;
 	}
 	
+	/**
+	 * @param filters
+	 * @param isCount
+	 * @param sql
+	 * @param query
+	 */
 	private void createOrderBy(Map<String, Object> filters, boolean isCount, StringBuilder sql, Query query) {
 		
 		if (!isCount && query.getOrderby() != null) {
@@ -217,6 +251,12 @@ public class ConfigQuery {
 		}
 	}
 
+	/**
+	 * @param filters
+	 * @param query
+	 * @param isOrderby
+	 * @return
+	 */
 	private String createSortOrders(Map<String, Object> filters, Query query, boolean isOrderby) {
 		
 		StringBuilder orderby = new StringBuilder();
@@ -244,6 +284,10 @@ public class ConfigQuery {
 		return orderby.substring(0, orderby.length()-1).trim();
 	}
 
+	/**
+	 * @param sql
+	 * @param query
+	 */
 	private void createGroupBy(StringBuilder sql, Query query) {
 		if (query.getGroupby() != null) {
 			sql.append(Constants.GROUP_BY + Constants.WRITERSPACE);
@@ -251,6 +295,11 @@ public class ConfigQuery {
 		}
 	}
 
+	/**
+	 * @param filters
+	 * @param sql
+	 * @param query
+	 */
 	private void createWhere(Map<String, Object> filters, StringBuilder sql, Query query) {
 		if (query.getWhere() != null) {
 			sql.append(Constants.WHERE + Constants.WRITERSPACE);
@@ -261,6 +310,11 @@ public class ConfigQuery {
 		}
 	}
 
+	/**
+	 * @param filters
+	 * @param sql
+	 * @param where
+	 */
 	private void createWhereValues(Map<String, Object> filters, StringBuilder sql, String where) {
 		Pattern pattern = Pattern.compile(":(?:[^():]*\\([^)]*\\))?([^:()\\s]+)");
 		Matcher matcher = pattern.matcher(where);
@@ -279,6 +333,11 @@ public class ConfigQuery {
 		}
 	}
 
+	/**
+	 * @param filters
+	 * @param where
+	 * @return
+	 */
 	private String createWhereOperator(Map<String, Object> filters, String where) {
 		Pattern pattern = Pattern.compile("\\{(.*?)\\}");
 		Matcher matcher = pattern.matcher(where);
@@ -292,12 +351,21 @@ public class ConfigQuery {
 		return where;
 	}
 
+	/**
+	 * @param sql
+	 * @param query
+	 */
 	private void createJoin(StringBuilder sql, Query query) {
 		if (query.getJoin() != null) {
 			query.getJoin().forEach(join -> sql.append(join + Constants.WRITERSPACE));
 		}
 	}
 
+	/**
+	 * @param isCount
+	 * @param sql
+	 * @param query
+	 */
 	private void createSelect(boolean isCount, StringBuilder sql, Query query) {
 		if (isCount) {
 			if(query.getGroupby() == null) {
@@ -316,6 +384,10 @@ public class ConfigQuery {
 		}
 	}
 	
+	/**
+	 * @param camelCase
+	 * @return
+	 */
 	private static String toSnakeCase(Object camelCase) {
 	    StringBuilder snakeCaseString = new StringBuilder();
 	    for (char c : camelCase.toString().toCharArray()) {
@@ -328,12 +400,23 @@ public class ConfigQuery {
 	    return snakeCaseString.toString();
 	}
 	
+	/**
+	 * @param file
+	 * @param name
+	 * @param value
+	 * @return
+	 */
 	private String alterPlaceholders(String file, String name, String value) {
 		ST st = new ST(file, '{', '}');
 		st.add(name, value);
 		return st.render();
 	}
 
+	/**
+	 * @param value
+	 * @return
+	 * @throws UncheckedException
+	 */
 	private List<Query> loadConfig(String value) throws UncheckedException {
 		try {
 			String string = "classpath:/querys/{file}.json";
@@ -347,6 +430,12 @@ public class ConfigQuery {
 		}
 	}
 
+	/**
+	 * @param fileQuery
+	 * @param invokerQuery
+	 * @return
+	 * @throws UncheckedException
+	 */
 	private Query getQuery(String fileQuery, String invokerQuery) throws UncheckedException {
 		try {
 			List<Query> querys = loadConfig(fileQuery);

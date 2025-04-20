@@ -95,8 +95,7 @@ public class QueryNativeController extends AbstractController {
 
 		setView(view);
 
-		PagedModel pagedModel = (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(view), Constants.METHOD_EXECUTE_QUERY_NATIVE_PAGINATOR, filter, queryName);
+		PagedModel pagedModel = (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(view), Constants.METHOD_EXECUTE_QUERY_NATIVE_PAGINATOR, filter, queryName);
 		
 		if (!pagedModel.getContent().isEmpty()) {
 			return ResponseEntity.ok(pagedModel);

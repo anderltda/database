@@ -22,33 +22,39 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 	private Double height;
 	private LocalDate birthDate;
 	private LocalDateTime prohibitedDateTime;
-	private Long count;
+
+	// EntityStatus
+	private Long idEntityStatus;
+	private String nameStatus;
+	private Integer status;
+	private Boolean ativo;
+	private LocalDateTime startDateTime;
 
 	// EntityTwo
 	private String idEntityTwo;
 	private String color;
 	private Integer hex;
 	private Double cost;
-	private LocalDate dateInclusion;
+	private LocalDate inclusionDate;
 
 	// EntityTree
 	private String idEntityTree;
 	private String animal;
-	private Integer number;
-	private Double value3;
-	private LocalDate dataLocal;
-	private LocalDateTime dataLocalTime;
+	private Integer indicator;
+	private Double amount;
+	private LocalDate localDate;
+	private LocalDateTime localDateTime;
 
 	// EntityFour
 	private String idEntityFour;
 	private String fruit;
-	private Integer nutritiou;
-	private LocalDateTime dateInclusionTime;
+	private Integer attribute;
+	private LocalDateTime inclusionDateTime;
 
 	// EntityFive
 	private String idEntityFive;
-	private String object;
-	private Integer value5;
+	private String reference;
+	private Integer factor;
 
 	@Override
 	@JsonIgnore
@@ -112,12 +118,44 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 		this.prohibitedDateTime = prohibitedDateTime;
 	}
 
-	public Long getCount() {
-		return count;
+	public Long getIdEntityStatus() {
+		return idEntityStatus;
 	}
 
-	public void setCount(Long count) {
-		this.count = count;
+	public void setIdEntityStatus(Long idEntityStatus) {
+		this.idEntityStatus = idEntityStatus;
+	}
+
+	public String getNameStatus() {
+		return nameStatus;
+	}
+
+	public void setNameStatus(String nameStatus) {
+		this.nameStatus = nameStatus;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public Boolean getAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
+	}
+
+	public LocalDateTime getStartDateTime() {
+		return startDateTime;
+	}
+
+	public void setStartDateTime(LocalDateTime startDateTime) {
+		this.startDateTime = startDateTime;
 	}
 
 	public String getIdEntityTwo() {
@@ -152,12 +190,12 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 		this.cost = cost;
 	}
 
-	public LocalDate getDateInclusion() {
-		return dateInclusion;
+	public LocalDate getInclusionDate() {
+		return inclusionDate;
 	}
 
-	public void setDateInclusion(LocalDate dateInclusion) {
-		this.dateInclusion = dateInclusion;
+	public void setInclusionDate(LocalDate inclusionDate) {
+		this.inclusionDate = inclusionDate;
 	}
 
 	public String getIdEntityTree() {
@@ -176,36 +214,36 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 		this.animal = animal;
 	}
 
-	public Integer getNumber() {
-		return number;
+	public Integer getIndicator() {
+		return indicator;
 	}
 
-	public void setNumber(Integer number) {
-		this.number = number;
+	public void setIndicator(Integer indicator) {
+		this.indicator = indicator;
 	}
 
-	public Double getValue3() {
-		return value3;
+	public Double getAmount() {
+		return amount;
 	}
 
-	public void setValue3(Double value3) {
-		this.value3 = value3;
+	public void setAmount(Double amount) {
+		this.amount = amount;
 	}
 
-	public LocalDate getDataLocal() {
-		return dataLocal;
+	public LocalDate getLocalDate() {
+		return localDate;
 	}
 
-	public void setDataLocal(LocalDate dataLocal) {
-		this.dataLocal = dataLocal;
+	public void setLocalDate(LocalDate localDate) {
+		this.localDate = localDate;
 	}
 
-	public LocalDateTime getDataLocalTime() {
-		return dataLocalTime;
+	public LocalDateTime getLocalDateTime() {
+		return localDateTime;
 	}
 
-	public void setDataLocalTime(LocalDateTime dataLocalTime) {
-		this.dataLocalTime = dataLocalTime;
+	public void setLocalDateTime(LocalDateTime localDateTime) {
+		this.localDateTime = localDateTime;
 	}
 
 	public String getIdEntityFour() {
@@ -224,20 +262,20 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 		this.fruit = fruit;
 	}
 
-	public Integer getNutritiou() {
-		return nutritiou;
+	public Integer getAttribute() {
+		return attribute;
 	}
 
-	public void setNutritiou(Integer nutritiou) {
-		this.nutritiou = nutritiou;
+	public void setAttribute(Integer attribute) {
+		this.attribute = attribute;
 	}
 
-	public LocalDateTime getDateInclusionTime() {
-		return dateInclusionTime;
+	public LocalDateTime getInclusionDateTime() {
+		return inclusionDateTime;
 	}
 
-	public void setDateInclusionTime(LocalDateTime dateInclusionTime) {
-		this.dateInclusionTime = dateInclusionTime;
+	public void setInclusionDateTime(LocalDateTime inclusionDateTime) {
+		this.inclusionDateTime = inclusionDateTime;
 	}
 
 	public String getIdEntityFive() {
@@ -248,29 +286,30 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 		this.idEntityFive = idEntityFive;
 	}
 
-	public String getObject() {
-		return object;
+	public String getReference() {
+		return reference;
 	}
 
-	public void setObject(String object) {
-		this.object = object;
+	public void setReference(String reference) {
+		this.reference = reference;
 	}
 
-	public Integer getValue5() {
-		return value5;
+	public Integer getFactor() {
+		return factor;
 	}
 
-	public void setValue5(Integer value5) {
-		this.value5 = value5;
+	public void setFactor(Integer factor) {
+		this.factor = factor;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(age, animal, birthDate, code, color, cost, count, dataLocal,
-				dataLocalTime, dateInclusion, dateInclusionTime, fruit, height, hex, idEntityFive, idEntityFour,
-				idEntityOne, idEntityTree, idEntityTwo, name, number, nutritiou, object, prohibitedDateTime, value3, value5);
+		result = prime * result + Objects.hash(age, amount, animal, ativo, attribute, birthDate, code, color, cost,
+				factor, fruit, height, hex, idEntityFive, idEntityFour, idEntityOne, idEntityStatus, idEntityTree,
+				idEntityTwo, inclusionDate, inclusionDateTime, indicator, localDate, localDateTime, name, nameStatus,
+				prohibitedDateTime, reference, startDateTime, status);
 		return result;
 	}
 
@@ -283,20 +322,23 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 		if (getClass() != obj.getClass())
 			return false;
 		EntityOneView other = (EntityOneView) obj;
-		return Objects.equals(age, other.age) && Objects.equals(animal, other.animal)
-				&& Objects.equals(birthDate, other.birthDate) && Objects.equals(code, other.code)
-				&& Objects.equals(color, other.color) && Objects.equals(cost, other.cost)
-				&& Objects.equals(count, other.count) && Objects.equals(dataLocal, other.dataLocal)
-				&& Objects.equals(dataLocalTime, other.dataLocalTime)
-				&& Objects.equals(dateInclusion, other.dateInclusion)
-				&& Objects.equals(dateInclusionTime, other.dateInclusionTime) && Objects.equals(fruit, other.fruit)
-				&& Objects.equals(height, other.height) && Objects.equals(hex, other.hex)
-				&& Objects.equals(idEntityFive, other.idEntityFive) && Objects.equals(idEntityFour, other.idEntityFour)
-				&& Objects.equals(idEntityOne, other.idEntityOne) && Objects.equals(idEntityTree, other.idEntityTree)
-				&& Objects.equals(idEntityTwo, other.idEntityTwo) && Objects.equals(name, other.name)
-				&& Objects.equals(number, other.number) && Objects.equals(nutritiou, other.nutritiou)
-				&& Objects.equals(object, other.object) && Objects.equals(prohibitedDateTime, other.prohibitedDateTime)
-				&& Objects.equals(value3, other.value3) && Objects.equals(value5, other.value5);
+		return Objects.equals(age, other.age) && Objects.equals(amount, other.amount)
+				&& Objects.equals(animal, other.animal) && Objects.equals(ativo, other.ativo)
+				&& Objects.equals(attribute, other.attribute) && Objects.equals(birthDate, other.birthDate)
+				&& Objects.equals(code, other.code) && Objects.equals(color, other.color)
+				&& Objects.equals(cost, other.cost) && Objects.equals(factor, other.factor)
+				&& Objects.equals(fruit, other.fruit) && Objects.equals(height, other.height)
+				&& Objects.equals(hex, other.hex) && Objects.equals(idEntityFive, other.idEntityFive)
+				&& Objects.equals(idEntityFour, other.idEntityFour) && Objects.equals(idEntityOne, other.idEntityOne)
+				&& Objects.equals(idEntityStatus, other.idEntityStatus)
+				&& Objects.equals(idEntityTree, other.idEntityTree) && Objects.equals(idEntityTwo, other.idEntityTwo)
+				&& Objects.equals(inclusionDate, other.inclusionDate)
+				&& Objects.equals(inclusionDateTime, other.inclusionDateTime)
+				&& Objects.equals(indicator, other.indicator) && Objects.equals(localDate, other.localDate)
+				&& Objects.equals(localDateTime, other.localDateTime) && Objects.equals(name, other.name)
+				&& Objects.equals(nameStatus, other.nameStatus)
+				&& Objects.equals(prohibitedDateTime, other.prohibitedDateTime)
+				&& Objects.equals(reference, other.reference) && Objects.equals(startDateTime, other.startDateTime)
+				&& Objects.equals(status, other.status);
 	}
-
 }

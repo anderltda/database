@@ -19,12 +19,11 @@ import br.com.process.integration.database.core.domain.query.DynamicRowMapper;
 import br.com.process.integration.database.core.exception.UncheckedException;
 import br.com.process.integration.database.core.util.Constants;
 
+/**
+ * @param <M>
+ */
 @Repository
 public abstract class AbstractJdbcRepository<M extends RepresentationModel<M>> extends AbstractAssembler<M> implements ViewRepository<M> {
-
-    protected AbstractJdbcRepository(Class<?> controllerClass, Class<M> resourceType) {
-        super(controllerClass, resourceType);
-    }
 
 	@Autowired
 	private ConfigQuery configQuery;
@@ -34,9 +33,20 @@ public abstract class AbstractJdbcRepository<M extends RepresentationModel<M>> e
 
 	private RowMapper<M> rowMapper = null;
 
-	@SuppressWarnings("unchecked")
+	/**
+	 * @param controllerClass
+	 * @param resourceType
+	 */
+	protected AbstractJdbcRepository(Class<?> controllerClass, Class<M> resourceType) {
+		super(controllerClass, resourceType);
+	}
+
+	/**
+	 *
+	 */
 	@Override
-	public M findSingle(M view, Map<String, Object> filters, String fileQuery, String query) throws UncheckedException {
+	@SuppressWarnings("unchecked")
+	public M findBySingle(M view, Map<String, Object> filters, String fileQuery, String query) throws UncheckedException {
 
 		try {
 
@@ -58,8 +68,11 @@ public abstract class AbstractJdbcRepository<M extends RepresentationModel<M>> e
 
 	}
 
-	@SuppressWarnings("unchecked")
+	/**
+	 *
+	 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<M> findAll(M view, Map<String, Object> filter, String fileQuery, String query) throws UncheckedException {
 
 		try {
@@ -79,8 +92,11 @@ public abstract class AbstractJdbcRepository<M extends RepresentationModel<M>> e
 		
 	}
 
-	@SuppressWarnings("unchecked")
+	/**
+	 *
+	 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public List<M> findAll(M view, Map<String, Object> filter, String fileQuery, String query, Integer page, Integer size) throws UncheckedException {
 
 		try {
@@ -107,6 +123,9 @@ public abstract class AbstractJdbcRepository<M extends RepresentationModel<M>> e
 		}
 	}
 
+	/**
+	 *
+	 */
 	@Override
 	public int count(M view, Map<String, Object> filter, String fileQuery, String query) throws UncheckedException {
 

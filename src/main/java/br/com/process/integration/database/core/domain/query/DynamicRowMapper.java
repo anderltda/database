@@ -11,14 +11,23 @@ import java.time.LocalTime;
 
 import org.springframework.jdbc.core.RowMapper;
 
+/**
+ * @param <T>
+ */
 public class DynamicRowMapper<T> implements RowMapper<T> {
 
 	private final Class<T> mappedClass;
 
+	/**
+	 * @param mappedClass
+	 */
 	public DynamicRowMapper(Class<T> mappedClass) {
 		this.mappedClass = mappedClass;
 	}
 
+	/**
+	 *
+	 */
 	@Override
 	public T mapRow(ResultSet rs, int rowNum) throws SQLException {
 
@@ -39,6 +48,11 @@ public class DynamicRowMapper<T> implements RowMapper<T> {
 		return instance;
 	}
 
+	/**
+	 * @param instance
+	 * @param fieldName
+	 * @param columnValue
+	 */
 	private void setFieldValue(T instance, String fieldName, Object columnValue) {
 
 		try {
@@ -55,6 +69,10 @@ public class DynamicRowMapper<T> implements RowMapper<T> {
 		}
 	}
 
+	/**
+	 * @param str
+	 * @return
+	 */
 	private String capitalize(String str) {
 		if (str == null || str.isEmpty()) {
 			return str;
@@ -62,6 +80,10 @@ public class DynamicRowMapper<T> implements RowMapper<T> {
 		return str.substring(0, 1).toUpperCase() + str.substring(1);
 	}
 
+	/**
+	 * @param columnName
+	 * @return
+	 */
 	private String convertToCamelCase(String columnName) {
 		StringBuilder result = new StringBuilder();
 		boolean toUpperCase = false;
@@ -79,6 +101,11 @@ public class DynamicRowMapper<T> implements RowMapper<T> {
 		return result.toString();
 	}
 
+	/**
+	 * @param field
+	 * @param columnValue
+	 * @return
+	 */
 	private Object convertToFieldType(Field field, Object columnValue) {
 		
 		Class<?> fieldType = field.getType();

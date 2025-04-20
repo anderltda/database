@@ -2,6 +2,9 @@ package br.com.process.integration.database.core.domain.query;
 
 import java.util.List;
 
+/**
+ * 
+ */
 public class Query {
 
 	private String name;

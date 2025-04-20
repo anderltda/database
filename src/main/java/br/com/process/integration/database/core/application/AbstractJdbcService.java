@@ -17,6 +17,9 @@ import br.com.process.integration.database.core.exception.UncheckedException;
 import br.com.process.integration.database.core.infrastructure.AbstractJdbcRepository;
 import br.com.process.integration.database.core.util.Constants;
 
+/**
+ * @param <V>
+ */
 @Service
 @Transactional
 public abstract class AbstractJdbcService<V extends RepresentationModel<V>> extends AbstractJdbcRepository<V> implements JdbcService<V> {
@@ -28,45 +31,55 @@ public abstract class AbstractJdbcService<V extends RepresentationModel<V>> exte
 	protected abstract void setView(V view);
 	protected abstract void setPagedModel();
 	
+	/**
+	 * @param controllerClass
+	 * @param resourceType
+	 */
 	protected AbstractJdbcService(Class<?> controllerClass, Class<V> resourceType) {
 		super(controllerClass, resourceType);
 	}
 
+	/**
+	 *
+	 */
 	@Override
-	public int executeQueryNativeCount(Map<String, Object> filter, String query) throws CheckedException {
+	public int count(Map<String, Object> filter, String query) throws CheckedException {
 		try {
 			return count(view, filter, this.getClass().getSimpleName(), query);
 		} catch (UncheckedException cuex) {
-			throw new CheckedException(cuex.getMessage(),
-					String.format("Falha ao executar metodo 'count' na classe %s com filters: %s e query-name: %s",
-							this.getClass().getSimpleName(), filter, query), cuex);
+			throw new CheckedException(cuex.getMessage(), String.format("Falha ao executar metodo 'count' na classe %s com filters: %s e query-name: %s", this.getClass().getSimpleName(), filter, query), cuex);
 		}
 	}
 
+	/**
+	 *
+	 */
 	@Override
-	public V executeQueryNativeSingle(Map<String, Object> filter, String query) throws CheckedException {
+	public V findBySingle(Map<String, Object> filter, String query) throws CheckedException {
 		try {
-			return findSingle(view, filter, this.getClass().getSimpleName(), query);
+			return findBySingle(view, filter, this.getClass().getSimpleName(), query);
 		} catch (UncheckedException cuex) {
-			throw new CheckedException(cuex.getMessage(), String.format(
-					"Falha ao executar metodo 'executeQueryNativeSingle' na classe %s com filters: %s e query-name: %s",
-					this.getClass().getSimpleName(), filter, query), cuex);
+			throw new CheckedException(cuex.getMessage(), String.format("Falha ao executar metodo 'executeQueryNativeSingle' na classe %s com filters: %s e query-name: %s", this.getClass().getSimpleName(), filter, query), cuex);
 		}
 	}
 
+	/**
+	 *
+	 */
 	@Override
-	public List<V> executeQueryNative(Map<String, Object> filter, String query) throws CheckedException {
+	public List<V> findAll(Map<String, Object> filter, String query) throws CheckedException {
 		try {
 			return findAll(view, filter, this.getClass().getSimpleName(), query);
 		} catch (UncheckedException cuex) {
-			throw new CheckedException(cuex.getMessage(), String.format(
-					"Falha ao executar metodo 'executeQueryNative' na classe %s com filters: %s e query-name: %s",
-					this.getClass().getSimpleName(), filter, query), cuex);
+			throw new CheckedException(cuex.getMessage(), String.format("Falha ao executar metodo 'executeQueryNative' na classe %s com filters: %s e query-name: %s", this.getClass().getSimpleName(), filter, query), cuex);
 		}
 	}
 
+	/**
+	 *
+	 */
 	@Override
-	public PagedModel<V> executeQueryNativePaginator(Map<String, Object> filter, String query) throws CheckedException {
+	public PagedModel<V> findPaginator(Map<String, Object> filter, String query) throws CheckedException {
 
 		try {
 
@@ -83,9 +96,7 @@ public abstract class AbstractJdbcService<V extends RepresentationModel<V>> exte
 			return pagedModel;
 
 		} catch (UncheckedException cuex) {
-			throw new CheckedException(cuex.getMessage(), String.format(
-					"Falha ao executar metodo 'executeQueryNativePaginator' na classe %s com filters: %s e query-name: %s",
-					this.getClass().getSimpleName(), filter, query), cuex);
+			throw new CheckedException(cuex.getMessage(), String.format("Falha ao executar metodo 'executeQueryNativePaginator' na classe %s com filters: %s e query-name: %s", this.getClass().getSimpleName(), filter, query), cuex);
 		}
 	}
 }
