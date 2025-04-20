@@ -256,7 +256,7 @@ class CriteriaTests {
 	                + "age=22,41&" 
 	                + "age_op=in";
 	    
-	    ErrorResponse errorResponse = new ErrorResponse("Query did not return a unique result: 3 results were returned", HttpStatus.BAD_REQUEST);
+	    ErrorResponse errorResponse = new ErrorResponse("Query did not return a unique result: 4 results were returned", HttpStatus.BAD_REQUEST);
 	    
 	    assertThrows(RuntimeException.class, () -> getSingleResult(url, errorResponse));
 	}
@@ -419,7 +419,7 @@ class CriteriaTests {
 	                + "age=55,12,22&"
 	                + "age_op=in";
 
-	    testes_single_parameterized_one(url, 4);
+	    testes_single_parameterized_one(url, 3);
 	}
 
 	@Test
@@ -456,11 +456,10 @@ class CriteriaTests {
 	    List<EntityOne> list = getAll(url, new ErrorResponse());
 
 	    assertNotNull(list);
-	    assertEquals(4, list.size());
+	    assertEquals(3, list.size());
 	    assertEquals("Paulo", list.get(0).getName());
-	    assertEquals("Carlos Alberto", list.get(1).getName());
-	    assertEquals("Carlos", list.get(2).getName());
-	    assertEquals("Maria", list.get(3).getName());
+	    assertEquals("Carlos", list.get(1).getName());
+	    assertEquals("Maria", list.get(2).getName());
 	}
 
 	@Test
@@ -493,12 +492,11 @@ class CriteriaTests {
 	    List<EntityOne> list = getAll(url, new ErrorResponse());
 
 	    assertNotNull(list);
-	    assertEquals(5, list.size());
+	    assertEquals(4, list.size());
 	    assertEquals("Maria", list.get(0).getName());
 	    assertEquals("Paulo", list.get(1).getName());
 	    assertEquals("Paulo Henrique", list.get(2).getName());
-	    assertEquals("Carlos Alberto", list.get(3).getName());
-	    assertEquals("Carlos", list.get(4).getName());
+	    assertEquals("Carlos", list.get(3).getName());
 	}
 
 	@Test
@@ -511,7 +509,7 @@ class CriteriaTests {
 	                + "height=1.86&"
 	                + "height_op=ge";
 	    
-	    testes_single_parameterized_one(url, 3);
+	    testes_single_parameterized_one(url, 4);
 	}
 
 	@Test
@@ -537,7 +535,7 @@ class CriteriaTests {
 	                + "height=1.87&"
 	                + "height_op=gt";
 
-	    testes_single_parameterized_one(url, 2);
+	    testes_single_parameterized_one(url, 3);
 	}
 
 	@Test
@@ -885,7 +883,7 @@ class CriteriaTests {
 	    
 	    Integer count = Integer.parseInt(getUniqueResult(url, new ErrorResponse()));
 	    
-	    assertEquals(4, count);
+	    assertEquals(5, count);
 	}
 
 	@Test

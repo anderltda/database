@@ -345,7 +345,7 @@ class CriteriaPaginatorTests {
 	        + "sortList=age&"
 	        + "sortOrders=desc";
 
-	    testes_single_parameterized_one(url, 4);
+	    testes_single_parameterized_one(url, 3);
 	}
 
 	@Test
@@ -380,11 +380,10 @@ class CriteriaPaginatorTests {
 	    List<EntityOne> list = getAll(url, new ErrorResponse());
 
 	    assertNotNull(list);
-	    assertEquals(4, list.size());
+	    assertEquals(3, list.size());
 	    assertEquals("Paulo", list.get(0).getName());
-	    assertEquals("Carlos Alberto", list.get(1).getName());
-	    assertEquals("Carlos", list.get(2).getName());
-	    assertEquals("Maria", list.get(3).getName());
+	    assertEquals("Carlos", list.get(1).getName());
+	    assertEquals("Maria", list.get(2).getName());
 	}
 
 	@Test
@@ -403,12 +402,11 @@ class CriteriaPaginatorTests {
 	    List<EntityOne> list = getAll(url, new ErrorResponse());
 
 	    assertNotNull(list);
-	    assertEquals(5, list.size());
+	    assertEquals(4, list.size());
 	    assertEquals("Maria", list.get(0).getName());
 	    assertEquals("Paulo", list.get(1).getName());
 	    assertEquals("Paulo Henrique", list.get(2).getName());
-	    assertEquals("Carlos Alberto", list.get(3).getName());
-	    assertEquals("Carlos", list.get(4).getName());
+	    assertEquals("Carlos", list.get(3).getName());
 	}
 
 	@Test
@@ -440,7 +438,7 @@ class CriteriaPaginatorTests {
 	        + "sortList=height&"
 	        + "sortOrders=desc";
 
-	    testes_single_parameterized_one(url, 3);
+	    testes_single_parameterized_one(url, 4);
 	}
 
 	@Test
@@ -456,7 +454,7 @@ class CriteriaPaginatorTests {
 	        + "sortList=height&"
 	        + "sortOrders=desc";
 
-	    testes_single_parameterized_one(url, 2);
+	    testes_single_parameterized_one(url, 3);
 	}
 
 	@Test

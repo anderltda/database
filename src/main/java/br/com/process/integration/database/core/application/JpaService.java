@@ -11,21 +11,21 @@ public interface JpaService<E, I> {
 
 	public int count(Map<String, Object> filter) throws CheckedException;
 
+	public int count(Map<String, Object> filter, String methodQueryJPQL) throws CheckedException;
+
+	public List<E> findAllById(List<I> ids);
+
 	public List<E> findAll(Map<String, Object> filter, List<String> sortList, List<String> sortOrders) throws CheckedException;
 
-	public PagedModel<E> findAll(Map<String, Object> filter, Integer page, Integer size, List<String> sortList, List<String> sortOrders) throws CheckedException;
-
 	public List<E> findAll(Map<String, Object> filter, String method) throws CheckedException;
+
+	public PagedModel<E> findPaginator(Map<String, Object> filter, Integer page, Integer size, List<String> sortList, List<String> sortOrders) throws CheckedException;
 
 	public PagedModel<E> findPaginator(Map<String, Object> filter, String method) throws CheckedException;
 
 	public E findBySingle(Map<String, Object> filter, String methodQueryJPQL) throws CheckedException;
 
 	public E findBySingle(Map<String, Object> filter) throws CheckedException;
-
-	public int count(Map<String, Object> filter, String methodQueryJPQL) throws CheckedException;
-
-	public List<E> findAllById(List<I> ids);
 
 	public E findById();
 

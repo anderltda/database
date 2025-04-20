@@ -74,7 +74,7 @@ class CriteriaJoinTests {
 	    assertEquals(2, list.size());
 	    assertEquals("Carlos Alberto", list.get(0).getName());
 	    assertEquals("Carlos", list.get(1).getName());
-	    assertEquals(234, list.get(0).getEntityTwo().getHex());
+	    assertEquals(10, list.get(0).getEntityTwo().getHex());
 	    assertEquals(144, list.get(1).getEntityTwo().getHex());
 	}
 

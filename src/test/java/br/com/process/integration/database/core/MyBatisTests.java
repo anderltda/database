@@ -245,7 +245,7 @@ class MyBatisTests {
 		assertEquals("Carlos", list.get(0).getName());
 		assertEquals(34, list.get(0).getAge());
 		assertEquals("Carlos Alberto", list.get(1).getName());
-		assertEquals(55, list.get(1).getAge());
+		assertEquals(41, list.get(1).getAge());
 		assertEquals("Maria", list.get(2).getName());
 		assertEquals(12, list.get(2).getAge());
 		assertEquals("Ricardo", list.get(3).getName());

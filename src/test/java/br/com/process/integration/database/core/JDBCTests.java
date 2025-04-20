@@ -402,7 +402,7 @@ class JDBCTests {
 		        + "age=55,12,22&"
 		        + "age_op=in";
 		
-		testes_single_parameterized_one(url, 4);
+		testes_single_parameterized_one(url, 3);
 	}
 
 	@Test
@@ -435,11 +435,10 @@ class JDBCTests {
 		List<EntityOneView> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
-		assertEquals(4, list.size());
+		assertEquals(3, list.size());
 		assertEquals("Paulo", list.get(0).getName());
-		assertEquals("Carlos Alberto", list.get(1).getName());
-		assertEquals("Carlos", list.get(2).getName());
-		assertEquals("Maria", list.get(3).getName());
+		assertEquals("Carlos", list.get(1).getName());
+		assertEquals("Maria", list.get(2).getName());
 	}
 
 	@Test
@@ -457,12 +456,11 @@ class JDBCTests {
 		List<EntityOneView> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
-		assertEquals(5, list.size());
+		assertEquals(4, list.size());
 		assertEquals("Maria", list.get(0).getName());
 		assertEquals("Paulo", list.get(1).getName());
 		assertEquals("Paulo Henrique", list.get(2).getName());
-		assertEquals("Carlos Alberto", list.get(3).getName());
-		assertEquals("Carlos", list.get(4).getName());
+		assertEquals("Carlos", list.get(3).getName());
 	}
 
 	@Test
@@ -477,7 +475,7 @@ class JDBCTests {
 		        + "sortList=birthDate&"
 		        + "sortOrders=desc";
 		
-		testes_single_parameterized_one(url, 3);
+		testes_single_parameterized_one(url, 4);
 	}
 
 	@Test
@@ -492,7 +490,7 @@ class JDBCTests {
 		        + "sortList=birthDate&"
 		        + "sortOrders=desc";
 		
-		testes_single_parameterized_one(url, 2);
+		testes_single_parameterized_one(url, 3);
 	}
 
 	@Test
@@ -757,7 +755,7 @@ class JDBCTests {
 	    List<EntityOneView> list = getAll(url, new ErrorResponse());
 	    
 	    assertNotNull(list);
-	    assertEquals(4, list.size());
+	    assertEquals(5, list.size());
 	}
 
 	@Test
@@ -825,7 +823,7 @@ class JDBCTests {
 	    
 	    Integer count = Integer.parseInt(getUniqueResult(url, new ErrorResponse()));
 	    
-	    assertEquals(4, count);
+	    assertEquals(5, count);
 	}
 	
 	void testes_single_parameterized_other(String url, String value, Integer size) {

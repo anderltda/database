@@ -248,25 +248,25 @@ class SaveTests {
 		String[] localTime = new String[5];
 
 		text[0] = "Carlos Alberto";
-		inteiro[0] = 55;
-		dobro[0] = 1.77;
-		localDate[0] = "09-22-1970";
-		localTime[0] = "2024-04-30T23:50:54";
+		inteiro[0] = 41;
+		dobro[0] = 1.93;
+		localDate[0] = "03-29-1983";
+		localTime[0] = "2025-04-19T23:52:24";
 
 		text[1] = "Preto";
-		inteiro[1] = 234;
-		dobro[1] = 25.5;
-		localDate[1] = "01-10-2024";
-		localTime[1] = "2024-10-07T16:40:43";
+		inteiro[1] = 10;
+		dobro[1] = 1432.52;
+		localDate[1] = "04-17-2025";
+		localTime[1] = "2025-04-17T16:40:43";
 
 		text[2] = "Capivara";
-		inteiro[2] = 33;
+		inteiro[2] = 11;
 		dobro[2] = 20.6;
 		localDate[2] = "01-05-2024";
 		localTime[2] = "2024-06-08T17:32:32";
 
 		text[3] = "Damasco";
-		inteiro[3] = 13;
+		inteiro[3] = 11;
 		dobro[3] = 33.1;
 		localDate[3] = "01-07-2024";
 		localTime[3] = "2024-04-09T18:23:21";
@@ -277,7 +277,14 @@ class SaveTests {
 		localDate[4] = "02-11-2024";
 		localTime[4] = "2024-04-10T19:24:12";
 
-		list.add(gerarEntity(text, inteiro, dobro, localDate, localTime));
+		EntityOne entityOne = gerarEntity(text, inteiro, dobro, localDate, localTime);
+		entityOne.setEntityStatus(entityStatusOne);
+		entityOne.getEntityTwo().setEntityStatus(entityStatusOne);
+		entityOne.getEntityTwo().getEntityTree().setEntityStatus(entityStatusOne);
+		entityOne.getEntityTwo().getEntityTree().getEntityFour().setEntityStatus(entityStatusOne);
+		entityOne.getEntityTwo().getEntityTree().getEntityFour().getEntityFive().setEntityStatus(entityStatusOne);
+		
+		list.add(entityOne);
 
 		text = new String[5];
 		inteiro = new Integer[5];

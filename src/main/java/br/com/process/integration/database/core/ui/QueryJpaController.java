@@ -31,13 +31,11 @@ public class QueryJpaController extends AbstractController {
 	 * public Long count(Map<String, Object> filter)
 	 */
 	@GetMapping(value = "/count/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<Integer> count(@PathVariable String entity,
-			@RequestParam(defaultValue = "") Map<String, Object> filter) throws CheckedException {
+	public ResponseEntity<Integer> count(@PathVariable String entity, @RequestParam(defaultValue = "") Map<String, Object> filter) throws CheckedException {
 
 		setEntity(entity);
 
-		Integer count = (int) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(entity), Constants.METHOD_COUNT, filter);
+		Integer count = (int) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_COUNT, filter);
 
 		return new ResponseEntity<>(count, HttpStatus.OK);
 	}
@@ -46,16 +44,13 @@ public class QueryJpaController extends AbstractController {
 	 * public E findBySingle(Map<String, Object> filter)
 	 */
 	@GetMapping(value = "/single/{entity}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<BeanEntity<?>> findBySingle(@PathVariable String entity,
-			@RequestParam(defaultValue = "") Map<String, Object> params) throws CheckedException {
+	public ResponseEntity<BeanEntity<?>> findBySingle(@PathVariable String entity, @RequestParam(defaultValue = "") Map<String, Object> params) throws CheckedException {
 
 		setEntity(entity);
 
-		BeanEntity<?> entityFound = (BeanEntity<?>) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(entity), Constants.METHOD_FIND_BY_SINGLE, params);
+		BeanEntity<?> entityFound = (BeanEntity<?>) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_FIND_BY_SINGLE, params);
 
 		if (entityFound != null) {
-
 			return new ResponseEntity<>(entityFound, HttpStatus.OK);
 		}
 
@@ -77,11 +72,9 @@ public class QueryJpaController extends AbstractController {
 
 		setEntity(entity);
 
-		List<BeanEntity<?>> list = (List<BeanEntity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL, filter, sortList, sortOrders);
+		List<BeanEntity<?>> list = (List<BeanEntity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL, filter, sortList, sortOrders);
 
 		if (!list.isEmpty()) {
-
 			return new ResponseEntity<>(list, HttpStatus.OK);
 		}
 
@@ -103,9 +96,7 @@ public class QueryJpaController extends AbstractController {
 
 		setEntity(entity);
 
-		PagedModel pagedModel = (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL, filter, page, size, sortList,
-				sortOrders);
+		PagedModel pagedModel = (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_FIND_PAGINATOR, filter, page, size, sortList, sortOrders);
 
 		if (!pagedModel.getContent().isEmpty()) {
 			return ResponseEntity.ok(pagedModel);
@@ -122,13 +113,11 @@ public class QueryJpaController extends AbstractController {
 	 * public Long count(Map<String, Object> filter, String method)
 	 */
 	@GetMapping(value = "/jpql/count/{entity}/{method}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<Integer> count(@PathVariable String entity, @RequestParam Map<String, Object> filter,
-			@PathVariable String method) throws CheckedException {
+	public ResponseEntity<Integer> count(@PathVariable String entity, @RequestParam Map<String, Object> filter, @PathVariable String method) throws CheckedException {
 
 		setEntity(entity);
 
-		Integer count = (int) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(entity), Constants.METHOD_COUNT, filter, method);
+		Integer count = (int) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_COUNT, filter, method);
 
 		return new ResponseEntity<>(count, HttpStatus.OK);
 	}
@@ -137,16 +126,13 @@ public class QueryJpaController extends AbstractController {
 	 * public E findBySingle(Map<String, Object> filter, String method)
 	 */
 	@GetMapping(value = "/jpql/single/{entity}/{method}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<BeanEntity<?>> findBySingle(@PathVariable String entity,
-			@RequestParam Map<String, Object> params, @PathVariable String method) throws CheckedException {
+	public ResponseEntity<BeanEntity<?>> findBySingle(@PathVariable String entity, @RequestParam Map<String, Object> params, @PathVariable String method) throws CheckedException {
 
 		setEntity(entity);
 
-		BeanEntity<?> entityFound = (BeanEntity<?>) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(entity), Constants.METHOD_FIND_BY_SINGLE, params, method);
+		BeanEntity<?> entityFound = (BeanEntity<?>) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_FIND_BY_SINGLE, params, method);
 
 		if (entityFound != null) {
-
 			return new ResponseEntity<>(entityFound, HttpStatus.OK);
 		}
 
@@ -158,18 +144,15 @@ public class QueryJpaController extends AbstractController {
 	 */
 	@SuppressWarnings("unchecked")
 	@GetMapping(value = "/jpql/{entity}/{method}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<List<BeanEntity<?>>> findAll(@PathVariable String entity,
-			@RequestParam Map<String, Object> filter, @PathVariable String method) throws CheckedException {
+	public ResponseEntity<List<BeanEntity<?>>> findAll(@PathVariable String entity, @RequestParam Map<String, Object> filter, @PathVariable String method) throws CheckedException {
 
 		addAjustOrderByFilter(filter);
 
 		setEntity(entity);
 
-		List<BeanEntity<?>> list = (List<BeanEntity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL, filter, method);
+		List<BeanEntity<?>> list = (List<BeanEntity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL, filter, method);
 
 		if (!list.isEmpty()) {
-
 			return new ResponseEntity<>(list, HttpStatus.OK);
 		}
 
@@ -181,16 +164,14 @@ public class QueryJpaController extends AbstractController {
 	 */
 	@SuppressWarnings({ "rawtypes" })
 	@GetMapping(value = "/jpql/paginator/{entity}/{method}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<PagedModel> paginator(@PathVariable String entity, @RequestParam Map<String, Object> filter,
-			@PathVariable String method) throws CheckedException {
+	public ResponseEntity<PagedModel> paginator(@PathVariable String entity, @RequestParam Map<String, Object> filter, @PathVariable String method) throws CheckedException {
 
 		addAjustPaginatorFilter(filter);
 		addAjustOrderByFilter(filter);
 
 		setEntity(entity);
 
-		PagedModel pagedModel = (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(entity), Constants.METHOD_FIND_PAGINATOR, filter, method);
+		PagedModel pagedModel = (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_FIND_PAGINATOR, filter, method);
 
 		if (!pagedModel.getContent().isEmpty()) {
 			return ResponseEntity.ok(pagedModel);
@@ -205,16 +186,13 @@ public class QueryJpaController extends AbstractController {
 
 	@SuppressWarnings("unchecked")
 	@GetMapping(value = "/{entity}/ids/{ids}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<List<BeanEntity<?>>> findAllIds(@PathVariable String entity, @PathVariable String ids)
-			throws CheckedException {
+	public ResponseEntity<List<BeanEntity<?>>> findAllIds(@PathVariable String entity, @PathVariable String ids) throws CheckedException {
 
 		List<Long> idList = Arrays.stream(ids.split(",")).map(Long::parseLong).toList();
 
-		List<BeanEntity<?>> list = (List<BeanEntity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL_BY_ID, idList);
+		List<BeanEntity<?>> list = (List<BeanEntity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL_BY_ID, idList);
 
 		if (!list.isEmpty()) {
-
 			return new ResponseEntity<>(list, HttpStatus.OK);
 		}
 
@@ -222,16 +200,13 @@ public class QueryJpaController extends AbstractController {
 	}
 
 	@GetMapping(value = "/{entity}/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<BeanEntity<?>> findById(@PathVariable String entity, @PathVariable String id)
-			throws CheckedException {
+	public ResponseEntity<BeanEntity<?>> findById(@PathVariable String entity, @PathVariable String id) throws CheckedException {
 
 		setId(entity, id);
 
-		BeanEntity<?> entityFound = (BeanEntity<?>) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(entity), Constants.METHOD_FIND_BY_ID);
+		BeanEntity<?> entityFound = (BeanEntity<?>) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_FIND_BY_ID);
 
 		if (entityFound != null) {
-
 			return new ResponseEntity<>(entityFound, HttpStatus.OK);
 		}
 
@@ -239,13 +214,11 @@ public class QueryJpaController extends AbstractController {
 	}
 
 	@GetMapping(value = "/exist/{entity}/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<Boolean> existsById(@PathVariable String entity, @PathVariable String id)
-			throws CheckedException {
+	public ResponseEntity<Boolean> existsById(@PathVariable String entity, @PathVariable String id) throws CheckedException {
 
 		setId(entity, id);
 
-		Boolean existsById = (Boolean) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(entity), Constants.METHOD_EXISTS_BY_ID);
+		Boolean existsById = (Boolean) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_EXISTS_BY_ID);
 
 		return new ResponseEntity<>(existsById, HttpStatus.OK);
 	}

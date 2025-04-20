@@ -290,7 +290,7 @@ class JPQLTests {
 
 		Long count = Long.parseLong(getUniqueResult(url, new ErrorResponse()));
 
-		assertEquals(4, count);
+		assertEquals(5, count);
 	}
 
 	@Test

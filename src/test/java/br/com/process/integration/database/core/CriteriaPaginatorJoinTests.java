@@ -496,7 +496,7 @@ class CriteriaPaginatorJoinTests {
 		assertEquals(2, list.size());
 		assertEquals("Carlos Alberto", list.get(0).getName());
 		assertEquals("Carlos", list.get(1).getName());
-		assertEquals(234, list.get(0).getEntityTwo().getHex());
+		assertEquals(10, list.get(0).getEntityTwo().getHex());
 		assertEquals(144, list.get(1).getEntityTwo().getHex());
 	}
 
@@ -518,10 +518,9 @@ class CriteriaPaginatorJoinTests {
 
 		assertNotNull(list);
 		assertEquals(8, list.size());
-		assertEquals("Renato", list.get(0).getName());
-		assertEquals("Carlos Alberto", list.get(1).getName());
-		assertEquals(8876, list.get(0).getEntityTwo().getHex());
-		assertEquals(234, list.get(1).getEntityTwo().getHex());
+		assertEquals("Carlos Alberto", list.get(0).getName());
+		assertEquals(10, list.get(0).getEntityTwo().getHex());
+		assertEquals(8876, list.get(1).getEntityTwo().getHex());
 	}
 
 	@Test
@@ -750,10 +749,9 @@ class CriteriaPaginatorJoinTests {
 		assertNotNull(list);
 		assertEquals(4, list.size());
 		assertEquals("Carlos", list.get(0).getName());
-		assertEquals("Carlos Alberto", list.get(1).getName());
-		assertEquals("Maria", list.get(2).getName());
-		assertEquals("Ricardo", list.get(3).getName());
-
+		assertEquals("Maria", list.get(1).getName());
+		assertEquals("Ricardo", list.get(2).getName());
+		assertEquals("Carlos Alberto", list.get(3).getName());
 	}
 
 	@Test
@@ -867,9 +865,8 @@ class CriteriaPaginatorJoinTests {
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
-		assertEquals(2, list.size());
+		assertEquals(1, list.size());
 		assertEquals("Carlos", list.get(0).getName());
-		assertEquals("Carlos Alberto", list.get(1).getName());
 	}
 
 	@Test
@@ -899,10 +896,9 @@ class CriteriaPaginatorJoinTests {
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
-		assertEquals(3, list.size());
+		assertEquals(2, list.size());
 		assertEquals("Carlos", list.get(0).getName());
-		assertEquals("Carlos Alberto", list.get(1).getName());
-		assertEquals("Maria", list.get(2).getName());
+		assertEquals("Maria", list.get(1).getName());
 	}
 
 	@Test
@@ -932,11 +928,10 @@ class CriteriaPaginatorJoinTests {
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
-		assertEquals(4, list.size());
-		assertEquals("Carlos Alberto", list.get(0).getName());
-		assertEquals("Carlos", list.get(1).getName());
-		assertEquals("Ricardo", list.get(2).getName());
-		assertEquals("Maria", list.get(3).getName());
+		assertEquals(3, list.size());
+		assertEquals("Carlos", list.get(0).getName());
+		assertEquals("Ricardo", list.get(1).getName());
+		assertEquals("Maria", list.get(2).getName());
 
 	}
 
@@ -973,11 +968,10 @@ class CriteriaPaginatorJoinTests {
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
-		assertEquals(4, list.size());
-		assertEquals("Carlos Alberto", list.get(0).getName());
-		assertEquals("Carlos", list.get(1).getName());
-		assertEquals("Ricardo", list.get(2).getName());
-		assertEquals("Maria", list.get(3).getName());
+		assertEquals(3, list.size());
+		assertEquals("Carlos", list.get(0).getName());
+		assertEquals("Ricardo", list.get(1).getName());
+		assertEquals("Maria", list.get(2).getName());
 	}
 
 	@Test

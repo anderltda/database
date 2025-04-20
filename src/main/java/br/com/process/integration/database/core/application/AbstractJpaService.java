@@ -77,7 +77,7 @@ public abstract class AbstractJpaService<E extends BeanEntity<?>, M extends Repr
 	}
 	
 	@Override
-	public PagedModel<E> findAll(Map<String, Object> filter, Integer page, Integer size, List<String> sortList, List<String> sortOrders) throws CheckedException {
+	public PagedModel<E> findPaginator(Map<String, Object> filter, Integer page, Integer size, List<String> sortList, List<String> sortOrders) throws CheckedException {
 		try {
 			Pageable pageable = PageRequest.of(page, size, createSortOrder(sortList, sortOrders));
 			pages = super.findByPageAll(filter, pageable);

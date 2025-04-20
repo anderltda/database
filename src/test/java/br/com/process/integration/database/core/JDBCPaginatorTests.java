@@ -201,7 +201,7 @@ class JDBCPaginatorTests {
 
 	    assertEquals(1, page.getContent().size());
 	    assertEquals("Carlos Alberto", list.get(0).getName());
-	    assertEquals(55, list.get(0).getAge());
+	    assertEquals(41, list.get(0).getAge());
 	}
 
 	@Test

@@ -46,8 +46,7 @@ public class MethodReflection {
 						transformsJsonModel(jsonNode.get(field.getName()), objectTemp);
 						executeMethod(object, setMethod(field.getName()), objectTemp);
 					} else {
-						executeMethod(object, setMethod(field.getName()),
-								DynamicFoundType.getTypeJsonValue(field, jsonNode));
+						executeMethod(object, setMethod(field.getName()), DynamicFoundType.getTypeJsonValue(field, jsonNode));
 					}
 				}
 			}
