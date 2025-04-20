@@ -21,6 +21,9 @@ import br.com.process.integration.database.core.reflection.MethodInvoker;
 import br.com.process.integration.database.core.reflection.MethodReflection;
 import br.com.process.integration.database.core.util.Constants;
 
+/**
+ * @param <D>
+ */
 @Service
 @Transactional
 public abstract class AbstractDataService<D extends RepresentationModel<D>> extends AbstractAssembler<D> implements DataMapper<D> {
@@ -36,33 +39,44 @@ public abstract class AbstractDataService<D extends RepresentationModel<D>> exte
 	@Autowired
 	protected MethodInvoker methodInvoker;
 
+	/**
+	 * @param controllerClass
+	 * @param resourceType
+	 */
 	protected AbstractDataService(Class<?> controllerClass, Class<D> resourceType) {
 		super(controllerClass, resourceType);
 	}
 
+	/**
+	 *
+	 */
 	@Override
 	public int count(Map<String, Object> filter, String method) {
 		try {
 			Object[] args = MethodReflection.getMethodArgs(mapper.getClass(), method, filter);
-			return (int) methodInvoker.invokeMethodReturnObjectWithParameters(
-					MethodReflection.getNameMapper(data.getClass().getSimpleName()), method, args);
+			return (int) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameMapper(data.getClass().getSimpleName()), method, args);
 		} catch (Exception ex) {
 			throw new CheckedException(ex.getMessage(), ex);
 		}
 	}
 
+	/**
+	 *
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public D findBySingle(Map<String, Object> filter, String method) {
 		try {
 			Object[] args = MethodReflection.getMethodArgs(mapper.getClass(), method, filter);
-			return (D) methodInvoker.invokeMethodReturnObjectWithParameters(
-					MethodReflection.getNameMapper(data.getClass().getSimpleName()), method, args);
+			return (D) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameMapper(data.getClass().getSimpleName()), method, args);
 		} catch (Exception ex) {
 			throw new CheckedException(ex.getMessage(), ex);
 		}
 	}
 
+	/**
+	 *
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<D> findAll(Map<String, Object> filter, String method) {
@@ -74,14 +88,16 @@ public abstract class AbstractDataService<D extends RepresentationModel<D>> exte
 				throw new UncheckedException(String.format("Erro: Numero de parametros incorretos para o method: '%s'", method));
 			}
 			
-			return (List<D>) methodInvoker.invokeMethodReturnObjectWithParameters(
-					MethodReflection.getNameMapper(data.getClass().getSimpleName()), method, args);
+			return (List<D>) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameMapper(data.getClass().getSimpleName()), method, args);
 			
 		} catch (Exception ex) {
 			throw new CheckedException(ex.getMessage(), ex);
 		}
 	}
 
+	/**
+	 *
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public PagedModel findPaginator(Map<String, Object> filter, String method) {
@@ -114,6 +130,10 @@ public abstract class AbstractDataService<D extends RepresentationModel<D>> exte
 		}
 	}
 	
+	/**
+	 * @param method
+	 * @return
+	 */
 	private String getCountMethod(String method) {
 		return Constants.METHOD_COUNT + method.substring(0, 1).toUpperCase() + method.substring(1);
 	}
