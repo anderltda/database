@@ -1,24 +1,16 @@
 package br.com.process.integration.database.core.reflection;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -109,8 +101,8 @@ public class MethodReflection {
 
 	public static Object findViewUsingClassLoader(String className) throws CheckedException {
 		try {
-			String packagePath = (Constants.DIRECTORY_APPLICATION + Constants.PACKAGE_NAME_VIEW).replaceAll("[.]", "/");
-			return findClassUsingClassLoader(className, packagePath);
+			//String packagePath = (Constants.DIRECTORY_APPLICATION + Constants.PACKAGE_NAME_VIEW).replaceAll("[.]", "/");
+			return findClassUsingClassLoader(className, Constants.PACKAGE_NAME_VIEW);
 		} catch (Exception ex) {
 			throw new CheckedException(ex.getMessage(), ex);
 		}
@@ -118,8 +110,8 @@ public class MethodReflection {
 
 	public static Object findEntityUsingClassLoader(String className) throws CheckedException {
 		try {
-			String packagePath = (Constants.DIRECTORY_APPLICATION + Constants.PACKAGE_NAME_ENTITY).replaceAll("[.]", "/");
-			return findClassUsingClassLoader(className, packagePath);
+			//String packagePath = (Constants.DIRECTORY_APPLICATION + Constants.PACKAGE_NAME_ENTITY).replaceAll("[.]", "/");
+			return findClassUsingClassLoader(className, Constants.PACKAGE_NAME_ENTITY);
 		} catch (Exception ex) {
 			throw new CheckedException(ex.getMessage(), ex);
 		}
@@ -127,8 +119,8 @@ public class MethodReflection {
 	
 	public static Object findDataUsingClassLoader(String className) throws CheckedException {
 		try {
-			String packagePath = (Constants.DIRECTORY_APPLICATION + Constants.PACKAGE_NAME_DATA).replaceAll("[.]", "/");
-			return findClassUsingClassLoader(className, packagePath);
+			//String packagePath = (Constants.DIRECTORY_APPLICATION + Constants.PACKAGE_NAME_DATA).replaceAll("[.]", "/");
+			return findClassUsingClassLoader(className, Constants.PACKAGE_NAME_DATA);
 		} catch (Exception ex) {
 			throw new CheckedException(ex.getMessage(), ex);
 		}
@@ -239,44 +231,11 @@ public class MethodReflection {
 		return param.getClass();
 	}
 
-	@SuppressWarnings("resource")
 	private static Object findClassUsingClassLoader(String className, String packagePath) throws UncheckedException {
-
 		try {
-
-			List<Path> dirs = Files.walk(Paths.get(packagePath), 1).filter(Files::isDirectory).toList();
-
-			for (Path path : dirs) {
-
-				String packageName = (path.toString().replace("/", ".").replace(Constants.DIRECTORY_APPLICATION, ""));
-
-				InputStream stream = ClassLoader.getSystemClassLoader()
-						.getResourceAsStream(packageName.replaceAll("[.]", "/"));
-
-				BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-
-				Set<Class<?>> values = reader.lines().filter(line -> line.endsWith(".class"))
-						.map(line -> getClass(line, packageName)).collect(Collectors.toSet());
-
-				for (Class<?> classFind : values) {
-					if (classFind.getSimpleName().equals(className)) {
-						return classFind.getDeclaredConstructor().newInstance();
-					}
-				}
-			}
-
-			throw new UncheckedException(String.format("Class not found %s !", className));
-
+			return PackageScanner.findClassBySimpleName(packagePath, className);
 		} catch (Exception ex) {
 			throw new UncheckedException(ex.getMessage(), ex);
-		}
-	}
-
-	private static Class<?> getClass(String className, String packageName) throws UncheckedException {
-		try {
-			return Class.forName(packageName + "." + className.substring(0, className.lastIndexOf('.')));
-		} catch (ClassNotFoundException cnfe) {
-			throw new UncheckedException(cnfe.getMessage(), cnfe);
 		}
 	}
 
