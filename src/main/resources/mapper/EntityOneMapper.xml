@@ -1,55 +1,69 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="br.com.process.integration.database.domain.store.mapper.EntityOneDataMapper">
+<mapper namespace="br.com.process.integration.database.model.data.mapper.example.EntityOneDataMapper">
+
+    <!-- ResultMap Principal -->
+	<resultMap id="EntityOneDataMap" type="br.com.process.integration.database.model.data.dto.example.EntityOneData">
+		<result property="id"                 column="id_entity_one" />
+		<result property="name"               column="name" />
+		<result property="age"                column="age" />
+		<result property="code"               column="code" />
+		<result property="height"             column="height" />
+		<result property="birthDate"          column="birth_date" />
+		<result property="prohibitedDateTime" column="prohibited_date_time" />
+		<association property="entityStatusData"  resultMap="EntityStatusMap" />
+		<association property="entityTwoData"     resultMap="EntityTwoMap" />
+	</resultMap>
+
+	<!-- ResultMap para EntityStatus -->
+	<resultMap id="EntityStatusMap" type="br.com.process.integration.database.model.data.dto.example.EntityStatusData">
+		<result property="id"            column="id_entity_status" />
+		<result property="name"          column="name" />
+		<result property="status"        column="status" />
+		<result property="ativo"         column="ativo" />
+		<result property="startDateTime" column="start_date_time" />
+	</resultMap>
 
 	<!-- ResultMap para EntityTwo -->
-	<resultMap id="EntityTwoMap" type="br.com.process.integration.database.domain.model.data.EntityTwoData">
-		<result property="id" column="id_entity_two" />
-		<result property="color" column="color" />
-		<result property="hex" column="hex" />
-		<result property="cost" column="cost" />
-		<result property="dateInclusion" column="date_inclusion" />
+	<resultMap id="EntityTwoMap" type="br.com.process.integration.database.model.data.dto.example.EntityTwoData">
+		<result property="id"                    column="id_entity_two" />
+		<result property="color"                 column="color" />
+		<result property="hex"                   column="hex" />
+		<result property="cost"                  column="cost" />
+		<result property="inclusionDate"         column="inclusion_date" />
+		<association property="entityStatusData" resultMap="EntityStatusMap" />
+		<association property="entityTreeData"   resultMap="EntityTreeMap" />
 	</resultMap>
 
 	<!-- ResultMap para EntityTree -->
-	<resultMap id="EntityTreeMap" type="br.com.process.integration.database.domain.model.data.EntityTreeData">
-		<result property="id" column="id_entity_tree" />
-		<result property="animal" column="animal" />
-		<result property="number" column="number" />
-		<result property="value" column="value" />
-		<result property="dataLocal" column="data_local" />
-		<result property="dataLocalTime" column="data_local_time" />
+	<resultMap id="EntityTreeMap" type="br.com.process.integration.database.model.data.dto.example.EntityTreeData">
+		<result property="id"                    column="id_entity_tree" />
+		<result property="animal"                column="animal" />
+		<result property="indicator"             column="indicator" />
+		<result property="amount"                column="amount" />
+		<result property="localDate"             column="local_date" />
+		<result property="localDateTime"         column="local_date_time" />
+		<association property="entityStatusData" resultMap="EntityStatusMap" />
+		<association property="entityFourData"   resultMap="EntityFourMap" />
 	</resultMap>
 
 	<!-- ResultMap para EntityFour -->
-	<resultMap id="EntityFourMap" type="br.com.process.integration.database.domain.model.data.EntityFourData">
-		<result property="id" column="id_entity_four" />
-		<result property="fruit" column="fruit" />
-		<result property="nutritiou" column="nutritiou" />
-		<result property="dateInclusionTime" column="date_inclusion_time" />
+	<resultMap id="EntityFourMap" type="br.com.process.integration.database.model.data.dto.example.EntityFourData">
+		<result property="id"                    column="id_entity_four" />
+		<result property="fruit"                 column="fruit" />
+		<result property="attribute"             column="attribute" />
+		<result property="inclusionDateTime"     column="inclusion_date_time" />
+		<association property="entityStatusData" resultMap="EntityStatusMap" />
+		<association property="entityFiveData"   resultMap="EntityFiveMap" />
 	</resultMap>
 
 	<!-- ResultMap para EntityFive -->
-	<resultMap id="EntityFiveMap" type="br.com.process.integration.database.domain.model.data.EntityFiveData">
-		<result property="id" column="id_entity_five" />
-		<result property="object" column="object" />
-		<result property="value" column="value" />
-	</resultMap>
-
-    <!-- ResultMap Principal -->
-	<resultMap id="EntityOneDataMap" type="br.com.process.integration.database.domain.model.data.EntityOneData">
-		<id property="id" column="id_entity_one" />
-		<result property="name" column="name" />
-		<result property="age" column="age" />
-		<result property="code" column="code" />
-		<result property="height" column="height" />
-		<result property="birthDate" column="birth_date" />
-		<result property="prohibitedDateTime" column="prohibited_date_time" />
-		<association property="entityTwo" resultMap="EntityTwoMap" />
-		<association property="entityTree" resultMap="EntityTreeMap" />
-		<association property="entityFour" resultMap="EntityFourMap" />
-		<association property="entityFive" resultMap="EntityFiveMap" />
+	<resultMap id="EntityFiveMap" type="br.com.process.integration.database.model.data.dto.example.EntityFiveData">
+		<result property="id"                    column="id_entity_five" />
+		<result property="reference"             column="reference" />
+		<result property="factor"                column="factor" />
+		<association property="entityStatusData" resultMap="EntityStatusMap" />
 	</resultMap>
     
     <select id="countEntitiesByName" resultType="int">
@@ -86,6 +100,7 @@
 			INNER JOIN entity_five t5 ON t5.id_entity_five = t4.id_entity_five
 		WHERE t1.name LIKE CONCAT('%', #{name}, '%')
 		  AND t1.height != #{height}
+		
 		
 	    <if test="sortList != null and sortOrders != null and sortList.size() == sortOrders.size()">
 	        ORDER BY 

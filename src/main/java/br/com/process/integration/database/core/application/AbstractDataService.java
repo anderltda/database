@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.process.integration.database.core.domain.DataMapper;
-import br.com.process.integration.database.core.exception.CheckedException;
 import br.com.process.integration.database.core.exception.UncheckedException;
 import br.com.process.integration.database.core.infrastructure.AbstractAssembler;
 import br.com.process.integration.database.core.reflection.MethodInvoker;
@@ -51,35 +50,35 @@ public abstract class AbstractDataService<D extends RepresentationModel<D>> exte
 	 *
 	 */
 	@Override
-	public int count(Map<String, Object> filter, String method) {
+	public Integer count(Map<String, Object> filter, String method) throws UncheckedException {
 		try {
 			Object[] args = MethodReflection.getMethodArgs(mapper.getClass(), method, filter);
 			return (int) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameMapper(data.getClass().getSimpleName()), method, args);
 		} catch (Exception ex) {
-			throw new CheckedException(ex.getMessage(), ex);
+			throw new UncheckedException(ex.getMessage(), ex);
 		}
 	}
 
 	/**
 	 *
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
-	public D findBySingle(Map<String, Object> filter, String method) {
+	@SuppressWarnings("unchecked")
+	public D findBySingle(Map<String, Object> filter, String method) throws UncheckedException {
 		try {
 			Object[] args = MethodReflection.getMethodArgs(mapper.getClass(), method, filter);
 			return (D) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameMapper(data.getClass().getSimpleName()), method, args);
 		} catch (Exception ex) {
-			throw new CheckedException(ex.getMessage(), ex);
+			throw new UncheckedException(ex.getMessage(), ex);
 		}
 	}
 
 	/**
 	 *
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
-	public List<D> findAll(Map<String, Object> filter, String method) {
+	@SuppressWarnings("unchecked")
+	public List<D> findAll(Map<String, Object> filter, String method) throws UncheckedException {
 		try {
 			
 			Object[] args = MethodReflection.getMethodArgs(mapper.getClass(), method, filter);
@@ -91,16 +90,16 @@ public abstract class AbstractDataService<D extends RepresentationModel<D>> exte
 			return (List<D>) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameMapper(data.getClass().getSimpleName()), method, args);
 			
 		} catch (Exception ex) {
-			throw new CheckedException(ex.getMessage(), ex);
+			throw new UncheckedException(ex.getMessage(), ex);
 		}
 	}
 
 	/**
 	 *
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public PagedModel findPaginator(Map<String, Object> filter, String method) {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public PagedModel findPaginator(Map<String, Object> filter, String method) throws UncheckedException {
 		try {
 			
 			int page = Integer.parseInt(filter.get(Constants.NAME_PAGE).toString());
@@ -126,7 +125,7 @@ public abstract class AbstractDataService<D extends RepresentationModel<D>> exte
 			return pagedModel;
 	        
 		} catch (Exception ex) {
-			throw new CheckedException(ex.getMessage(), ex);
+			throw new UncheckedException(ex.getMessage(), ex);
 		}
 	}
 	

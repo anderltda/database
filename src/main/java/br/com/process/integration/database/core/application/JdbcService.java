@@ -18,7 +18,7 @@ public interface JdbcService<V> {
 	 * @return
 	 * @throws CheckedException
 	 */
-	public int count(Map<String, Object> filter, String query) throws CheckedException;
+	public Integer count(Map<String, Object> filter, String query) throws CheckedException;
 	
 	/**
 	 * @param filter

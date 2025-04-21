@@ -37,7 +37,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import br.com.process.integration.database.core.exception.ErrorResponse;
 import br.com.process.integration.database.core.ui.QueryJpaController;
 import br.com.process.integration.database.core.util.Constants;
-import br.com.process.integration.database.domain.model.entity.EntityOne;
+import br.com.process.integration.database.model.entity.dto.example.EntityOne;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -94,7 +94,7 @@ class CriteriaTests {
 		            + "sortList=teste,age&"
 		            + "sortOrders=asc,desc";
 		
-		ErrorResponse errorResponse = new ErrorResponse("Could not resolve attribute 'teste' of 'br.com.process.integration.database.domain.model.entity.EntityOne'", HttpStatus.BAD_REQUEST);
+		ErrorResponse errorResponse = new ErrorResponse("Could not resolve attribute 'teste' of 'br.com.process.integration.database.model.entity.dto.example.EntityOne'", HttpStatus.BAD_REQUEST);
 		
 	    assertThrows(RuntimeException.class, () -> getAll(url, errorResponse));
 	}
@@ -144,7 +144,7 @@ class CriteriaTests {
 	            + "sortList=name,asc&"
 	            + "sortOrders=asc,desc";
 		
-	    testes_single_parameterized_one(url, "Could not resolve attribute 'asc' of 'br.com.process.integration.database.domain.model.entity.EntityOne'");
+	    testes_single_parameterized_one(url, "Could not resolve attribute 'asc' of 'br.com.process.integration.database.model.entity.dto.example.EntityOne'");
 	}
 
 	@Test

@@ -22,21 +22,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.hateoas.mediatype.hal.Jackson2HalModule;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 import br.com.process.integration.database.core.exception.ErrorResponse;
 import br.com.process.integration.database.core.ui.QueryMyBatisController;
 import br.com.process.integration.database.core.util.Constants;
-import br.com.process.integration.database.domain.model.data.EntityOneData;
+import br.com.process.integration.database.model.data.dto.example.EntityOneData;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -101,7 +106,7 @@ class MyBatisTests {
 	            + "/mapper/single/EntityOneData/methodNoMapping?" 
 	            + "name=Anderson";
 		
-		single_parameterized_one_erro(url, "Invalid bound statement (not found): br.com.process.integration.database.domain.store.mapper.EntityOneDataMapper.methodNoMapping");
+		single_parameterized_one_erro(url, "Invalid bound statement (not found): br.com.process.integration.database.model.data.mapper.example.EntityOneDataMapper.methodNoMapping");
 
 	}
 	
@@ -114,7 +119,7 @@ class MyBatisTests {
 	            + "/mapper/count/EntityOneData/methodNoMapping?" 
 	            + "id=1";
 		
-		single_parameterized_one_erro(url, "Invalid bound statement (not found): br.com.process.integration.database.domain.store.mapper.EntityOneDataMapper.methodNoMapping");
+		single_parameterized_one_erro(url, "Invalid bound statement (not found): br.com.process.integration.database.model.data.mapper.example.EntityOneDataMapper.methodNoMapping");
 
 	}
 	
@@ -136,7 +141,7 @@ class MyBatisTests {
 		assertEquals(LocalDate.parse("1983-03-29", DateTimeFormatter.ISO_LOCAL_DATE), data.getBirthDate());
 		assertEquals(LocalDateTime.parse("2024-02-01T02:52:54", DateTimeFormatter.ISO_LOCAL_DATE_TIME), data.getProhibitedDateTime());
 		assertNotEquals(0, data.hashCode());
-		assertNotNull(data.getEntityTwo());
+		assertNotNull(data.getEntityTwoData());
 
 		assertNotNull(data);
 	}
@@ -208,7 +213,7 @@ class MyBatisTests {
 	            + "/mapper/EntityOneData/methodNoMapping?"
 	            + "name=Pedro";
 		
-		single_parameterized_one_erro(url, "Invalid bound statement (not found): br.com.process.integration.database.domain.store.mapper.EntityOneDataMapper.methodNoMapping");
+		single_parameterized_one_erro(url, "Invalid bound statement (not found): br.com.process.integration.database.model.data.mapper.example.EntityOneDataMapper.methodNoMapping");
 	}
 	
 	@Test
@@ -306,19 +311,29 @@ class MyBatisTests {
 	
 	private ObjectMapper createObjectMapper() {
 	    ObjectMapper objectMapper = new ObjectMapper();
-	    objectMapper.registerModule(new JavaTimeModule());
-	    objectMapper.findAndRegisterModules(); 
+
+	    JavaTimeModule module = new JavaTimeModule();
+	    module.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+	    module.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")));
+	    objectMapper.registerModule(module);
+
+	    objectMapper.registerModule(new Jackson2HalModule()); // ← suporte a RepresentationModel
+	    objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+	    objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+	    objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+
 	    return objectMapper;
 	}
 
 	private List<EntityOneData> convertResponseToEntityOneDataList(String body) {
 	    ObjectMapper objectMapper = createObjectMapper();
 	    try {
-	    	if(body != null) {
-	    		return objectMapper.readValue(body, new TypeReference<List<EntityOneData>>(){});
-	    	} else {
-	    		return null;
-	    	}
+	        if (body != null) {
+	            System.out.println("JSON recebido: " + body); // ← debug importante
+	            return objectMapper.readValue(body, new TypeReference<List<EntityOneData>>() {});
+	        } else {
+	            return null;
+	        }
 	    } catch (JsonProcessingException e) {
 	        throw new RuntimeException("Error parsing EntityOneData list response", e);
 	    }

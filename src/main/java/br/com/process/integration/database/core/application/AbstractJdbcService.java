@@ -43,7 +43,7 @@ public abstract class AbstractJdbcService<V extends RepresentationModel<V>> exte
 	 *
 	 */
 	@Override
-	public int count(Map<String, Object> filter, String query) throws CheckedException {
+	public Integer count(Map<String, Object> filter, String query) throws CheckedException {
 		try {
 			return count(view, filter, this.getClass().getSimpleName(), query);
 		} catch (UncheckedException cuex) {

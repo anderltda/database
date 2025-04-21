@@ -23,32 +23,23 @@ import br.com.process.integration.database.core.util.Constants;
 public class QueryMyBatisController extends AbstractController {
 	
 	@GetMapping(value = "/mapper/count/{data}/{method}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<Integer> count(
-			@PathVariable String data, 
-			@PathVariable String method,
-			@RequestParam(defaultValue = "") Map<String, Object> filter) throws CheckedException {
+	public ResponseEntity<Integer> count(@PathVariable String data, @PathVariable String method, @RequestParam(defaultValue = "") Map<String, Object> filter) throws CheckedException {
 
 		setData(data);
 
-		Integer count = (int) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(data),
-				Constants.METHOD_EXECUTE_MAPPER_COUNT, filter, method);
+		Integer count = (Integer) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(data), Constants.METHOD_EXECUTE_MAPPER_COUNT, filter, method);
 
 		return new ResponseEntity<>(count, HttpStatus.OK);
 	}	
 
 	@GetMapping(value = "/mapper/single/{data}/{method}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<BeanData<?>> findBySingle(
-			@PathVariable String data, 
-			@PathVariable String method,
-			@RequestParam(defaultValue = "") Map<String, Object> filter) throws CheckedException {
+	public ResponseEntity<BeanData<?>> findBySingle(@PathVariable String data, @PathVariable String method, @RequestParam(defaultValue = "") Map<String, Object> filter) throws CheckedException {
 
 		setData(data);
 
-		BeanData<?> beanData = (BeanData<?>) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(data), Constants.METHOD_EXECUTE_MAPPER_SINGLE, filter, method);
+		BeanData<?> beanData = (BeanData<?>) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(data), Constants.METHOD_EXECUTE_MAPPER_SINGLE, filter, method);
 
 		if (beanData != null) {
-
 			return new ResponseEntity<>(beanData, HttpStatus.OK);
 		}
 
@@ -57,20 +48,15 @@ public class QueryMyBatisController extends AbstractController {
 	
 	@SuppressWarnings("unchecked")
 	@GetMapping(value = "/mapper/{data}/{method}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<List<BeanData<?>>> findAll(
-			@PathVariable String data, 
-			@PathVariable String method,
-			@RequestParam(defaultValue = "") Map<String, Object> filter) throws CheckedException {
+	public ResponseEntity<List<BeanData<?>>> findAll(@PathVariable String data, @PathVariable String method, @RequestParam(defaultValue = "") Map<String, Object> filter) throws CheckedException {
 
 		addAjustOrderByFilter(filter);
 		
 		setData(data);
 		
-		List<BeanData<?>> list = (List<BeanData<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(
-				MethodReflection.getNameService(data), Constants.METHOD_EXECUTE_MAPPER_ALL, filter, method);
+		List<BeanData<?>> list = (List<BeanData<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(data), Constants.METHOD_EXECUTE_MAPPER_ALL, filter, method);
 
 		if (!list.isEmpty()) {
-
 			return new ResponseEntity<>(list, HttpStatus.OK);
 		}
 
@@ -79,18 +65,14 @@ public class QueryMyBatisController extends AbstractController {
 
 	@SuppressWarnings("rawtypes")
 	@GetMapping(value = "/mapper/paginator/{data}/{method}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<PagedModel> findAllPaginator(
-			@PathVariable String data, 
-			@PathVariable String method,
-			@RequestParam Map<String, Object> filter) throws CheckedException {
+	public ResponseEntity<PagedModel> findAllPaginator(@PathVariable String data, @PathVariable String method, @RequestParam Map<String, Object> filter) throws CheckedException {
 		
 		addAjustPaginatorFilter(filter);
 		addAjustOrderByFilter(filter);
 		
 		setData(data);
 		
-		PagedModel pagedModel = (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(data),
-				Constants.METHOD_EXECUTE_PAGINATOR, filter, method);
+		PagedModel pagedModel = (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(data), Constants.METHOD_EXECUTE_PAGINATOR, filter, method);
 		
 		if (!pagedModel.getContent().isEmpty()) {
 			return ResponseEntity.ok(pagedModel);

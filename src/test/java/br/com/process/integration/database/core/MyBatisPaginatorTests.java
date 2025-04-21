@@ -35,7 +35,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import br.com.process.integration.database.core.exception.ErrorResponse;
 import br.com.process.integration.database.core.ui.QueryMyBatisController;
 import br.com.process.integration.database.core.util.Constants;
-import br.com.process.integration.database.domain.model.data.EntityOneData;
+import br.com.process.integration.database.model.data.dto.example.EntityOneData;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

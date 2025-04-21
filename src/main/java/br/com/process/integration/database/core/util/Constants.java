@@ -32,17 +32,17 @@ public class Constants {
 	/**
 	 *  Nome do pacote onde estao as classes das entidades (entitys)
 	 */
-	public static final String PACKAGE_NAME_ENTITY = "br.com.process.integration.database.domain.model.entity";
+	public static final String PACKAGE_NAME_ENTITY = "br.com.process.integration.database.model.entity.dto.example";
 	
 	/**
 	 *  Nome do pacote onde estao as classes dos views
 	 */
-	public static final String PACKAGE_NAME_VIEW = "br.com.process.integration.database.domain.model.view";
+	public static final String PACKAGE_NAME_VIEW = "br.com.process.integration.database.model.view.dto.example";
 	
 	/**
 	 *  Nome do pacote onde estao as classes dos datas
 	 */
-	public static final String PACKAGE_NAME_DATA = "br.com.process.integration.database.domain.model.data";
+	public static final String PACKAGE_NAME_DATA = "br.com.process.integration.database.model.data.dto.example";
 	
 	/**
 	 * Referencia ao identificador da operacao

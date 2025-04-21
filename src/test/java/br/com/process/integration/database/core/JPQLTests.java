@@ -37,7 +37,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import br.com.process.integration.database.core.exception.ErrorResponse;
 import br.com.process.integration.database.core.ui.QueryJpaController;
 import br.com.process.integration.database.core.util.Constants;
-import br.com.process.integration.database.domain.model.entity.EntityOne;
+import br.com.process.integration.database.model.entity.dto.example.EntityOne;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -302,7 +302,7 @@ class JPQLTests {
 		        + "/jpql/count/EntityOne/countMaiorAge?"
 		        + "age=AQ";
 		
-		ErrorResponse errorResponse = new ErrorResponse("Parameter value [AQ] did not match expected type [SqmBasicValuedSimplePath(br.com.process.integration.database.domain.model.entity.EntityOne(e).age)]",
+		ErrorResponse errorResponse = new ErrorResponse("Parameter value [AQ] did not match expected type [SqmBasicValuedSimplePath(br.com.process.integration.database.model.entity.dto.example.EntityOne(e).age)]",
 				HttpStatus.BAD_REQUEST);
 
 		assertThrows(RuntimeException.class, () -> getUniqueResult(url, errorResponse));
@@ -336,7 +336,7 @@ class JPQLTests {
 		        + "sortList=name,birthDate&"
 		        + "sortOrders=desc,asc";
 
-		ErrorResponse errorResponse = new ErrorResponse("Parameter value [Silva] did not match expected type [SqmBasicValuedSimplePath(br.com.process.integration.database.domain.model.entity.EntityOne(e).age)]",
+		ErrorResponse errorResponse = new ErrorResponse("Parameter value [Silva] did not match expected type [SqmBasicValuedSimplePath(br.com.process.integration.database.model.entity.dto.example.EntityOne(e).age)]",
 				HttpStatus.BAD_REQUEST);
 
 		assertThrows(RuntimeException.class, () -> getAll(url, errorResponse));

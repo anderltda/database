@@ -46,7 +46,7 @@ public abstract class AbstractJdbcRepository<M extends RepresentationModel<M>> e
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public M findBySingle(M view, Map<String, Object> filters, String fileQuery, String query) throws UncheckedException {
+	public M findBySingle(M view, Map<String, Object> filters, String fileQuery, String queryName) throws UncheckedException {
 
 		try {
 
@@ -54,7 +54,7 @@ public abstract class AbstractJdbcRepository<M extends RepresentationModel<M>> e
 
 			rowMapper = new BeanPropertyRowMapper<>((Class<M>) view.getClass());
 
-			String sql = configQuery.executeSQL(view.getClass(), filters, fileQuery, query, mapSqlParameterSource);
+			String sql = configQuery.executeSQL(view.getClass(), filters, fileQuery, queryName, mapSqlParameterSource);
 
 			return namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, rowMapper);
 
@@ -73,7 +73,7 @@ public abstract class AbstractJdbcRepository<M extends RepresentationModel<M>> e
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<M> findAll(M view, Map<String, Object> filter, String fileQuery, String query) throws UncheckedException {
+	public List<M> findAll(M view, Map<String, Object> filter, String fileQuery, String queryName) throws UncheckedException {
 
 		try {
 
@@ -81,7 +81,7 @@ public abstract class AbstractJdbcRepository<M extends RepresentationModel<M>> e
 
 			rowMapper = new BeanPropertyRowMapper<>((Class<M>) view.getClass());
 			
-			String sql = configQuery.executeSQL(view.getClass(), filter, fileQuery, query, mapSqlParameterSource);
+			String sql = configQuery.executeSQL(view.getClass(), filter, fileQuery, queryName, mapSqlParameterSource);
 
 			return namedParameterJdbcTemplate.query(sql, mapSqlParameterSource,
 					new DynamicRowMapper<>((Class<M>) view.getClass()));
@@ -97,7 +97,7 @@ public abstract class AbstractJdbcRepository<M extends RepresentationModel<M>> e
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<M> findAll(M view, Map<String, Object> filter, String fileQuery, String query, Integer page, Integer size) throws UncheckedException {
+	public List<M> findAll(M view, Map<String, Object> filter, String fileQuery, String queryName, Integer page, Integer size) throws UncheckedException {
 
 		try {
 
@@ -107,7 +107,7 @@ public abstract class AbstractJdbcRepository<M extends RepresentationModel<M>> e
 
 			StringBuilder sql = new StringBuilder();
 
-			sql.append(configQuery.executeSQL(view.getClass(), filter, fileQuery, query, mapSqlParameterSource));
+			sql.append(configQuery.executeSQL(view.getClass(), filter, fileQuery, queryName, mapSqlParameterSource));
 
 			sql.append(Constants.LIMIT);
 			sql.append(Constants.WRITERSPACE);
@@ -127,13 +127,13 @@ public abstract class AbstractJdbcRepository<M extends RepresentationModel<M>> e
 	 *
 	 */
 	@Override
-	public int count(M view, Map<String, Object> filter, String fileQuery, String query) throws UncheckedException {
+	public Integer count(M view, Map<String, Object> filter, String fileQuery, String queryName) throws UncheckedException {
 
 		try {
 
 			MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
 
-			String sql = configQuery.executeCountSQL(view.getClass(), filter, fileQuery, query, mapSqlParameterSource);
+			String sql = configQuery.executeCountSQL(view.getClass(), filter, fileQuery, queryName, mapSqlParameterSource);
 
 			return namedParameterJdbcTemplate.queryForObject(sql, mapSqlParameterSource, Integer.class);
 

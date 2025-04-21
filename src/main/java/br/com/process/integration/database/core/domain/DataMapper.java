@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.springframework.hateoas.PagedModel;
 
+import br.com.process.integration.database.core.exception.UncheckedException;
+
 /**
  * @param <D>
  */
@@ -14,28 +16,32 @@ public interface DataMapper<D> {
 	 * @param filter
 	 * @param method
 	 * @return
+	 * @throws UncheckedException
 	 */
-	int count(Map<String, Object> filter, String method);
+	Integer count(Map<String, Object> filter, String method) throws UncheckedException;
 
 	/**
 	 * @param filter
 	 * @param method
 	 * @return
+	 * @throws UncheckedException
 	 */
-	D findBySingle(Map<String, Object> filter, String method);
+	D findBySingle(Map<String, Object> filter, String method) throws UncheckedException;
 	
 	/**
 	 * @param filter
 	 * @param method
 	 * @return
+	 * @throws UncheckedException
 	 */
-	List<D> findAll(Map<String, Object> filter, String method);
+	List<D> findAll(Map<String, Object> filter, String method) throws UncheckedException;
 
 	/**
 	 * @param filter
 	 * @param method
 	 * @return
+	 * @throws UncheckedException
 	 */
-	PagedModel<D> findPaginator(Map<String, Object> filter, String method);
+	PagedModel<D> findPaginator(Map<String, Object> filter, String method) throws UncheckedException;
 
 }

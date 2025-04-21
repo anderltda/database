@@ -37,12 +37,12 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import br.com.process.integration.database.core.exception.ErrorResponse;
 import br.com.process.integration.database.core.ui.CrudJpaController;
 import br.com.process.integration.database.core.util.Constants;
-import br.com.process.integration.database.domain.model.entity.EntityFive;
-import br.com.process.integration.database.domain.model.entity.EntityFour;
-import br.com.process.integration.database.domain.model.entity.EntityOne;
-import br.com.process.integration.database.domain.model.entity.EntityStatus;
-import br.com.process.integration.database.domain.model.entity.EntityTree;
-import br.com.process.integration.database.domain.model.entity.EntityTwo;
+import br.com.process.integration.database.model.entity.dto.example.EntityFive;
+import br.com.process.integration.database.model.entity.dto.example.EntityFour;
+import br.com.process.integration.database.model.entity.dto.example.EntityOne;
+import br.com.process.integration.database.model.entity.dto.example.EntityStatus;
+import br.com.process.integration.database.model.entity.dto.example.EntityTree;
+import br.com.process.integration.database.model.entity.dto.example.EntityTwo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -557,7 +557,7 @@ class SaveFlushTests {
 		String json = objectMapper.writeValueAsString(entityOne);
 
 		ErrorResponse errorResponse = new ErrorResponse(
-				"not-null property references a null or transient value: br.com.process.integration.database.domain.model.entity.EntityOne.name",
+				"not-null property references a null or transient value: br.com.process.integration.database.model.entity.dto.example.EntityOne.name",
 				HttpStatus.BAD_REQUEST);
 
 		assertThrows(RuntimeException.class, () -> postJson(url, json, errorResponse));
