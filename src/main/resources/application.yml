@@ -12,8 +12,10 @@ spring:
     url: jdbc:postgresql://localhost:5432/root-database
     username: anderson
     password: admin
+    driver-class-name: org.postgresql.Driver
 
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
     generate-ddl: true
