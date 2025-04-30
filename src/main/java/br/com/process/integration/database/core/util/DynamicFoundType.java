@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -127,7 +128,9 @@ public class DynamicFoundType {
 		} else if (type.equals(Sort.class)) {
 			return value;
 		} else if (type.equals(List.class)) {
-			return value;			
+			return value;	
+		} else if (type.equals(UUID.class)) {
+			return UUID.fromString(value.toString());				
 		} else if (type.equals(PageRequest.class)) {
 			return value;	    	
 	    } else {

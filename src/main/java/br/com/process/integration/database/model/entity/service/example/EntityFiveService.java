@@ -1,5 +1,7 @@
 package br.com.process.integration.database.model.entity.service.example;
 
+import java.util.UUID;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -12,7 +14,7 @@ import br.com.process.integration.database.model.entity.dto.example.EntityFive;
 
 @Service
 @Transactional
-public class EntityFiveService extends AbstractJpaService<EntityFive, EntityFive, String> {
+public class EntityFiveService extends AbstractJpaService<EntityFive, EntityFive, UUID> {
 
 	@Autowired
 	private PagedResourcesAssembler<EntityFive> pagedResourcesAssembler;
@@ -29,7 +31,7 @@ public class EntityFiveService extends AbstractJpaService<EntityFive, EntityFive
 	}
 
 	@Override
-	public void setId(String id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 
