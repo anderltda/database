@@ -2,7 +2,6 @@ package br.com.process.integration.database.model.entity.dto.example;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 import org.springframework.hateoas.RepresentationModel;
 
@@ -23,138 +22,139 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Entity_One")
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Table(name = "entity_one")
 public class EntityOne extends RepresentationModel<EntityOne> implements BeanEntity<Long> {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_entity_one")
 	private Long id;
 
-	@Column(name = "name", nullable = false, length = 100)
-	private String name;
-
-	@Column(name = "age", nullable = true)
+	@Column(name = "age")
 	private Integer age;
-
-	@Column(name = "height", nullable = false, precision = 10, scale = 0)
-	private Double height;
 
 	@Column(name = "birth_date", nullable = false)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_FORMAT)
 	private LocalDate birthDate;
 
+	@Column(name = "code", nullable = false)
+	private Boolean code;
+
+	@Column(name = "height", nullable = false)
+	private Double height;
+
+	@Column(name = "name", nullable = false, length = 255)
+	private String name;
+
 	@Column(name = "prohibited_date_time", nullable = false)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_TIME_FORMAT)
 	private LocalDateTime prohibitedDateTime;
 
-	@Column(name = "code", nullable = false)
-	private Boolean code = true;
-
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_entity_two", nullable = false, referencedColumnName = "id_entity_two")
-	private EntityTwo entityTwo;
-
 	@ManyToOne
-	@JoinColumn(name = "id_entity_status", nullable = false, referencedColumnName = "id_entity_status")
+	@JoinColumn(name = "id_entity_status", referencedColumnName = "id_entity_status")
 	private EntityStatus entityStatus;
 
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_entity_two", referencedColumnName = "id_entity_two", unique = true)
+	private EntityTwo entityTwo;
+
+	@Override
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public Integer getAge() {
-		return age;
+		return this.age;
 	}
 
 	public void setAge(Integer age) {
 		this.age = age;
 	}
 
-	public Double getHeight() {
-		return height;
-	}
-
-	public void setHeight(Double height) {
-		this.height = height;
-	}
-
 	public LocalDate getBirthDate() {
-		return birthDate;
+		return this.birthDate;
 	}
 
 	public void setBirthDate(LocalDate birthDate) {
 		this.birthDate = birthDate;
 	}
 
-	public LocalDateTime getProhibitedDateTime() {
-		return prohibitedDateTime;
-	}
-
-	public void setProhibitedDateTime(LocalDateTime prohibitedDateTime) {
-		this.prohibitedDateTime = prohibitedDateTime;
-	}
-
 	public Boolean getCode() {
-		return code;
+		return this.code;
 	}
 
 	public void setCode(Boolean code) {
 		this.code = code;
 	}
 
-	public EntityTwo getEntityTwo() {
-		return entityTwo;
+	public Double getHeight() {
+		return this.height;
 	}
 
-	public void setEntityTwo(EntityTwo entityTwo) {
-		this.entityTwo = entityTwo;
+	public void setHeight(Double height) {
+		this.height = height;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public LocalDateTime getProhibitedDateTime() {
+		return this.prohibitedDateTime;
+	}
+
+	public void setProhibitedDateTime(LocalDateTime prohibitedDateTime) {
+		this.prohibitedDateTime = prohibitedDateTime;
 	}
 
 	public EntityStatus getEntityStatus() {
-		return entityStatus;
+		return this.entityStatus;
 	}
 
 	public void setEntityStatus(EntityStatus entityStatus) {
 		this.entityStatus = entityStatus;
 	}
 
+	public EntityTwo getEntityTwo() {
+		return this.entityTwo;
+	}
+
+	public void setEntityTwo(EntityTwo entityTwo) {
+		this.entityTwo = entityTwo;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		EntityOne that = (EntityOne) o;
+		return java.util.Objects.equals(id, that.id);
+	}
+
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result
-				+ Objects.hash(age, birthDate, code, entityStatus, entityTwo, height, id, name, prohibitedDateTime);
-		return result;
+		return java.util.Objects.hash(id);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		EntityOne other = (EntityOne) obj;
-		return Objects.equals(age, other.age) && Objects.equals(birthDate, other.birthDate)
-				&& Objects.equals(code, other.code) && Objects.equals(entityStatus, other.entityStatus)
-				&& Objects.equals(entityTwo, other.entityTwo) && Objects.equals(height, other.height)
-				&& Objects.equals(id, other.id) && Objects.equals(name, other.name)
-				&& Objects.equals(prohibitedDateTime, other.prohibitedDateTime);
+	public String toString() {
+		return "EntityOne{" + "id=" + id + ", " + "age=" + (age != null ? age.toString() : "null") + ", " + "birthDate="
+				+ (birthDate != null ? birthDate.toString() : "null") + ", " + "code="
+				+ (code != null ? code.toString() : "null") + ", " + "height="
+				+ (height != null ? height.toString() : "null") + ", " + "name="
+				+ (name != null ? name.toString() : "null") + ", " + "prohibitedDateTime="
+				+ (prohibitedDateTime != null ? prohibitedDateTime.toString() : "null") + ", " + "entityStatus="
+				+ (entityStatus != null ? entityStatus.toString() : "null") + ", " + "entityTwo="
+				+ (entityTwo != null ? entityTwo.toString() : "null") + '}';
 	}
-
 }

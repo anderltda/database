@@ -3,6 +3,7 @@ package br.com.process.integration.database.model.view.dto.example;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 import org.springframework.hateoas.RepresentationModel;
 
@@ -36,7 +37,7 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 	private LocalDateTime startDateTime;
 
 	// EntityTwo
-	private String idEntityTwo;
+	private UUID idEntityTwo;
 	private String color;
 	private Integer hex;
 	private Double cost;
@@ -44,7 +45,7 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 	private LocalDate inclusionDate;
 
 	// EntityTree
-	private String idEntityTree;
+	private UUID idEntityTree;
 	private String animal;
 	private Integer indicator;
 	private Double amount;
@@ -54,14 +55,14 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 	private LocalDateTime localDateTime;
 
 	// EntityFour
-	private String idEntityFour;
+	private UUID idEntityFour;
 	private String fruit;
 	private Integer attribute;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_TIME_FORMAT)
 	private LocalDateTime inclusionDateTime;
 
 	// EntityFive
-	private String idEntityFive;
+	private UUID idEntityFive;
 	private String reference;
 	private Integer factor;
 
@@ -167,11 +168,11 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 		this.startDateTime = startDateTime;
 	}
 
-	public String getIdEntityTwo() {
+	public UUID getIdEntityTwo() {
 		return idEntityTwo;
 	}
 
-	public void setIdEntityTwo(String idEntityTwo) {
+	public void setIdEntityTwo(UUID idEntityTwo) {
 		this.idEntityTwo = idEntityTwo;
 	}
 
@@ -207,11 +208,11 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 		this.inclusionDate = inclusionDate;
 	}
 
-	public String getIdEntityTree() {
+	public UUID getIdEntityTree() {
 		return idEntityTree;
 	}
 
-	public void setIdEntityTree(String idEntityTree) {
+	public void setIdEntityTree(UUID idEntityTree) {
 		this.idEntityTree = idEntityTree;
 	}
 
@@ -255,11 +256,11 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 		this.localDateTime = localDateTime;
 	}
 
-	public String getIdEntityFour() {
+	public UUID getIdEntityFour() {
 		return idEntityFour;
 	}
 
-	public void setIdEntityFour(String idEntityFour) {
+	public void setIdEntityFour(UUID idEntityFour) {
 		this.idEntityFour = idEntityFour;
 	}
 
@@ -287,11 +288,11 @@ public class EntityOneView extends RepresentationModel<EntityOneView> implements
 		this.inclusionDateTime = inclusionDateTime;
 	}
 
-	public String getIdEntityFive() {
+	public UUID getIdEntityFive() {
 		return idEntityFive;
 	}
 
-	public void setIdEntityFive(String idEntityFive) {
+	public void setIdEntityFive(UUID idEntityFive) {
 		this.idEntityFive = idEntityFive;
 	}
 

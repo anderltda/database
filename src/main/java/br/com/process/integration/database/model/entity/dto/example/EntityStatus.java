@@ -1,7 +1,6 @@
 package br.com.process.integration.database.model.entity.dto.example;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 import org.springframework.hateoas.RepresentationModel;
 
@@ -18,86 +17,88 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Entity_Status")
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Table(name = "entity_status")
 public class EntityStatus extends RepresentationModel<EntityStatus> implements BeanEntity<Long> {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_entity_status")
 	private Long id;
 
-	@Column(name = "name", nullable = false, length = 100)
+	@Column(name = "ativo")
+	private Boolean ativo;
+
+	@Column(name = "name", length = 255)
 	private String name;
 
-	@Column(name = "status", nullable = true)
-	private Integer status;
-
-	@Column(name = "start_date_time", nullable = false)
+	@Column(name = "start_date_time")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_TIME_FORMAT)
 	private LocalDateTime startDateTime;
 
-	@Column(name = "ativo", nullable = false)
-	private Boolean ativo = true;
+	@Column(name = "status")
+	private Integer status;
 
+	@Override
 	public Long getId() {
-		return id;
+		return this.id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Integer getStatus() {
-		return status;
-	}
-
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
-
-	public LocalDateTime getStartDateTime() {
-		return startDateTime;
-	}
-
-	public void setStartDateTime(LocalDateTime startDateTime) {
-		this.startDateTime = startDateTime;
-	}
-
 	public Boolean getAtivo() {
-		return ativo;
+		return this.ativo;
 	}
 
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + Objects.hash(ativo, id, name, startDateTime, status);
-		return result;
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public LocalDateTime getStartDateTime() {
+		return this.startDateTime;
+	}
+
+	public void setStartDateTime(LocalDateTime startDateTime) {
+		this.startDateTime = startDateTime;
+	}
+
+	public Integer getStatus() {
+		return this.status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
+	public boolean equals(Object o) {
+		if (this == o)
 			return true;
-		if (!super.equals(obj))
+		if (o == null || getClass() != o.getClass())
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		EntityStatus other = (EntityStatus) obj;
-		return Objects.equals(ativo, other.ativo) && Objects.equals(id, other.id) && Objects.equals(name, other.name)
-				&& Objects.equals(startDateTime, other.startDateTime) && Objects.equals(status, other.status);
+		EntityStatus that = (EntityStatus) o;
+		return java.util.Objects.equals(id, that.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(id);
+	}
+
+	@Override
+	public String toString() {
+		return "EntityStatus{" + "id=" + id + ", " + "ativo=" + (ativo != null ? ativo.toString() : "null") + ", "
+				+ "name=" + (name != null ? name.toString() : "null") + ", " + "startDateTime="
+				+ (startDateTime != null ? startDateTime.toString() : "null") + ", " + "status="
+				+ (status != null ? status.toString() : "null") + '}';
 	}
 }

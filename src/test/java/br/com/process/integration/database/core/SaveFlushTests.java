@@ -647,6 +647,7 @@ class SaveFlushTests {
 			String[] localTime) {
 
 		EntityOne entityOne = new EntityOne();
+		entityOne.setCode(true);
 		entityOne.setName(text[0]);
 		entityOne.setAge(inteiro[0]);
 		entityOne.setHeight(dobro[0]);

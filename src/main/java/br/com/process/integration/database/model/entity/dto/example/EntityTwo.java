@@ -1,7 +1,7 @@
 package br.com.process.integration.database.model.entity.dto.example;
 
 import java.time.LocalDate;
-import java.util.Objects;
+import java.util.UUID;
 
 import org.springframework.hateoas.RepresentationModel;
 
@@ -22,113 +22,114 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Entity_Two")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EntityTwo extends RepresentationModel<EntityTwo> implements BeanEntity<String> {
-
+@Table(name = "entity_two")
+public class EntityTwo extends RepresentationModel<EntityTwo> implements BeanEntity<UUID> {
 	@Id
-	@GeneratedValue(strategy = GenerationType.UUID) 
+	@GeneratedValue(strategy = GenerationType.UUID)
 	@Column(name = "id_entity_two")
-	private String id;
+	private UUID id;
 
-	@Column(name = "color", nullable = false, length = 100)
+	@Column(name = "color", nullable = false, length = 255)
 	private String color;
 
-	@Column(name = "hex", nullable = true)
-	private Integer hex;
-
-	@Column(name = "cost", nullable = false, precision = 10, scale = 0)
+	@Column(name = "cost", nullable = false)
 	private Double cost;
+
+	@Column(name = "hex")
+	private Integer hex;
 
 	@Column(name = "inclusion_date", nullable = false)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_FORMAT)
 	private LocalDate inclusionDate;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_entity_tree", nullable = false, referencedColumnName = "id_entity_tree")
-	private EntityTree entityTree;
-
 	@ManyToOne
-	@JoinColumn(name = "id_entity_status", nullable = false, referencedColumnName = "id_entity_status")
+	@JoinColumn(name = "id_entity_status", referencedColumnName = "id_entity_status")
 	private EntityStatus entityStatus;
 
-	public String getId() {
-		return id;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_entity_tree", referencedColumnName = "id_entity_tree", unique = true)
+	private EntityTree entityTree;
+
+	@Override
+	public UUID getId() {
+		return this.id;
 	}
 
-	public void setId(String id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 
 	public String getColor() {
-		return color;
+		return this.color;
 	}
 
 	public void setColor(String color) {
 		this.color = color;
 	}
 
-	public Integer getHex() {
-		return hex;
-	}
-
-	public void setHex(Integer hex) {
-		this.hex = hex;
-	}
-
 	public Double getCost() {
-		return cost;
+		return this.cost;
 	}
 
 	public void setCost(Double cost) {
 		this.cost = cost;
 	}
 
+	public Integer getHex() {
+		return this.hex;
+	}
+
+	public void setHex(Integer hex) {
+		this.hex = hex;
+	}
+
 	public LocalDate getInclusionDate() {
-		return inclusionDate;
+		return this.inclusionDate;
 	}
 
 	public void setInclusionDate(LocalDate inclusionDate) {
 		this.inclusionDate = inclusionDate;
 	}
 
-	public EntityTree getEntityTree() {
-		return entityTree;
-	}
-
-	public void setEntityTree(EntityTree entityTree) {
-		this.entityTree = entityTree;
-	}
-
 	public EntityStatus getEntityStatus() {
-		return entityStatus;
+		return this.entityStatus;
 	}
 
 	public void setEntityStatus(EntityStatus entityStatus) {
 		this.entityStatus = entityStatus;
 	}
 
+	public EntityTree getEntityTree() {
+		return this.entityTree;
+	}
+
+	public void setEntityTree(EntityTree entityTree) {
+		this.entityTree = entityTree;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		EntityTwo that = (EntityTwo) o;
+		return java.util.Objects.equals(id, that.id);
+	}
+
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + Objects.hash(color, cost, entityStatus, entityTree, hex, id, inclusionDate);
-		return result;
+		return java.util.Objects.hash(id);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		EntityTwo other = (EntityTwo) obj;
-		return Objects.equals(color, other.color) && Objects.equals(cost, other.cost)
-				&& Objects.equals(entityStatus, other.entityStatus) && Objects.equals(entityTree, other.entityTree)
-				&& Objects.equals(hex, other.hex) && Objects.equals(id, other.id)
-				&& Objects.equals(inclusionDate, other.inclusionDate);
+	public String toString() {
+		return "EntityTwo{" + "id=" + id + ", " + "color=" + (color != null ? color.toString() : "null") + ", "
+				+ "cost=" + (cost != null ? cost.toString() : "null") + ", " + "hex="
+				+ (hex != null ? hex.toString() : "null") + ", " + "inclusionDate="
+				+ (inclusionDate != null ? inclusionDate.toString() : "null") + ", " + "entityStatus="
+				+ (entityStatus != null ? entityStatus.toString() : "null") + ", " + "entityTree="
+				+ (entityTree != null ? entityTree.toString() : "null") + '}';
 	}
-
 }

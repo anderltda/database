@@ -2,7 +2,7 @@ package br.com.process.integration.database.model.entity.dto.example;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Objects;
+import java.util.UUID;
 
 import org.springframework.hateoas.RepresentationModel;
 
@@ -23,23 +23,22 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Entity_Tree")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EntityTree extends RepresentationModel<EntityTree> implements BeanEntity<String> {
-
+@Table(name = "entity_tree")
+public class EntityTree extends RepresentationModel<EntityTree> implements BeanEntity<UUID> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	@Column(name = "id_entity_tree")
-	private String id;
+	private UUID id;
 
-	@Column(name = "animal", nullable = false, length = 100)
+	@Column(name = "amount", nullable = false)
+	private Double amount;
+
+	@Column(name = "animal", nullable = false, length = 255)
 	private String animal;
 
-	@Column(name = "indicator", nullable = true)
+	@Column(name = "indicator")
 	private Integer indicator;
-
-	@Column(name = "amount", nullable = false, precision = 10, scale = 0)
-	private Double amount;
 
 	@Column(name = "local_date", nullable = false)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_FORMAT)
@@ -49,24 +48,33 @@ public class EntityTree extends RepresentationModel<EntityTree> implements BeanE
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_TIME_FORMAT)
 	private LocalDateTime localDateTime;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_entity_four", nullable = false, referencedColumnName = "id_entity_four")
-	private EntityFour entityFour;
-
 	@ManyToOne
-	@JoinColumn(name = "id_entity_status", nullable = false, referencedColumnName = "id_entity_status")
+	@JoinColumn(name = "id_entity_status", referencedColumnName = "id_entity_status")
 	private EntityStatus entityStatus;
 
-	public String getId() {
-		return id;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_entity_four", referencedColumnName = "id_entity_four", unique = true)
+	private EntityFour entityFour;
+
+	@Override
+	public UUID getId() {
+		return this.id;
 	}
 
-	public void setId(String id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 
+	public Double getAmount() {
+		return this.amount;
+	}
+
+	public void setAmount(Double amount) {
+		this.amount = amount;
+	}
+
 	public String getAnimal() {
-		return animal;
+		return this.animal;
 	}
 
 	public void setAnimal(String animal) {
@@ -74,23 +82,15 @@ public class EntityTree extends RepresentationModel<EntityTree> implements BeanE
 	}
 
 	public Integer getIndicator() {
-		return indicator;
+		return this.indicator;
 	}
 
 	public void setIndicator(Integer indicator) {
 		this.indicator = indicator;
 	}
 
-	public Double getAmount() {
-		return amount;
-	}
-
-	public void setAmount(Double amount) {
-		this.amount = amount;
-	}
-
 	public LocalDate getLocalDate() {
-		return localDate;
+		return this.localDate;
 	}
 
 	public void setLocalDate(LocalDate localDate) {
@@ -98,50 +98,52 @@ public class EntityTree extends RepresentationModel<EntityTree> implements BeanE
 	}
 
 	public LocalDateTime getLocalDateTime() {
-		return localDateTime;
+		return this.localDateTime;
 	}
 
 	public void setLocalDateTime(LocalDateTime localDateTime) {
 		this.localDateTime = localDateTime;
 	}
 
-	public EntityFour getEntityFour() {
-		return entityFour;
-	}
-
-	public void setEntityFour(EntityFour entityFour) {
-		this.entityFour = entityFour;
-	}
-
 	public EntityStatus getEntityStatus() {
-		return entityStatus;
+		return this.entityStatus;
 	}
 
 	public void setEntityStatus(EntityStatus entityStatus) {
 		this.entityStatus = entityStatus;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result
-				+ Objects.hash(amount, animal, entityFour, entityStatus, id, indicator, localDate, localDateTime);
-		return result;
+	public EntityFour getEntityFour() {
+		return this.entityFour;
+	}
+
+	public void setEntityFour(EntityFour entityFour) {
+		this.entityFour = entityFour;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
+	public boolean equals(Object o) {
+		if (this == o)
 			return true;
-		if (!super.equals(obj))
+		if (o == null || getClass() != o.getClass())
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		EntityTree other = (EntityTree) obj;
-		return Objects.equals(amount, other.amount) && Objects.equals(animal, other.animal)
-				&& Objects.equals(entityFour, other.entityFour) && Objects.equals(entityStatus, other.entityStatus)
-				&& Objects.equals(id, other.id) && Objects.equals(indicator, other.indicator)
-				&& Objects.equals(localDate, other.localDate) && Objects.equals(localDateTime, other.localDateTime);
+		EntityTree that = (EntityTree) o;
+		return java.util.Objects.equals(id, that.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(id);
+	}
+
+	@Override
+	public String toString() {
+		return "EntityTree{" + "id=" + id + ", " + "amount=" + (amount != null ? amount.toString() : "null") + ", "
+				+ "animal=" + (animal != null ? animal.toString() : "null") + ", " + "indicator="
+				+ (indicator != null ? indicator.toString() : "null") + ", " + "localDate="
+				+ (localDate != null ? localDate.toString() : "null") + ", " + "localDateTime="
+				+ (localDateTime != null ? localDateTime.toString() : "null") + ", " + "entityStatus="
+				+ (entityStatus != null ? entityStatus.toString() : "null") + ", " + "entityFour="
+				+ (entityFour != null ? entityFour.toString() : "null") + '}';
 	}
 }

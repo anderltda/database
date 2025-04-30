@@ -1,6 +1,6 @@
 package br.com.process.integration.database.model.entity.dto.example;
 
-import java.util.Objects;
+import java.util.UUID;
 
 import org.springframework.hateoas.RepresentationModel;
 
@@ -17,51 +17,51 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "Entity_Five")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EntityFive extends RepresentationModel<EntityFive> implements BeanEntity<String> {
-
+@Table(name = "entity_five")
+public class EntityFive extends RepresentationModel<EntityFive> implements BeanEntity<UUID> {
 	@Id
-	@GeneratedValue(strategy = GenerationType.UUID) 
+	@GeneratedValue(strategy = GenerationType.UUID)
 	@Column(name = "id_entity_five")
-	private String id;
+	private UUID id;
 
-	@Column(name = "reference", nullable = false, length = 100)
-	private String reference;
-
-	@Column(name = "factor", nullable = true)
+	@Column(name = "factor", nullable = false)
 	private Integer factor;
 
+	@Column(name = "reference", nullable = false, length = 255)
+	private String reference;
+
 	@ManyToOne
-	@JoinColumn(name = "id_entity_status", nullable = false, referencedColumnName = "id_entity_status")
+	@JoinColumn(name = "id_entity_status", referencedColumnName = "id_entity_status")
 	private EntityStatus entityStatus;
 
-	public String getId() {
-		return id;
+	@Override
+	public UUID getId() {
+		return this.id;
 	}
 
-	public void setId(String id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 
-	public String getReference() {
-		return reference;
-	}
-
-	public void setReference(String reference) {
-		this.reference = reference;
-	}
-
 	public Integer getFactor() {
-		return factor;
+		return this.factor;
 	}
 
 	public void setFactor(Integer factor) {
 		this.factor = factor;
 	}
 
+	public String getReference() {
+		return this.reference;
+	}
+
+	public void setReference(String reference) {
+		this.reference = reference;
+	}
+
 	public EntityStatus getEntityStatus() {
-		return entityStatus;
+		return this.entityStatus;
 	}
 
 	public void setEntityStatus(EntityStatus entityStatus) {
@@ -69,23 +69,24 @@ public class EntityFive extends RepresentationModel<EntityFive> implements BeanE
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + Objects.hash(entityStatus, factor, id, reference);
-		return result;
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		EntityFive that = (EntityFive) o;
+		return java.util.Objects.equals(id, that.id);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		EntityFive other = (EntityFive) obj;
-		return Objects.equals(entityStatus, other.entityStatus) && Objects.equals(factor, other.factor)
-				&& Objects.equals(id, other.id) && Objects.equals(reference, other.reference);
+	public int hashCode() {
+		return java.util.Objects.hash(id);
+	}
+
+	@Override
+	public String toString() {
+		return "EntityFive{" + "id=" + id + ", " + "factor=" + (factor != null ? factor.toString() : "null") + ", "
+				+ "reference=" + (reference != null ? reference.toString() : "null") + ", " + "entityStatus="
+				+ (entityStatus != null ? entityStatus.toString() : "null") + '}';
 	}
 }
