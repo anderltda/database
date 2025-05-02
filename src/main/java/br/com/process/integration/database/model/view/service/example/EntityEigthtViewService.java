@@ -2,7 +2,7 @@ package br.com.process.integration.database.model.view.service.example;
 
 import br.com.process.integration.database.core.application.AbstractJdbcService;
 import br.com.process.integration.database.core.ui.QueryNativeController;
-import br.com.process.integration.database.model.view.dto.example.EntityOneView;
+import br.com.process.integration.database.model.view.dto.example.EntityEigthtView;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -11,23 +11,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class EntityOneViewService extends AbstractJdbcService<EntityOneView> {
+public class EntityEigthtViewService extends AbstractJdbcService<EntityEigthtView> {
     @Autowired
-    private PagedResourcesAssembler<EntityOneView> pagedResourcesAssembler;
+    private PagedResourcesAssembler<EntityEigthtView> pagedResourcesAssembler;
 
-    protected EntityOneViewService() {
-        super(QueryNativeController.class, EntityOneView.class);
+    protected EntityEigthtViewService() {
+        super(QueryNativeController.class, EntityEigthtView.class);
     }
 
     @Override
-    public EntityOneView toModel(EntityOneView view) {
-        EntityOneView model = new EntityOneView();
+    public EntityEigthtView toModel(EntityEigthtView view) {
+        EntityEigthtView model = new EntityEigthtView();
         BeanUtils.copyProperties(view, model);
         return model;
     }
 
     @Override
-    public void setView(EntityOneView view) {
+    public void setView(EntityEigthtView view) {
         this.view = view;
     }
 

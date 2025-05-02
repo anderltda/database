@@ -2,8 +2,8 @@ package br.com.process.integration.database.model.entity.service.example;
 
 import br.com.process.integration.database.core.application.AbstractJpaService;
 import br.com.process.integration.database.core.ui.QueryJpaController;
-import br.com.process.integration.database.model.entity.dto.example.EntityTree;
-import java.util.UUID;
+import br.com.process.integration.database.model.entity.dto.example.EntitySeven;
+import br.com.process.integration.database.model.entity.dto.example.EntitySevenId;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -12,28 +12,28 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class EntityTreeService extends AbstractJpaService<EntityTree, EntityTree, UUID> {
+public class EntitySevenService extends AbstractJpaService<EntitySeven, EntitySeven, EntitySevenId> {
     @Autowired
-    private PagedResourcesAssembler<EntityTree> pagedResourcesAssembler;
+    private PagedResourcesAssembler<EntitySeven> pagedResourcesAssembler;
 
-    protected EntityTreeService() {
-        super(QueryJpaController.class, EntityTree.class);
+    protected EntitySevenService() {
+        super(QueryJpaController.class, EntitySeven.class);
     }
 
     @Override
-    public EntityTree toModel(EntityTree entity) {
-        EntityTree model = new EntityTree();
+    public EntitySeven toModel(EntitySeven entity) {
+        EntitySeven model = new EntitySeven();
         BeanUtils.copyProperties(entity, model);
         return model;
     }
 
     @Override
-    public void setId(UUID id) {
+    public void setId(EntitySevenId id) {
         this.id = id;
     }
 
     @Override
-    public void setEntity(EntityTree entity) {
+    public void setEntity(EntitySeven entity) {
         this.entity = entity;
     }
 

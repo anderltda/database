@@ -1,4 +1,4 @@
-package br.com.process.integration.database.generator;
+package br.com.process.integration.database.generator.handler;
 
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -26,6 +26,7 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 
+import br.com.process.integration.database.generator.metadata.ClassResolver;
 import br.com.process.integration.database.generator.metadata.ForeignKeyResolver;
 import br.com.process.integration.database.generator.model.ColumnInfo;
 import br.com.process.integration.database.generator.util.StringUtils;
@@ -50,43 +51,50 @@ public class EntityGenerator {
 	private final String username;
 	private final String password;
 	private final String packageName;
-	private final Set<String> tabelasParaGerar;
+	private final Set<String> tables;
 
 	/**
 	 * @param jdbcUrl
 	 * @param username
 	 * @param password
-	 * @param tabelasParaGerar
+	 * @param tables
 	 */
-	public EntityGenerator(String jdbcUrl, String username, String password, String packageName,
-			Set<String> tabelasParaGerar) {
+	public EntityGenerator(String jdbcUrl, String username, String password, String packageName, Set<String> tables) {
 		this.jdbcUrl = jdbcUrl;
 		this.username = username;
 		this.password = password;
 		this.packageName = packageName;
-		this.tabelasParaGerar = tabelasParaGerar;
+		this.tables = tables;
 	}
 
 	/**
 	 * @throws Exception
 	 */
-	public void run() throws Exception {
+	public List<ClassResolver> run() throws Exception {
+		
+		List<ClassResolver> classResolverList = new ArrayList<>();
+		
 		try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
+			
 			DatabaseMetaData metaData = connection.getMetaData();
 			Map<String, Map<String, String>> foreignKeys = ForeignKeyResolver.resolve(metaData);
 
-			ResultSet tables = metaData.getTables(null, null, "%", new String[] { "TABLE" });
-			while (tables.next()) {
-				String tableName = tables.getString("TABLE_NAME");
-				if (tabelasParaGerar.isEmpty() || tabelasParaGerar.contains(tableName)) {
-					gerarClasseEntity(metaData, packageName, tableName, foreignKeys);
+			ResultSet ResultSetTables = metaData.getTables(null, null, "%", new String[] { "TABLE" });
+			
+			while (ResultSetTables.next()) {
+				String tableName = ResultSetTables.getString("TABLE_NAME");
+				if (tables.isEmpty() || tables.contains(tableName)) {
+					ClassResolver classResolver = gerarClasseEntity(metaData, packageName, tableName, foreignKeys);
+					classResolverList.add(classResolver);
 				}
 			}
+			
 		}
+		
+		return classResolverList;
 	}
 
-	private void gerarClasseEntity(DatabaseMetaData metaData, String packageName, String tableName,
-			Map<String, Map<String, String>> foreignKeys) throws SQLException, IOException {
+	private ClassResolver gerarClasseEntity(DatabaseMetaData metaData, String packageName, String tableName, Map<String, Map<String, String>> foreignKeys) throws SQLException, IOException {
 
 		String className = StringUtils.capitalize(StringUtils.camelCase(tableName));
 
@@ -94,8 +102,7 @@ public class EntityGenerator {
 
 		Set<String> primaryKeys = new HashSet<>();
 
-		Map<String, Map<String, List<String>>> compositeForeignKeys = ForeignKeyResolver
-				.resolveCompositeForeignKeys(metaData);
+		Map<String, Map<String, List<String>>> compositeForeignKeys = ForeignKeyResolver.resolveCompositeForeignKeys(metaData);
 
 		ResultSet pk = metaData.getPrimaryKeys(null, null, tableName);
 
@@ -160,7 +167,7 @@ public class EntityGenerator {
 				.addAnnotation(tableAnnotation.build())
 				.superclass(ParameterizedTypeName.get(representationModel, ClassName.get(packageName, className)));
 
-		ClassName idTypeClass;
+		ClassName idTypeClass = null;
 
 		if (isCompositeKey) {
 			idTypeClass = ClassName.get(packageName, className + "Id");
@@ -235,8 +242,7 @@ public class EntityGenerator {
 
 				FieldSpec field = FieldSpec.builder(typeClass, "id", Modifier.PRIVATE).addAnnotation(Id.class)
 						.addAnnotation(generatedValue.build())
-						.addAnnotation(
-								AnnotationSpec.builder(Column.class).addMember("name", "$S", column.name).build())
+						.addAnnotation(AnnotationSpec.builder(Column.class).addMember("name", "$S", column.name).build())
 						.build();
 
 				classBuilder.addField(field);
@@ -276,9 +282,9 @@ public class EntityGenerator {
 							cascadeType);
 				} else {
 					relationAnnotation = ClassName.get("jakarta.persistence", "ManyToOne");
-					ClassName fetchType = ClassName.get("jakarta.persistence", "FetchType");
-					relationBuilder = AnnotationSpec.builder(relationAnnotation).addMember("fetch", "$T.LAZY",
-							fetchType);
+					//ClassName fetchType = ClassName.get("jakarta.persistence", "FetchType");
+					relationBuilder = AnnotationSpec.builder(relationAnnotation);
+							//.addMember("fetch", "$T.LAZY", fetchType);
 				}
 
 				FieldSpec field = FieldSpec
@@ -354,9 +360,10 @@ public class EntityGenerator {
 			}
 		}
 
-		for (Map.Entry<String, List<String>> entry : compositeForeignKeys.getOrDefault(tableName, Map.of())
-				.entrySet()) {
+		for (Map.Entry<String, List<String>> entry : compositeForeignKeys.getOrDefault(tableName, Map.of()).entrySet()) {
+			
 			String referencedTable = entry.getKey();
+			
 			List<String> fkColumns = entry.getValue();
 
 			boolean alreadyMapped = fkColumns.stream().anyMatch(
@@ -366,14 +373,17 @@ public class EntityGenerator {
 				continue;
 
 			String referencedProperty = StringUtils.camelCase(referencedTable);
+			
+			
 			String referencedClass = StringUtils.capitalize(referencedProperty);
 
 			List<CodeBlock> joinColumnsBlocks = new ArrayList<>();
+			
 			for (String fkColumn : fkColumns) {
 				String referencedColumnName = getReferencedColumnName(metaData, tableName, fkColumn);
 
-				CodeBlock join = CodeBlock.of("@$T(name = $S, referencedColumnName = $S)", JoinColumn.class, fkColumn,
-						referencedColumnName);
+				CodeBlock join = CodeBlock.of("@$T(name = $S, referencedColumnName = $S)", 
+						JoinColumn.class, fkColumn, referencedColumnName);
 				joinColumnsBlocks.add(join);
 			}
 
@@ -415,52 +425,44 @@ public class EntityGenerator {
 							.returns(int.class).addStatement("return java.util.Objects.hash(id)").build());
 		}
 
-		// toString
-		List<String> linhas = new ArrayList<>();
+        // toString
+        List<String> linhas = new ArrayList<>();
 
-		if (!isCompositeKey && primaryKeys.size() == 1) {
-			linhas.add("\"id=\" + id");
-		} else if (isCompositeKey) {
-			linhas.add("\"id=\" + id");
-		}
+        // Gera toString com base em todos os campos realmente gerados
+        Set<String> usedFields = new HashSet<>();
 
-		for (ColumnInfo column : columns) {
+        for (FieldSpec field : classBuilder.build().fieldSpecs) {
+            String fieldName = field.name;
 
-			String fieldName = primaryKeys.contains(column.name) && !isCompositeKey ? "id"
-					: StringUtils.camelCase(column.name);
+            if (!usedFields.add(fieldName)) continue;
 
-			boolean isForeignKey = foreignKeys.containsKey(tableName)
-					&& foreignKeys.get(tableName).containsKey(column.name);
+            String label = fieldName;
+            if (label.startsWith("id") && label.length() > 2 && Character.isUpperCase(label.charAt(2))) {
+                label = label.substring(2);
+                label = Character.toLowerCase(label.charAt(0)) + label.substring(1);
+            }
 
-			if (isCompositeKey && primaryKeys.contains(column.name))
-				continue;
-			if (primaryKeys.contains(column.name) && !isCompositeKey)
-				continue;
+            linhas.add("\"" + label + "=\" + (" + fieldName + " != null ? " + fieldName + ".toString() : \"null\")");
+        }
 
-			if (isForeignKey) {
-				String referencedTable = foreignKeys.get(tableName).get(column.name);
-				String referencedProperty = StringUtils.camelCase(referencedTable);
-				linhas.add("\"" + referencedProperty + "=\" + (" + referencedProperty + " != null ? "
-						+ referencedProperty + ".toString() : \"null\")");
-			} else {
-				linhas.add("\"" + fieldName + "=\" + (" + fieldName + " != null ? " + fieldName
-						+ ".toString() : \"null\")");
-			}
-		}
-
-		classBuilder
-				.addMethod(
-						MethodSpec.methodBuilder("toString").addAnnotation(Override.class).addModifiers(Modifier.PUBLIC)
-								.returns(String.class)
-								.addCode(CodeBlock.builder().add("return $S +\n", className + "{")
-										.add("$L", String.join(" + \", \" +\n", linhas)).add(" + '}';\n").build())
-								.build());
+        classBuilder.addMethod(MethodSpec.methodBuilder("toString")
+            .addAnnotation(Override.class)
+            .addModifiers(Modifier.PUBLIC)
+            .returns(String.class)
+            .addCode(CodeBlock.builder()
+                .add("return $S +\n", className + "{")
+                .add("$L", String.join(" + \", \" +\n", linhas))
+                .add(" + '}';\n")
+                .build())
+            .build());
 
 		// Escreve a classe
 		JavaFile javaFile = JavaFile.builder(packageName, classBuilder.build()).skipJavaLangImports(true).indent("    ")
 				.build();
 
 		javaFile.writeTo(Paths.get("src/main/java"));
+		
+		return new ClassResolver(className, idTypeClass);
 	}
 
 	private String getReferencedColumnName(DatabaseMetaData metaData, String fkTable, String fkColumn)
