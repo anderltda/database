@@ -12,7 +12,7 @@ import com.squareup.javapoet.TypeSpec;
 
 import br.com.process.integration.database.generator.util.TypeMapper;
 
-public class RepositoryGenerator {
+public class EntityRepositoryGenerator {
 
 	public static void generateRepositoryClass(String entityClassName, String packageEntity, String packageRepository, String idJavaType) throws IOException {
 

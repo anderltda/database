@@ -8,7 +8,7 @@ import java.util.Set;
 
 import br.com.process.integration.database.generator.handler.EntityGenerator;
 import br.com.process.integration.database.generator.handler.EntityServiceGenerator;
-import br.com.process.integration.database.generator.handler.RepositoryGenerator;
+import br.com.process.integration.database.generator.handler.EntityRepositoryGenerator;
 import br.com.process.integration.database.generator.handler.ViewGenerator;
 import br.com.process.integration.database.generator.handler.ViewServiceGenerator;
 import br.com.process.integration.database.generator.metadata.ClassResolver;
@@ -35,7 +35,7 @@ public class MainApplication {
 				String packageRepository = "br.com.process.integration.database.model.entity.repository." + domain;
 				String packageService = "br.com.process.integration.database.model.entity.service." + domain;
 				try {
-					RepositoryGenerator.generateRepositoryClass(resolver.getName(), packageEntity, packageRepository, resolver.getTypeId().toString());
+					EntityRepositoryGenerator.generateRepositoryClass(resolver.getName(), packageEntity, packageRepository, resolver.getTypeId().toString());
 					EntityServiceGenerator.generateServiceClass(resolver.getName(), packageEntity, packageService, resolver.getTypeId().toString());
 				} catch (IOException ex) {
 					ex.printStackTrace();
