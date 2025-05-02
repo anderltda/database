@@ -6,14 +6,14 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import br.com.process.integration.database.generator.handler.EntityGenerator;
-import br.com.process.integration.database.generator.handler.EntityServiceGenerator;
-import br.com.process.integration.database.generator.handler.EntityRepositoryGenerator;
-import br.com.process.integration.database.generator.handler.ViewGenerator;
-import br.com.process.integration.database.generator.handler.ViewServiceGenerator;
+import br.com.process.integration.database.generator.handler.entity.EntityGenerator;
+import br.com.process.integration.database.generator.handler.entity.EntityRepositoryGenerator;
+import br.com.process.integration.database.generator.handler.entity.EntityServiceGenerator;
+import br.com.process.integration.database.generator.handler.view.ViewGenerator;
+import br.com.process.integration.database.generator.handler.view.ViewServiceGenerator;
 import br.com.process.integration.database.generator.metadata.ClassResolver;
 
-public class MainApplication {
+public class MainGenerator {
 
 	public static void main(String[] args) {
 

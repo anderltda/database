@@ -1,4 +1,4 @@
-package br.com.process.integration.database.generator.handler;
+package br.com.process.integration.database.generator.handler.view;
 
 import java.io.IOException;
 import java.nio.file.Paths;
