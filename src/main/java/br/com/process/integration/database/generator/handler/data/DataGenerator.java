@@ -126,10 +126,9 @@ public class DataGenerator {
         }
 
         for (Map.Entry<String, String> entry : foreignKeys.entrySet()) {
-            String fkColumn = entry.getKey();
             String referencedTable = entry.getValue();
             if (!handledForeignTables.add(referencedTable)) {
-                continue; // já mapeado
+                continue;
             }
 
             String baseFieldName = StringUtils.camelCase(referencedTable) + "Data";
