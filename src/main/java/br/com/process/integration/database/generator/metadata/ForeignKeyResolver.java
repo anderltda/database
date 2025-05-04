@@ -20,6 +20,7 @@ public class ForeignKeyResolver {
 	 * @throws SQLException
 	 */
 	public static Map<String, Map<String, String>> resolve(DatabaseMetaData metaData) throws SQLException {
+		
 		Map<String, Map<String, String>> foreignKeys = new HashMap<>();
 		Map<String, Map<Short, String>> fkGroups = new HashMap<>();
 
@@ -34,8 +35,7 @@ public class ForeignKeyResolver {
 
 				// Agrupa todas as colunas por nome da FK e tabela
 				String fkKey = fkTable + "|" + fkName;
-				fkGroups.computeIfAbsent(fkKey, k -> new HashMap<>()).put(keySeq,
-						fkColumn + "=>" + pkTable + "." + pkColumn);
+				fkGroups.computeIfAbsent(fkKey, k -> new HashMap<>()).put(keySeq, fkColumn + "=>" + pkTable + "." + pkColumn);
 			}
 		}
 

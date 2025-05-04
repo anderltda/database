@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="br.com.process.integration.database.model.data.mapper.test.EntityOneDataMapper">
+
+    <resultMap id="defaultResultMap" type="br.com.process.integration.database.model.data.dto.test.EntityOneData">
+        <result column="id" property="id"/>
+        <result column="age" property="age"/>
+        <result column="birth_date" property="birthDate"/>
+        <result column="code" property="code"/>
+        <result column="height" property="height"/>
+        <result column="name" property="name"/>
+        <result column="prohibited_date_time" property="prohibitedDateTime"/>
+        <association property="entityStatusData" javaType="br.com.process.integration.database.model.data.dto.test.EntityStatusData" resultMap="EntityStatusMap" />
+        <association property="entityTwoData" javaType="br.com.process.integration.database.model.data.dto.test.EntityTwoData" resultMap="EntityTwoMap" />
+    </resultMap>
+
+    <resultMap id="EntityStatusMap" type="br.com.process.integration.database.model.data.dto.test.EntityStatusData">
+        <result column="id" property="id"/>
+        <result column="ativo" property="ativo"/>
+        <result column="name" property="name"/>
+        <result column="start_date_time" property="startDateTime"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+    <resultMap id="EntityTwoMap" type="br.com.process.integration.database.model.data.dto.test.EntityTwoData">
+        <result column="id" property="id"/>
+        <result column="color" property="color"/>
+        <result column="cost" property="cost"/>
+        <result column="hex" property="hex"/>
+        <result column="inclusion_date" property="inclusionDate"/>
+    </resultMap>
+
+    <select id="findById" resultMap="defaultResultMap" parameterType="java.lang.Long">
+        SELECT * FROM entity_one WHERE id = #{id}
+    </select>
+
+    <select id="findAll" resultMap="defaultResultMap">
+        SELECT * FROM entity_one
+    </select>
+
+</mapper>

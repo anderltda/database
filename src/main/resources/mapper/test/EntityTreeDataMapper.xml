@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="br.com.process.integration.database.model.data.mapper.test.EntityTreeDataMapper">
+
+    <resultMap id="defaultResultMap" type="br.com.process.integration.database.model.data.dto.test.EntityTreeData">
+        <result column="id" property="id"/>
+        <result column="amount" property="amount"/>
+        <result column="animal" property="animal"/>
+        <result column="indicator" property="indicator"/>
+        <result column="local_date" property="localDate"/>
+        <result column="local_date_time" property="localDateTime"/>
+        <association property="entityFourData" javaType="br.com.process.integration.database.model.data.dto.test.EntityFourData" resultMap="EntityFourMap" />
+        <association property="entityStatusData" javaType="br.com.process.integration.database.model.data.dto.test.EntityStatusData" resultMap="EntityStatusMap" />
+    </resultMap>
+
+    <resultMap id="EntityFourMap" type="br.com.process.integration.database.model.data.dto.test.EntityFourData">
+        <result column="id" property="id"/>
+        <result column="attribute" property="attribute"/>
+        <result column="fruit" property="fruit"/>
+        <result column="inclusion_date_time" property="inclusionDateTime"/>
+    </resultMap>
+
+    <resultMap id="EntityStatusMap" type="br.com.process.integration.database.model.data.dto.test.EntityStatusData">
+        <result column="id" property="id"/>
+        <result column="ativo" property="ativo"/>
+        <result column="name" property="name"/>
+        <result column="start_date_time" property="startDateTime"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+    <select id="findById" resultMap="defaultResultMap" parameterType="java.lang.Long">
+        SELECT * FROM entity_tree WHERE id = #{id}
+    </select>
+
+    <select id="findAll" resultMap="defaultResultMap">
+        SELECT * FROM entity_tree
+    </select>
+
+</mapper>
