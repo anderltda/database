@@ -17,6 +17,5 @@ public class ColumnInfo {
 	    this.nullable = nullable;
 	    this.decimalDigits = decimalDigits;
 	    this.unique = unique;
-	    System.out.println(name + " --->>  " + sqlTypeName);
 	}
 }

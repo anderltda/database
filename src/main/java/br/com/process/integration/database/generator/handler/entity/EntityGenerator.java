@@ -162,8 +162,7 @@ public class EntityGenerator {
 		// Criação da classe com todas as anotações e heranças/interfaces
 		TypeSpec.Builder classBuilder = TypeSpec.classBuilder(className).addModifiers(Modifier.PUBLIC)
 				.addAnnotation(Entity.class)
-				.addAnnotation(
-						AnnotationSpec.builder(jsonIgnoreProperties).addMember("ignoreUnknown", "$L", true).build())
+				.addAnnotation(AnnotationSpec.builder(jsonIgnoreProperties).addMember("ignoreUnknown", "$L", true).build())
 				.addAnnotation(tableAnnotation.build())
 				.superclass(ParameterizedTypeName.get(representationModel, ClassName.get(packageName, className)));
 
@@ -282,9 +281,9 @@ public class EntityGenerator {
 							cascadeType);
 				} else {
 					relationAnnotation = ClassName.get("jakarta.persistence", "ManyToOne");
-					//ClassName fetchType = ClassName.get("jakarta.persistence", "FetchType");
+					//ClassName fetchType = ClassName.get("jakarta.persistence", "FetchType"); // Ativa LAZY
 					relationBuilder = AnnotationSpec.builder(relationAnnotation);
-							//.addMember("fetch", "$T.LAZY", fetchType);
+							//.addMember("fetch", "$T.LAZY", fetchType); // Ativa LAZY
 				}
 
 				FieldSpec field = FieldSpec

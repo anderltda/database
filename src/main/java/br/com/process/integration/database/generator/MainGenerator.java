@@ -47,7 +47,7 @@ public class MainGenerator {
 	 */
 	private static void extractedInit(Set<String> tables) throws Exception {
 
-		String domain = "test";
+		String domain = "example";
 		String url = "jdbc:postgresql://localhost:5432/root-database";
 		String user = "anderson";
 		String pass = "admin";
