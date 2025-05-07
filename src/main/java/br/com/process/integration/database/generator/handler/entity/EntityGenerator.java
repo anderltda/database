@@ -1,7 +1,6 @@
 package br.com.process.integration.database.generator.handler.entity;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;

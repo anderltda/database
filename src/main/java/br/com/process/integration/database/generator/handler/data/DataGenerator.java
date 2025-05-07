@@ -104,7 +104,8 @@ public class DataGenerator {
             for (String table : tables) {
                 List<String> primaryKeys = primaryKeysMap.getOrDefault(table, List.of());
                 if (primaryKeys.size() > 1) {
-                    gerarClasseCompostaId(table, tableColumnsMap.get(table), primaryKeys);
+                	String classNameCompostaId = gerarClasseCompostaId(table, tableColumnsMap.get(table), primaryKeys);
+                	classNames.add(classNameCompostaId);
                 }
                 String className = gerarClasseData(table, tableColumnsMap.get(table), foreignKeys.getOrDefault(table, Map.of()), primaryKeys);
                 classNames.add(className);
@@ -119,7 +120,7 @@ public class DataGenerator {
      * @param primaryKeys
      * @throws Exception
      */
-    private void gerarClasseCompostaId(String tableName, List<ColumnInfo> columns, List<String> primaryKeys) throws Exception {
+    private String gerarClasseCompostaId(String tableName, List<ColumnInfo> columns, List<String> primaryKeys) throws Exception {
     	
         String className = StringUtils.capitalize(StringUtils.camelCase(tableName)) + "Id";
         
@@ -156,6 +157,8 @@ public class DataGenerator {
             .skipJavaLangImports(true).indent("    ").build();
 
         javaFile.writeTo(Paths.get("src/main/java"));
+        
+        return className;
     }
 
     /**

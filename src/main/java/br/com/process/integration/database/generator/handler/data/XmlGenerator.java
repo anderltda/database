@@ -39,6 +39,10 @@ public class XmlGenerator {
         String mapperName = baseName + "DataMapper";
         String namespace = clazz.getPackageName().replace(".dto", ".mapper") + "." + mapperName;
         String tableName = camelToSnake(baseName);
+        
+        boolean classeCompostaId = (className.substring(className.length() - 2).endsWith("Id"));
+        
+        if(classeCompostaId) return;
 
         File dir = new File(TARGET_DIR + File.separator + domain);
         if (!dir.exists())
