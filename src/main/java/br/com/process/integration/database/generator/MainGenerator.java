@@ -28,8 +28,8 @@ public class MainGenerator {
 	public static void main(String[] args) {
 
 		Map<Integer, Set<String>> maps = new HashMap<>();
-		maps.put(1, new LinkedHashSet<>(Arrays.asList("entity_eigtht", "entity_seven", "entity_six")));
-		maps.put(2, new LinkedHashSet<>(Arrays.asList("entity_one", "entity_status", "entity_two", "entity_tree", "entity_four", "entity_five")));
+		maps.put(1, new LinkedHashSet<>(Arrays.asList("entity_six", "entity_seven", "entity_eight", "entity_nine")));
+		maps.put(2, new LinkedHashSet<>(Arrays.asList("entity_status", "entity_five", "entity_four", "entity_tree", "entity_two", "entity_one")));
 
 		maps.forEach((key, tables) -> {
 			try {
