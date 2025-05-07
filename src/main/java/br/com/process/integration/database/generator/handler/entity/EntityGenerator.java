@@ -475,9 +475,7 @@ public class EntityGenerator {
 		JavaFile javaFile = JavaFile.builder(packageName, classBuilder.build()).skipJavaLangImports(true).indent("    ")
 				.build();
 		
-		Path outputPath = Paths.get(System.getProperty("user.dir"), "src", "main", "java");
-
-		javaFile.writeTo(outputPath);
+		javaFile.writeTo(Paths.get("src/main/java"));
 
 		return new ClassResolver(className, idTypeClass);
 	}
