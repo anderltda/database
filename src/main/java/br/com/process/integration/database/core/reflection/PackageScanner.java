@@ -74,7 +74,7 @@ public class PackageScanner {
 							.replace(".class", "");
 				} else if (resourcePath.contains("/classes/")) {
 					className = resourcePath
-							.substring(resourcePath.indexOf("/classes/") + 18)
+							.substring(resourcePath.indexOf("/classes/") + 9)
 							.replace("/", ".")
 							.replace(".class", "");
 				}
