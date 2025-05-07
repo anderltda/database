@@ -39,6 +39,7 @@ public class DataGenerator {
             DatabaseMetaData metaData = conn.getMetaData();
             Map<String, List<ColumnInfo>> tableColumnsMap = new LinkedHashMap<>();
             Map<String, Map<String, String>> foreignKeys = new HashMap<>();
+            Map<String, List<String>> primaryKeysMap = new HashMap<>();
 
             for (String table : tables) {
                 List<ColumnInfo> columns = new ArrayList<>();
@@ -63,18 +64,66 @@ public class DataGenerator {
                     fks.put(fkColumn, pkTable);
                 }
                 foreignKeys.put(table, fks);
+
+                List<String> pkCols = new ArrayList<>();
+                ResultSet pkRs = metaData.getPrimaryKeys(null, null, table);
+                while (pkRs.next()) {
+                    pkCols.add(pkRs.getString("COLUMN_NAME"));
+                }
+                primaryKeysMap.put(table, pkCols);
             }
 
             for (String table : tables) {
-                String className = gerarClasseData(table, tableColumnsMap.get(table), foreignKeys.getOrDefault(table, Map.of()));
+                List<String> primaryKeys = primaryKeysMap.getOrDefault(table, List.of());
+                if (primaryKeys.size() > 1) {
+                    gerarClasseCompostaId(table, tableColumnsMap.get(table), primaryKeys);
+                }
+                String className = gerarClasseData(table, tableColumnsMap.get(table), foreignKeys.getOrDefault(table, Map.of()), primaryKeys);
                 classNames.add(className);
             }
         }
         return classNames;
     }
 
-    private String gerarClasseData(String tableName, List<ColumnInfo> columns, Map<String, String> foreignKeys) throws IOException {
-        String className = StringUtils.capitalize(StringUtils.camelCase(tableName)) + "Data";
+    private void gerarClasseCompostaId(String tableName, List<ColumnInfo> columns, List<String> primaryKeys) throws IOException {
+        String className = StringUtils.capitalize(StringUtils.camelCase(tableName)) + "Id";
+        TypeSpec.Builder classBuilder = TypeSpec.classBuilder(className)
+            .addModifiers(Modifier.PUBLIC);
+
+        for (String pk : primaryKeys) {
+            ColumnInfo column = columns.stream().filter(c -> c.name.equalsIgnoreCase(pk)).findFirst().orElse(null);
+            if (column == null) continue;
+
+            String fieldName = StringUtils.camelCase(column.name);
+            String javaTypeName = TypeMapper.toJavaType(column.sqlTypeName);
+            ClassName typeClass = TypeMapper.resolveType(javaTypeName);
+
+            FieldSpec.Builder fieldBuilder = FieldSpec.builder(typeClass, fieldName, Modifier.PRIVATE);
+            fieldBuilder.addJavadoc("Coluna: $L\n", column.name);
+
+            if (!column.nullable) {
+                fieldBuilder.addAnnotation(ClassName.get("jakarta.validation.constraints", "NotNull"));
+            }
+
+            classBuilder.addField(fieldBuilder.build());
+
+            classBuilder.addMethod(MethodSpec.methodBuilder("get" + StringUtils.capitalize(fieldName))
+                .addModifiers(Modifier.PUBLIC).returns(typeClass)
+                .addStatement("return this.$N", fieldName).build());
+
+            classBuilder.addMethod(MethodSpec.methodBuilder("set" + StringUtils.capitalize(fieldName))
+                .addModifiers(Modifier.PUBLIC).addParameter(typeClass, fieldName)
+                .addStatement("this.$N = $N", fieldName, fieldName).build());
+        }
+
+        JavaFile javaFile = JavaFile.builder(packageName, classBuilder.build())
+            .skipJavaLangImports(true).indent("    ").build();
+
+        javaFile.writeTo(Paths.get("src/main/java"));
+    }
+
+    private String gerarClasseData(String tableName, List<ColumnInfo> columns, Map<String, String> foreignKeys, List<String> primaryKeys) throws IOException {
+    	String className = StringUtils.capitalize(StringUtils.camelCase(tableName)) + "Data";
 
         ClassName representationModel = ClassName.get("org.springframework.hateoas", "RepresentationModel");
         ClassName beanData = ClassName.get("br.com.process.integration.database.core.domain", "BeanData");
@@ -92,18 +141,54 @@ public class DataGenerator {
         Set<String> fieldNames = new LinkedHashSet<>();
         Set<String> usedFieldNames = new HashSet<>();
         Set<String> handledForeignTables = new HashSet<>();
+        
+        if (primaryKeys.size() > 1) {
+            String idClassName = StringUtils.capitalize(StringUtils.camelCase(tableName)) + "Id";
+            ClassName idClass = ClassName.get(packageName, idClassName);
+            classBuilder.addField(FieldSpec.builder(idClass, "id", Modifier.PRIVATE).build());
+
+            classBuilder.addMethod(MethodSpec.methodBuilder("getId")
+                .addModifiers(Modifier.PUBLIC).returns(idClass)
+                .addStatement("return this.id").build());
+
+            classBuilder.addMethod(MethodSpec.methodBuilder("setId")
+                .addModifiers(Modifier.PUBLIC).addParameter(idClass, "id")
+                .addStatement("this.id = id").build());
+
+            fieldNames.add("id");
+            usedFieldNames.add("id");
+        }
 
         for (ColumnInfo column : columns) {
+        	
+            if (primaryKeys.size() > 1 && primaryKeys.contains(column.name)) {
+                continue;
+            }
             if (foreignKeys.containsKey(column.name)) {
                 continue;
             }
 
-            String fieldName = column.name.equalsIgnoreCase("id_" + tableName) ? "id" : StringUtils.camelCase(column.name);
+            String fieldName = StringUtils.camelCase(column.name);
             String javaTypeName = TypeMapper.toJavaType(column.sqlTypeName);
             ClassName typeClass = TypeMapper.resolveType(javaTypeName);
 
             FieldSpec.Builder fieldBuilder = FieldSpec.builder(typeClass, fieldName, Modifier.PRIVATE);
 
+            // Comentário Javadoc com o nome original da coluna
+            fieldBuilder.addJavadoc("Coluna: $L\n", column.name);
+
+            // @NotNull se não for anulável
+            if (!column.nullable) {
+                fieldBuilder.addAnnotation(ClassName.get("jakarta.validation.constraints", "NotNull"));
+            }
+
+            // @Size(max = ...) para VARCHAR, CHAR
+            if ((column.sqlTypeName.equalsIgnoreCase("VARCHAR") || column.sqlTypeName.equalsIgnoreCase("CHAR")) && column.size > 0) {
+                fieldBuilder.addAnnotation(AnnotationSpec.builder(ClassName.get("jakarta.validation.constraints", "Size"))
+                    .addMember("max", "$L", column.size).build());
+            }
+
+            // @JsonFormat para datas
             if (javaTypeName.contains("LocalDate")) {
                 String formatConstant = javaTypeName.endsWith("Time") ? "DATE_TIME_FORMAT" : "DATE_FORMAT";
                 fieldBuilder.addAnnotation(AnnotationSpec.builder(jsonFormat)
@@ -212,4 +297,4 @@ public class DataGenerator {
 
         return className;
     }
-}
+} 

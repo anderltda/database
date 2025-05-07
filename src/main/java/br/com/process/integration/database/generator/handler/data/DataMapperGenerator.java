@@ -62,12 +62,12 @@ public class DataMapperGenerator {
 		// findById
 		try {
 			Class<?> dtoClass = Class.forName(packageDto + "." + dataClassName);
-			Field idField = dtoClass.getDeclaredField("id");
+			Field idField = dtoClass.getDeclaredFields()[0];
 			Class<?> idType = idField.getType();
 
-			ParameterSpec param = ParameterSpec.builder(idType, "id")
+			ParameterSpec param = ParameterSpec.builder(idType, idField.getName())
 				    .addAnnotation(AnnotationSpec.builder(ClassName.get("org.apache.ibatis.annotations", "Param"))
-				        .addMember("value", "$S", "id")
+				        .addMember("value", "$S", idField.getName())
 				        .build())
 				    .build();
 			
@@ -76,6 +76,7 @@ public class DataMapperGenerator {
 					.addParameter(param)
 					.returns(dataClass)
 					.build());
+			
 		} catch (Exception e) {
 			throw new RuntimeException("Erro ao identificar o tipo da propriedade 'id' da classe " + dataClassName, e);
 		}

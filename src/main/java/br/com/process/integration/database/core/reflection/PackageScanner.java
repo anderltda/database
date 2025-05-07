@@ -67,11 +67,19 @@ public class PackageScanner {
 
 			for (Resource resource : resources) {
 				String resourcePath = resource.getURL().toString();
-				if (resourcePath.contains("/classes/")) {
-					className = resourcePath.substring(resourcePath.indexOf("/classes/") + 9).replace("/", ".").replace(".class", "");
-					Class<?> clazz = Class.forName(className);
-					classes.add(clazz);
+				if (resourcePath.contains("/BOOT-INF/classes/")) {
+					className = resourcePath
+							.substring(resourcePath.indexOf("/BOOT-INF/classes/") + 18)
+							.replace("/", ".")
+							.replace(".class", "");
+				} else if (resourcePath.contains("/classes/")) {
+					className = resourcePath
+							.substring(resourcePath.indexOf("/classes/") + 18)
+							.replace("/", ".")
+							.replace(".class", "");
 				}
+				Class<?> clazz = Class.forName(className);
+				classes.add(clazz);
 			}
 
 		} catch (Exception ex) {
