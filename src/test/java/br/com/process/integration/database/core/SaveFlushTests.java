@@ -558,9 +558,7 @@ class SaveFlushTests {
 
 		String json = objectMapper.writeValueAsString(entityOne);
 
-		ErrorResponse errorResponse = new ErrorResponse(
-				"not-null property references a null or transient value: br.com.process.integration.database.model.entity.dto.example.EntityOne.name",
-				HttpStatus.BAD_REQUEST);
+		ErrorResponse errorResponse = new ErrorResponse("NULL not allowed for column", HttpStatus.BAD_REQUEST);
 
 		assertThrows(RuntimeException.class, () -> postJson(url, json, errorResponse));
 	}
