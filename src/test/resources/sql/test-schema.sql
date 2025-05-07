@@ -1,5 +1,6 @@
 -- DROPs para garantir ambiente limpo
-DROP TABLE IF EXISTS entity_eigtht CASCADE;
+DROP TABLE IF EXISTS entity_nine CASCADE;
+DROP TABLE IF EXISTS entity_eight CASCADE;
 DROP TABLE IF EXISTS entity_seven CASCADE;
 DROP TABLE IF EXISTS entity_six CASCADE;
 DROP TABLE IF EXISTS entity_one CASCADE;
@@ -95,11 +96,23 @@ CREATE TABLE entity_seven (
     FOREIGN KEY (id_entity_six) REFERENCES entity_six(id_entity_six)
 );
 
-CREATE TABLE entity_eigtht (
-    id_entity_eigtht INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE entity_eight (
+    id_entity_eight INT AUTO_INCREMENT PRIMARY KEY,
     id_entity_seven INT NOT NULL,
     id_entity_six INT NOT NULL,
     position VARCHAR(100) NOT NULL,
     properties VARCHAR(100),
+    FOREIGN KEY (id_entity_seven, id_entity_six) REFERENCES entity_seven(id_entity_seven, id_entity_six)
+);
+
+CREATE TABLE entity_nine (
+    id_entity_eight BIGINT NOT NULL,
+    id_entity_seven BIGINT NOT NULL,
+    id_entity_six BIGINT NOT NULL,
+ 	key_nine VARCHAR(100) NOT NULL,
+	code VARCHAR(100),
+	variable VARCHAR(100),
+    PRIMARY KEY (id_entity_eight, id_entity_seven, id_entity_six),
+	FOREIGN KEY (id_entity_eight) REFERENCES entity_eight(id_entity_eight),
     FOREIGN KEY (id_entity_seven, id_entity_six) REFERENCES entity_seven(id_entity_seven, id_entity_six)
 );
