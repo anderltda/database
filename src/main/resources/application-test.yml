@@ -1,17 +1,13 @@
 spring:
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:/sql/test-schema.sql
   datasource:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
     username: sa
     password:
-    driver-class-name: org.h2.Driver
   jpa:
     hibernate:
-      ddl-auto: create-drop
-    database-platform: org.hibernate.dialect.H2Dialect
-  h2:
-    console:
-      enabled: true
-
-mybatis:
-  mapper-locations: classpath:mapper/**/*.xml
-  type-aliases-package: br.com.process.integration.database.model.data.dto
+      ddl-auto: none
