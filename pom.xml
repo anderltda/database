@@ -121,6 +121,14 @@
 			<version>1.13.0</version>
 		</dependency>
 		<!-- javapoet -->
+		<!-- h2 -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- h2 -->
+
 		<!-- sonarqube -->
 		<dependency>
 			<groupId>org.jacoco</groupId>
