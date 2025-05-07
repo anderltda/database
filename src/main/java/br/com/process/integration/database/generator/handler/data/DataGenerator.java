@@ -1,22 +1,37 @@
 package br.com.process.integration.database.generator.handler.data;
 
-import java.io.IOException;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.lang.model.element.Modifier;
 
-import com.squareup.javapoet.*;
+import com.squareup.javapoet.AnnotationSpec;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
+import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeSpec;
 
 import br.com.process.integration.database.generator.model.ColumnInfo;
 import br.com.process.integration.database.generator.util.StringUtils;
 import br.com.process.integration.database.generator.util.TypeMapper;
 
+/**
+ * 
+ */
 public class DataGenerator {
 
     private final String jdbcUrl;
@@ -25,6 +40,13 @@ public class DataGenerator {
     private final String packageName;
     private final Set<String> tables;
 
+    /**
+     * @param jdbcUrl
+     * @param username
+     * @param password
+     * @param packageName
+     * @param tables
+     */
     public DataGenerator(String jdbcUrl, String username, String password, String packageName, Set<String> tables) {
         this.jdbcUrl = jdbcUrl;
         this.username = username;
@@ -33,8 +55,14 @@ public class DataGenerator {
         this.tables = tables;
     }
 
-    public List<String> run() throws SQLException, IOException {
+    /**
+     * @return
+     * @throws Exception
+     */
+    public List<String> run() throws Exception {
+    	
         List<String> classNames = new ArrayList<>();
+        
         try (Connection conn = DriverManager.getConnection(jdbcUrl, username, password)) {
             DatabaseMetaData metaData = conn.getMetaData();
             Map<String, List<ColumnInfo>> tableColumnsMap = new LinkedHashMap<>();
@@ -85,8 +113,16 @@ public class DataGenerator {
         return classNames;
     }
 
-    private void gerarClasseCompostaId(String tableName, List<ColumnInfo> columns, List<String> primaryKeys) throws IOException {
+    /**
+     * @param tableName
+     * @param columns
+     * @param primaryKeys
+     * @throws Exception
+     */
+    private void gerarClasseCompostaId(String tableName, List<ColumnInfo> columns, List<String> primaryKeys) throws Exception {
+    	
         String className = StringUtils.capitalize(StringUtils.camelCase(tableName)) + "Id";
+        
         TypeSpec.Builder classBuilder = TypeSpec.classBuilder(className)
             .addModifiers(Modifier.PUBLIC);
 
@@ -122,7 +158,16 @@ public class DataGenerator {
         javaFile.writeTo(Paths.get("src/main/java"));
     }
 
-    private String gerarClasseData(String tableName, List<ColumnInfo> columns, Map<String, String> foreignKeys, List<String> primaryKeys) throws IOException {
+    /**
+     * @param tableName
+     * @param columns
+     * @param foreignKeys
+     * @param primaryKeys
+     * @return
+     * @throws Exception
+     */
+    private String gerarClasseData(String tableName, List<ColumnInfo> columns, Map<String, String> foreignKeys, List<String> primaryKeys) throws Exception {
+    	
     	String className = StringUtils.capitalize(StringUtils.camelCase(tableName)) + "Data";
 
         ClassName representationModel = ClassName.get("org.springframework.hateoas", "RepresentationModel");

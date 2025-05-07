@@ -1,6 +1,5 @@
 package br.com.process.integration.database.generator.handler.data;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -17,19 +16,32 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 
+/**
+ * 
+ */
 public class DataMapperGenerator {
 
 	private final String packageName;
 	private final String packageDto;
 	private final Set<String> tables;
 
+	/**
+	 * @param packageName
+	 * @param packageDto
+	 * @param tables
+	 */
 	public DataMapperGenerator(String packageName, String packageDto, Set<String> tables) {
 		this.packageName = packageName;
 		this.packageDto = packageDto;
 		this.tables = tables;
 	}
 
-	public List<String> run() throws IOException {
+	/**
+	 * @return
+	 * @throws Exception
+	 */
+	public List<String> run() throws Exception {
+		
 		List<String> classNames = new ArrayList<>();
 
 		for (String table : tables) {
@@ -40,7 +52,12 @@ public class DataMapperGenerator {
 		return classNames;
 	}
 
-	private String generateMapperClass(String table) throws IOException {
+	/**
+	 * @param table
+	 * @return
+	 * @throws Exception
+	 */
+	private String generateMapperClass(String table) throws Exception {
 		String dataClassName = capitalizeCamel(table) + "Data";
 		String mapperClassName = dataClassName + "Mapper";
 
@@ -87,9 +104,14 @@ public class DataMapperGenerator {
 				.build();
 
 		javaFile.writeTo(Paths.get("src/main/java"));
+		
 		return mapperClassName;
 	}
 
+	/**
+	 * @param table
+	 * @return
+	 */
 	private String capitalizeCamel(String table) {
 		String[] parts = table.toLowerCase().split("_");
 		StringBuilder sb = new StringBuilder();

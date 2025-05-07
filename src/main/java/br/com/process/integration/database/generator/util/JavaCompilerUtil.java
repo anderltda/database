@@ -10,11 +10,18 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 
+ */
 public class JavaCompilerUtil {
 
     private static final String SOURCE_DIR = "src/main/java";
     private static final String CLASS_OUTPUT_DIR = "target/classes";
 
+    /**
+     * @param qualifiedClassNames
+     * @return
+     */
     public static List<Class<?>> compileAndLoadClasses(List<String> qualifiedClassNames) {
         List<Class<?>> loadedClasses = new ArrayList<>();
 

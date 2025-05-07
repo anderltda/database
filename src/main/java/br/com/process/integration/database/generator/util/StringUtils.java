@@ -1,6 +1,14 @@
 package br.com.process.integration.database.generator.util;
 
+/**
+ * 
+ */
 public class StringUtils {
+	
+	/**
+	 * @param input
+	 * @return
+	 */
 	public static String camelCase(String input) {
 		StringBuilder result = new StringBuilder();
 		boolean capitalizeNext = false;
@@ -17,6 +25,10 @@ public class StringUtils {
 		return result.toString();
 	}
 
+	/**
+	 * @param input
+	 * @return
+	 */
 	public static String capitalize(String input) {
 		if (input == null || input.isEmpty())
 			return input;

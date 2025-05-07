@@ -2,7 +2,15 @@ package br.com.process.integration.database.generator.util;
 
 import com.squareup.javapoet.ClassName;
 
+/**
+ * 
+ */
 public class TypeMapper {
+	
+	/**
+	 * @param sqlTypeName
+	 * @return
+	 */
 	public static String toJavaType(String sqlTypeName) {
 		return switch (sqlTypeName.toUpperCase()) {
 		case "INT", "INTEGER", "INT4" -> "Integer";
@@ -18,6 +26,10 @@ public class TypeMapper {
 		};
 	}
 
+	/**
+	 * @param javaTypeName
+	 * @return
+	 */
 	public static ClassName resolveType(String javaTypeName) {
 	    return switch (javaTypeName) {
 	        case "Integer" -> ClassName.get(Integer.class);

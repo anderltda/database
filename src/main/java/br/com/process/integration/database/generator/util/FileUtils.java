@@ -7,8 +7,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
+/**
+ * 
+ */
 public class FileUtils {
 
+	/**
+	 * @param filePath
+	 * @param content
+	 * @return
+	 * @throws IOException
+	 */
 	public static boolean writeIfChanged(String filePath, String content) throws IOException {
 		File file = new File(filePath);
 		boolean changed = true;
@@ -27,6 +36,10 @@ public class FileUtils {
 		return changed;
 	}
 
+	/**
+	 * @param path
+	 * @throws IOException
+	 */
 	public static void ensureDirectoryExists(String path) throws IOException {
 		Path dir = Path.of(path);
 		if (!Files.exists(dir)) {

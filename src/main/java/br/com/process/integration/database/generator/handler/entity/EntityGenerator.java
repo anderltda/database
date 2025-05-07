@@ -94,7 +94,15 @@ public class EntityGenerator {
 		return classResolverList;
 	}
 
-	private ClassResolver gerarClasseEntity(DatabaseMetaData metaData, String packageName, String tableName, Map<String, Map<String, String>> foreignKeys) throws SQLException, IOException {
+	/**
+	 * @param metaData
+	 * @param packageName
+	 * @param tableName
+	 * @param foreignKeys
+	 * @return
+	 * @throws Exception
+	 */
+	private ClassResolver gerarClasseEntity(DatabaseMetaData metaData, String packageName, String tableName, Map<String, Map<String, String>> foreignKeys) throws Exception {
 
 		String className = StringUtils.capitalize(StringUtils.camelCase(tableName));
 
@@ -464,8 +472,14 @@ public class EntityGenerator {
 		return new ClassResolver(className, idTypeClass);
 	}
 
-	private String getReferencedColumnName(DatabaseMetaData metaData, String fkTable, String fkColumn)
-			throws SQLException {
+	/**
+	 * @param metaData
+	 * @param fkTable
+	 * @param fkColumn
+	 * @return
+	 * @throws SQLException
+	 */
+	private String getReferencedColumnName(DatabaseMetaData metaData, String fkTable, String fkColumn) throws SQLException {
 		ResultSet fkResultSet = metaData.getImportedKeys(null, null, fkTable);
 		while (fkResultSet.next()) {
 			String fkCol = fkResultSet.getString("FKCOLUMN_NAME");
@@ -476,6 +490,13 @@ public class EntityGenerator {
 		return "id"; // fallback padrão
 	}
 
+	/**
+	 * @param metaData
+	 * @param tableName
+	 * @param columnName
+	 * @return
+	 * @throws SQLException
+	 */
 	private boolean isColumnUnique(DatabaseMetaData metaData, String tableName, String columnName) throws SQLException {
 		ResultSet indexInfo = metaData.getIndexInfo(null, null, tableName, true, false);
 		while (indexInfo.next()) {
@@ -488,8 +509,13 @@ public class EntityGenerator {
 		return false;
 	}
 
-	private Map<String, Set<String>> getCompositeUniqueIndexes(DatabaseMetaData metaData, String tableName)
-			throws SQLException {
+	/**
+	 * @param metaData
+	 * @param tableName
+	 * @return
+	 * @throws SQLException
+	 */
+	private Map<String, Set<String>> getCompositeUniqueIndexes(DatabaseMetaData metaData, String tableName) throws SQLException {
 		Map<String, Set<String>> indexMap = new HashMap<>();
 		ResultSet indexInfo = metaData.getIndexInfo(null, null, tableName, true, false);
 
@@ -506,8 +532,14 @@ public class EntityGenerator {
 		return indexMap;
 	}
 
-	private void gerarClasseEmbeddableId(String packageName, String className, List<ColumnInfo> columns,
-			Set<String> primaryKeys) throws IOException {
+	/**
+	 * @param packageName
+	 * @param className
+	 * @param columns
+	 * @param primaryKeys
+	 * @throws IOException
+	 */
+	private void gerarClasseEmbeddableId(String packageName, String className, List<ColumnInfo> columns, Set<String> primaryKeys) throws IOException {
 
 		TypeSpec.Builder classBuilder = TypeSpec.classBuilder(className).addModifiers(Modifier.PUBLIC)
 				.addAnnotation(Embeddable.class);

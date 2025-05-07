@@ -8,8 +8,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+
+/**
+ * 
+ */
 public class ForeignKeyResolver {
 
+	private record ForeignKeyInfo(String fkTable, String fkColumn, String pkTable, String fkName) { }
+	
 	/**
 	 * Resolve foreign keys simples (não compostas), garantindo que uma coluna FK
 	 * seja mapeada apenas para uma PK (evita conflitos com chaves compostas).
@@ -93,6 +99,4 @@ public class ForeignKeyResolver {
 		return result;
 	}
 
-	private record ForeignKeyInfo(String fkTable, String fkColumn, String pkTable, String fkName) {
-	}
 }

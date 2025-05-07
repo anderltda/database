@@ -14,8 +14,18 @@ import com.squareup.javapoet.TypeSpec;
 
 import br.com.process.integration.database.generator.util.TypeMapper;
 
+/**
+ * 
+ */
 public class EntityServiceGenerator {
 
+    /**
+     * @param entityName
+     * @param packageDto
+     * @param packageService
+     * @param idJavaType
+     * @throws IOException
+     */
     public static void generateServiceClass(String entityName, String packageDto, String packageService, String idJavaType) throws IOException {
 
         String serviceName = entityName + "Service";

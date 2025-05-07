@@ -2,11 +2,18 @@ package br.com.process.integration.database.generator.metadata;
 
 import com.squareup.javapoet.ClassName;
 
+/**
+ * 
+ */
 public class ClassResolver {
 
 	private String name;
 	private ClassName typeId;
 
+	/**
+	 * @param name
+	 * @param typeId
+	 */
 	public ClassResolver(String name, ClassName typeId) {
 		this.name = name;
 		this.typeId = typeId;

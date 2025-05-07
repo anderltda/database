@@ -1,6 +1,10 @@
 package br.com.process.integration.database.generator.model;
 
+/**
+ * 
+ */
 public class ColumnInfo {
+	
 	public final String name;
 	public final int sqlType;
 	public final String sqlTypeName;
@@ -9,6 +13,15 @@ public class ColumnInfo {
 	public final int decimalDigits;
 	public final boolean unique;
 
+	/**
+	 * @param name
+	 * @param sqlType
+	 * @param sqlTypeName
+	 * @param size
+	 * @param nullable
+	 * @param decimalDigits
+	 * @param unique
+	 */
 	public ColumnInfo(String name, int sqlType, String sqlTypeName, int size, boolean nullable, int decimalDigits, boolean unique) {
 	    this.name = name;
 	    this.sqlType = sqlType;

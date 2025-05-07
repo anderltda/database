@@ -1,6 +1,5 @@
 package br.com.process.integration.database.generator.handler.data;
 
-import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +14,9 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 
+/**
+ * 
+ */
 public class DataServiceGenerator {
 
 	private final String packageName;
@@ -22,6 +24,12 @@ public class DataServiceGenerator {
 	private final String packageMapper;
 	private final Set<String> tables;
 
+	/**
+	 * @param packageName
+	 * @param packageDto
+	 * @param packageMapper
+	 * @param tables
+	 */
 	public DataServiceGenerator(String packageName, String packageDto, String packageMapper, Set<String> tables) {
 		this.packageName = packageName;
 		this.packageDto = packageDto;
@@ -29,7 +37,12 @@ public class DataServiceGenerator {
 		this.tables = tables;
 	}
 
-	public List<String> run() throws IOException {
+	/**
+	 * @return
+	 * @throws Exception
+	 */
+	public List<String> run() throws Exception {
+		
 		List<String> classNames = new ArrayList<>();
 
 		for (String table : tables) {
@@ -40,7 +53,13 @@ public class DataServiceGenerator {
 		return classNames;
 	}
 
-	private String generateServiceClass(String table) throws IOException {
+	/**
+	 * @param table
+	 * @return
+	 * @throws Exception
+	 */
+	private String generateServiceClass(String table) throws Exception {
+		
 		String baseName = capitalizeCamel(table);
 		String dataClassName = baseName + "Data";
 		String mapperClassName = dataClassName + "Mapper";
@@ -88,15 +107,24 @@ public class DataServiceGenerator {
 				.build();
 
 		javaFile.writeTo(Paths.get("src/main/java"));
+		
 		return serviceClassName;
 	}
 
+	/**
+	 * @param table
+	 * @return
+	 */
 	private String capitalizeCamel(String table) {
+		
 		String[] parts = table.toLowerCase().split("_");
+		
 		StringBuilder sb = new StringBuilder();
+		
 		for (String part : parts) {
 			sb.append(Character.toUpperCase(part.charAt(0))).append(part.substring(1));
 		}
+		
 		return sb.toString();
 	}
 }

@@ -12,8 +12,18 @@ import com.squareup.javapoet.TypeSpec;
 
 import br.com.process.integration.database.generator.util.TypeMapper;
 
+/**
+ * 
+ */
 public class EntityRepositoryGenerator {
 
+	/**
+	 * @param entityClassName
+	 * @param packageEntity
+	 * @param packageRepository
+	 * @param idJavaType
+	 * @throws IOException
+	 */
 	public static void generateRepositoryClass(String entityClassName, String packageEntity, String packageRepository, String idJavaType) throws IOException {
 
 		String repositoryName = entityClassName + "Repository";

@@ -29,6 +29,9 @@ import br.com.process.integration.database.generator.model.ColumnInfo;
 import br.com.process.integration.database.generator.util.StringUtils;
 import br.com.process.integration.database.generator.util.TypeMapper;
 
+/**
+ * 
+ */
 public class ViewGenerator {
 
 	private final String jdbcUrl;
@@ -37,6 +40,13 @@ public class ViewGenerator {
 	private final String packageName;
 	private final Set<String> tables;
 
+	/**
+	 * @param jdbcUrl
+	 * @param username
+	 * @param password
+	 * @param packageName
+	 * @param tabelasParaGerar
+	 */
 	public ViewGenerator(String jdbcUrl, String username, String password, String packageName, Set<String> tabelasParaGerar) {
 		this.jdbcUrl = jdbcUrl;
 		this.username = username;
@@ -45,7 +55,11 @@ public class ViewGenerator {
 		this.tables = tabelasParaGerar;
 	}
 
-	public String run() throws SQLException, IOException {
+	/**
+	 * @return
+	 * @throws Exception
+	 */
+	public String run() throws Exception {
 		try (Connection conn = DriverManager.getConnection(jdbcUrl, username, password)) {
 			DatabaseMetaData metaData = conn.getMetaData();
 			Map<String, List<ColumnInfo>> tableColumnsMap = new LinkedHashMap<>();
@@ -70,6 +84,11 @@ public class ViewGenerator {
 		}
 	}
 
+	/**
+	 * @param tabelas
+	 * @return
+	 * @throws IOException
+	 */
 	private String gerarClasseView(Map<String, List<ColumnInfo>> tabelas) throws IOException {
 		
 		String firstTable = tabelas.keySet().iterator().next();

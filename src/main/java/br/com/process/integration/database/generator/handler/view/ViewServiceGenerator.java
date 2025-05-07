@@ -12,8 +12,17 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 
+/**
+ * 
+ */
 public class ViewServiceGenerator {
 
+	/**
+	 * @param viewClassName
+	 * @param packageView
+	 * @param packageService
+	 * @throws IOException
+	 */
 	public static void generateServiceClass(String viewClassName, String packageView, String packageService) throws IOException {
 		
 		String serviceName = viewClassName + "Service";

@@ -5,6 +5,9 @@ import java.io.FileWriter;
 import java.lang.reflect.Field;
 import java.util.List;
 
+/**
+ * 
+ */
 public class XmlGenerator {
 
     private static final String TARGET_DIR = "src/main/resources/mapper";
@@ -13,13 +16,24 @@ public class XmlGenerator {
 
     private static final String DOCTYPE = "<!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\">\n";
 
+    /**
+     * @param dataClasses
+     * @param domain
+     * @throws Exception
+     */
     public void run(List<Class<?>> dataClasses, String domain) throws Exception {
         for (Class<?> dataClass : dataClasses) {
             generateXmlForClass(dataClass, domain);
         }
     }
 
+    /**
+     * @param clazz
+     * @param domain
+     * @throws Exception
+     */
     private void generateXmlForClass(Class<?> clazz, String domain) throws Exception {
+    	
         String className = clazz.getSimpleName();
         String baseName = className.replace("Data", "");
         String mapperName = baseName + "DataMapper";
@@ -109,6 +123,10 @@ public class XmlGenerator {
         }
     }
 
+    /**
+     * @param type
+     * @return
+     */
     private boolean isSimple(Class<?> type) {
         return type.isPrimitive() || type == String.class || type == Integer.class || type == Long.class
                 || type == Double.class || type == Float.class || type == Boolean.class
@@ -116,6 +134,10 @@ public class XmlGenerator {
                 || type == java.util.UUID.class;
     }
 
+    /**
+     * @param str
+     * @return
+     */
     private String camelToSnake(String str) {
         return str.replaceAll("([a-z])([A-Z]+)", "$1_$2").toLowerCase();
     }
