@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -25,23 +26,24 @@ public class ForeignKeyResolver {
 	 *         tabela PK
 	 * @throws SQLException
 	 */
-	public static Map<String, Map<String, String>> resolve(DatabaseMetaData metaData) throws SQLException {
+	public static Map<String, Map<String, String>> resolve(DatabaseMetaData metaData, Set<String> tableNames) throws SQLException {
 		
 		Map<String, Map<String, String>> foreignKeys = new HashMap<>();
 		Map<String, Map<Short, String>> fkGroups = new HashMap<>();
 
-		try (ResultSet fk = metaData.getImportedKeys(null, null, null)) {
-			while (fk.next()) {
-				String fkTable = fk.getString("FKTABLE_NAME");
-				String fkColumn = fk.getString("FKCOLUMN_NAME");
-				String pkTable = fk.getString("PKTABLE_NAME");
-				String pkColumn = fk.getString("PKCOLUMN_NAME");
-				short keySeq = fk.getShort("KEY_SEQ");
-				String fkName = fk.getString("FK_NAME");
+		for (String table : tableNames) {
+			try (ResultSet fk = metaData.getImportedKeys(null, null, table)) {
+				while (fk.next()) {
+					String fkTable = fk.getString("FKTABLE_NAME");
+					String fkColumn = fk.getString("FKCOLUMN_NAME");
+					String pkTable = fk.getString("PKTABLE_NAME");
+					String pkColumn = fk.getString("PKCOLUMN_NAME");
+					short keySeq = fk.getShort("KEY_SEQ");
+					String fkName = fk.getString("FK_NAME");
 
-				// Agrupa todas as colunas por nome da FK e tabela
-				String fkKey = fkTable + "|" + fkName;
-				fkGroups.computeIfAbsent(fkKey, k -> new HashMap<>()).put(keySeq, fkColumn + "=>" + pkTable + "." + pkColumn);
+					String fkKey = fkTable + "|" + fkName;
+					fkGroups.computeIfAbsent(fkKey, k -> new HashMap<>()).put(keySeq, fkColumn + "=>" + pkTable + "." + pkColumn);
+				}
 			}
 		}
 
@@ -56,7 +58,6 @@ public class ForeignKeyResolver {
 				String fkTable = entry.getKey().split("\\|")[0];
 				foreignKeys.computeIfAbsent(fkTable, k -> new HashMap<>()).put(fkColumn, pkTable);
 			}
-			// else: múltiplas colunas => foreign key composta => ignoramos aqui
 		}
 
 		return foreignKeys;

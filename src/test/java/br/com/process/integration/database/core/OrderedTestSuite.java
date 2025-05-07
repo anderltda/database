@@ -6,6 +6,9 @@ import org.junit.platform.suite.api.Suite;
 @Suite
 @SelectClasses({ 
 	InitTests.class,
+	EntityGeneratorTests.class,
+	ViewGeneratorTests.class,
+	DataGeneratorTests.class,
 	SaveInsertsFlushTests.class,
 	DeleteAllTests.class, 
 	SaveFlushTests.class, 
