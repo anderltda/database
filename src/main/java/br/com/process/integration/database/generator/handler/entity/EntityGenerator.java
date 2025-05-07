@@ -108,8 +108,7 @@ public class EntityGenerator {
 	 * @return
 	 * @throws Exception
 	 */
-	private ClassResolver gerarClasseEntity(DatabaseMetaData metaData, String packageName, String tableName,
-			Map<String, Map<String, String>> foreignKeys) throws Exception {
+	private ClassResolver gerarClasseEntity(DatabaseMetaData metaData, String packageName, String tableName, Map<String, Map<String, String>> foreignKeys) throws Exception {
 
 		String className = StringUtils.capitalize(StringUtils.camelCase(tableName));
 
@@ -490,8 +489,7 @@ public class EntityGenerator {
 	 * @return
 	 * @throws SQLException
 	 */
-	private String getReferencedColumnName(DatabaseMetaData metaData, String fkTable, String fkColumn)
-			throws SQLException {
+	private String getReferencedColumnName(DatabaseMetaData metaData, String fkTable, String fkColumn) throws SQLException {
 		ResultSet fkResultSet = metaData.getImportedKeys(null, null, fkTable);
 		while (fkResultSet.next()) {
 			String fkCol = fkResultSet.getString("FKCOLUMN_NAME");
@@ -527,8 +525,8 @@ public class EntityGenerator {
 	 * @return
 	 * @throws SQLException
 	 */
-	private Map<String, Set<String>> getCompositeUniqueIndexes(DatabaseMetaData metaData, String tableName)
-			throws SQLException {
+	private Map<String, Set<String>> getCompositeUniqueIndexes(DatabaseMetaData metaData, String tableName) throws SQLException {
+		
 		Map<String, Set<String>> indexMap = new HashMap<>();
 		ResultSet indexInfo = metaData.getIndexInfo(null, null, tableName, true, false);
 
@@ -552,8 +550,7 @@ public class EntityGenerator {
 	 * @param primaryKeys
 	 * @throws IOException
 	 */
-	private void gerarClasseEmbeddableId(String packageName, String className, List<ColumnInfo> columns,
-			Set<String> primaryKeys) throws IOException {
+	private void gerarClasseEmbeddableId(String packageName, String className, List<ColumnInfo> columns, Set<String> primaryKeys) throws IOException {
 
 		TypeSpec.Builder classBuilder = TypeSpec.classBuilder(className).addModifiers(Modifier.PUBLIC)
 				.addAnnotation(Embeddable.class);
