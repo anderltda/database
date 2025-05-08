@@ -67,11 +67,12 @@ public class ForeignKeyResolver {
 	 * Resolve foreign keys compostas, agrupando por tabela de origem, destino e
 	 * nome da constraint.
 	 */
-	public static Map<String, Map<String, List<String>>> resolveCompositeForeignKeys(DatabaseMetaData metaData)
-			throws SQLException {
+	public static Map<String, Map<String, List<String>>> resolveCompositeForeignKeys(DatabaseMetaData metaData, String tableName) throws SQLException {
+		
 		Map<String, Map<String, List<String>>> result = new HashMap<>();
 
-		try (ResultSet fk = metaData.getImportedKeys(null, null, null)) {
+		try (ResultSet fk = metaData.getImportedKeys(null, null, tableName)) {
+			
 			Map<String, List<ForeignKeyInfo>> grouped = new HashMap<>();
 
 			while (fk.next()) {

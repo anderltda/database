@@ -34,23 +34,19 @@ public class EntityGeneratorTests {
 	private String user = "sa";
 	private String pass = "";
 
-	private Set<String> table1s = new LinkedHashSet<>(Arrays.asList("entity_eigtht", "entity_seven", "entity_six"));
-
+	private Set<String> table1s = new LinkedHashSet<>(Arrays.asList("entity_nine", "entity_eight", "entity_seven", "entity_six"));
+	
 	private Set<String> table2s = new LinkedHashSet<>(Arrays.asList("entity_one", "entity_status", "entity_two", "entity_tree", "entity_four", "entity_five"));
 
 	@Test
 	@Order(1)
 	void teste_01() throws Exception {
-		System.out.println("Diretório atual (user.dir): " + System.getProperty("user.dir"));
-		
 		generateEntity(table1s);
 	}
 
 	@Test
 	@Order(2)
 	void teste_02() throws Exception {
-		System.out.println("Diretório atual (user.dir): " + System.getProperty("user.dir"));
-		
 		generateEntity(table2s);
 	}
 	
@@ -58,7 +54,8 @@ public class EntityGeneratorTests {
 
 		String packages = packageEntity + domain;
 
-		EntityGenerator entityGenerator = new EntityGenerator(url, user, pass, packages, tables);
+		EntityGenerator entityGenerator = new EntityGenerator(url, user, pass, packages);
+		entityGenerator.setTables(tables);
 
 		List<ClassResolver> classResolverList = entityGenerator.run();
 

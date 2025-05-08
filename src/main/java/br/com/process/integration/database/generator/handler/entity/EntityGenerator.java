@@ -51,7 +51,8 @@ public class EntityGenerator {
 	private final String username;
 	private final String password;
 	private final String packageName;
-	private final Set<String> tables;
+	private boolean isUpperCase;
+	private Set<String> tables;
 
 	/**
 	 * @param jdbcUrl
@@ -64,7 +65,20 @@ public class EntityGenerator {
 		this.username = username;
 		this.password = password;
 		this.packageName = packageName;
-		this.tables = tables;
+		this.isUpperCase = false;
+		this.tables = tables.stream().map(String::toLowerCase).collect(Collectors.toSet());
+	}
+	
+	public EntityGenerator(String jdbcUrl, String username, String password, String packageName) {
+		this.jdbcUrl = jdbcUrl;
+		this.username = username;
+		this.password = password;
+		this.packageName = packageName;
+	}
+
+	public void setTables(Set<String> tables) {
+		this.isUpperCase = true;
+		this.tables = tables.stream().map(String::toUpperCase).collect(Collectors.toSet());
 	}
 
 	/**
@@ -81,10 +95,11 @@ public class EntityGenerator {
 			DatabaseMetaData metaData = connection.getMetaData();
 			Map<String, Map<String, String>> foreignKeys = ForeignKeyResolver.resolve(metaData, tables);
 
-			ResultSet ResultSetTables = metaData.getTables(null, null, "%", new String[] { "TABLE" });
+			ResultSet resultSetTables = metaData.getTables(null, null, "%", new String[] { "TABLE" });
 
-			while (ResultSetTables.next()) {
-				String tableName = ResultSetTables.getString("TABLE_NAME");
+			while (resultSetTables.next()) {
+				String tableName = isUpperCase ? resultSetTables.getString("TABLE_NAME").toUpperCase() : resultSetTables.getString("TABLE_NAME").toLowerCase();
+				System.out.println(tableName);
 				if (tables.isEmpty() || tables.contains(tableName)) {
 					ClassResolver classResolver = gerarClasseEntity(metaData, packageName, tableName, foreignKeys);
 					classResolverList.add(classResolver);
@@ -116,7 +131,7 @@ public class EntityGenerator {
 		Set<String> primaryKeys = new HashSet<>();
 
 		Map<String, Map<String, List<String>>> compositeForeignKeys = ForeignKeyResolver
-				.resolveCompositeForeignKeys(metaData);
+				.resolveCompositeForeignKeys(metaData, tableName);
 
 		ResultSet pk = metaData.getPrimaryKeys(null, null, tableName);
 

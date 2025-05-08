@@ -12,6 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.lang.model.element.Modifier;
 
@@ -37,21 +38,32 @@ public class ViewGenerator {
 	private final String username;
 	private final String password;
 	private final String packageName;
-	private final Set<String> tables;
+	private Set<String> tables;
 
 	/**
 	 * @param jdbcUrl
 	 * @param username
 	 * @param password
 	 * @param packageName
-	 * @param tabelasParaGerar
+	 * @param tables
 	 */
-	public ViewGenerator(String jdbcUrl, String username, String password, String packageName, Set<String> tabelasParaGerar) {
+	public ViewGenerator(String jdbcUrl, String username, String password, String packageName, Set<String> tables) {
 		this.jdbcUrl = jdbcUrl;
 		this.username = username;
 		this.password = password;
 		this.packageName = packageName;
-		this.tables = tabelasParaGerar;
+		this.tables = tables;
+	}
+	
+	public ViewGenerator(String jdbcUrl, String username, String password, String packageName) {
+		this.jdbcUrl = jdbcUrl;
+		this.username = username;
+		this.password = password;
+		this.packageName = packageName;
+	}
+	
+	public void setTables(Set<String> tables) {
+		this.tables = tables.stream().map(String::toUpperCase).collect(Collectors.toSet());
 	}
 
 	/**
