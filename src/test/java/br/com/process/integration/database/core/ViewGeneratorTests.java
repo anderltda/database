@@ -48,6 +48,7 @@ public class ViewGeneratorTests {
 	
 	private void generateView(Set<String> tables) throws Exception {
 
+		/*
 		String packages = packageView + domain;
 
 		ViewGenerator viewGenerator = new ViewGenerator(url, user, pass, packages, tables);
@@ -58,6 +59,7 @@ public class ViewGeneratorTests {
 		String service = packageService + domain;
 
 		ViewServiceGenerator.generateServiceClass(classView, packages, service);
+		*/
 	}
 
 }

@@ -99,7 +99,6 @@ public class EntityGenerator {
 
 			while (resultSetTables.next()) {
 				String tableName = isUpperCase ? resultSetTables.getString("TABLE_NAME").toUpperCase() : resultSetTables.getString("TABLE_NAME").toLowerCase();
-				System.out.println(tableName);
 				if (tables.isEmpty() || tables.contains(tableName)) {
 					ClassResolver classResolver = gerarClasseEntity(metaData, packageName, tableName, foreignKeys);
 					classResolverList.add(classResolver);
