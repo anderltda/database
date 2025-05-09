@@ -21,10 +21,10 @@ public class EntityRepositoryGenerator {
 	 * @param entityClassName
 	 * @param packageEntity
 	 * @param packageRepository
-	 * @param idJavaType
+	 * @param javaType
 	 * @throws IOException
 	 */
-	public static void generateRepositoryClass(String entityClassName, String packageEntity, String packageRepository, String idJavaType) throws IOException {
+	public static void generateRepositoryClass(String entityClassName, String packageEntity, String packageRepository, String javaType) throws IOException {
 
 		String repositoryName = entityClassName + "Repository";
 
@@ -35,13 +35,13 @@ public class EntityRepositoryGenerator {
 
 		ClassName idClass = null;
 
-		if (idJavaType.contains(".")) {
-			int lastDot = idJavaType.lastIndexOf('.');
-			String idClassPackage = idJavaType.substring(0, lastDot);
-			String idClassName = idJavaType.substring(lastDot + 1);
+		if (javaType.contains(".")) {
+			int lastDot = javaType.lastIndexOf('.');
+			String idClassPackage = javaType.substring(0, lastDot);
+			String idClassName = javaType.substring(lastDot + 1);
 			idClass = ClassName.get(idClassPackage, idClassName);
 		} else {
-			idClass = TypeMapper.resolveType(idJavaType);
+			idClass = TypeMapper.resolveType(javaType);
 		}
 
 		TypeSpec repositoryInterface = TypeSpec.interfaceBuilder(repositoryName).addModifiers(Modifier.PUBLIC)
