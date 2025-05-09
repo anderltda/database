@@ -116,7 +116,7 @@ public class MainGenerator {
 				
 				String packageView = "br.com.process.integration.database.model.view.dto." + domain;
 
-				ViewGenerator viewGenerator = new ViewGenerator(url, user, pass, packageView);
+				ViewGenerator viewGenerator = new ViewGenerator(url, user, pass, packageView, domain);
 
 				String classView = viewGenerator.run(table);
 

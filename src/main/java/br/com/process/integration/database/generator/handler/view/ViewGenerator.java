@@ -25,6 +25,7 @@ public class ViewGenerator {
     private final String username;
     private final String password;
     private final String packageName;
+    private final String domain;
 
     /**
      * @param jdbcUrl
@@ -32,11 +33,12 @@ public class ViewGenerator {
      * @param password
      * @param packageName
      */
-    public ViewGenerator(String jdbcUrl, String username, String password, String packageName) {
+    public ViewGenerator(String jdbcUrl, String username, String password, String packageName, String domain) {
         this.jdbcUrl = jdbcUrl;
         this.username = username;
         this.password = password;
         this.packageName = packageName;
+        this.domain = domain;
     }
 
     /**
@@ -180,7 +182,7 @@ public class ViewGenerator {
     		json.put("orderby", ":sortList :sortOrders");
 
     		ObjectMapper mapper = new ObjectMapper();
-    		File dir = new File("src/main/resources/querys");
+    		File dir = new File("src/main/resources/querys" + domain);
     		if (!dir.exists()) dir.mkdirs();
 
     		try (FileWriter writer = new FileWriter(dir.getPath() + "/" + viewClassName + ".json")) {

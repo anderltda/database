@@ -64,7 +64,7 @@ public class ViewGeneratorTests {
 
 		String packages = packageView + domain;
 
-		ViewGenerator viewGenerator = new ViewGenerator(url, user, pass, packages);
+		ViewGenerator viewGenerator = new ViewGenerator(url, user, pass, packages, domain);
 		
 		String classView = viewGenerator.run(table.toUpperCase());
 
