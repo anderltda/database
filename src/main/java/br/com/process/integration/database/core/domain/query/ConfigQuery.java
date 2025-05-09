@@ -413,14 +413,14 @@ public class ConfigQuery {
 	}
 
 	/**
-	 * @param value
+	 * @param fileQuery
 	 * @return
 	 * @throws UncheckedException
 	 */
-	private List<Query> loadConfig(String value) throws UncheckedException {
+	private List<Query> loadConfig(String fileQuery) throws UncheckedException {
 		try {
 			String string = "classpath:/querys/{file}.json";
-			String file = alterPlaceholders(string, "file", value);
+			String file = alterPlaceholders(string, "file", fileQuery);
 			Resource resource = resourceLoader.getResource(file);
 			InputStream inputStream = resource.getInputStream();
 			ObjectMapper objectMapper = new ObjectMapper();

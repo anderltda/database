@@ -45,7 +45,7 @@ public abstract class AbstractJdbcService<V extends RepresentationModel<V>> exte
 	@Override
 	public Integer count(Map<String, Object> filter, String query) throws CheckedException {
 		try {
-			return count(view, filter, this.getClass().getSimpleName(), query);
+			return count(view, filter, getPackageFileQuery(this.getClass()), query);
 		} catch (UncheckedException cuex) {
 			throw new CheckedException(cuex.getMessage(), String.format("Falha ao executar metodo 'count' na classe %s com filters: %s e query-name: %s", this.getClass().getSimpleName(), filter, query), cuex);
 		}
@@ -57,7 +57,7 @@ public abstract class AbstractJdbcService<V extends RepresentationModel<V>> exte
 	@Override
 	public V findBySingle(Map<String, Object> filter, String query) throws CheckedException {
 		try {
-			return findBySingle(view, filter, this.getClass().getSimpleName(), query);
+			return findBySingle(view, filter, getPackageFileQuery(this.getClass()), query);
 		} catch (UncheckedException cuex) {
 			throw new CheckedException(cuex.getMessage(), String.format("Falha ao executar metodo 'executeQueryNativeSingle' na classe %s com filters: %s e query-name: %s", this.getClass().getSimpleName(), filter, query), cuex);
 		}
@@ -69,7 +69,7 @@ public abstract class AbstractJdbcService<V extends RepresentationModel<V>> exte
 	@Override
 	public List<V> findAll(Map<String, Object> filter, String query) throws CheckedException {
 		try {
-			return findAll(view, filter, this.getClass().getSimpleName(), query);
+			return findAll(view, filter, getPackageFileQuery(this.getClass()), query);
 		} catch (UncheckedException cuex) {
 			throw new CheckedException(cuex.getMessage(), String.format("Falha ao executar metodo 'executeQueryNative' na classe %s com filters: %s e query-name: %s", this.getClass().getSimpleName(), filter, query), cuex);
 		}
@@ -86,8 +86,8 @@ public abstract class AbstractJdbcService<V extends RepresentationModel<V>> exte
 			int page = filter.get(Constants.NAME_PAGE) != null ? Integer.parseInt((String) filter.get(Constants.NAME_PAGE)) : Constants.NUMBER_PAGE_DEFAULT;
 			int size = filter.get(Constants.NAME_SIZE) != null ? Integer.parseInt((String) filter.get(Constants.NAME_SIZE)) : Constants.NUMBER_SIZE_DEFAULT;
 
-			List<V> models = findAll(view, filter, this.getClass().getSimpleName(), query, page, size);
-			int totalElements = count(view, filter, this.getClass().getSimpleName(), query);
+			List<V> models = findAll(view, filter, getPackageFileQuery(this.getClass()), query, page, size);
+			int totalElements = count(view, filter, getPackageFileQuery(this.getClass()), query);
 			Pageable pageable = PageRequest.of(page, size);
 			pages = new PageImpl<>(models, pageable, totalElements);
 
@@ -98,5 +98,16 @@ public abstract class AbstractJdbcService<V extends RepresentationModel<V>> exte
 		} catch (UncheckedException cuex) {
 			throw new CheckedException(cuex.getMessage(), String.format("Falha ao executar metodo 'executeQueryNativePaginator' na classe %s com filters: %s e query-name: %s", this.getClass().getSimpleName(), filter, query), cuex);
 		}
+	}
+	
+	/**
+	 * @param clazz
+	 * @return
+	 */
+	private String getPackageFileQuery(Class<?> clazz) {
+	    String packageName = clazz.getPackageName();
+	    int lastDot = packageName.lastIndexOf('.');
+	    String packageLast = (lastDot == -1) ? packageName : packageName.substring(lastDot + 1);
+	    return packageLast + "/" + clazz.getSimpleName();
 	}
 }
