@@ -69,6 +69,12 @@ public class EntityGenerator {
 		this.tables = tables.stream().map(String::toLowerCase).collect(Collectors.toSet());
 	}
 	
+	/**
+	 * @param jdbcUrl
+	 * @param username
+	 * @param password
+	 * @param packageName
+	 */
 	public EntityGenerator(String jdbcUrl, String username, String password, String packageName) {
 		this.jdbcUrl = jdbcUrl;
 		this.username = username;
@@ -76,6 +82,9 @@ public class EntityGenerator {
 		this.packageName = packageName;
 	}
 
+	/**
+	 * @param tables
+	 */
 	public void setTables(Set<String> tables) {
 		this.isUpperCase = true;
 		this.tables = tables.stream().map(String::toUpperCase).collect(Collectors.toSet());

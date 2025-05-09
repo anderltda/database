@@ -63,6 +63,7 @@ class InitTests {
 			ResultSet tables = metaData.getTables(null, null, "%", new String[] { "TABLE" });
 			while (tables.next()) {
 				String table = tables.getString("TABLE_NAME");
+				System.out.println("TABLE_NAME >>>>> " + table);
 				putTrueTable(table);
 			}
 			

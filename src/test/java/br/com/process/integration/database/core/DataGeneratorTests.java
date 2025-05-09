@@ -54,7 +54,8 @@ public class DataGeneratorTests {
 
 		String packages = packageData + domain;
 
-		DataGenerator dataGenerator = new DataGenerator(url, user, pass, packages, tables);
+		DataGenerator dataGenerator = new DataGenerator(url, user, pass, packages);
+		dataGenerator.setTables(tables);
 
 		List<String> classList = dataGenerator.run();
 

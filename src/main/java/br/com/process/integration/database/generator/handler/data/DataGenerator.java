@@ -13,6 +13,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.lang.model.element.Modifier;
 
@@ -38,7 +39,8 @@ public class DataGenerator {
     private final String username;
     private final String password;
     private final String packageName;
-    private final Set<String> tables;
+	private boolean isUpperCase;
+    private Set<String> tables;
     
     private Map<String, List<String>> mapPrimaryKeys;
     private Map<String, String> mapTables;
@@ -55,10 +57,33 @@ public class DataGenerator {
         this.username = username;
         this.password = password;
         this.packageName = packageName;
-        this.tables = tables;
+		this.tables = tables.stream().map(String::toLowerCase).collect(Collectors.toSet());
         this.mapPrimaryKeys = new HashMap<>();
         this.mapTables = new HashMap<>();
     }
+    
+	/**
+	 * @param jdbcUrl
+	 * @param username
+	 * @param password
+	 * @param packageName
+	 */
+	public DataGenerator(String jdbcUrl, String username, String password, String packageName) {
+		this.jdbcUrl = jdbcUrl;
+		this.username = username;
+		this.password = password;
+		this.packageName = packageName;
+        this.mapPrimaryKeys = new HashMap<>();
+        this.mapTables = new HashMap<>();
+	}
+
+	/**
+	 * @param tables
+	 */
+	public void setTables(Set<String> tables) {
+		this.isUpperCase = true;
+		this.tables = tables.stream().map(String::toUpperCase).collect(Collectors.toSet());
+	}
 
     /**
      * @return
@@ -74,8 +99,9 @@ public class DataGenerator {
             Map<String, Map<String, String>> foreignKeys = new HashMap<>();
             Map<String, List<String>> primaryKeysMap = new HashMap<>();
 
-            for (String table : tables) {
+            for (String tableName : tables) {
                 List<ColumnInfo> columns = new ArrayList<>();
+                String table = isUpperCase ? tableName.toUpperCase() : tableName.toLowerCase();
                 ResultSet rs = metaData.getColumns(null, null, table, null);
                 while (rs.next()) {
                     columns.add(new ColumnInfo(
@@ -87,7 +113,7 @@ public class DataGenerator {
                         rs.getInt("DECIMAL_DIGITS"),
                         false));
                 }
-                tableColumnsMap.put(table, columns);
+                tableColumnsMap.put(tableName, columns);
 
                 Map<String, String> fks = new LinkedHashMap<>();
                 ResultSet fkRs = metaData.getImportedKeys(null, null, table);
@@ -96,14 +122,14 @@ public class DataGenerator {
                     String pkTable = fkRs.getString("PKTABLE_NAME");
                     fks.put(fkColumn, pkTable);
                 }
-                foreignKeys.put(table, fks);
+                foreignKeys.put(tableName, fks);
 
                 List<String> pkCols = new ArrayList<>();
                 ResultSet pkRs = metaData.getPrimaryKeys(null, null, table);
                 while (pkRs.next()) {
                     pkCols.add(pkRs.getString("COLUMN_NAME"));
                 }
-                primaryKeysMap.put(table, pkCols);
+                primaryKeysMap.put(tableName, pkCols);
             }
 
             for (String table : tables) {
