@@ -1,29 +1,16 @@
 package br.com.process.integration.database.generator.handler.view;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.sql.*;
+import java.util.*;
 
 import javax.lang.model.element.Modifier;
 
-import com.squareup.javapoet.AnnotationSpec;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterizedTypeName;
-import com.squareup.javapoet.TypeSpec;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.squareup.javapoet.*;
 
 import br.com.process.integration.database.generator.model.ColumnInfo;
 import br.com.process.integration.database.generator.util.StringUtils;
@@ -34,77 +21,183 @@ import br.com.process.integration.database.generator.util.TypeMapper;
  */
 public class ViewGenerator {
 
-	private final String jdbcUrl;
-	private final String username;
-	private final String password;
-	private final String packageName;
-	private Set<String> tables;
+    private final String jdbcUrl;
+    private final String username;
+    private final String password;
+    private final String packageName;
 
-	/**
-	 * @param jdbcUrl
-	 * @param username
-	 * @param password
-	 * @param packageName
-	 * @param tables
-	 */
-	public ViewGenerator(String jdbcUrl, String username, String password, String packageName, Set<String> tables) {
-		this.jdbcUrl = jdbcUrl;
-		this.username = username;
-		this.password = password;
-		this.packageName = packageName;
-		this.tables = tables;
-	}
-	
-	public ViewGenerator(String jdbcUrl, String username, String password, String packageName) {
-		this.jdbcUrl = jdbcUrl;
-		this.username = username;
-		this.password = password;
-		this.packageName = packageName;
-	}
-	
-	public void setTables(Set<String> tables) {
-		this.tables = tables.stream().map(String::toUpperCase).collect(Collectors.toSet());
-	}
+    /**
+     * @param jdbcUrl
+     * @param username
+     * @param password
+     * @param packageName
+     */
+    public ViewGenerator(String jdbcUrl, String username, String password, String packageName) {
+        this.jdbcUrl = jdbcUrl;
+        this.username = username;
+        this.password = password;
+        this.packageName = packageName;
+    }
 
-	/**
-	 * @return
-	 * @throws Exception
-	 */
-	public String run() throws Exception {
-		try (Connection conn = DriverManager.getConnection(jdbcUrl, username, password)) {
-			DatabaseMetaData metaData = conn.getMetaData();
-			Map<String, List<ColumnInfo>> tableColumnsMap = new LinkedHashMap<>();
+    /**
+     * @param rootTable
+     * @return
+     * @throws Exception
+     */
+    public String run(String rootTable) throws Exception {
+        try (Connection conn = DriverManager.getConnection(jdbcUrl, username, password)) {
+            DatabaseMetaData metaData = conn.getMetaData();
+            Map<String, List<ColumnInfo>> resolved = resolveRecursively(metaData, rootTable, new HashSet<>());
+            return generateClass(rootTable, resolved);
+        }
+    }
 
-			for (String table : tables) {
-				List<ColumnInfo> columns = new ArrayList<>();
-				ResultSet rs = metaData.getColumns(null, null, table, null);
-				while (rs.next()) {
-					columns.add(new ColumnInfo(
-							rs.getString("COLUMN_NAME"), 
-							rs.getInt("DATA_TYPE"),
-							rs.getString("TYPE_NAME"), 
-							rs.getInt("COLUMN_SIZE"),
-							rs.getInt("NULLABLE") == DatabaseMetaData.columnNullable, 
-							rs.getInt("DECIMAL_DIGITS"),
-						false));
-				}
-				tableColumnsMap.put(table, columns);
-			}
+    /**
+     * @param metaData
+     * @param table
+     * @param visited
+     * @return
+     * @throws SQLException
+     */
+    private Map<String, List<ColumnInfo>> resolveRecursively(DatabaseMetaData metaData, String table, Set<String> visited) throws SQLException {
+    	
+        if (!visited.add(table)) return new LinkedHashMap<>();
 
-			return gerarClasseView(tableColumnsMap);
-		}
-	}
+        Map<String, List<ColumnInfo>> result = new LinkedHashMap<>();
 
-	/**
-	 * @param tabelas
-	 * @return
-	 * @throws IOException
-	 */
-	private String gerarClasseView(Map<String, List<ColumnInfo>> tabelas) throws IOException {
-		
-		String firstTable = tabelas.keySet().iterator().next();
-		
-		String className = StringUtils.capitalize(StringUtils.camelCase(firstTable)) + "View";
+        List<ColumnInfo> columns = new ArrayList<>();
+        try (ResultSet rs = metaData.getColumns(null, null, table, null)) {
+            while (rs.next()) {
+                columns.add(new ColumnInfo(
+                    rs.getString("COLUMN_NAME"),
+                    rs.getInt("DATA_TYPE"),
+                    rs.getString("TYPE_NAME"),
+                    rs.getInt("COLUMN_SIZE"),
+                    rs.getInt("NULLABLE") == DatabaseMetaData.columnNullable,
+                    rs.getInt("DECIMAL_DIGITS"),
+                    false
+                ));
+            }
+        }
+        result.put(table, columns);
+
+        try (ResultSet fks = metaData.getImportedKeys(null, null, table)) {
+            while (fks.next()) {
+                String pkTable = fks.getString("PKTABLE_NAME");
+                result.putAll(resolveRecursively(metaData, pkTable, visited));
+            }
+        }
+
+        return result;
+    }
+
+
+    /**
+     * @param rootTable
+     * @throws Exception
+     */
+    public void generateQueryDefinition(String rootTable) throws Exception {
+    	try (Connection conn = DriverManager.getConnection(jdbcUrl, username, password)) {
+    		DatabaseMetaData metaData = conn.getMetaData();
+    		Set<String> visited = new HashSet<>();
+    		Map<String, List<ColumnInfo>> resolved = resolveRecursively(metaData, rootTable, visited);
+
+    		List<String> joins = new ArrayList<>();
+    		List<String> wheres = new ArrayList<>();
+    		StringBuilder select = new StringBuilder("SELECT ");
+    		String viewClassName = StringUtils.capitalize(StringUtils.camelCase(rootTable)) + "ViewService";
+    		String rootAlias = "t1";
+    		int aliasCounter = 1;
+
+    		Map<String, String> tableAliasMap = new LinkedHashMap<>();
+    		Map<String, String> columnToAliasMap = new HashMap<>(); // chave: table.column → alias
+    		tableAliasMap.put(rootTable, rootAlias);
+
+    		List<String> aliasList = new ArrayList<>();
+    		aliasList.add(rootAlias);
+
+    		String from = " FROM " + rootTable + " " + rootAlias;
+
+    		Queue<String> queue = new LinkedList<>();
+    		queue.add(rootTable);
+
+    		while (!queue.isEmpty()) {
+    			String currentTable = queue.poll();
+    			String currentAlias = tableAliasMap.get(currentTable);
+
+    			try (ResultSet fks = metaData.getImportedKeys(null, null, currentTable)) {
+    				while (fks.next()) {
+    					String pkTable = fks.getString("PKTABLE_NAME");
+    					String pkColumn = fks.getString("PKCOLUMN_NAME");
+    					String fkColumn = fks.getString("FKCOLUMN_NAME");
+
+    					String joinKey = currentTable + "." + fkColumn + "->" + pkTable + "." + pkColumn;
+    					if (columnToAliasMap.containsKey(joinKey)) continue;
+
+    					aliasCounter++;
+    					String alias = "t" + aliasCounter;
+    					tableAliasMap.put(pkTable, alias);
+    					columnToAliasMap.put(joinKey, alias);
+    					aliasList.add(alias);
+
+    					joins.add("INNER JOIN " + pkTable + " " + alias + " ON " +
+    						alias + "." + pkColumn + " = " + currentAlias + "." + fkColumn);
+
+    					queue.add(pkTable); // para processar FK da nova tabela
+    				}
+    			}
+    		}
+
+    		// SELECT
+    		for (int i = 0; i < aliasList.size(); i++) {
+    			select.append(aliasList.get(i)).append(".*");
+    			if (i < aliasList.size() - 1) select.append(", ");
+    		}
+    		select.append(from);
+
+    		// WHERE
+    		Set<String> whereKeys = new HashSet<>();
+    		for (Map.Entry<String, List<ColumnInfo>> entry : resolved.entrySet()) {
+    			String table = entry.getKey();
+    			String alias = tableAliasMap.getOrDefault(table, ""); // proteção
+
+    			for (ColumnInfo col : entry.getValue()) {
+    				String column = col.name;
+    				String key = alias + "." + column;
+    				if (whereKeys.add(key)) {
+    					String camel = StringUtils.camelCase(column);
+    					wheres.add("AND " + key + " {" + camel + "_op} :" + camel);
+    				}
+    			}
+    		}
+
+    		// Monta JSON
+    		Map<String, Object> json = new LinkedHashMap<>();
+    		json.put("name", "busca_" + rootTable + "_com_joins");
+    		json.put("select", select.toString());
+    		json.put("join", joins);
+    		json.put("where", wheres);
+    		json.put("orderby", ":sortList :sortOrders");
+
+    		ObjectMapper mapper = new ObjectMapper();
+    		File dir = new File("src/main/resources/querys");
+    		if (!dir.exists()) dir.mkdirs();
+
+    		try (FileWriter writer = new FileWriter(dir.getPath() + "/" + viewClassName + ".json")) {
+    			mapper.writerWithDefaultPrettyPrinter().writeValue(writer, json);
+    		}
+    	}
+    }
+
+    /**
+     * @param rootTable
+     * @param tables
+     * @return
+     * @throws IOException
+     */
+    private String generateClass(String rootTable, Map<String, List<ColumnInfo>> tables) throws IOException {
+
+		String className = StringUtils.capitalize(StringUtils.camelCase(rootTable)) + "View";
 
 		ClassName representationModel = ClassName.get("org.springframework.hateoas", "RepresentationModel");
 		ClassName beanView = ClassName.get("br.com.process.integration.database.core.domain", "BeanView");
@@ -116,27 +209,31 @@ public class ViewGenerator {
 		TypeSpec.Builder classBuilder = TypeSpec.classBuilder(className).addModifiers(Modifier.PUBLIC)
 				.superclass(ParameterizedTypeName.get(representationModel, ClassName.bestGuess(className)))
 				.addSuperinterface(ParameterizedTypeName.get(beanView, ClassName.bestGuess(className))).addAnnotation(
-					AnnotationSpec.builder(jsonIgnoreProperties).addMember("ignoreUnknown", "$L", true).build());
+						AnnotationSpec.builder(jsonIgnoreProperties).addMember("ignoreUnknown", "$L", true).build());
 
-		Set<String> camposAdicionados = new HashSet<>();
+		Set<String> addedFields = new HashSet<>();
 		List<String> fieldNames = new ArrayList<>();
 
-		for (Map.Entry<String, List<ColumnInfo>> entry : tabelas.entrySet()) {
+		for (Map.Entry<String, List<ColumnInfo>> entry : tables.entrySet()) {
+			String table = entry.getKey();
+			classBuilder.addJavadoc("\n// $L\n", StringUtils.capitalize(StringUtils.camelCase(table)));
+
 			for (ColumnInfo column : entry.getValue()) {
-				String fieldName = StringUtils.camelCase("id_".equals(column.name) ? entry.getKey() : column.name);
-				if (!camposAdicionados.add(fieldName))
+				String fieldName = StringUtils.camelCase(column.name);
+				if (!addedFields.add(fieldName))
 					continue;
 
-				String javaTypeName = TypeMapper.toJavaType(column.sqlTypeName);
-				ClassName typeClass = TypeMapper.resolveType(javaTypeName);
+				String javaType = TypeMapper.toJavaType(column.sqlTypeName);
+				ClassName typeClass = TypeMapper.resolveType(javaType);
 
-				FieldSpec.Builder fieldBuilder = FieldSpec.builder(typeClass, fieldName, Modifier.PRIVATE);
+				FieldSpec.Builder fieldBuilder = FieldSpec.builder(typeClass, fieldName, Modifier.PRIVATE)
+						.addJavadoc("from $L\n", table);
 
-				if (javaTypeName.contains("LocalDate")) {
-					String formatConstant = javaTypeName.endsWith("Time") ? "DATE_TIME_FORMAT" : "DATE_FORMAT";
+				if (javaType.contains("LocalDate")) {
+					String format = javaType.endsWith("Time") ? "DATE_TIME_FORMAT" : "DATE_FORMAT";
 					fieldBuilder.addAnnotation(AnnotationSpec.builder(jsonFormat)
 							.addMember("shape", "$T.STRING", jsonFormat.nestedClass("Shape"))
-							.addMember("pattern", "$T.$L", constants, formatConstant).build());
+							.addMember("pattern", "$T.$L", constants, format).build());
 				}
 
 				classBuilder.addField(fieldBuilder.build());
@@ -153,51 +250,47 @@ public class ViewGenerator {
 			}
 		}
 
-		// getView
 		classBuilder.addMethod(MethodSpec.methodBuilder("getView").addAnnotation(jsonIgnore)
 				.addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).returns(ClassName.bestGuess(className))
 				.addStatement("return this").build());
 
-		// toString
-		CodeBlock.Builder toStringBuilder = CodeBlock.builder().add("return \"$L{\" +\n", className);
+		CodeBlock.Builder toStringBuilder = CodeBlock.builder().add("return $S +\n", className + "{");
+
 		for (int i = 0; i < fieldNames.size(); i++) {
-			String field = fieldNames.get(i);
-			String label = field.startsWith("id") && field.length() > 2 && Character.isUpperCase(field.charAt(2))
-					? field.substring(2) : field;
-			toStringBuilder.add("\"$L=\" + ($L != null ? $L.toString() : \"null\")", label, field, field);
-			if (i < fieldNames.size() - 1)
+			String f = fieldNames.get(i);
+			toStringBuilder.add("$S + ($N != null ? $N.toString() : \"null\")", f + "=", f, f);
+			if (i < fieldNames.size() - 1) {
 				toStringBuilder.add(" + \", \" +\n");
+			}
 		}
 		toStringBuilder.add(" + '}';");
 		classBuilder.addMethod(MethodSpec.methodBuilder("toString").addAnnotation(Override.class)
 				.addModifiers(Modifier.PUBLIC).returns(String.class).addCode(toStringBuilder.build()).build());
 
-		// equals
-		CodeBlock.Builder equalsBlock = CodeBlock.builder().add("if (this == o) return true;\n")
+		CodeBlock.Builder equalsBuilder = CodeBlock.builder().add("if (this == o) return true;\n")
 				.add("if (o == null || getClass() != o.getClass()) return false;\n")
 				.add("$L that = ($L) o;\n", className, className).add("return ");
 
 		for (int i = 0; i < fieldNames.size(); i++) {
-			String field = fieldNames.get(i);
-			equalsBlock.add("java.util.Objects.equals($L, that.$L)", field, field);
-			if (i < fieldNames.size() - 1)
-				equalsBlock.add(" &&\n");
+			String f = fieldNames.get(i);
+			equalsBuilder.add("java.util.Objects.equals($L, that.$L)", f, f);
+			if (i < fieldNames.size() - 1) {
+				equalsBuilder.add(" &&\n");
+			}
 		}
-		equalsBlock.add(";");
+		equalsBuilder.add(";");
 		classBuilder.addMethod(
 				MethodSpec.methodBuilder("equals").addAnnotation(Override.class).addModifiers(Modifier.PUBLIC)
-						.returns(boolean.class).addParameter(Object.class, "o").addCode(equalsBlock.build()).build());
+						.returns(boolean.class).addParameter(Object.class, "o").addCode(equalsBuilder.build()).build());
 
-		// hashCode
 		CodeBlock hashBlock = CodeBlock.of("return java.util.Objects.hash($L);", String.join(", ", fieldNames));
 		classBuilder.addMethod(MethodSpec.methodBuilder("hashCode").addAnnotation(Override.class)
 				.addModifiers(Modifier.PUBLIC).returns(int.class).addCode(hashBlock).build());
 
-		JavaFile javaFile = JavaFile.builder(packageName, classBuilder.build()).skipJavaLangImports(true)
-				.indent("    ").build();
+		JavaFile javaFile = JavaFile.builder(packageName, classBuilder.build()).skipJavaLangImports(true).indent("    ")
+				.build();
 
 		javaFile.writeTo(Paths.get("src/main/java"));
-		
 		return className;
 	}
 }

@@ -110,15 +110,26 @@ public class MainGenerator {
 	 */
 	private static void extractedView(Set<String> tables, String domain, String url, String user, String pass) throws Exception {
 
-		String packageView = "br.com.process.integration.database.model.view.dto." + domain;
+		tables.forEach(table -> {
+			
+			try {
+				
+				String packageView = "br.com.process.integration.database.model.view.dto." + domain;
 
-		ViewGenerator viewGenerator = new ViewGenerator(url, user, pass, packageView, tables);
+				ViewGenerator viewGenerator = new ViewGenerator(url, user, pass, packageView);
 
-		String classView = viewGenerator.run();
+				String classView = viewGenerator.run(table);
 
-		String packageService = "br.com.process.integration.database.model.view.service." + domain;
+				viewGenerator.generateQueryDefinition(table);
 
-		ViewServiceGenerator.generateServiceClass(classView, packageView, packageService);
+				String packageService = "br.com.process.integration.database.model.view.service." + domain;
+
+				ViewServiceGenerator.generateServiceClass(classView, packageView, packageService);
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
 	}
 
 	/**

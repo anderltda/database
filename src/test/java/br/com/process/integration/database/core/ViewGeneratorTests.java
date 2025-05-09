@@ -36,30 +36,44 @@ public class ViewGeneratorTests {
 	@Test
 	@Order(1)
 	void teste_01() throws Exception {
-		generateView(table1s);
+		
+		for (String table : table1s) {
+			try {
+				generateView(table);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				throw ex;
+			}
+		}
 	}
 
 	@Test
 	@Order(2)
 	void teste_02() throws Exception {
-		generateView(table2s);
+		for (String table : table2s) {
+			try {
+				generateView(table);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				throw ex;
+			}
+		}
 	}
 	
-	
-	private void generateView(Set<String> tables) throws Exception {
+	private void generateView(String table) throws Exception {
 
-		/*
 		String packages = packageView + domain;
 
-		ViewGenerator viewGenerator = new ViewGenerator(url, user, pass, packages, tables);
-		viewGenerator.setTables(tables);
+		ViewGenerator viewGenerator = new ViewGenerator(url, user, pass, packages);
+		
+		String classView = viewGenerator.run(table.toUpperCase());
 
-		String classView = viewGenerator.run();
+		viewGenerator.generateQueryDefinition(table.toUpperCase());
 
 		String service = packageService + domain;
 
 		ViewServiceGenerator.generateServiceClass(classView, packages, service);
-		*/
+
 	}
 
 }
