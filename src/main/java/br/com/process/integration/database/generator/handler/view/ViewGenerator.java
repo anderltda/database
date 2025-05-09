@@ -182,7 +182,7 @@ public class ViewGenerator {
     		json.put("orderby", ":sortList :sortOrders");
 
     		ObjectMapper mapper = new ObjectMapper();
-    		File dir = new File("src/main/resources/querys" + domain);
+    		File dir = new File("src/main/resources/querys/" + domain);
     		if (!dir.exists()) dir.mkdirs();
 
     		try (FileWriter writer = new FileWriter(dir.getPath() + "/" + viewClassName + ".json")) {
