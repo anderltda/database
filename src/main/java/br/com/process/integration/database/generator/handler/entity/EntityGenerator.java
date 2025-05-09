@@ -185,12 +185,13 @@ public class EntityGenerator {
 
 		// Obtém tipo da chave primária
 		String idColumn = primaryKeys.stream().findFirst().orElse(null);
-		String idJavaType = null;
+		String javaType = null;
 
 		if (idColumn != null) {
 			for (ColumnInfo column : columns) {
 				if (column.name.equals(idColumn)) {
-					idJavaType = TypeMapper.toJavaType(column.sqlTypeName);
+					javaType = TypeMapper.toJavaType(column.sqlTypeName);
+					System.out.println(" Field Name --->> " + column.name + " Type Name --->> " + column.sqlTypeName + " - Type Java --->> " + javaType);
 					break;
 				}
 			}
@@ -208,8 +209,8 @@ public class EntityGenerator {
 
 		if (isCompositeKey) {
 			idTypeClass = ClassName.get(packageName, className + "Id");
-		} else if (idJavaType != null) {
-			idTypeClass = ClassName.bestGuess(idJavaType);
+		} else if (javaType != null) {
+			idTypeClass = ClassName.bestGuess(javaType);
 		} else {
 			idTypeClass = ClassName.get(Object.class); // fallback
 		}
@@ -239,7 +240,9 @@ public class EntityGenerator {
 				continue; // evita gerar novamente campos que já estão no EmbeddedId
 			}
 
-			String javaType = TypeMapper.toJavaType(column.sqlTypeName);
+			javaType = TypeMapper.toJavaType(column.sqlTypeName);
+			
+			System.out.println(" Field Name --->> " + column.name + " - Type Name --->> " + column.sqlTypeName + " - Type Java --->> " + javaType);
 
 			ClassName typeClass = ClassName.bestGuess(javaType);
 
@@ -580,6 +583,7 @@ public class EntityGenerator {
 				continue;
 
 			String javaType = TypeMapper.toJavaType(column.sqlTypeName);
+			System.out.println(" Field Name --->> " + column.name + " - Type Name --->> " + column.sqlTypeName + " - Type Java --->> " + javaType);
 			String fieldName = StringUtils.camelCase(column.name);
 			ClassName typeClass = ClassName.bestGuess(javaType);
 

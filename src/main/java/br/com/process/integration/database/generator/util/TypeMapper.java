@@ -18,7 +18,7 @@ public class TypeMapper {
 		case "BOOLEAN", "BIT", "BOOL" -> "Boolean";
 		case "DATE" -> "java.time.LocalDate";
 		case "TIMESTAMP", "DATETIME" -> "java.time.LocalDateTime";
-		case "DOUBLE", "BIGDECIMAL", "DECIMAL", "NUMERIC", "FLOAT8" -> "Double";
+		case "DOUBLE PRECISION", "DOUBLE", "BIGDECIMAL", "DECIMAL", "NUMERIC", "FLOAT8" -> "Double";
 		case "FLOAT" -> "Float";
 		case "JSON", "JSONB", "VARCHAR", "TEXT", "CHAR" -> "String";
 		case "UUID" -> "UUID";
