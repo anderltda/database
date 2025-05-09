@@ -39,6 +39,9 @@ public class DataGenerator {
     private final String password;
     private final String packageName;
     private final Set<String> tables;
+    
+    private Map<String, List<String>> mapPrimaryKeys;
+    private Map<String, String> mapTables;
 
     /**
      * @param jdbcUrl
@@ -53,6 +56,8 @@ public class DataGenerator {
         this.password = password;
         this.packageName = packageName;
         this.tables = tables;
+        this.mapPrimaryKeys = new HashMap<>();
+        this.mapTables = new HashMap<>();
     }
 
     /**
@@ -103,6 +108,8 @@ public class DataGenerator {
 
             for (String table : tables) {
                 List<String> primaryKeys = primaryKeysMap.getOrDefault(table, List.of());
+                mapPrimaryKeys.put(StringUtils.capitalize(StringUtils.camelCase(table)), primaryKeys);
+                mapTables.put(StringUtils.capitalize(StringUtils.camelCase(table)), table);
                 if (primaryKeys.size() > 1) {
                 	String classNameCompostaId = gerarClasseCompostaId(table, tableColumnsMap.get(table), primaryKeys);
                 	classNames.add(classNameCompostaId);
@@ -345,4 +352,12 @@ public class DataGenerator {
 
         return className;
     }
+
+	public Map<String, List<String>> getMapPrimaryKeys() {
+		return mapPrimaryKeys;
+	}
+
+	public Map<String, String> getMapTables() {
+		return mapTables;
+	}
 } 

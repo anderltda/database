@@ -149,7 +149,7 @@ public class MainGenerator {
 		DataServiceGenerator dataServiceGenerator = new DataServiceGenerator(packageService, packageData, packageMapper, tables);
 		dataServiceGenerator.run();
 
-		XmlGenerator xmlGenerator = new XmlGenerator();
+		XmlGenerator xmlGenerator = new XmlGenerator(dataGenerator.getMapPrimaryKeys(), dataGenerator.getMapTables());
 		xmlGenerator.run(compiledClasses, domain);
 	}
 }

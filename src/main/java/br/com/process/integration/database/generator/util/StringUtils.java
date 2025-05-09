@@ -34,4 +34,12 @@ public class StringUtils {
 			return input;
 		return input.substring(0, 1).toUpperCase() + input.substring(1);
 	}
+	
+    /**
+     * @param str
+     * @return
+     */
+	public static String camelToSnake(String str) {
+        return str.replaceAll("([a-z])([A-Z]+)", "$1_$2").toLowerCase();
+    }
 }

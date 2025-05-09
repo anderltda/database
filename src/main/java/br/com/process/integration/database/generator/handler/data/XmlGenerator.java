@@ -3,9 +3,13 @@ package br.com.process.integration.database.generator.handler.data;
 import java.io.File;
 import java.io.FileWriter;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import br.com.process.integration.database.generator.util.StringUtils;
 
 /**
  * 
@@ -13,10 +17,20 @@ import java.util.Set;
 public class XmlGenerator {
 
     private static final String TARGET_DIR = "src/main/resources/mapper";
-
     private static final String VERSION_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
-
     private static final String DOCTYPE = "<!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\">\n";
+
+    private Map<String, List<String>> mapPrimaryKeys;
+    private Map<String, String> mapTables;
+
+    /**
+     * @param mapPrimaryKeys
+     * @param mapTables
+     */
+    public XmlGenerator(Map<String, List<String>> mapPrimaryKeys, Map<String, String> mapTables) {
+        this.mapPrimaryKeys = mapPrimaryKeys;
+        this.mapTables = mapTables;
+    }
 
     /**
      * @param dataClasses
@@ -25,78 +39,92 @@ public class XmlGenerator {
      */
     public void run(List<Class<?>> dataClasses, String domain) throws Exception {
         for (Class<?> dataClass : dataClasses) {
-            generateXmlForClass(dataClass, domain, new HashSet<>());
+            generateXmlForClass(dataClass, domain);
         }
     }
 
     /**
      * @param clazz
      * @param domain
-     * @param generatedMaps
      * @throws Exception
      */
-    private void generateXmlForClass(Class<?> clazz, String domain, Set<String> generatedMaps) throws Exception {
+    private void generateXmlForClass(Class<?> clazz, String domain) throws Exception {
         String className = clazz.getSimpleName();
         String baseName = className.replace("Data", "");
         String mapperName = baseName + "DataMapper";
         String namespace = clazz.getPackageName().replace(".dto", ".mapper") + "." + mapperName;
-        String tableName = camelToSnake(baseName);
+        String tableName = mapTables.get(baseName);
 
-        boolean classeCompostaId = (className.substring(className.length() - 2).endsWith("Id"));
-        if (classeCompostaId) return;
+        if (className.endsWith("Id")) return;
 
         File dir = new File(TARGET_DIR + File.separator + domain);
-        if (!dir.exists())
-            dir.mkdirs();
+        if (!dir.exists()) dir.mkdirs();
 
         File file = new File(dir, mapperName + ".xml");
+
+        Set<String> generatedMaps = new HashSet<>();
+        StringBuilder resultMapBuffer = new StringBuilder();
+        StringBuilder nestedMapsBuffer = new StringBuilder();
+        List<Class<?>> nestedTypesToGenerate = new ArrayList<>();
 
         try (FileWriter writer = new FileWriter(file)) {
             writer.write(VERSION_XML);
             writer.write(DOCTYPE);
             writer.write("<mapper namespace=\"" + namespace + "\">\n\n");
 
-            writer.write("    <resultMap id=\"defaultResultMap\" type=\"" + clazz.getName() + "\">\n");
+            resultMapBuffer.append("    <resultMap id=\"defaultResultMap\" type=\"" + clazz.getName() + "\">\n");
             for (Field field : clazz.getDeclaredFields()) {
                 Class<?> fieldType = field.getType();
                 String propertyName = field.getName();
 
                 if (propertyName.equals("id") && fieldType.getSimpleName().endsWith("Id")) {
-                    writer.write("        <association property=\"id\" javaType=\"" + fieldType.getName() + "\">\n");
+                    resultMapBuffer.append("        <association property=\"id\" javaType=\"" + fieldType.getName() + "\">\n");
                     for (Field idField : fieldType.getDeclaredFields()) {
-                        writer.write("            <id property=\"" + idField.getName() + "\" column=\"" + camelToSnake(idField.getName()) + "\" />\n");
+                        resultMapBuffer.append("            <id property=\"" + idField.getName() + "\" column=\"" + StringUtils.camelToSnake(idField.getName()) + "\" />\n");
                     }
-                    writer.write("        </association>\n");
+                    resultMapBuffer.append("        </association>\n");
+                } else if (isPrimaryKeySimple(baseName, propertyName)) {
+                    resultMapBuffer.append("        <id column=\"" + StringUtils.camelToSnake(propertyName) + "\" property=\"" + propertyName + "\"/>\n");
                 } else if (isSimple(fieldType)) {
-                    writer.write("        <result column=\"" + camelToSnake(propertyName) + "\" property=\"" + propertyName + "\"/>\n");
+                    resultMapBuffer.append("        <result column=\"" + StringUtils.camelToSnake(propertyName) + "\" property=\"" + propertyName + "\"/>\n");
                 } else if (fieldType.getSimpleName().endsWith("Data")) {
                     String nestedMap = fieldType.getSimpleName().replace("Data", "") + "Map";
-                    writer.write("        <association property=\"" + propertyName + "\" javaType=\""
+                    resultMapBuffer.append("        <association property=\"" + propertyName + "\" javaType=\""
                             + fieldType.getName() + "\" resultMap=\"" + nestedMap + "\" />\n");
-                    // Gera recursivamente os ResultMaps aninhados
-                    generateNestedResultMap(writer, fieldType, generatedMaps);
+                    nestedTypesToGenerate.add(fieldType);
                 }
             }
-            writer.write("    </resultMap>\n\n");
+            resultMapBuffer.append("    </resultMap>\n\n");
 
-            String idType = "java.lang.Long";
+            writer.write(resultMapBuffer.toString());
+
+            for (Class<?> nested : nestedTypesToGenerate) {
+                generateNestedResultMap(nestedMapsBuffer, nested, generatedMaps);
+            }
+            writer.write(nestedMapsBuffer.toString());
+
+            Class<?> type = null;
+            String fieldName = null;
             for (Field field : clazz.getDeclaredFields()) {
-                if (field.getName().equals("id") && field.getType().getSimpleName().endsWith("Id")) {
-                    idType = field.getType().getName();
+                if (isPrimaryKeySimple(baseName, field.getName())) {
+                    type = field.getType();
+                    fieldName = field.getName();
+                    break;
+                } else if (field.getName().equals("id") && field.getType().getSimpleName().endsWith("Id")) {
+                    type = field.getType();
                     break;
                 }
             }
 
-            writer.write("    <select id=\"findById\" resultMap=\"defaultResultMap\" parameterType=\"" + idType + "\">\n");
+            writer.write("    <select id=\"findById\" resultMap=\"defaultResultMap\" parameterType=\"" + type.getName() + "\">\n");
             writer.write("        SELECT * FROM " + tableName + " WHERE ");
-
-            if (idType.equals("java.lang.Long")) {
-                writer.write("id = #{id}\n");
+            if (isSimple(type)) {
+                writer.write(StringUtils.camelToSnake(fieldName) + " = #{" + fieldName + "}\n");
             } else {
-                Field[] idFields = Class.forName(idType).getDeclaredFields();
+                Field[] idFields = Class.forName(type.getName()).getDeclaredFields();
                 for (int i = 0; i < idFields.length; i++) {
                     Field f = idFields[i];
-                    writer.write(camelToSnake(f.getName()) + " = #{id." + f.getName() + "}");
+                    writer.write(StringUtils.camelToSnake(f.getName()) + " = #{id." + f.getName() + "}");
                     if (i < idFields.length - 1) writer.write(" AND ");
                 }
                 writer.write("\n");
@@ -112,41 +140,47 @@ public class XmlGenerator {
     }
 
     /**
-     * @param writer
+     * @param buffer
      * @param type
      * @param generatedMaps
      * @throws Exception
      */
-    private void generateNestedResultMap(FileWriter writer, Class<?> type, Set<String> generatedMaps) throws Exception {
-    	
+    private void generateNestedResultMap(StringBuilder buffer, Class<?> type, Set<String> generatedMaps) throws Exception {
         String mapId = type.getSimpleName().replace("Data", "") + "Map";
-        
         if (generatedMaps.contains(mapId)) return;
-        
         generatedMaps.add(mapId);
 
-        writer.write("    <resultMap id=\"" + mapId + "\" type=\"" + type.getName() + "\">\n");
-        
+        buffer.append("    <resultMap id=\"" + mapId + "\" type=\"" + type.getName() + "\">\n");
+        List<Class<?>> innerNestedTypes = new ArrayList<>();
+
+        String baseName = type.getSimpleName().replace("Data", "");
+
         for (Field field : type.getDeclaredFields()) {
             Class<?> fieldType = field.getType();
             String propertyName = field.getName();
 
             if (propertyName.equals("id") && fieldType.getSimpleName().endsWith("Id")) {
-                writer.write("        <association property=\"id\" javaType=\"" + fieldType.getName() + "\">\n");
+                buffer.append("        <association property=\"id\" javaType=\"" + fieldType.getName() + "\">\n");
                 for (Field idField : fieldType.getDeclaredFields()) {
-                    writer.write("            <id property=\"" + idField.getName() + "\" column=\"" + camelToSnake(idField.getName()) + "\" />\n");
+                    buffer.append("            <id property=\"" + idField.getName() + "\" column=\"" + StringUtils.camelToSnake(idField.getName()) + "\" />\n");
                 }
-                writer.write("        </association>\n");
+                buffer.append("        </association>\n");
+            } else if (isPrimaryKeySimple(baseName, propertyName)) {
+                buffer.append("        <id column=\"" + StringUtils.camelToSnake(propertyName) + "\" property=\"" + propertyName + "\"/>\n");
             } else if (isSimple(fieldType)) {
-                writer.write("        <result column=\"" + camelToSnake(propertyName) + "\" property=\"" + propertyName + "\"/>\n");
+                buffer.append("        <result column=\"" + StringUtils.camelToSnake(propertyName) + "\" property=\"" + propertyName + "\"/>\n");
             } else if (fieldType.getSimpleName().endsWith("Data")) {
                 String nestedMap = fieldType.getSimpleName().replace("Data", "") + "Map";
-                writer.write("        <association property=\"" + propertyName + "\" javaType=\""
+                buffer.append("        <association property=\"" + propertyName + "\" javaType=\""
                         + fieldType.getName() + "\" resultMap=\"" + nestedMap + "\" />\n");
-                generateNestedResultMap(writer, fieldType, generatedMaps);
+                innerNestedTypes.add(fieldType);
             }
         }
-        writer.write("    </resultMap>\n\n");
+        buffer.append("    </resultMap>\n\n");
+
+        for (Class<?> inner : innerNestedTypes) {
+            generateNestedResultMap(buffer, inner, generatedMaps);
+        }
     }
 
     /**
@@ -161,10 +195,14 @@ public class XmlGenerator {
     }
 
     /**
-     * @param str
+     * @param baseName
+     * @param propertyName
      * @return
      */
-    private String camelToSnake(String str) {
-        return str.replaceAll("([a-z])([A-Z]+)", "$1_$2").toLowerCase();
+    private boolean isPrimaryKeySimple(String baseName, String propertyName) {
+        List<String> primaryKeys = mapPrimaryKeys.get(baseName);
+        if (primaryKeys == null || primaryKeys.isEmpty()) return false;
+        String fieldName = StringUtils.camelCase(primaryKeys.getFirst());
+        return propertyName.equals(fieldName);
     }
-} 
+}
