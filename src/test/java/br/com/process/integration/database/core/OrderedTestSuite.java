@@ -6,9 +6,6 @@ import org.junit.platform.suite.api.Suite;
 @Suite
 @SelectClasses({ 
 	InitTests.class,
-	EntityGeneratorTests.class,
-	ViewGeneratorTests.class,
-	DataGeneratorTests.class,
 	SaveInsertsFlushTests.class,
 	DeleteAllTests.class, 
 	SaveFlushTests.class, 
@@ -24,6 +21,9 @@ import org.junit.platform.suite.api.Suite;
 	JDBCPaginatorTests.class,
 	MyBatisTests.class,
 	MyBatisPaginatorTests.class,
+	EntityGeneratorTests.class,
+	ViewGeneratorTests.class,
+	DataGeneratorTests.class,
 	ClearAllTests.class
 })
 public class OrderedTestSuite {

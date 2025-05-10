@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -27,6 +29,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import br.com.process.integration.database.core.exception.ErrorResponse;
 import br.com.process.integration.database.core.ui.CrudJpaController;
 import br.com.process.integration.database.core.util.Constants;
+import br.com.process.integration.database.util.PackageDeleter;
+import br.com.process.integration.database.util.ResourceFolderDeleter;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -73,6 +77,67 @@ class ClearAllTests {
 		String statusCode = delete(url, new ErrorResponse());
 
 		assertEquals(statusCode, HttpStatus.OK.toString());
+	}
+	
+	@Test
+	@Order(4)
+	void teste_03() throws IOException {
+		PackageDeleter.deletePackage("src/main/java", "br.com.process.integration.database.model.data.dto.test");
+
+	}
+	
+	@Test
+	@Order(5)
+	void teste_04() throws IOException {
+		PackageDeleter.deletePackage("src/main/java", "br.com.process.integration.database.model.data.mapper.test");
+	}
+	
+	@Test
+	@Order(6)
+	void teste_05() throws IOException {
+		PackageDeleter.deletePackage("src/main/java", "br.com.process.integration.database.model.data.service.test");
+	}
+	
+	@Test
+	@Order(7)
+	void teste_06() throws IOException {
+		PackageDeleter.deletePackage("src/main/java", "br.com.process.integration.database.model.entity.dto.test");
+	}
+	
+	@Test
+	@Order(8)
+	void teste_07() throws IOException {
+		PackageDeleter.deletePackage("src/main/java", "br.com.process.integration.database.model.entity.repository.test");
+	}
+	
+	@Test
+	@Order(9)
+	void teste_08() throws IOException {
+		PackageDeleter.deletePackage("src/main/java", "br.com.process.integration.database.model.entity.service.test");
+	}	
+	
+	@Test
+	@Order(10)
+	void teste_09() throws IOException {
+		PackageDeleter.deletePackage("src/main/java", "br.com.process.integration.database.model.view.dto.test");
+	}	
+	
+	@Test
+	@Order(11)
+	void teste_10() throws IOException {
+		PackageDeleter.deletePackage("src/main/java", "br.com.process.integration.database.model.view.service.test");
+	}	
+	
+	@Test
+	@Order(12)
+	void teste_11() throws IOException {
+		ResourceFolderDeleter.deleteResourceFolder("mapper.test");
+	}	
+	
+	@Test
+	@Order(13)
+	void teste_12() throws IOException {
+		ResourceFolderDeleter.deleteResourceFolder("querys.test");
 	}
 
 	public String delete(String url, ErrorResponse compare) {
