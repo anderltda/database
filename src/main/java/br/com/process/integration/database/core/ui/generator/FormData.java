@@ -1,4 +1,4 @@
-package br.com.process.integration.database.core.ui.genesis;
+package br.com.process.integration.database.core.ui.generator;
 
 import java.util.List;
 
