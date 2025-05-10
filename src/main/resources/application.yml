@@ -1,24 +1,28 @@
 server:
   port: 8080
-
 spring:
+  thymeleaf:
+    cache: false  # bom para desenvolvimento
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+    servlet:
+      content-type: text/html
   hateoas:
     use-hal-as-default-json-media-type: false
   data:
     rest:
-      defaultMediaType: application/json       
+      defaultMediaType: application/json
   datasource:
-    #url: jdbc:mysql://localhost:3306/root-database?allowPublicKeyRetrieval=true&useSSL=false
     url: jdbc:postgresql://localhost:5432/root-database
     username: anderson
     password: admin
-
   jpa:
     generate-ddl: false
     hibernate:
       ddl-auto: none
     show-sql: true
     open-in-view: false
-
 mybatis:
   mapper-locations: classpath:mapper/**/*.xml

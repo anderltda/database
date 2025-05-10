@@ -191,7 +191,7 @@ public class EntityGenerator {
 			for (ColumnInfo column : columns) {
 				if (column.name.equals(idColumn)) {
 					javaType = TypeMapper.toJavaType(column.sqlTypeName);
-					System.out.println(" Field Name --->> " + column.name + " Type Name --->> " + column.sqlTypeName + " - Type Java --->> " + javaType);
+					System.out.println(" Field Name --->> " + column.name + " - Type Name --->> " + column.sqlTypeName + " - Type Java --->> " + javaType);
 					break;
 				}
 			}
