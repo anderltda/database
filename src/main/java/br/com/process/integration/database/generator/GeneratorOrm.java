@@ -45,6 +45,12 @@ public class GeneratorOrm {
 	@Value("${spring.datasource.password}")
 	private String pass;
 
+	/**
+	 * @param domain
+	 * @param tables
+	 * @param types
+	 * @throws Exception
+	 */
 	public void generateAll(String domain, Set<String> tables, List<String> types) throws Exception {
 
 		this.domain = domain;
@@ -62,6 +68,10 @@ public class GeneratorOrm {
 		}
 	}
 
+	/**
+	 * @param tables
+	 * @throws Exception
+	 */
 	private void extractedEntity(Set<String> tables) throws Exception {
 
 		String packageEntity = JPA_ENTITY + domain;
@@ -78,20 +88,20 @@ public class GeneratorOrm {
 
 			try {
 
-				EntityRepositoryGenerator.generateRepositoryClass(resolver.getName(), packageEntity, packageRepository,
-						resolver.getTypeId().toString());
+				EntityRepositoryGenerator.generateRepositoryClass(resolver.getName(), packageEntity, packageRepository, resolver.getTypeId().toString());
 
-				EntityServiceGenerator.generateServiceClass(resolver.getName(), packageEntity, packageService,
-						resolver.getTypeId().toString());
+				EntityServiceGenerator.generateServiceClass(resolver.getName(), packageEntity, packageService, resolver.getTypeId().toString());
 
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
 		});
 	}
-	
 
-
+	/**
+	 * @param tables
+	 * @throws Exception
+	 */
 	private void extractedView(Set<String> tables) throws Exception {
 
 		tables.forEach(table -> {
@@ -115,9 +125,11 @@ public class GeneratorOrm {
 			}
 		});
 	}
-	
 
-
+	/**
+	 * @param tables
+	 * @throws Exception
+	 */
 	private void extractedData(Set<String> tables) throws Exception {
 
 		String packageData = MYBATIS_DATA + domain;
@@ -135,8 +147,7 @@ public class GeneratorOrm {
 		dataMapperGenerator.run();
 
 		String packageService = MYBATIS_SERVICE + domain;
-		DataServiceGenerator dataServiceGenerator = new DataServiceGenerator(packageService, packageData, packageMapper,
-				tables);
+		DataServiceGenerator dataServiceGenerator = new DataServiceGenerator(packageService, packageData, packageMapper, tables);
 		dataServiceGenerator.run();
 
 		XmlGenerator xmlGenerator = new XmlGenerator(dataGenerator.getMapPrimaryKeys(), dataGenerator.getMapTables());

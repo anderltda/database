@@ -2,6 +2,9 @@ package br.com.process.integration.database.core.ui.genesis;
 
 import java.util.List;
 
+/**
+ * 
+ */
 public class FormData {
 
 	private String domain;

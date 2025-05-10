@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import br.com.process.integration.database.generator.GeneratorOrm;
 
+/**
+ * 
+ */
 @Controller
 @RequestMapping("/v1/database")
 public class GeneratorController {
@@ -34,19 +37,26 @@ public class GeneratorController {
 		this.generator = generator;
 	}
 
-	@GetMapping("/genesis")
+	/**
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@GetMapping()
     public String index(Model model) throws Exception {
         model.addAttribute("title", "Gerador de Entidades ORM!");
-        model.addAttribute("tables", listarTabelas()); // Adiciona a lista de tabelas no model
+        model.addAttribute("tables", getTables()); // Adiciona a lista de tabelas no model
         return "index";
     }
     
-	@PostMapping("/save")
+	/**
+	 * @param formData
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@PostMapping("/generator")
 	public String save(@ModelAttribute FormData formData, Model model) throws Exception {
-		
-		System.out.println("Tabelas: " + formData.getTables());
-		System.out.println("Tipos: " + formData.getTypes());
-		System.out.println("Domínio: " + formData.getDomain());
 
 		generator.generateAll(formData.getDomain(), new LinkedHashSet<>(formData.getTables()), formData.getTypes());
 
@@ -55,9 +65,7 @@ public class GeneratorController {
 		return "confirmacao";
 	}
     
-	private List<String> listarTabelas() throws Exception {
-		
-		
+	private List<String> getTables() throws Exception {
 		List<String> tableList = new ArrayList<>();
 		try (Connection conn = dataSource.getConnection()) {
 			DatabaseMetaData metaData = conn.getMetaData();
