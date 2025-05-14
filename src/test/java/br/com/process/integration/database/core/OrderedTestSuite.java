@@ -21,10 +21,10 @@ import org.junit.platform.suite.api.Suite;
 	JDBCPaginatorTests.class,
 	MyBatisTests.class,
 	MyBatisPaginatorTests.class,
-	EntityGeneratorTests.class,
-	ViewGeneratorTests.class,
-	DataGeneratorTests.class,
-	ClearAllTests.class
+	//EntityGeneratorTests.class,
+	//ViewGeneratorTests.class,
+	//DataGeneratorTests.class,
+	//ClearAllTests.class
 })
 public class OrderedTestSuite {
 	

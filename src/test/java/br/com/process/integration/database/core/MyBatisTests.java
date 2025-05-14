@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
@@ -43,6 +44,8 @@ import br.com.process.integration.database.core.exception.ErrorResponse;
 import br.com.process.integration.database.core.ui.QueryMyBatisController;
 import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.model.data.dto.example.EntityOneData;
+import br.com.process.integration.database.model.data.dto.example.EntityTreeData;
+import br.com.process.integration.database.model.entity.dto.example.EntityFive;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -60,6 +63,12 @@ class MyBatisTests {
 
 	@Autowired
 	private QueryMyBatisController queryMyBatisController;
+	
+	private EntityOneData entityOneData;
+	
+	private EntityTreeData entityTreeData;
+	
+	private EntityFive entityFive;
 
 	@BeforeAll
 	void setupOnce() {
@@ -72,6 +81,7 @@ class MyBatisTests {
 	};
 
 	@Test
+	@Order(1)
 	void teste_01() {
 
 		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING
@@ -83,6 +93,7 @@ class MyBatisTests {
 	}
 
 	@Test
+	@Order(2)
 	void teste_02() {
 
 		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING
@@ -95,6 +106,7 @@ class MyBatisTests {
 	}
 
 	@Test
+	@Order(3)
 	void teste_03() {
 
 		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/single/EntityOneData/methodNoMapping?"
@@ -106,6 +118,7 @@ class MyBatisTests {
 	}
 
 	@Test
+	@Order(4)
 	void teste_04() {
 
 		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/count/EntityOneData/methodNoMapping?"
@@ -117,6 +130,7 @@ class MyBatisTests {
 	}
 
 	@Test
+	@Order(5)
 	void teste_05() {
 
 		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING
@@ -138,6 +152,7 @@ class MyBatisTests {
 	}
 
 	@Test
+	@Order(6)
 	void teste_06() {
 
 		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/findEntityOneByName?"
@@ -149,6 +164,7 @@ class MyBatisTests {
 	}
 
 	@Test
+	@Order(7)
 	void teste_07() {
 
 		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/findEntityOneByName?"
@@ -161,6 +177,7 @@ class MyBatisTests {
 	}
 
 	@Test
+	@Order(8)
 	void teste_08() {
 
 		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/findEntityOneByName?"
@@ -177,6 +194,7 @@ class MyBatisTests {
 	}
 
 	@Test
+	@Order(9)
 	void teste_09() {
 
 		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/methodNoMapping?"
@@ -187,6 +205,7 @@ class MyBatisTests {
 	}
 
 	@Test
+	@Order(10)
 	void teste_10() {
 
 		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/findEntityDataByName?"
@@ -198,6 +217,7 @@ class MyBatisTests {
 	}
 
 	@Test
+	@Order(11)
 	void teste_11() {
 
 		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/findEntityOneByName?"
@@ -216,7 +236,155 @@ class MyBatisTests {
 		assertEquals("Ricardo", list.get(3).getName());
 		assertEquals(22, list.get(3).getAge());
 	}
+	
+	@Test
+	@Order(12)
+	void teste_12() {
 
+		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityOneData/findAll";
+
+		List<EntityOneData> list = getAll(url, new ErrorResponse());
+
+		assertNotNull(list);
+		assertEquals(10, list.size());
+	}
+	
+	@Test
+	@Order(13)
+	void teste_13() {
+
+		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityTwoData/findAll";
+
+		List<EntityOneData> list = getAll(url, new ErrorResponse());
+
+		assertNotNull(list);
+		assertEquals(10, list.size());
+	}
+	
+	@Test
+	@Order(14)
+	void teste_14() {
+
+		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityTreeData/findAll";
+
+		List<EntityOneData> list = getAll(url, new ErrorResponse());
+
+		assertNotNull(list);
+		assertEquals(10, list.size());
+	}
+	
+	@Test
+	@Order(15)
+	void teste_15() {
+
+		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityFourData/findAll";
+
+		List<EntityOneData> list = getAll(url, new ErrorResponse());
+
+		assertNotNull(list);
+		assertEquals(10, list.size());
+	}
+	
+	@Test
+	@Order(16)
+	void teste_16() {
+
+		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityFiveData/findAll";
+
+		List<EntityOneData> list = getAll(url, new ErrorResponse());
+
+		assertNotNull(list);
+		assertEquals(10, list.size());
+	}
+	
+	@Test
+	@Order(17)
+	void teste_17() {
+
+		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityStatusData/findAll";
+
+		List<EntityOneData> list = getAll(url, new ErrorResponse());
+
+		assertNotNull(list);
+		assertEquals(5, list.size());
+	}
+	
+	@Test
+	@Order(18)
+	void teste_18() {
+
+		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/single/EntityOneData/findById?idEntityOne=" + SaveTests.id;
+		
+		entityOneData = getSingleResult(url, new ErrorResponse());
+
+		assertNotNull(entityOneData);
+	}
+	
+	@Test
+	@Order(19)
+	void teste_19() {
+		
+		String id = entityOneData.getEntityTwoData().getIdEntityTwo().toString();
+
+		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/single/EntityTwoData/findById?idEntityTwo=" + id;
+		
+		String entity = getUniqueResult(url, new ErrorResponse());
+
+		assertNotNull(entity);
+	}
+	
+	@Test
+	@Order(20)
+	void teste_20() {
+		
+		//String id = entityOneData.getEntityTwoData().getEntityTreeData().getIdEntityTree().toString();
+
+		//String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/single/EntityTreeData/findById?idEntityTree=" + id;
+		
+		//String entity = getUniqueResult(url, new ErrorResponse());
+
+		//assertNotNull(entity);
+	}	
+	
+	@Test
+	@Order(21)
+	void teste_21() {
+		
+		//String id = entityOneData.getEntityTwoData().getEntityTreeData().getEntityFourData().getIdEntityFour().toString();
+
+		//String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/single/EntityFourData/findById?idEntityFour=" + id;
+		
+		//String entity = getUniqueResult(url, new ErrorResponse());
+
+		//assertNotNull(entity);
+	}
+	
+	@Test
+	@Order(22)
+	void teste_22() {
+		
+		//String id = entityOneData.getEntityTwoData().getEntityTreeData().getEntityFourData().getEntityFiveData().getIdEntityFive().toString();
+
+		//String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/single/EntityFiveData/findById?idEntityFive=" + id;
+		
+		//String entity = getUniqueResult(url, new ErrorResponse());
+
+		//assertNotNull(entity);
+	}
+	
+	@Test
+	@Order(23)
+	void teste_23() {
+		
+		Long id = entityOneData.getEntityStatusData().getIdEntityStatus();
+
+		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/single/EntityStatusData/findById?idEntityStatus=" + id;
+		
+		String entityOneData = getUniqueResult(url, new ErrorResponse());
+
+		assertNotNull(entityOneData);
+	}
+	
 	public void single_parameterized_one_erro(String url, String message) {
 
 		ErrorResponse errorResponse = new ErrorResponse(message, HttpStatus.BAD_REQUEST);

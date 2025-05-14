@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -370,6 +371,10 @@ public class MethodReflection {
 			return true;
 		}
 		
+		if (isCompatibleTypeUUID(paramType, value)) {
+			return true;
+		}
+		
 		return isCompatibleTypeByte(paramType, value);
 	}
 	
@@ -481,6 +486,18 @@ public class MethodReflection {
 		return false;
 	}
 
+	public static boolean isCompatibleTypeUUID(Class<?> paramType, Object value) {
+		if (paramType == UUID.class && value instanceof String string) {
+			try {
+				UUID.fromString(string);
+				return true;
+			} catch (Exception e) {
+				return false;
+			}
+		}
+		return false;
+	}
+	
 	public static boolean isCompatibleTypeLocalDateTime(Class<?> paramType, Object value) {
 		if (paramType == LocalDateTime.class && value instanceof String string) {
 			try {
