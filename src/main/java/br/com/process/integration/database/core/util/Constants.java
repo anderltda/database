@@ -28,21 +28,41 @@ public class Constants {
 	 *  Pattern para aplicar no JSON mapper @JsonFormat - Date
 	 */
 	public static final String DATE_FORMAT = "yyyy-MM-dd";	
+	
+	/**
+	 * Packages JPA, MyBatis and JDBC 
+	 */
+	public static final String JPA_ENTITY      = "br.com.process.integration.database.model.entity.dto.";
+	public static final String JPA_REPOSITORY  = "br.com.process.integration.database.model.entity.repository.";
+	public static final String JPA_SERVICE     = "br.com.process.integration.database.model.entity.service.";
+	
+	/**
+	 * Packages JPA, MyBatis and JDBC 
+	 */
+	public static final String MYBATIS_DATA    = "br.com.process.integration.database.model.data.dto.";
+	public static final String MYBATIS_MAPPER  = "br.com.process.integration.database.model.data.mapper.";
+	public static final String MYBATIS_SERVICE = "br.com.process.integration.database.model.data.service.";
+
+	/**
+	 * Packages JPA, MyBatis and JDBC 
+	 */
+	public static final String JDBC_VIEW       = "br.com.process.integration.database.model.view.dto.";
+	public static final String JDBC_SERVICE    = "br.com.process.integration.database.model.view.service.";
 
 	/**
 	 *  Nome do pacote onde estao as classes das entidades (entitys)
 	 */
-	public static final String PACKAGE_NAME_ENTITY = "br.com.process.integration.database.model.entity.dto";
+	public static final String PACKAGE_NAME_ENTITY = JPA_ENTITY.substring(0, JPA_ENTITY.length() - 1);
 	
 	/**
 	 *  Nome do pacote onde estao as classes dos views
 	 */
-	public static final String PACKAGE_NAME_VIEW = "br.com.process.integration.database.model.view.dto";
+	public static final String PACKAGE_NAME_VIEW = JDBC_VIEW.substring(0, JDBC_VIEW.length() - 1);
 	
 	/**
 	 *  Nome do pacote onde estao as classes dos datas
 	 */
-	public static final String PACKAGE_NAME_DATA = "br.com.process.integration.database.model.data.dto";
+	public static final String PACKAGE_NAME_DATA = MYBATIS_DATA.substring(0, MYBATIS_DATA.length() - 1);
 	
 	/**
 	 * Referencia ao identificador da operacao

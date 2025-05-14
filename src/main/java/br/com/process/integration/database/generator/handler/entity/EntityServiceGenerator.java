@@ -5,6 +5,12 @@ import java.nio.file.Paths;
 
 import javax.lang.model.element.Modifier;
 
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
@@ -12,6 +18,8 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 
+import br.com.process.integration.database.core.application.AbstractJpaService;
+import br.com.process.integration.database.core.ui.QueryJpaController;
 import br.com.process.integration.database.generator.util.TypeMapper;
 
 /**
@@ -28,15 +36,15 @@ public class EntityServiceGenerator {
      */
     public static void generateServiceClass(String entityName, String packageDto, String packageService, String idJavaType) throws IOException {
 
-        String serviceName = entityName + "Service";
+        String serviceName = entityName + Service.class.getSimpleName();
 
-        ClassName serviceAnnotation = ClassName.get("org.springframework.stereotype", "Service");
-        ClassName transactional = ClassName.get("org.springframework.transaction.annotation", "Transactional");
-        ClassName autowired = ClassName.get("org.springframework.beans.factory.annotation", "Autowired");
-        ClassName beanUtils = ClassName.get("org.springframework.beans", "BeanUtils");
-        ClassName assembler = ClassName.get("org.springframework.data.web", "PagedResourcesAssembler");
-        ClassName abstractService = ClassName.get("br.com.process.integration.database.core.application", "AbstractJpaService");
-        ClassName controllerClass = ClassName.get("br.com.process.integration.database.core.ui", "QueryJpaController");
+        ClassName serviceAnnotation = ClassName.get(Service.class.getPackageName(), Service.class.getSimpleName());
+        ClassName transactional = ClassName.get(Transactional.class.getPackageName(), Transactional.class.getSimpleName());
+        ClassName autowired = ClassName.get(Autowired.class.getPackageName(), Autowired.class.getSimpleName());
+        ClassName beanUtils = ClassName.get(BeanUtils.class.getPackageName(), BeanUtils.class.getSimpleName());
+        ClassName assembler = ClassName.get(PagedResourcesAssembler.class.getPackageName(), PagedResourcesAssembler.class.getSimpleName());
+        ClassName abstractService = ClassName.get(AbstractJpaService.class.getPackageName(), AbstractJpaService.class.getSimpleName());
+        ClassName controllerClass = ClassName.get(QueryJpaController.class.getPackageName(), QueryJpaController.class.getSimpleName());
 
         ClassName entityClass = ClassName.get(packageDto, entityName);
 

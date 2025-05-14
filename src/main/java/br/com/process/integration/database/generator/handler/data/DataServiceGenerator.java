@@ -7,12 +7,22 @@ import java.util.Set;
 
 import javax.lang.model.element.Modifier;
 
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
+
+import br.com.process.integration.database.core.application.AbstractDataService;
+import br.com.process.integration.database.core.ui.QueryMyBatisController;
 
 /**
  * 
@@ -62,19 +72,19 @@ public class DataServiceGenerator {
 		
 		String baseName = capitalizeCamel(table);
 		String dataClassName = baseName + "Data";
-		String mapperClassName = dataClassName + "Mapper";
-		String serviceClassName = dataClassName + "Service";
+		String mapperClassName = dataClassName + Mapper.class.getSimpleName();
+		String serviceClassName = dataClassName + Service.class.getSimpleName();
 
-		ClassName serviceAnnotation = ClassName.get("org.springframework.stereotype", "Service");
-		ClassName transactional = ClassName.get("org.springframework.transaction.annotation", "Transactional");
-		ClassName autowired = ClassName.get("org.springframework.beans.factory.annotation", "Autowired");
-		ClassName beanUtils = ClassName.get("org.springframework.beans", "BeanUtils");
-		ClassName assemblerType = ClassName.get("org.springframework.data.web", "PagedResourcesAssembler");
-		ClassName controllerType = ClassName.get("br.com.process.integration.database.core.ui", "QueryMyBatisController");
+		ClassName serviceAnnotation = ClassName.get(Service.class.getPackageName(), Service.class.getSimpleName());
+		ClassName transactional = ClassName.get(Transactional.class.getPackageName(), Transactional.class.getSimpleName());
+		ClassName autowired = ClassName.get(Autowired.class.getPackageName(), Autowired.class.getSimpleName());
+		ClassName beanUtils = ClassName.get(BeanUtils.class.getPackageName(), BeanUtils.class.getSimpleName());
+		ClassName assemblerType = ClassName.get(PagedResourcesAssembler.class.getPackageName(), PagedResourcesAssembler.class.getSimpleName());
+		ClassName controllerType = ClassName.get(QueryMyBatisController.class.getPackageName(), QueryMyBatisController.class.getSimpleName());
 
 		ClassName dtoClass = ClassName.get(packageDto, dataClassName);
 		ClassName mapperClass = ClassName.get(packageMapper, mapperClassName);
-		ClassName abstractService = ClassName.get("br.com.process.integration.database.core.application", "AbstractDataService");
+		ClassName abstractService = ClassName.get(AbstractDataService.class.getPackageName(), AbstractDataService.class.getSimpleName());
 
 		ParameterizedTypeName superClass = ParameterizedTypeName.get(abstractService, dtoClass);
 

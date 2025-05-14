@@ -8,6 +8,9 @@ import java.util.Set;
 
 import javax.lang.model.element.Modifier;
 
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
@@ -15,6 +18,8 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
+
+import br.com.process.integration.database.core.domain.DataMapper;
 
 /**
  * 
@@ -59,10 +64,10 @@ public class DataMapperGenerator {
 	 */
 	private String generateMapperClass(String table) throws Exception {
 		String dataClassName = capitalizeCamel(table) + "Data";
-		String mapperClassName = dataClassName + "Mapper";
+		String mapperClassName = dataClassName + Mapper.class.getSimpleName();
 
-		ClassName mapperAnnotation = ClassName.get("org.apache.ibatis.annotations", "Mapper");
-		ClassName dataMapper = ClassName.get("br.com.process.integration.database.core.domain", "DataMapper");
+		ClassName mapperAnnotation = ClassName.get(Mapper.class.getPackageName(), Mapper.class.getSimpleName());
+		ClassName dataMapper = ClassName.get(DataMapper.class.getPackageName(), DataMapper.class.getSimpleName());
 		ClassName dataClass = ClassName.get(packageDto, dataClassName);
 
 		TypeSpec.Builder interfaceBuilder = TypeSpec.interfaceBuilder(mapperClassName)
@@ -83,7 +88,7 @@ public class DataMapperGenerator {
 			Class<?> idType = idField.getType();
 
 			ParameterSpec param = ParameterSpec.builder(idType, idField.getName())
-				    .addAnnotation(AnnotationSpec.builder(ClassName.get("org.apache.ibatis.annotations", "Param"))
+				    .addAnnotation(AnnotationSpec.builder(ClassName.get(Param.class.getPackageName(), Param.class.getSimpleName()))
 				        .addMember("value", "$S", idField.getName())
 				        .build())
 				    .build();

@@ -9,9 +9,16 @@ import java.util.*;
 
 import javax.lang.model.element.Modifier;
 
+import org.springframework.hateoas.RepresentationModel;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.javapoet.*;
 
+import br.com.process.integration.database.core.domain.BeanView;
+import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.generator.model.ColumnInfo;
 import br.com.process.integration.database.generator.util.StringUtils;
 import br.com.process.integration.database.generator.util.TypeMapper;
@@ -112,7 +119,7 @@ public class ViewGenerator {
     		int aliasCounter = 1;
 
     		Map<String, String> tableAliasMap = new LinkedHashMap<>();
-    		Map<String, String> columnToAliasMap = new HashMap<>(); // chave: table.column → alias
+    		Map<String, String> columnToAliasMap = new HashMap<>();
     		tableAliasMap.put(rootTable, rootAlias);
 
     		List<String> aliasList = new ArrayList<>();
@@ -145,7 +152,7 @@ public class ViewGenerator {
     					joins.add("INNER JOIN " + pkTable + " " + alias + " ON " +
     						alias + "." + pkColumn + " = " + currentAlias + "." + fkColumn);
 
-    					queue.add(pkTable); // para processar FK da nova tabela
+    					queue.add(pkTable);
     				}
     			}
     		}
@@ -161,7 +168,7 @@ public class ViewGenerator {
     		Set<String> whereKeys = new HashSet<>();
     		for (Map.Entry<String, List<ColumnInfo>> entry : resolved.entrySet()) {
     			String table = entry.getKey();
-    			String alias = tableAliasMap.getOrDefault(table, ""); // proteção
+    			String alias = tableAliasMap.getOrDefault(table, "");
 
     			for (ColumnInfo col : entry.getValue()) {
     				String column = col.name;
@@ -201,12 +208,12 @@ public class ViewGenerator {
 
 		String className = StringUtils.capitalize(StringUtils.camelCase(rootTable)) + "View";
 
-		ClassName representationModel = ClassName.get("org.springframework.hateoas", "RepresentationModel");
-		ClassName beanView = ClassName.get("br.com.process.integration.database.core.domain", "BeanView");
-		ClassName jsonFormat = ClassName.get("com.fasterxml.jackson.annotation", "JsonFormat");
-		ClassName constants = ClassName.get("br.com.process.integration.database.core.util", "Constants");
-		ClassName jsonIgnore = ClassName.get("com.fasterxml.jackson.annotation", "JsonIgnore");
-		ClassName jsonIgnoreProperties = ClassName.get("com.fasterxml.jackson.annotation", "JsonIgnoreProperties");
+		ClassName representationModel = ClassName.get(RepresentationModel.class.getPackageName(), RepresentationModel.class.getSimpleName());
+		ClassName beanView = ClassName.get(BeanView.class.getPackageName(), BeanView.class.getSimpleName());
+		ClassName jsonFormat = ClassName.get(JsonFormat.class.getPackageName(), JsonFormat.class.getSimpleName());
+		ClassName constants = ClassName.get(Constants.class.getPackageName(), Constants.class.getSimpleName());
+		ClassName jsonIgnore = ClassName.get(JsonIgnore.class.getPackageName(), JsonIgnore.class.getSimpleName());
+		ClassName jsonIgnoreProperties = ClassName.get(JsonIgnoreProperties.class.getPackageName(), JsonIgnoreProperties.class.getSimpleName());
 
 		TypeSpec.Builder classBuilder = TypeSpec.classBuilder(className).addModifiers(Modifier.PUBLIC)
 				.superclass(ParameterizedTypeName.get(representationModel, ClassName.bestGuess(className)))

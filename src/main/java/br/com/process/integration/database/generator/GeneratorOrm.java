@@ -7,6 +7,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.generator.handler.data.DataGenerator;
 import br.com.process.integration.database.generator.handler.data.DataMapperGenerator;
 import br.com.process.integration.database.generator.handler.data.DataServiceGenerator;
@@ -25,15 +26,6 @@ import br.com.process.integration.database.generator.util.JavaCompilerUtil;
 @Component
 public class GeneratorOrm {
 	
-	private static final String JPA_ENTITY      = "br.com.process.integration.database.model.entity.dto.";
-	private static final String JPA_REPOSITORY  = "br.com.process.integration.database.model.entity.repository.";
-	private static final String JPA_SERVICE     = "br.com.process.integration.database.model.entity.service.";
-	private static final String JDBC_VIEW       = "br.com.process.integration.database.model.view.dto.";
-	private static final String JDBC_SERVICE    = "br.com.process.integration.database.model.view.service.";
-	private static final String MYBATIS_DATA    = "br.com.process.integration.database.model.data.dto.";
-	private static final String MYBATIS_MAPPER  = "br.com.process.integration.database.model.data.mapper.";
-	private static final String MYBATIS_SERVICE = "br.com.process.integration.database.model.data.service.";
-
 	private String domain;
 
 	@Value("${spring.datasource.url}")
@@ -74,7 +66,7 @@ public class GeneratorOrm {
 	 */
 	private void extractedEntity(Set<String> tables) throws Exception {
 
-		String packageEntity = JPA_ENTITY + domain;
+		String packageEntity = Constants.JPA_ENTITY + domain;
 
 		EntityGenerator entityGenerator = new EntityGenerator(url, user, pass, packageEntity, tables);
 
@@ -82,9 +74,9 @@ public class GeneratorOrm {
 
 		classResolverList.forEach(resolver -> {
 
-			String packageRepository = JPA_REPOSITORY + domain;
+			String packageRepository = Constants.JPA_REPOSITORY + domain;
 
-			String packageService = JPA_SERVICE + domain;
+			String packageService = Constants.JPA_SERVICE + domain;
 
 			try {
 
@@ -108,7 +100,7 @@ public class GeneratorOrm {
 
 			try {
 
-				String packageView = JDBC_VIEW + domain;
+				String packageView = Constants.JDBC_VIEW + domain;
 
 				ViewGenerator viewGenerator = new ViewGenerator(url, user, pass, packageView, domain);
 
@@ -116,7 +108,7 @@ public class GeneratorOrm {
 
 				viewGenerator.generateQueryDefinition(table);
 
-				String packageService = JDBC_SERVICE + domain;
+				String packageService = Constants.JDBC_SERVICE + domain;
 
 				ViewServiceGenerator.generateServiceClass(classView, packageView, packageService);
 
@@ -132,7 +124,7 @@ public class GeneratorOrm {
 	 */
 	private void extractedData(Set<String> tables) throws Exception {
 
-		String packageData = MYBATIS_DATA + domain;
+		String packageData = Constants.MYBATIS_DATA + domain;
 
 		DataGenerator dataGenerator = new DataGenerator(url, user, pass, packageData, tables);
 
@@ -142,11 +134,11 @@ public class GeneratorOrm {
 
 		List<Class<?>> compiledClasses = JavaCompilerUtil.compileAndLoadClasses(qualifiedClassNames);
 
-		String packageMapper = MYBATIS_MAPPER + domain;
+		String packageMapper = Constants.MYBATIS_MAPPER + domain;
 		DataMapperGenerator dataMapperGenerator = new DataMapperGenerator(packageMapper, packageData, tables);
 		dataMapperGenerator.run();
 
-		String packageService = MYBATIS_SERVICE + domain;
+		String packageService = Constants.MYBATIS_SERVICE + domain;
 		DataServiceGenerator dataServiceGenerator = new DataServiceGenerator(packageService, packageData, packageMapper, tables);
 		dataServiceGenerator.run();
 

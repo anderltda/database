@@ -13,6 +13,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.generator.handler.data.DataGenerator;
 import br.com.process.integration.database.generator.handler.data.DataMapperGenerator;
 import br.com.process.integration.database.generator.handler.data.DataServiceGenerator;
@@ -25,10 +26,6 @@ import br.com.process.integration.database.generator.util.JavaCompilerUtil;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DataGeneratorTests {
 
-	private String packageData = "br.com.process.integration.database.model.data.dto.";
-	private String packageMapper = "br.com.process.integration.database.model.data.mapper.";
-	private String packageService = "br.com.process.integration.database.model.data.service.";
-	
 	private String domain = "test";
 	private String url = "jdbc:h2:mem:testdb";
 	private String user = "sa";
@@ -52,7 +49,7 @@ public class DataGeneratorTests {
 	
 	private void generateData(Set<String> tables) throws Exception {
 
-		String packages = packageData + domain;
+		String packages = Constants.MYBATIS_DATA + domain;
 
 		DataGenerator dataGenerator = new DataGenerator(url, user, pass, packages);
 		dataGenerator.setTables(tables);
@@ -63,11 +60,11 @@ public class DataGeneratorTests {
 
 		List<Class<?>> compiledClasses = JavaCompilerUtil.compileAndLoadClasses(qualifiedClassNames);
 
-		String mapper = packageMapper + domain;
+		String mapper = Constants.MYBATIS_MAPPER + domain;
 		DataMapperGenerator dataMapperGenerator = new DataMapperGenerator(mapper, packages, tables);
 		dataMapperGenerator.run();
 
-		String service = packageService + domain;
+		String service = Constants.MYBATIS_SERVICE + domain;
 		DataServiceGenerator dataServiceGenerator = new DataServiceGenerator(service, packages, mapper, tables);
 		dataServiceGenerator.run();
 

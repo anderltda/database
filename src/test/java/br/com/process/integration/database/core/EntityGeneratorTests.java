@@ -14,6 +14,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.generator.handler.entity.EntityGenerator;
 import br.com.process.integration.database.generator.handler.entity.EntityRepositoryGenerator;
 import br.com.process.integration.database.generator.handler.entity.EntityServiceGenerator;
@@ -25,17 +26,13 @@ import br.com.process.integration.database.generator.metadata.ClassResolver;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class EntityGeneratorTests {
 
-	private String packageEntity = "br.com.process.integration.database.model.entity.dto.";
-	private String packageRepository = "br.com.process.integration.database.model.entity.repository.";
-	private String packageService = "br.com.process.integration.database.model.entity.service.";
-	
 	private String domain = "test";
 	private String url = "jdbc:h2:mem:testdb";
 	private String user = "sa";
 	private String pass = "";
 
 	private Set<String> table1s = new LinkedHashSet<>(Arrays.asList("entity_nine", "entity_eight", "entity_seven", "entity_six"));
-	
+
 	private Set<String> table2s = new LinkedHashSet<>(Arrays.asList("entity_one", "entity_status", "entity_two", "entity_tree", "entity_four", "entity_five"));
 
 	@Test
@@ -49,10 +46,10 @@ public class EntityGeneratorTests {
 	void teste_02() throws Exception {
 		generateEntity(table2s);
 	}
-	
+
 	private void generateEntity(Set<String> tables) throws Exception {
 
-		String packages = packageEntity + domain;
+		String packages = Constants.JPA_ENTITY + domain;
 
 		EntityGenerator entityGenerator = new EntityGenerator(url, user, pass, packages);
 		entityGenerator.setTables(tables);
@@ -61,9 +58,9 @@ public class EntityGeneratorTests {
 
 		classResolverList.forEach(resolver -> {
 
-			String repository = packageRepository + domain;
+			String repository = Constants.JPA_REPOSITORY + domain;
 
-			String service = packageService + domain;
+			String service = Constants.JPA_SERVICE + domain;
 
 			try {
 

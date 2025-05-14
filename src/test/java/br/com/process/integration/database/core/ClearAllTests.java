@@ -46,6 +46,8 @@ class ClearAllTests {
 
 	@Autowired
 	private CrudJpaController crudJpaController;
+	
+	private String domain = "test";
 
 	@BeforeAll
 	void setupOnce() {
@@ -82,50 +84,50 @@ class ClearAllTests {
 	@Test
 	@Order(4)
 	void teste_03() throws IOException {
-		PackageDeleter.deletePackage("src/main/java", "br.com.process.integration.database.model.data.dto.test");
+		PackageDeleter.deletePackage("src/main/java", Constants.MYBATIS_DATA + domain);
 
 	}
 	
 	@Test
 	@Order(5)
 	void teste_04() throws IOException {
-		PackageDeleter.deletePackage("src/main/java", "br.com.process.integration.database.model.data.mapper.test");
+		PackageDeleter.deletePackage("src/main/java", Constants.MYBATIS_MAPPER + domain);
 	}
 	
 	@Test
 	@Order(6)
 	void teste_05() throws IOException {
-		PackageDeleter.deletePackage("src/main/java", "br.com.process.integration.database.model.data.service.test");
+		PackageDeleter.deletePackage("src/main/java", Constants.MYBATIS_SERVICE + domain);
 	}
 	
 	@Test
 	@Order(7)
 	void teste_06() throws IOException {
-		PackageDeleter.deletePackage("src/main/java", "br.com.process.integration.database.model.entity.dto.test");
+		PackageDeleter.deletePackage("src/main/java", Constants.JPA_ENTITY +  domain);
 	}
 	
 	@Test
 	@Order(8)
 	void teste_07() throws IOException {
-		PackageDeleter.deletePackage("src/main/java", "br.com.process.integration.database.model.entity.repository.test");
+		PackageDeleter.deletePackage("src/main/java", Constants.JPA_REPOSITORY + domain);
 	}
 	
 	@Test
 	@Order(9)
 	void teste_08() throws IOException {
-		PackageDeleter.deletePackage("src/main/java", "br.com.process.integration.database.model.entity.service.test");
+		PackageDeleter.deletePackage("src/main/java", Constants.JPA_SERVICE + domain);
 	}	
 	
 	@Test
 	@Order(10)
 	void teste_09() throws IOException {
-		PackageDeleter.deletePackage("src/main/java", "br.com.process.integration.database.model.view.dto.test");
+		PackageDeleter.deletePackage("src/main/java", Constants.JDBC_VIEW + domain);
 	}	
 	
 	@Test
 	@Order(11)
 	void teste_10() throws IOException {
-		PackageDeleter.deletePackage("src/main/java", "br.com.process.integration.database.model.view.service.test");
+		PackageDeleter.deletePackage("src/main/java", Constants.JDBC_SERVICE + domain);
 	}	
 	
 	@Test

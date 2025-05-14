@@ -12,6 +12,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.generator.handler.view.ViewGenerator;
 import br.com.process.integration.database.generator.handler.view.ViewServiceGenerator;
 
@@ -20,9 +21,6 @@ import br.com.process.integration.database.generator.handler.view.ViewServiceGen
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ViewGeneratorTests {
-	
-	private String packageView = "br.com.process.integration.database.model.view.dto.";
-	private String packageService = "br.com.process.integration.database.model.view.service.";
 	
 	private String domain = "test";
 	private String url = "jdbc:h2:mem:testdb";
@@ -62,7 +60,7 @@ public class ViewGeneratorTests {
 	
 	private void generateView(String table) throws Exception {
 
-		String packages = packageView + domain;
+		String packages = Constants.JDBC_VIEW + domain;
 
 		ViewGenerator viewGenerator = new ViewGenerator(url, user, pass, packages, domain);
 		
@@ -70,7 +68,7 @@ public class ViewGeneratorTests {
 
 		viewGenerator.generateQueryDefinition(table.toUpperCase());
 
-		String service = packageService + domain;
+		String service = Constants.JDBC_SERVICE + domain;
 
 		ViewServiceGenerator.generateServiceClass(classView, packages, service);
 

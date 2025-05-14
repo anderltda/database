@@ -5,6 +5,10 @@ import java.nio.file.Paths;
 
 import javax.lang.model.element.Modifier;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.stereotype.Repository;
+
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.ParameterizedTypeName;
@@ -26,11 +30,11 @@ public class EntityRepositoryGenerator {
 	 */
 	public static void generateRepositoryClass(String entityClassName, String packageEntity, String packageRepository, String javaType) throws IOException {
 
-		String repositoryName = entityClassName + "Repository";
+		String repositoryName = entityClassName + Repository.class.getSimpleName();
 
-		ClassName repositoryAnnotation = ClassName.get("org.springframework.stereotype", "Repository");
-		ClassName jpaRepository = ClassName.get("org.springframework.data.jpa.repository", "JpaRepository");
-		ClassName jpaSpecExecutor = ClassName.get("org.springframework.data.jpa.repository", "JpaSpecificationExecutor");
+		ClassName repositoryAnnotation = ClassName.get(Repository.class.getPackageName(), Repository.class.getSimpleName());
+		ClassName jpaRepository = ClassName.get(JpaRepository.class.getPackageName(), JpaRepository.class.getSimpleName());
+		ClassName jpaSpecExecutor = ClassName.get(JpaSpecificationExecutor.class.getPackageName(), JpaSpecificationExecutor.class.getSimpleName());
 		ClassName entityClass = ClassName.get(packageEntity, entityClassName);
 
 		ClassName idClass = null;

@@ -17,6 +17,11 @@ import java.util.stream.Collectors;
 
 import javax.lang.model.element.Modifier;
 
+import org.springframework.hateoas.RepresentationModel;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -26,9 +31,13 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 
+import br.com.process.integration.database.core.domain.BeanData;
+import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.generator.model.ColumnInfo;
 import br.com.process.integration.database.generator.util.StringUtils;
 import br.com.process.integration.database.generator.util.TypeMapper;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 /**
  * 
@@ -172,7 +181,7 @@ public class DataGenerator {
             fieldBuilder.addJavadoc("Coluna: $L\n", column.name);
 
             if (!column.nullable) {
-                fieldBuilder.addAnnotation(ClassName.get("jakarta.validation.constraints", "NotNull"));
+                fieldBuilder.addAnnotation(ClassName.get(NotNull.class.getPackageName(), NotNull.class.getSimpleName()));
             }
 
             classBuilder.addField(fieldBuilder.build());
@@ -206,12 +215,12 @@ public class DataGenerator {
     	
     	String className = StringUtils.capitalize(StringUtils.camelCase(tableName)) + "Data";
 
-        ClassName representationModel = ClassName.get("org.springframework.hateoas", "RepresentationModel");
-        ClassName beanData = ClassName.get("br.com.process.integration.database.core.domain", "BeanData");
-        ClassName jsonFormat = ClassName.get("com.fasterxml.jackson.annotation", "JsonFormat");
-        ClassName constants = ClassName.get("br.com.process.integration.database.core.util", "Constants");
-        ClassName jsonIgnore = ClassName.get("com.fasterxml.jackson.annotation", "JsonIgnore");
-        ClassName jsonIgnoreProperties = ClassName.get("com.fasterxml.jackson.annotation", "JsonIgnoreProperties");
+        ClassName representationModel = ClassName.get(RepresentationModel.class.getPackageName(), RepresentationModel.class.getSimpleName());
+        ClassName beanData = ClassName.get(BeanData.class.getPackageName(), BeanData.class.getSimpleName());
+        ClassName jsonFormat = ClassName.get(JsonFormat.class.getPackageName(), JsonFormat.class.getSimpleName());
+        ClassName constants = ClassName.get(Constants.class.getPackageName(), Constants.class.getSimpleName());
+        ClassName jsonIgnore = ClassName.get(JsonIgnore.class.getPackageName(), JsonIgnore.class.getSimpleName());
+        ClassName jsonIgnoreProperties = ClassName.get(JsonIgnoreProperties.class.getPackageName(), JsonIgnoreProperties.class.getSimpleName());
 
         TypeSpec.Builder classBuilder = TypeSpec.classBuilder(className)
             .addModifiers(Modifier.PUBLIC)
@@ -260,12 +269,12 @@ public class DataGenerator {
 
             // @NotNull se não for anulável
             if (!column.nullable) {
-                fieldBuilder.addAnnotation(ClassName.get("jakarta.validation.constraints", "NotNull"));
+                fieldBuilder.addAnnotation(ClassName.get(NotNull.class.getPackageName(), NotNull.class.getSimpleName()));
             }
 
             // @Size(max = ...) para VARCHAR, CHAR
             if ((column.sqlTypeName.equalsIgnoreCase("VARCHAR") || column.sqlTypeName.equalsIgnoreCase("CHAR")) && column.size > 0) {
-                fieldBuilder.addAnnotation(AnnotationSpec.builder(ClassName.get("jakarta.validation.constraints", "Size"))
+                fieldBuilder.addAnnotation(AnnotationSpec.builder(ClassName.get(Size.class.getPackageName(), Size.class.getSimpleName()))
                     .addMember("max", "$L", column.size).build());
             }
 

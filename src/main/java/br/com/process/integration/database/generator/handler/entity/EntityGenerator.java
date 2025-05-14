@@ -17,6 +17,10 @@ import java.util.stream.Collectors;
 
 import javax.lang.model.element.Modifier;
 
+import org.springframework.hateoas.RepresentationModel;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -26,21 +30,28 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 
+import br.com.process.integration.database.core.domain.BeanEntity;
+import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.generator.metadata.ClassResolver;
 import br.com.process.integration.database.generator.metadata.ForeignKeyResolver;
 import br.com.process.integration.database.generator.model.ColumnInfo;
 import br.com.process.integration.database.generator.util.StringUtils;
 import br.com.process.integration.database.generator.util.TypeMapper;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinColumns;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 /**
  * 
@@ -138,8 +149,7 @@ public class EntityGenerator {
 
 		Set<String> primaryKeys = new HashSet<>();
 
-		Map<String, Map<String, List<String>>> compositeForeignKeys = ForeignKeyResolver
-				.resolveCompositeForeignKeys(metaData, tableName);
+		Map<String, Map<String, List<String>>> compositeForeignKeys = ForeignKeyResolver.resolveCompositeForeignKeys(metaData, tableName);
 
 		ResultSet pk = metaData.getPrimaryKeys(null, null, tableName);
 
@@ -151,12 +161,17 @@ public class EntityGenerator {
 		while (rs.next()) {
 			String columnName = rs.getString("COLUMN_NAME");
 			boolean isUnique = isColumnUnique(metaData, tableName, columnName);
-			columns.add(new ColumnInfo(columnName, rs.getInt("DATA_TYPE"), rs.getString("TYPE_NAME"),
-					rs.getInt("COLUMN_SIZE"), rs.getInt("NULLABLE") == DatabaseMetaData.columnNullable,
+			columns.add(new ColumnInfo(
+					columnName, 
+					rs.getInt("DATA_TYPE"), 
+					rs.getString("TYPE_NAME"),
+					rs.getInt("COLUMN_SIZE"), 
+					rs.getInt("NULLABLE") == DatabaseMetaData.columnNullable,
 					rs.getInt("DECIMAL_DIGITS"), isUnique));
 		}
 
 		boolean isCompositeKey = primaryKeys.size() > 1;
+		
 		if (isCompositeKey) {
 			gerarClasseEmbeddableId(packageName, className + "Id", columns, primaryKeys);
 		}
@@ -170,18 +185,16 @@ public class EntityGenerator {
 		if (!compositeUniqueIndexes.isEmpty()) {
 			for (Set<String> columnsSet : compositeUniqueIndexes.values()) {
 				if (columnsSet.size() > 1) {
-					String columnsFormatted = columnsSet.stream().map(c -> "\"" + c + "\"")
-							.collect(Collectors.joining(", "));
-					tableAnnotation.addMember("uniqueConstraints", "@$T(columnNames = {$L})",
-							ClassName.get("jakarta.persistence", "UniqueConstraint"), columnsFormatted);
+					String columnsFormatted = columnsSet.stream().map(c -> "\"" + c + "\"").collect(Collectors.joining(", "));
+					tableAnnotation.addMember("uniqueConstraints", "@$T(columnNames = {$L})", ClassName.get(UniqueConstraint.class.getPackageName(), UniqueConstraint.class.getSimpleName()), columnsFormatted);
 				}
 			}
 		}
 
 		// Importa classes necessárias
-		ClassName jsonIgnoreProperties = ClassName.get("com.fasterxml.jackson.annotation", "JsonIgnoreProperties");
-		ClassName representationModel = ClassName.get("org.springframework.hateoas", "RepresentationModel");
-		ClassName beanEntity = ClassName.get("br.com.process.integration.database.core.domain", "BeanEntity");
+		ClassName jsonIgnoreProperties = ClassName.get(JsonIgnoreProperties.class.getPackageName(), JsonIgnoreProperties.class.getSimpleName());
+		ClassName representationModel = ClassName.get(RepresentationModel.class.getPackageName(), RepresentationModel.class.getSimpleName());
+		ClassName beanEntity = ClassName.get(BeanEntity.class.getPackageName(), BeanEntity.class.getSimpleName());
 
 		// Obtém tipo da chave primária
 		String idColumn = primaryKeys.stream().findFirst().orElse(null);
@@ -200,8 +213,7 @@ public class EntityGenerator {
 		// Criação da classe com todas as anotações e heranças/interfaces
 		TypeSpec.Builder classBuilder = TypeSpec.classBuilder(className).addModifiers(Modifier.PUBLIC)
 				.addAnnotation(Entity.class)
-				.addAnnotation(
-						AnnotationSpec.builder(jsonIgnoreProperties).addMember("ignoreUnknown", "$L", true).build())
+				.addAnnotation(AnnotationSpec.builder(jsonIgnoreProperties).addMember("ignoreUnknown", "$L", true).build())
 				.addAnnotation(tableAnnotation.build())
 				.superclass(ParameterizedTypeName.get(representationModel, ClassName.get(packageName, className)));
 
@@ -218,20 +230,14 @@ public class EntityGenerator {
 		classBuilder.addSuperinterface(ParameterizedTypeName.get(beanEntity, idTypeClass));
 
 		// Importa Jackson + Constants
-		ClassName jsonFormat = ClassName.get("com.fasterxml.jackson.annotation", "JsonFormat");
-		ClassName constants = ClassName.get("br.com.process.integration.database.core.util", "Constants");
+		ClassName jsonFormat = ClassName.get(JsonFormat.class.getPackageName(), JsonFormat.class.getSimpleName());
+		ClassName constants = ClassName.get(Constants.class.getPackageName(), Constants.class.getSimpleName());
 
 		if (isCompositeKey) {
 			ClassName idClass = ClassName.get(packageName, className + "Id");
-
-			classBuilder.addField(
-					FieldSpec.builder(idClass, "id", Modifier.PRIVATE).addAnnotation(EmbeddedId.class).build());
-
-			classBuilder.addMethod(MethodSpec.methodBuilder("getId").addAnnotation(Override.class)
-					.addModifiers(Modifier.PUBLIC).returns(idClass).addStatement("return this.id").build());
-
-			classBuilder.addMethod(MethodSpec.methodBuilder("setId").addModifiers(Modifier.PUBLIC)
-					.addParameter(idClass, "id").addStatement("this.id = id").build());
+			classBuilder.addField(FieldSpec.builder(idClass, "id", Modifier.PRIVATE).addAnnotation(EmbeddedId.class).build());
+			classBuilder.addMethod(MethodSpec.methodBuilder("getId").addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).returns(idClass).addStatement("return this.id").build());
+			classBuilder.addMethod(MethodSpec.methodBuilder("setId").addModifiers(Modifier.PUBLIC).addParameter(idClass, "id").addStatement("this.id = id").build());
 		}
 
 		for (ColumnInfo column : columns) {
@@ -248,13 +254,11 @@ public class EntityGenerator {
 
 			boolean isPrimaryKey = primaryKeys.contains(column.name);
 
-			boolean isForeignKey = foreignKeys.containsKey(tableName)
-					&& foreignKeys.get(tableName).containsKey(column.name);
+			boolean isForeignKey = foreignKeys.containsKey(tableName) && foreignKeys.get(tableName).containsKey(column.name);
 
 			String fieldName = isPrimaryKey ? "id" : StringUtils.camelCase(column.name);
 
-			boolean isCompositeFK = compositeForeignKeys.containsKey(tableName) && compositeForeignKeys.get(tableName)
-					.values().stream().anyMatch(cols -> cols.contains(column.name));
+			boolean isCompositeFK = compositeForeignKeys.containsKey(tableName) && compositeForeignKeys.get(tableName).values().stream().anyMatch(cols -> cols.contains(column.name));
 
 			if (isCompositeFK && !isForeignKey) {
 				continue;
@@ -280,19 +284,15 @@ public class EntityGenerator {
 					generatedValue.addMember("strategy", "$T.IDENTITY", GenerationType.class);
 				}
 
-				FieldSpec field = FieldSpec.builder(typeClass, "id", Modifier.PRIVATE).addAnnotation(Id.class)
-						.addAnnotation(generatedValue.build())
-						.addAnnotation(
-								AnnotationSpec.builder(Column.class).addMember("name", "$S", column.name).build())
+				FieldSpec field = FieldSpec.builder(typeClass, "id", Modifier.PRIVATE).addAnnotation(Id.class).addAnnotation(generatedValue.build())
+						.addAnnotation(AnnotationSpec.builder(Column.class).addMember("name", "$S", column.name).build())
 						.build();
 
 				classBuilder.addField(field);
 
-				classBuilder.addMethod(MethodSpec.methodBuilder("getId").addAnnotation(Override.class)
-						.addModifiers(Modifier.PUBLIC).returns(typeClass).addStatement("return this.id").build());
+				classBuilder.addMethod(MethodSpec.methodBuilder("getId").addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).returns(typeClass).addStatement("return this.id").build());
 
-				classBuilder.addMethod(MethodSpec.methodBuilder("setId").addModifiers(Modifier.PUBLIC)
-						.addParameter(typeClass, "id").addStatement("this.id = id").build());
+				classBuilder.addMethod(MethodSpec.methodBuilder("setId").addModifiers(Modifier.PUBLIC).addParameter(typeClass, "id").addStatement("this.id = id").build());
 
 			} else if (isForeignKey) {
 
@@ -302,9 +302,7 @@ public class EntityGenerator {
 
 				String referencedColumnName = getReferencedColumnName(metaData, tableName, column.name);
 
-				AnnotationSpec.Builder joinColumn = AnnotationSpec.builder(JoinColumn.class)
-						.addMember("name", "$S", column.name)
-						.addMember("referencedColumnName", "$S", referencedColumnName);
+				AnnotationSpec.Builder joinColumn = AnnotationSpec.builder(JoinColumn.class).addMember("name", "$S", column.name).addMember("referencedColumnName", "$S", referencedColumnName);
 
 				if (!column.nullable) {
 					joinColumn.addMember("nullable", "$L", false);
@@ -317,13 +315,12 @@ public class EntityGenerator {
 				AnnotationSpec.Builder relationBuilder = null;
 
 				if (column.unique) {
-					relationAnnotation = ClassName.get("jakarta.persistence", "OneToOne");
-					ClassName cascadeType = ClassName.get("jakarta.persistence", "CascadeType");
-					relationBuilder = AnnotationSpec.builder(relationAnnotation).addMember("cascade", "$T.ALL",
-							cascadeType);
+					relationAnnotation = ClassName.get(OneToOne.class.getPackageName(), OneToOne.class.getSimpleName());
+					ClassName cascadeType = ClassName.get(CascadeType.class.getPackageName(), CascadeType.class.getSimpleName());
+					relationBuilder = AnnotationSpec.builder(relationAnnotation).addMember("cascade", "$T.ALL", cascadeType);
 				} else {
-					relationAnnotation = ClassName.get("jakarta.persistence", "ManyToOne");
-					// ClassName fetchType = ClassName.get("jakarta.persistence", "FetchType"); //
+					relationAnnotation = ClassName.get(ManyToOne.class.getPackageName(), ManyToOne.class.getSimpleName());
+					//ClassName fetchType = ClassName.get(FetchType.class.getPackageName(), FetchType.class.getSimpleName()); //
 					// Ativa LAZY
 					relationBuilder = AnnotationSpec.builder(relationAnnotation);
 					// .addMember("fetch", "$T.LAZY", fetchType); // Ativa LAZY
@@ -378,13 +375,9 @@ public class EntityGenerator {
 
 				// Adiciona @JsonFormat se for LocalDate ou LocalDateTime
 				if (javaType.equals("java.time.LocalDate")) {
-					fieldBuilder.addAnnotation(AnnotationSpec.builder(jsonFormat)
-							.addMember("shape", "$T.STRING", jsonFormat.nestedClass("Shape"))
-							.addMember("pattern", "$T.DATE_FORMAT", constants).build());
+					fieldBuilder.addAnnotation(AnnotationSpec.builder(jsonFormat).addMember("shape", "$T.STRING", jsonFormat.nestedClass("Shape")).addMember("pattern", "$T.DATE_FORMAT", constants).build());
 				} else if (javaType.equals("java.time.LocalDateTime")) {
-					fieldBuilder.addAnnotation(AnnotationSpec.builder(jsonFormat)
-							.addMember("shape", "$T.STRING", jsonFormat.nestedClass("Shape"))
-							.addMember("pattern", "$T.DATE_TIME_FORMAT", constants).build());
+					fieldBuilder.addAnnotation(AnnotationSpec.builder(jsonFormat).addMember("shape", "$T.STRING", jsonFormat.nestedClass("Shape")).addMember("pattern", "$T.DATE_TIME_FORMAT", constants).build());
 				}
 
 				FieldSpec field = fieldBuilder.build();
@@ -402,15 +395,13 @@ public class EntityGenerator {
 			}
 		}
 
-		for (Map.Entry<String, List<String>> entry : compositeForeignKeys.getOrDefault(tableName, Map.of())
-				.entrySet()) {
+		for (Map.Entry<String, List<String>> entry : compositeForeignKeys.getOrDefault(tableName, Map.of()).entrySet()) {
 
 			String referencedTable = entry.getKey();
 
 			List<String> fkColumns = entry.getValue();
 
-			boolean alreadyMapped = fkColumns.stream().anyMatch(
-					col -> columns.stream().anyMatch(c -> c.name.equals(col) && foreignKeys.containsKey(tableName)));
+			boolean alreadyMapped = fkColumns.stream().anyMatch(col -> columns.stream().anyMatch(c -> c.name.equals(col) && foreignKeys.containsKey(tableName)));
 
 			if (alreadyMapped)
 				continue;
@@ -423,20 +414,17 @@ public class EntityGenerator {
 
 			for (String fkColumn : fkColumns) {
 				String referencedColumnName = getReferencedColumnName(metaData, tableName, fkColumn);
-
-				CodeBlock join = CodeBlock.of("@$T(name = $S, referencedColumnName = $S)", JoinColumn.class, fkColumn,
-						referencedColumnName);
+				CodeBlock join = CodeBlock.of("@$T(name = $S, referencedColumnName = $S)", JoinColumn.class, fkColumn, referencedColumnName);
 				joinColumnsBlocks.add(join);
 			}
 
-			AnnotationSpec joinColumnsAnnotation = AnnotationSpec
-					.builder(ClassName.get("jakarta.persistence", "JoinColumns"))
+			AnnotationSpec joinColumnsAnnotation = AnnotationSpec.builder(ClassName.get(JoinColumns.class.getPackageName(), JoinColumns.class.getSimpleName()))
 					.addMember("value", "{$L}", CodeBlock.join(joinColumnsBlocks, ", ")).build();
 
 			FieldSpec field = FieldSpec
 					.builder(ClassName.get(packageName, referencedClass), referencedProperty, Modifier.PRIVATE)
 					.addAnnotation(AnnotationSpec.builder(ManyToOne.class)
-							.addMember("fetch", "$T.LAZY", ClassName.get("jakarta.persistence", "FetchType")).build())
+							.addMember("fetch", "$T.LAZY", ClassName.get(FetchType.class.getPackageName(), FetchType.class.getSimpleName())).build())
 					.addAnnotation(joinColumnsAnnotation).build();
 
 			classBuilder.addField(field);
@@ -488,17 +476,12 @@ public class EntityGenerator {
 			linhas.add("\"" + label + "=\" + (" + fieldName + " != null ? " + fieldName + ".toString() : \"null\")");
 		}
 
-		classBuilder
-				.addMethod(
-						MethodSpec.methodBuilder("toString").addAnnotation(Override.class).addModifiers(Modifier.PUBLIC)
-								.returns(String.class)
-								.addCode(CodeBlock.builder().add("return $S +\n", className + "{")
-										.add("$L", String.join(" + \", \" +\n", linhas)).add(" + '}';\n").build())
+		classBuilder.addMethod(MethodSpec.methodBuilder("toString").addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).returns(String.class)
+								.addCode(CodeBlock.builder().add("return $S +\n", className + "{").add("$L", String.join(" + \", \" +\n", linhas)).add(" + '}';\n").build())
 								.build());
 
 		// Escreve a classe
-		JavaFile javaFile = JavaFile.builder(packageName, classBuilder.build()).skipJavaLangImports(true).indent("    ")
-				.build();
+		JavaFile javaFile = JavaFile.builder(packageName, classBuilder.build()).skipJavaLangImports(true).indent("    ").build();
 		
 		javaFile.writeTo(Paths.get("src/main/java"));
 
