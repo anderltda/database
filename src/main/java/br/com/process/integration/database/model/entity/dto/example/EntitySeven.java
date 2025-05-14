@@ -15,6 +15,7 @@ import jakarta.persistence.UniqueConstraint;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "entity_seven", uniqueConstraints = @UniqueConstraint(columnNames = { "id_entity_seven", "id_entity_six" }))
 public class EntitySeven extends RepresentationModel<EntitySeven> implements BeanEntity<EntitySevenId> {
+	
 	@EmbeddedId
 	private EntitySevenId id;
 

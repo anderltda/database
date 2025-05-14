@@ -18,11 +18,12 @@ import jakarta.persistence.Table;
 
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Table(name = "entity_eigtht")
-public class EntityEigtht extends RepresentationModel<EntityEigtht> implements BeanEntity<Long> {
+@Table(name = "entity_eight")
+public class EntityEight extends RepresentationModel<EntityEight> implements BeanEntity<Long> {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_entity_eigtht")
+	@Column(name = "id_entity_eight")
 	private Long id;
 
 	@Column(name = "position", nullable = false, length = 100)
@@ -75,7 +76,7 @@ public class EntityEigtht extends RepresentationModel<EntityEigtht> implements B
 			return true;
 		if (o == null || getClass() != o.getClass())
 			return false;
-		EntityEigtht that = (EntityEigtht) o;
+		EntityEight that = (EntityEight) o;
 		return java.util.Objects.equals(id, that.id);
 	}
 
@@ -86,7 +87,7 @@ public class EntityEigtht extends RepresentationModel<EntityEigtht> implements B
 
 	@Override
 	public String toString() {
-		return "EntityEigtht{" + "id=" + (id != null ? id.toString() : "null") + ", " + "position="
+		return "EntityEight{" + "id=" + (id != null ? id.toString() : "null") + ", " + "position="
 				+ (position != null ? position.toString() : "null") + ", " + "properties="
 				+ (properties != null ? properties.toString() : "null") + ", " + "entitySeven="
 				+ (entitySeven != null ? entitySeven.toString() : "null") + '}';

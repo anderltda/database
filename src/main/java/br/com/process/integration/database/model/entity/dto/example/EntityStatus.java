@@ -1,22 +1,26 @@
 package br.com.process.integration.database.model.entity.dto.example;
 
-import br.com.process.integration.database.core.domain.BeanEntity;
-import br.com.process.integration.database.core.util.Constants;
+import java.time.LocalDateTime;
+
+import org.springframework.hateoas.RepresentationModel;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import br.com.process.integration.database.core.domain.BeanEntity;
+import br.com.process.integration.database.core.util.Constants;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
-import org.springframework.hateoas.RepresentationModel;
 
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "entity_status")
 public class EntityStatus extends RepresentationModel<EntityStatus> implements BeanEntity<Long> {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_entity_status")

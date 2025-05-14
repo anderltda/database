@@ -19,11 +19,12 @@ import jakarta.persistence.Table;
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "entity_six")
-public class EntitySix extends RepresentationModel<EntitySix> implements BeanEntity<Integer> {
+public class EntitySix extends RepresentationModel<EntitySix> implements BeanEntity<Long> {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_entity_six")
-	private Integer id;
+	private Long id;
 
 	@Column(name = "package_name", nullable = false, length = 100)
 	private String packageName;
@@ -37,11 +38,11 @@ public class EntitySix extends RepresentationModel<EntitySix> implements BeanEnt
 	private LocalDate stopDate;
 
 	@Override
-	public Integer getId() {
+	public Long getId() {
 		return this.id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

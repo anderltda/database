@@ -1,17 +1,19 @@
 package br.com.process.integration.database.model.entity.service.example;
 
-import br.com.process.integration.database.core.application.AbstractJpaService;
-import br.com.process.integration.database.core.ui.QueryJpaController;
-import br.com.process.integration.database.model.entity.dto.example.EntityOne;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.process.integration.database.core.application.AbstractJpaService;
+import br.com.process.integration.database.core.ui.QueryJpaController;
+import br.com.process.integration.database.model.entity.dto.example.EntityOne;
+
 @Service
 @Transactional
 public class EntityOneService extends AbstractJpaService<EntityOne, EntityOne, Long> {
+	
     @Autowired
     private PagedResourcesAssembler<EntityOne> pagedResourcesAssembler;
 

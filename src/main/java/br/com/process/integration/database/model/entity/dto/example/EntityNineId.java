@@ -4,13 +4,24 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
-public class EntitySevenId {
+public class EntityNineId {
 	
+	@Column(name = "id_entity_eight")
+	private Long idEntityEight;
+
 	@Column(name = "id_entity_seven")
 	private Long idEntitySeven;
 
 	@Column(name = "id_entity_six")
 	private Long idEntitySix;
+
+	public Long getIdEntityEight() {
+		return this.idEntityEight;
+	}
+
+	public void setIdEntityEight(Long idEntityEight) {
+		this.idEntityEight = idEntityEight;
+	}
 
 	public Long getIdEntitySeven() {
 		return this.idEntitySeven;
@@ -34,13 +45,14 @@ public class EntitySevenId {
 			return true;
 		if (o == null || getClass() != o.getClass())
 			return false;
-		EntitySevenId that = (EntitySevenId) o;
+		EntityNineId that = (EntityNineId) o;
 		return java.util.Objects.equals(idEntitySeven, that.idEntitySeven)
-				&& java.util.Objects.equals(idEntitySix, that.idEntitySix);
+				&& java.util.Objects.equals(idEntitySix, that.idEntitySix)
+				&& java.util.Objects.equals(idEntityEight, that.idEntityEight);
 	}
 
 	@Override
 	public int hashCode() {
-		return java.util.Objects.hash(idEntitySeven, idEntitySix);
+		return java.util.Objects.hash(idEntitySeven, idEntitySix, idEntityEight);
 	}
 }
