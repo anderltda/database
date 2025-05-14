@@ -11,7 +11,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
@@ -44,8 +43,6 @@ import br.com.process.integration.database.core.exception.ErrorResponse;
 import br.com.process.integration.database.core.ui.QueryMyBatisController;
 import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.model.data.dto.example.EntityOneData;
-import br.com.process.integration.database.model.data.dto.example.EntityTreeData;
-import br.com.process.integration.database.model.entity.dto.example.EntityFive;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -65,10 +62,6 @@ class MyBatisTests {
 	private QueryMyBatisController queryMyBatisController;
 	
 	private EntityOneData entityOneData;
-	
-	private EntityTreeData entityTreeData;
-	
-	private EntityFive entityFive;
 
 	@BeforeAll
 	void setupOnce() {
@@ -336,45 +329,6 @@ class MyBatisTests {
 	@Test
 	@Order(20)
 	void teste_20() {
-		
-		//String id = entityOneData.getEntityTwoData().getEntityTreeData().getIdEntityTree().toString();
-
-		//String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/single/EntityTreeData/findById?idEntityTree=" + id;
-		
-		//String entity = getUniqueResult(url, new ErrorResponse());
-
-		//assertNotNull(entity);
-	}	
-	
-	@Test
-	@Order(21)
-	void teste_21() {
-		
-		//String id = entityOneData.getEntityTwoData().getEntityTreeData().getEntityFourData().getIdEntityFour().toString();
-
-		//String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/single/EntityFourData/findById?idEntityFour=" + id;
-		
-		//String entity = getUniqueResult(url, new ErrorResponse());
-
-		//assertNotNull(entity);
-	}
-	
-	@Test
-	@Order(22)
-	void teste_22() {
-		
-		//String id = entityOneData.getEntityTwoData().getEntityTreeData().getEntityFourData().getEntityFiveData().getIdEntityFive().toString();
-
-		//String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/single/EntityFiveData/findById?idEntityFive=" + id;
-		
-		//String entity = getUniqueResult(url, new ErrorResponse());
-
-		//assertNotNull(entity);
-	}
-	
-	@Test
-	@Order(23)
-	void teste_23() {
 		
 		Long id = entityOneData.getEntityStatusData().getIdEntityStatus();
 
