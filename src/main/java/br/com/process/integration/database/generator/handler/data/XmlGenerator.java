@@ -78,11 +78,9 @@ public class XmlGenerator {
                 String propertyName = field.getName();
 
                 if (propertyName.equals("id") && fieldType.getSimpleName().endsWith("Id")) {
-                    resultMapBuffer.append("        <association property=\"id\" javaType=\"" + fieldType.getName() + "\">\n");
                     for (Field idField : fieldType.getDeclaredFields()) {
-                        resultMapBuffer.append("            <id property=\"" + idField.getName() + "\" column=\"" + StringUtils.camelToSnake(idField.getName()) + "\" />\n");
+                        resultMapBuffer.append("        <result column=\"" + StringUtils.camelToSnake(idField.getName()) + "\" property=\"id." + idField.getName() + "\" />\n");
                     }
-                    resultMapBuffer.append("        </association>\n");
                 } else if (isPrimaryKeySimple(baseName, propertyName)) {
                     resultMapBuffer.append("        <id column=\"" + StringUtils.camelToSnake(propertyName) + "\" property=\"" + propertyName + "\"/>\n");
                 } else if (isSimple(fieldType)) {
@@ -124,7 +122,7 @@ public class XmlGenerator {
                 Field[] idFields = Class.forName(type.getName()).getDeclaredFields();
                 for (int i = 0; i < idFields.length; i++) {
                     Field f = idFields[i];
-                    writer.write(StringUtils.camelToSnake(f.getName()) + " = #{id." + f.getName() + "}");
+                    writer.write(StringUtils.camelToSnake(f.getName()) + " = #{" + f.getName() + "}");
                     if (i < idFields.length - 1) writer.write(" AND ");
                 }
                 writer.write("\n");
@@ -160,11 +158,9 @@ public class XmlGenerator {
             String propertyName = field.getName();
 
             if (propertyName.equals("id") && fieldType.getSimpleName().endsWith("Id")) {
-                buffer.append("        <association property=\"id\" javaType=\"" + fieldType.getName() + "\">\n");
                 for (Field idField : fieldType.getDeclaredFields()) {
-                    buffer.append("            <id property=\"" + idField.getName() + "\" column=\"" + StringUtils.camelToSnake(idField.getName()) + "\" />\n");
+                    buffer.append("        <result column=\"" + StringUtils.camelToSnake(idField.getName()) + "\" property=\"id." + idField.getName() + "\" />\n");
                 }
-                buffer.append("        </association>\n");
             } else if (isPrimaryKeySimple(baseName, propertyName)) {
                 buffer.append("        <id column=\"" + StringUtils.camelToSnake(propertyName) + "\" property=\"" + propertyName + "\"/>\n");
             } else if (isSimple(fieldType)) {
