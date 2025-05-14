@@ -1,0 +1,24 @@
+{
+	"name": "busca_entity_eight_com_joins",
+	"select": "SELECT t1.*, t2.*, t3.*, t4.* FROM entity_eight t1",
+	"join": [
+		"INNER JOIN entity_seven t2 ON t2.id_entity_seven = t1.id_entity_seven",
+		"INNER JOIN entity_seven t3 ON t3.id_entity_six = t1.id_entity_six",
+		"INNER JOIN entity_six t4 ON t4.id_entity_six = t3.id_entity_six"
+	],
+	"where": [
+		"AND t1.id_entity_eight {idEntityEight_op} :idEntityEight",
+		"AND t1.id_entity_seven {idEntitySeven_op} :idEntitySeven",
+		"AND t1.id_entity_six {idEntitySix_op} :idEntitySix",
+		"AND t1.position {position_op} :position",
+		"AND t1.properties {properties_op} :properties",
+		"AND t3.id_entity_seven {idEntitySeven_op} :idEntitySeven",
+		"AND t3.id_entity_six {idEntitySix_op} :idEntitySix",
+		"AND t3.dado {dado_op} :dado",
+		"AND t4.id_entity_six {idEntitySix_op} :idEntitySix",
+		"AND t4.package_name {packageName_op} :packageName",
+		"AND t4.start_date {startDate_op} :startDate",
+		"AND t4.stop_date {stopDate_op} :stopDate"
+	],
+	"orderby": ":sortList :sortOrders"
+}

@@ -56,7 +56,7 @@
 			"AND t1.name {name_op} :name",
 			"AND t1.prohibited_date_time {prohibitedDateTime_op} :prohibitedDateTime"
 		]
-	},	
+	},
 	
 	
 	{
@@ -74,7 +74,7 @@
 		],
 		"groupby": "t1.prohibited_date_time",
 		"orderby": "t1.prohibited_date_time ASC"
-	} ,
+	},
 	
 	
 	{
@@ -91,5 +91,65 @@
 		],
 		"groupby": "e1.prohibited_date_time",
 		"orderby": "e1.prohibited_date_time ASC"
+	},
+	
+	
+	{
+		"name": "busca_entity_one_com_joins",
+		"select": "SELECT t1.*, t2.*, t3.*, t4.*, t5.*, t6.*, t7.*, t8.*, t9.*, t10.* FROM entity_one t1",
+		"join": [
+			"INNER JOIN entity_status t2 ON t2.id_entity_status = t1.id_entity_status",
+			"INNER JOIN entity_two t3 ON t3.id_entity_two = t1.id_entity_two",
+			"INNER JOIN entity_status t4 ON t4.id_entity_status = t3.id_entity_status",
+			"INNER JOIN entity_tree t5 ON t5.id_entity_tree = t3.id_entity_tree",
+			"INNER JOIN entity_four t6 ON t6.id_entity_four = t5.id_entity_four",
+			"INNER JOIN entity_status t7 ON t7.id_entity_status = t5.id_entity_status",
+			"INNER JOIN entity_five t8 ON t8.id_entity_five = t6.id_entity_five",
+			"INNER JOIN entity_status t9 ON t9.id_entity_status = t6.id_entity_status",
+			"INNER JOIN entity_status t10 ON t10.id_entity_status = t8.id_entity_status"
+		],
+		"where": [
+			"AND t1.id_entity_one {idEntityOne_op} :idEntityOne",
+			"AND t1.age {age_op} :age",
+			"AND t1.birth_date {birthDate_op} :birthDate",
+			"AND t1.code {code_op} :code",
+			"AND t1.height {height_op} :height",
+			"AND t1.name {name_op} :name",
+			"AND t1.prohibited_date_time {prohibitedDateTime_op} :prohibitedDateTime",
+			"AND t1.id_entity_status {idEntityStatus_op} :idEntityStatus",
+			"AND t1.id_entity_two {idEntityTwo_op} :idEntityTwo",
+			"AND t10.id_entity_status {idEntityStatus_op} :idEntityStatus",
+			"AND t10.ativo {ativo_op} :ativo",
+			"AND t10.name {name_op} :name",
+			"AND t10.start_date_time {startDateTime_op} :startDateTime",
+			"AND t10.status {status_op} :status",
+			"AND t3.id_entity_two {idEntityTwo_op} :idEntityTwo",
+			"AND t3.color {color_op} :color",
+			"AND t3.cost {cost_op} :cost",
+			"AND t3.hex {hex_op} :hex",
+			"AND t3.inclusion_date {inclusionDate_op} :inclusionDate",
+			"AND t3.id_entity_status {idEntityStatus_op} :idEntityStatus",
+			"AND t3.id_entity_tree {idEntityTree_op} :idEntityTree",
+			"AND t5.id_entity_tree {idEntityTree_op} :idEntityTree",
+			"AND t5.amount {amount_op} :amount",
+			"AND t5.animal {animal_op} :animal",
+			"AND t5.indicator {indicator_op} :indicator",
+			"AND t5.local_date {localDate_op} :localDate",
+			"AND t5.local_date_time {localDateTime_op} :localDateTime",
+			"AND t5.id_entity_status {idEntityStatus_op} :idEntityStatus",
+			"AND t5.id_entity_four {idEntityFour_op} :idEntityFour",
+			"AND t6.id_entity_four {idEntityFour_op} :idEntityFour",
+			"AND t6.attribute {attribute_op} :attribute",
+			"AND t6.fruit {fruit_op} :fruit",
+			"AND t6.inclusion_date_time {inclusionDateTime_op} :inclusionDateTime",
+			"AND t6.id_entity_status {idEntityStatus_op} :idEntityStatus",
+			"AND t6.id_entity_five {idEntityFive_op} :idEntityFive",
+			"AND t8.id_entity_five {idEntityFive_op} :idEntityFive",
+			"AND t8.factor {factor_op} :factor",
+			"AND t8.reference {reference_op} :reference",
+			"AND t8.id_entity_status {idEntityStatus_op} :idEntityStatus"
+		],
+		"orderby": ":sortList :sortOrders"
 	}
+
 ]
