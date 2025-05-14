@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="br.com.process.integration.database.model.data.mapper.example.EntityStatusDataMapper">
+
+    <resultMap id="defaultResultMap" type="br.com.process.integration.database.model.data.dto.example.EntityStatusData">
+        <id column="id_entity_status" property="idEntityStatus"/>
+        <result column="ativo" property="ativo"/>
+        <result column="name" property="name"/>
+        <result column="start_date_time" property="startDateTime"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+    <select id="findById" resultMap="defaultResultMap" parameterType="java.lang.Long">
+        SELECT * FROM entity_status WHERE id_entity_status = #{idEntityStatus}
+    </select>
+
+    <select id="findAll" resultMap="defaultResultMap">
+        SELECT * FROM entity_status
+    </select>
+
+</mapper>

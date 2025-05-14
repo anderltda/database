@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="br.com.process.integration.database.model.data.mapper.example.EntityTreeDataMapper">
+
+    <resultMap id="defaultResultMap" type="br.com.process.integration.database.model.data.dto.example.EntityTreeData">
+        <id column="id_entity_tree" property="idEntityTree"/>
+        <result column="amount" property="amount"/>
+        <result column="animal" property="animal"/>
+        <result column="indicator" property="indicator"/>
+        <result column="local_date" property="localDate"/>
+        <result column="local_date_time" property="localDateTime"/>
+        <association property="entityFourData" javaType="br.com.process.integration.database.model.data.dto.example.EntityFourData" resultMap="EntityFourMap" />
+        <association property="entityStatusData" javaType="br.com.process.integration.database.model.data.dto.example.EntityStatusData" resultMap="EntityStatusMap" />
+    </resultMap>
+
+    <resultMap id="EntityFourMap" type="br.com.process.integration.database.model.data.dto.example.EntityFourData">
+        <id column="id_entity_four" property="idEntityFour"/>
+        <result column="attribute" property="attribute"/>
+        <result column="fruit" property="fruit"/>
+        <result column="inclusion_date_time" property="inclusionDateTime"/>
+        <association property="entityFiveData" javaType="br.com.process.integration.database.model.data.dto.example.EntityFiveData" resultMap="EntityFiveMap" />
+        <association property="entityStatusData" javaType="br.com.process.integration.database.model.data.dto.example.EntityStatusData" resultMap="EntityStatusMap" />
+    </resultMap>
+
+    <resultMap id="EntityFiveMap" type="br.com.process.integration.database.model.data.dto.example.EntityFiveData">
+        <id column="id_entity_five" property="idEntityFive"/>
+        <result column="factor" property="factor"/>
+        <result column="reference" property="reference"/>
+        <association property="entityStatusData" javaType="br.com.process.integration.database.model.data.dto.example.EntityStatusData" resultMap="EntityStatusMap" />
+    </resultMap>
+
+    <resultMap id="EntityStatusMap" type="br.com.process.integration.database.model.data.dto.example.EntityStatusData">
+        <id column="id_entity_status" property="idEntityStatus"/>
+        <result column="ativo" property="ativo"/>
+        <result column="name" property="name"/>
+        <result column="start_date_time" property="startDateTime"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+    <select id="findById" resultMap="defaultResultMap" parameterType="java.util.UUID">
+        SELECT * FROM entity_tree WHERE id_entity_tree = #{idEntityTree}
+    </select>
+
+    <select id="findAll" resultMap="defaultResultMap">
+        SELECT * FROM entity_tree
+    </select>
+
+</mapper>
