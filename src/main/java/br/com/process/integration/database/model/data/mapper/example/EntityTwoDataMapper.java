@@ -11,8 +11,8 @@ import br.com.process.integration.database.model.data.dto.example.EntityTwoData;
 
 @Mapper
 public interface EntityTwoDataMapper extends DataMapper<EntityTwoData> {
+	
+    List<EntityTwoData> findAll();
 
-	List<EntityTwoData> findAll();
-
-	EntityTwoData findById(@Param("idEntityTwo") UUID idEntityTwo);
+    EntityTwoData findById(@Param("idEntityTwo") UUID idEntityTwo);
 }

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="br.com.process.integration.database.model.data.mapper.example.EntityEightDataMapper">
+
+    <resultMap id="defaultResultMap" type="br.com.process.integration.database.model.data.dto.example.EntityEightData">
+        <id column="id_entity_eight" property="idEntityEight"/>
+        <result column="position" property="position"/>
+        <result column="properties" property="properties"/>
+        <association property="entitySevenData" javaType="br.com.process.integration.database.model.data.dto.example.EntitySevenData" resultMap="EntitySevenMap" />
+    </resultMap>
+
+    <resultMap id="EntitySevenMap" type="br.com.process.integration.database.model.data.dto.example.EntitySevenData">
+        <result column="id_entity_seven" property="id.idEntitySeven" />
+        <result column="id_entity_six" property="id.idEntitySix" />
+        <result column="dado" property="dado"/>
+        <association property="entitySixData" javaType="br.com.process.integration.database.model.data.dto.example.EntitySixData" resultMap="EntitySixMap" />
+    </resultMap>
+
+    <resultMap id="EntitySixMap" type="br.com.process.integration.database.model.data.dto.example.EntitySixData">
+        <id column="id_entity_six" property="idEntitySix"/>
+        <result column="package_name" property="packageName"/>
+        <result column="start_date" property="startDate"/>
+        <result column="stop_date" property="stopDate"/>
+    </resultMap>
+
+    <select id="findById" resultMap="defaultResultMap" parameterType="java.lang.Long">
+        SELECT * FROM entity_eight WHERE id_entity_eight = #{idEntityEight}
+    </select>
+
+    <select id="findAll" resultMap="defaultResultMap">
+        SELECT * FROM entity_eight
+    </select>
+
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="br.com.process.integration.database.model.data.mapper.example.EntityNineDataMapper">
+
+    <resultMap id="defaultResultMap" type="br.com.process.integration.database.model.data.dto.example.EntityNineData">
+        <result column="id_entity_eight" property="id.idEntityEight" />
+        <result column="id_entity_seven" property="id.idEntitySeven" />
+        <result column="id_entity_six" property="id.idEntitySix" />
+        <result column="key" property="key"/>
+        <result column="code" property="code"/>
+        <result column="variable" property="variable"/>
+    </resultMap>
+
+    <select id="findById" resultMap="defaultResultMap" parameterType="br.com.process.integration.database.model.data.dto.example.EntityNineId">
+        SELECT * FROM entity_nine WHERE id_entity_eight = #{idEntityEight} AND id_entity_seven = #{idEntitySeven} AND id_entity_six = #{idEntitySix}
+    </select>
+
+    <select id="findAll" resultMap="defaultResultMap">
+        SELECT * FROM entity_nine
+    </select>
+
+</mapper>
