@@ -9,5 +9,11 @@ spring:
     username: sa
     password:
   jpa:
+    generate-ddl: false
     hibernate:
       ddl-auto: none
+    show-sql: true
+    open-in-view: false
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+  type-handlers-package: br.com.process.integration.database.generator.handler.data.type		

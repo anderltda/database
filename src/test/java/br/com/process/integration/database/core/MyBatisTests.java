@@ -124,7 +124,7 @@ class MyBatisTests {
 
 		EntityOneData data = getSingleResult(url, new ErrorResponse());
 
-		assertNotNull(data.getId());
+		assertNotNull(data.getIdEntityOne());
 		assertEquals("Anderson", data.getName());
 		assertEquals(41, data.getAge());
 		assertEquals(1.93, data.getHeight());
