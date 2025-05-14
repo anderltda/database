@@ -1,12 +1,15 @@
 package br.com.process.integration.database.model.view.dto.example;
 
-import br.com.process.integration.database.core.domain.BeanView;
-import br.com.process.integration.database.core.util.Constants;
+import java.time.LocalDate;
+
+import org.springframework.hateoas.RepresentationModel;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.time.LocalDate;
-import org.springframework.hateoas.RepresentationModel;
+
+import br.com.process.integration.database.core.domain.BeanView;
+import br.com.process.integration.database.core.util.Constants;
 
 /**
  *
@@ -18,7 +21,7 @@ import org.springframework.hateoas.RepresentationModel;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EntityEightView extends RepresentationModel<EntityEightView> implements BeanView<EntityEightView> {
-	
+
 	/**
 	 * from entity_eight
 	 */
