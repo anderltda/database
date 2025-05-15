@@ -102,7 +102,6 @@ public class MethodReflection {
 
 	public static Object findViewUsingClassLoader(String className) throws CheckedException {
 		try {
-			//String packagePath = (Constants.DIRECTORY_APPLICATION + Constants.PACKAGE_NAME_VIEW).replaceAll("[.]", "/");
 			return findClassUsingClassLoader(className, Constants.PACKAGE_NAME_VIEW);
 		} catch (Exception ex) {
 			throw new CheckedException(ex.getMessage(), ex);
@@ -111,7 +110,6 @@ public class MethodReflection {
 
 	public static Object findEntityUsingClassLoader(String className) throws CheckedException {
 		try {
-			//String packagePath = (Constants.DIRECTORY_APPLICATION + Constants.PACKAGE_NAME_ENTITY).replaceAll("[.]", "/");
 			return findClassUsingClassLoader(className, Constants.PACKAGE_NAME_ENTITY);
 		} catch (Exception ex) {
 			throw new CheckedException(ex.getMessage(), ex);
@@ -120,7 +118,6 @@ public class MethodReflection {
 	
 	public static Object findDataUsingClassLoader(String className) throws CheckedException {
 		try {
-			//String packagePath = (Constants.DIRECTORY_APPLICATION + Constants.PACKAGE_NAME_DATA).replaceAll("[.]", "/");
 			return findClassUsingClassLoader(className, Constants.PACKAGE_NAME_DATA);
 		} catch (Exception ex) {
 			throw new CheckedException(ex.getMessage(), ex);
@@ -148,7 +145,7 @@ public class MethodReflection {
 			return null;
 		} catch (InvocationTargetException e) {
 			Throwable tex = e.getTargetException();
-			throw new UncheckedException(tex.getMessage(), tex);			
+			throw new UncheckedException(tex.getMessage(), tex);
 		} catch (Exception ex) {
 			throw new UncheckedException(ex.getMessage(), ex);
 		}
@@ -263,6 +260,49 @@ public class MethodReflection {
 		} catch (Exception ex) {
 			throw new UncheckedException(ex.getMessage(), ex);
 		}
+	}
+
+	public static Object[] getCompositeKeyArgs(Class<?> clazz, Map<String, Object> filter) throws UncheckedException {
+		
+		Object[] args = new Object[1];
+		
+		try {
+			
+			Class<?> compositeKeyClass = getCompositeKeyClass(clazz);
+
+			if (compositeKeyClass == null) {
+				throw new UncheckedException(String.format("Erro: Esse mapper nao tem composite key, method: '%s'", Constants.METHOD_FIND_BY_ID));
+			}
+
+			Object instance = compositeKeyClass.getDeclaredConstructor().newInstance();
+
+			for (Map.Entry<String, Object> entry : filter.entrySet()) {
+				String fieldName = entry.getKey();
+				Object stringValue = entry.getValue();
+
+				Field field = compositeKeyClass.getDeclaredField(fieldName);
+				field.setAccessible(true);
+
+				Object value = DynamicFoundType.getTypeValue(field.getType(), stringValue);
+				field.set(instance, value);
+			}
+			
+			args[0] = instance;
+			
+		} catch (Exception ex) {
+			throw new UncheckedException(ex.getMessage(), ex);
+		}
+
+		return args;
+	}
+
+	private static Class<?> getCompositeKeyClass(Class<?> dtoClass) {
+		for (Field field : dtoClass.getDeclaredFields()) {
+			if (field.getName().equals("id") && field.getType().getSimpleName().endsWith("Id")) {
+				return field.getType();
+			}
+		}
+		return null;
 	}
 
 	public static Object[] getMethodArgs(Class<?> clazz, String methodName, Map<String, Object> param) throws UncheckedException {
@@ -497,7 +537,7 @@ public class MethodReflection {
 		}
 		return false;
 	}
-	
+
 	public static boolean isCompatibleTypeLocalDateTime(Class<?> paramType, Object value) {
 		if (paramType == LocalDateTime.class && value instanceof String string) {
 			try {
@@ -509,23 +549,23 @@ public class MethodReflection {
 		}
 		return false;
 	}
-	
-    public static Class<?> getAttributeType(String classPath, String attributeName, boolean notFound) {
-        try {
-            Class<?> clazz = Class.forName(classPath);
-            Field field = clazz.getDeclaredField(attributeName);
-            return field.getType();
-        } catch (ClassNotFoundException e) {
-            throw new UncheckedException("Classe não encontrada: " + classPath);
-        } catch (NoSuchFieldException e) {
-        	if(notFound) {
-        		return String.class;
-        	}
-            throw new UncheckedException("Atributo não encontrado: " + attributeName);
-        } catch (Exception e) {
-            throw new UncheckedException("Erro inesperado ao obter o tipo do atributo.", e);
-        }
-    }
+
+	public static Class<?> getAttributeType(String classPath, String attributeName, boolean notFound) {
+		try {
+			Class<?> clazz = Class.forName(classPath);
+			Field field = clazz.getDeclaredField(attributeName);
+			return field.getType();
+		} catch (ClassNotFoundException e) {
+			throw new UncheckedException("Classe não encontrada: " + classPath);
+		} catch (NoSuchFieldException e) {
+			if (notFound) {
+				return String.class;
+			}
+			throw new UncheckedException("Atributo não encontrado: " + attributeName);
+		} catch (Exception e) {
+			throw new UncheckedException("Erro inesperado ao obter o tipo do atributo.", e);
+		}
+	}
 
 	private static boolean isPrimitiveMatch(Class<?> paramType, Object value) {
 

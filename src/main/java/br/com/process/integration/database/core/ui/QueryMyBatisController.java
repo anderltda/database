@@ -30,8 +30,36 @@ public class QueryMyBatisController extends AbstractController {
 		Integer count = (Integer) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(data), Constants.METHOD_EXECUTE_MAPPER_COUNT, filter, method);
 
 		return new ResponseEntity<>(count, HttpStatus.OK);
-	}	
+	}
 
+	@GetMapping(value = "/mapper/findById/{data}/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<BeanData<?>> findById(@PathVariable String data, @PathVariable String id) throws CheckedException {
+
+		setData(data);
+
+		BeanData<?> beanData = (BeanData<?>) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(data), Constants.METHOD_FIND_BY_ID, id);
+
+		if (beanData != null) {
+			return new ResponseEntity<>(beanData, HttpStatus.OK);
+		}
+
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+
+	@GetMapping(value = "/mapper/findById/{data}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<BeanData<?>> findById(@PathVariable String data, @RequestParam(defaultValue = "") Map<String, Object> compositeKey) throws CheckedException {
+
+		setData(data);
+
+		BeanData<?> beanData = (BeanData<?>) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(data), Constants.METHOD_FIND_BY_ID, compositeKey);
+
+		if (beanData != null) {
+			return new ResponseEntity<>(beanData, HttpStatus.OK);
+		}
+
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
 	@GetMapping(value = "/mapper/single/{data}/{method}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<BeanData<?>> findBySingle(@PathVariable String data, @PathVariable String method, @RequestParam(defaultValue = "") Map<String, Object> filter) throws CheckedException {
 
@@ -44,7 +72,7 @@ public class QueryMyBatisController extends AbstractController {
 		}
 
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	}	
+	}		
 	
 	@SuppressWarnings("unchecked")
 	@GetMapping(value = "/mapper/{data}/{method}", produces = { MediaType.APPLICATION_JSON_VALUE })

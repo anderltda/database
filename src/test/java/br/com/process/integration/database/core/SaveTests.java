@@ -31,9 +31,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.process.integration.database.core.ui.CrudJpaController;
 import br.com.process.integration.database.core.util.Constants;
+import br.com.process.integration.database.model.entity.dto.example.EntityEight;
 import br.com.process.integration.database.model.entity.dto.example.EntityFive;
 import br.com.process.integration.database.model.entity.dto.example.EntityFour;
+import br.com.process.integration.database.model.entity.dto.example.EntityNine;
+import br.com.process.integration.database.model.entity.dto.example.EntityNineId;
 import br.com.process.integration.database.model.entity.dto.example.EntityOne;
+import br.com.process.integration.database.model.entity.dto.example.EntitySeven;
+import br.com.process.integration.database.model.entity.dto.example.EntitySevenId;
+import br.com.process.integration.database.model.entity.dto.example.EntitySix;
 import br.com.process.integration.database.model.entity.dto.example.EntityStatus;
 import br.com.process.integration.database.model.entity.dto.example.EntityTree;
 import br.com.process.integration.database.model.entity.dto.example.EntityTwo;
@@ -642,9 +648,128 @@ class SaveTests {
 		assertNotNull(lists.get(3).getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getId());
 
 	}
+	
+	@Test
+	@Order(6)
+	void teste_05() throws Exception {
+		
+		String json = null;
+		List<String> responses = null;
+		String url = null;
 
-	public EntityOne gerarEntity(String[] text, Integer[] inteiro, Double[] dobro, String[] localDate,
-			String[] localTime) {
+		EntitySix entitySix = new EntitySix();
+		entitySix.setPackageName(EntitySix.class.getPackageName());
+		entitySix.setStartDate(LocalDate.now());
+		entitySix.setStopDate(LocalDate.now());
+
+		json = objectMapper.writeValueAsString(entitySix);
+		url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntitySix";
+		responses = postJson(url, json);
+		entitySix = objectMapper.readValue(responses.get(1), EntitySix.class);
+		assertNotNull(entitySix.getId());
+
+		EntitySeven entitySeven = new EntitySeven();
+		EntitySevenId entitySevenId = new EntitySevenId();
+		entitySevenId.setIdEntitySix(entitySix.getId());
+		entitySevenId.setIdEntitySeven(1l);
+		entitySeven.setId(entitySevenId);
+		entitySeven.setDado(Byte.class.getSimpleName());
+		
+		json = objectMapper.writeValueAsString(entitySeven);
+		url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntitySeven";
+		responses = postJson(url, json);
+		entitySeven = objectMapper.readValue(responses.get(1), EntitySeven.class);
+		assertNotNull(entitySeven.getId());
+
+		EntityEight entityEight = new EntityEight();
+		entityEight.setPosition("Decimo");
+		entityEight.setProperties("position");
+		entityEight.setEntitySeven(entitySeven);
+		
+		json = objectMapper.writeValueAsString(entityEight);
+		url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityEight";
+		responses = postJson(url, json);
+		entityEight = objectMapper.readValue(responses.get(1), EntityEight.class);
+		assertNotNull(entityEight.getId());
+
+		EntityNine entityNine = new EntityNine();
+		EntityNineId entityNineId = new EntityNineId();
+		entityNineId.setIdEntityEight(entityEight.getId());
+		entityNineId.setIdEntitySeven(entitySeven.getId().getIdEntitySeven());
+		entityNineId.setIdEntitySix(entitySeven.getId().getIdEntitySix());
+		entityNine.setId(entityNineId);
+		entityNine.setCode("10");
+		entityNine.setKeyNine("key1");
+		entityNine.setVariable("new");
+		
+		json = objectMapper.writeValueAsString(entityNine);
+		url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityNine";
+		responses = postJson(url, json);
+		entityNine = objectMapper.readValue(responses.get(1), EntityNine.class);
+		assertNotNull(entityNine.getId());
+	}
+	
+	@Test
+	@Order(7)
+	void teste_06() throws Exception {
+		
+		String json = null;
+		List<String> responses = null;
+		String url = null;
+
+		EntitySix entitySix = new EntitySix();
+		entitySix.setPackageName(EntitySeven.class.getPackageName());
+		entitySix.setStartDate(LocalDate.now());
+		entitySix.setStopDate(LocalDate.now());
+
+		json = objectMapper.writeValueAsString(entitySix);
+		url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntitySix";
+		responses = postJson(url, json);
+		entitySix = objectMapper.readValue(responses.get(1), EntitySix.class);
+		assertNotNull(entitySix.getId());
+
+		EntitySeven entitySeven = new EntitySeven();
+		EntitySevenId entitySevenId = new EntitySevenId();
+		entitySevenId.setIdEntitySix(entitySix.getId());
+		entitySevenId.setIdEntitySeven(2l);
+		entitySeven.setId(entitySevenId);
+		entitySeven.setDado(String.class.getSimpleName());
+		
+		json = objectMapper.writeValueAsString(entitySeven);
+		url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntitySeven";
+		responses = postJson(url, json);
+		entitySeven = objectMapper.readValue(responses.get(1), EntitySeven.class);
+		assertNotNull(entitySeven.getId());
+
+		EntityEight entityEight = new EntityEight();
+		entityEight.setPosition("Setimo");
+		entityEight.setProperties("mapper");
+		entityEight.setEntitySeven(entitySeven);
+		
+		json = objectMapper.writeValueAsString(entityEight);
+		url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityEight";
+		responses = postJson(url, json);
+		entityEight = objectMapper.readValue(responses.get(1), EntityEight.class);
+		assertNotNull(entityEight.getId());
+
+		EntityNine entityNine = new EntityNine();
+		EntityNineId entityNineId = new EntityNineId();
+		entityNineId.setIdEntityEight(entityEight.getId());
+		entityNineId.setIdEntitySeven(entitySeven.getId().getIdEntitySeven());
+		entityNineId.setIdEntitySix(entitySeven.getId().getIdEntitySix());
+		entityNine.setId(entityNineId);
+		entityNine.setCode("11");
+		entityNine.setKeyNine("key2");
+		entityNine.setVariable("test");
+		
+		json = objectMapper.writeValueAsString(entityNine);
+		url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityNine";
+		responses = postJson(url, json);
+		entityNine = objectMapper.readValue(responses.get(1), EntityNine.class);
+		assertNotNull(entityNine.getId());
+	}
+
+	public EntityOne gerarEntity(String[] text, Integer[] inteiro, Double[] dobro, String[] localDate, String[] localTime) {
 
 		EntityOne entityOne = new EntityOne();
 		entityOne.setCode(true);

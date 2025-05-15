@@ -15,12 +15,12 @@ import jakarta.persistence.UniqueConstraint;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "entity_nine", uniqueConstraints = @UniqueConstraint(columnNames = { "id_entity_seven", "id_entity_six", "id_entity_eight" }))
 public class EntityNine extends RepresentationModel<EntityNine> implements BeanEntity<EntityNineId> {
-	
+
 	@EmbeddedId
 	private EntityNineId id;
 
-	@Column(name = "key", nullable = false, length = 100)
-	private String key;
+	@Column(name = "key_nine", nullable = false, length = 100)
+	private String keyNine;
 
 	@Column(name = "code", length = 100)
 	private String code;
@@ -37,12 +37,12 @@ public class EntityNine extends RepresentationModel<EntityNine> implements BeanE
 		this.id = id;
 	}
 
-	public String getKey() {
-		return this.key;
+	public String getKeyNine() {
+		return this.keyNine;
 	}
 
-	public void setKey(String key) {
-		this.key = key;
+	public void setKeyNine(String keyNine) {
+		this.keyNine = keyNine;
 	}
 
 	public String getCode() {
@@ -63,8 +63,9 @@ public class EntityNine extends RepresentationModel<EntityNine> implements BeanE
 
 	@Override
 	public String toString() {
-		return "EntityNine{" + "id=" + (id != null ? id.toString() : "null") + ", " + "key="
-				+ (key != null ? key.toString() : "null") + ", " + "code=" + (code != null ? code.toString() : "null")
-				+ ", " + "variable=" + (variable != null ? variable.toString() : "null") + '}';
+		return "EntityNine{" + "id=" + (id != null ? id.toString() : "null") + ", " + "keyNine="
+				+ (keyNine != null ? keyNine.toString() : "null") + ", " + "code="
+				+ (code != null ? code.toString() : "null") + ", " + "variable="
+				+ (variable != null ? variable.toString() : "null") + '}';
 	}
 }

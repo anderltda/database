@@ -19,6 +19,20 @@ public interface DataMapper<D> {
 	 * @throws UncheckedException
 	 */
 	Integer count(Map<String, Object> filter, String method) throws UncheckedException;
+	
+	/**
+	 * @param id
+	 * @return
+	 * @throws UncheckedException
+	 */
+	public D findById(String id) throws UncheckedException;
+	
+	/**
+	 * @param filter
+	 * @return
+	 * @throws UncheckedException
+	 */
+	public D findById(Map<String, Object> filter) throws UncheckedException;
 
 	/**
 	 * @param filter

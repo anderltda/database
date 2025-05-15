@@ -122,7 +122,7 @@ public class XmlGenerator {
                 Field[] idFields = Class.forName(type.getName()).getDeclaredFields();
                 for (int i = 0; i < idFields.length; i++) {
                     Field f = idFields[i];
-                    writer.write(StringUtils.camelToSnake(f.getName()) + " = #{" + f.getName() + "}");
+                    writer.write(StringUtils.camelToSnake(f.getName()) + " = #{id." + f.getName() + "}");
                     if (i < idFields.length - 1) writer.write(" AND ");
                 }
                 writer.write("\n");

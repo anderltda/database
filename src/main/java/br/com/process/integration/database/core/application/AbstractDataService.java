@@ -64,6 +64,35 @@ public abstract class AbstractDataService<D extends RepresentationModel<D>> exte
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
+	public D findById(String id) throws UncheckedException {
+		try {
+			Map<String, Object> filter = Map.of("id", id);
+			Object[] args = MethodReflection.getMethodArgs(mapper.getClass(), Constants.METHOD_FIND_BY_ID, filter);
+			return (D) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameMapper(data.getClass().getSimpleName()), Constants.METHOD_FIND_BY_ID, args);
+		} catch (Exception ex) {
+			throw new UncheckedException(ex.getMessage(), ex);
+		}
+	}
+	
+	/**
+	 *
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	public D findById(Map<String, Object> filter) throws UncheckedException {
+		try {
+			Object[] args = MethodReflection.getCompositeKeyArgs(data.getClass(), filter);
+			return (D) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameMapper(data.getClass().getSimpleName()), Constants.METHOD_FIND_BY_ID, args);
+		} catch (Exception ex) {
+			throw new UncheckedException(ex.getMessage(), ex);
+		}
+	}
+	
+	/**
+	 *
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
 	public D findBySingle(Map<String, Object> filter, String method) throws UncheckedException {
 		try {
 			Object[] args = MethodReflection.getMethodArgs(mapper.getClass(), method, filter);
