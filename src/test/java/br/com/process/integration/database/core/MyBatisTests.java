@@ -44,6 +44,7 @@ import br.com.process.integration.database.core.ui.QueryMyBatisController;
 import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.model.data.dto.example.EntityNineData;
 import br.com.process.integration.database.model.data.dto.example.EntityOneData;
+import br.com.process.integration.database.model.data.dto.example.EntitySixData;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -358,6 +359,25 @@ class MyBatisTests {
 		assertEquals(1l, entityNineData.getId().getIdEntitySeven());
 		assertEquals(1l, entityNineData.getId().getIdEntitySix());
 		assertEquals("10", entityNineData.getCode());
+	}
+	
+	@Test
+	@Order(22)
+	void teste_22() throws Exception {
+		
+		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/by-id/entitySixData/2";
+		
+		String data = getUniqueResult(url, new ErrorResponse());
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		EntitySixData entitySixData = objectMapper.readValue(data, EntitySixData.class);
+
+		assertNotNull(data);
+		assertNotNull(entitySixData);
+		assertEquals(2l, entitySixData.getIdEntitySix());
+		assertEquals("br.com.process.integration.database.model.entity.dto.example", entitySixData.getPackageName());
+		
 	}
 	
 	public void single_parameterized_one_erro(String url, String message) {
