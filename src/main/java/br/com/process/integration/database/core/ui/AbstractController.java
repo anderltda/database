@@ -73,6 +73,12 @@ public abstract class AbstractController {
 		filter.putAll(filterRefactory);
 	}
 	
+	protected void setId(String nameEntity, Map<String, Object> ids) throws CheckedException {
+		BeanEntity<?> entity = (BeanEntity<?>) MethodReflection.findEntityUsingClassLoader(nameEntity);
+		Object[] args = MethodReflection.getCompositeKeyArgs(entity.getClass(), ids);
+		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameEntity), Constants.METHOD_SET_ID, args[0]);
+	}
+	
 	protected void setId(String nameEntity, String id) throws CheckedException {
 		BeanEntity<?> entity = (BeanEntity<?>) MethodReflection.findEntityUsingClassLoader(nameEntity);
 		methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(nameEntity), Constants.METHOD_SET_ID, DynamicFoundType.getTypeValue(entity, id));

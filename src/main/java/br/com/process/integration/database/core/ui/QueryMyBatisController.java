@@ -32,7 +32,7 @@ public class QueryMyBatisController extends AbstractController {
 		return new ResponseEntity<>(count, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/mapper/findById/{data}/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(value = "/mapper/by-id/{data}/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<BeanData<?>> findById(@PathVariable String data, @PathVariable String id) throws CheckedException {
 
 		setData(data);
@@ -46,12 +46,12 @@ public class QueryMyBatisController extends AbstractController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
-	@GetMapping(value = "/mapper/findById/{data}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<BeanData<?>> findById(@PathVariable String data, @RequestParam(defaultValue = "") Map<String, Object> compositeKey) throws CheckedException {
+	@GetMapping(value = "/mapper/by-ids/{data}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<BeanData<?>> findById(@PathVariable String data, @RequestParam(defaultValue = "") Map<String, Object> ids) throws CheckedException {
 
 		setData(data);
 
-		BeanData<?> beanData = (BeanData<?>) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(data), Constants.METHOD_FIND_BY_ID, compositeKey);
+		BeanData<?> beanData = (BeanData<?>) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(data), Constants.METHOD_FIND_BY_ID, ids);
 
 		if (beanData != null) {
 			return new ResponseEntity<>(beanData, HttpStatus.OK);

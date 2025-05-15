@@ -22,6 +22,63 @@ import br.com.process.integration.database.core.util.Constants;
 @RestController
 @RequestMapping("/v1/database")
 public class QueryJpaController extends AbstractController {
+	
+	/*****************************************************************************************************************************************************************
+	 * SERVICES UTILIZANDO GENERIC CRUD REPOSITORY *
+	 *****************************************************************************************************************************************************************/
+
+	@SuppressWarnings("unchecked")
+	@GetMapping(value = "/{entity}/ids/{ids}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<List<BeanEntity<?>>> findAllIds(@PathVariable String entity, @PathVariable String ids) throws CheckedException {
+
+		List<Long> idList = Arrays.stream(ids.split(",")).map(Long::parseLong).toList();
+
+		List<BeanEntity<?>> list = (List<BeanEntity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL_BY_ID, idList);
+
+		if (!list.isEmpty()) {
+			return new ResponseEntity<>(list, HttpStatus.OK);
+		}
+
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+
+	@GetMapping(value = "/{entity}/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<BeanEntity<?>> findById(@PathVariable String entity, @PathVariable String id) throws CheckedException {
+
+		setId(entity, id);
+
+		BeanEntity<?> entityFound = (BeanEntity<?>) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_FIND_BY_ID);
+
+		if (entityFound != null) {
+			return new ResponseEntity<>(entityFound, HttpStatus.OK);
+		}
+
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
+	@GetMapping(value = "/{entity}/ids", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<BeanEntity<?>> findById(@PathVariable String entity, @RequestParam(defaultValue = "") Map<String, Object> ids) throws CheckedException {
+
+		setId(entity, ids);
+
+		BeanEntity<?> entityFound = (BeanEntity<?>) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_FIND_BY_ID);
+
+		if (entityFound != null) {
+			return new ResponseEntity<>(entityFound, HttpStatus.OK);
+		}
+
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}	
+
+	@GetMapping(value = "/exist/{entity}/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<Boolean> existsById(@PathVariable String entity, @PathVariable String id) throws CheckedException {
+
+		setId(entity, id);
+
+		Boolean existsById = (Boolean) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_EXISTS_BY_ID);
+
+		return new ResponseEntity<>(existsById, HttpStatus.OK);
+	}
 
 	/*****************************************************************************************************************************************************************
 	 * SERVICES UTILIZANDO CRITERIA *
@@ -178,48 +235,5 @@ public class QueryJpaController extends AbstractController {
 		}
 
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	}
-
-	/*****************************************************************************************************************************************************************
-	 * SERVICES UTILIZANDO GENERIC CRUD REPOSITORY *
-	 *****************************************************************************************************************************************************************/
-
-	@SuppressWarnings("unchecked")
-	@GetMapping(value = "/{entity}/ids/{ids}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<List<BeanEntity<?>>> findAllIds(@PathVariable String entity, @PathVariable String ids) throws CheckedException {
-
-		List<Long> idList = Arrays.stream(ids.split(",")).map(Long::parseLong).toList();
-
-		List<BeanEntity<?>> list = (List<BeanEntity<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_FIND_ALL_BY_ID, idList);
-
-		if (!list.isEmpty()) {
-			return new ResponseEntity<>(list, HttpStatus.OK);
-		}
-
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	}
-
-	@GetMapping(value = "/{entity}/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<BeanEntity<?>> findById(@PathVariable String entity, @PathVariable String id) throws CheckedException {
-
-		setId(entity, id);
-
-		BeanEntity<?> entityFound = (BeanEntity<?>) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_FIND_BY_ID);
-
-		if (entityFound != null) {
-			return new ResponseEntity<>(entityFound, HttpStatus.OK);
-		}
-
-		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	}
-
-	@GetMapping(value = "/exist/{entity}/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<Boolean> existsById(@PathVariable String entity, @PathVariable String id) throws CheckedException {
-
-		setId(entity, id);
-
-		Boolean existsById = (Boolean) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(entity), Constants.METHOD_EXISTS_BY_ID);
-
-		return new ResponseEntity<>(existsById, HttpStatus.OK);
 	}
 }
