@@ -42,6 +42,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import br.com.process.integration.database.core.exception.ErrorResponse;
 import br.com.process.integration.database.core.ui.QueryMyBatisController;
 import br.com.process.integration.database.core.util.Constants;
+import br.com.process.integration.database.model.data.dto.example.EntityNineData;
 import br.com.process.integration.database.model.data.dto.example.EntityOneData;
 
 @ActiveProfiles("test")
@@ -337,6 +338,26 @@ class MyBatisTests {
 		String entityOneData = getUniqueResult(url, new ErrorResponse());
 
 		assertNotNull(entityOneData);
+	}
+	
+	@Test
+	@Order(21)
+	void teste_21() throws Exception {
+		
+		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/by-ids/entityNineData?idEntityEight=1&idEntitySeven=1&idEntitySix=1";
+		
+		String data = getUniqueResult(url, new ErrorResponse());
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		EntityNineData entityNineData = objectMapper.readValue(data, EntityNineData.class);
+
+		assertNotNull(data);
+		assertNotNull(entityNineData);
+		assertEquals(1l, entityNineData.getId().getIdEntityEight());
+		assertEquals(1l, entityNineData.getId().getIdEntitySeven());
+		assertEquals(1l, entityNineData.getId().getIdEntitySix());
+		assertEquals("10", entityNineData.getCode());
 	}
 	
 	public void single_parameterized_one_erro(String url, String message) {
