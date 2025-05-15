@@ -6,13 +6,36 @@
         <result column="id_entity_eight" property="id.idEntityEight" />
         <result column="id_entity_seven" property="id.idEntitySeven" />
         <result column="id_entity_six" property="id.idEntitySix" />
-        <result column="key" property="key"/>
+        <result column="key_nine" property="keyNine"/>
         <result column="code" property="code"/>
         <result column="variable" property="variable"/>
+        <association property="entityEightData" javaType="br.com.process.integration.database.model.data.dto.example.EntityEightData" resultMap="EntityEightMap" />
+        <association property="entitySevenData" javaType="br.com.process.integration.database.model.data.dto.example.EntitySevenData" resultMap="EntitySevenMap" />
+    </resultMap>
+
+    <resultMap id="EntityEightMap" type="br.com.process.integration.database.model.data.dto.example.EntityEightData">
+        <id column="id_entity_eight" property="idEntityEight"/>
+        <result column="position" property="position"/>
+        <result column="properties" property="properties"/>
+        <association property="entitySevenData" javaType="br.com.process.integration.database.model.data.dto.example.EntitySevenData" resultMap="EntitySevenMap" />
+    </resultMap>
+
+    <resultMap id="EntitySevenMap" type="br.com.process.integration.database.model.data.dto.example.EntitySevenData">
+        <result column="id_entity_seven" property="id.idEntitySeven" />
+        <result column="id_entity_six" property="id.idEntitySix" />
+        <result column="dado" property="dado"/>
+        <association property="entitySixData" javaType="br.com.process.integration.database.model.data.dto.example.EntitySixData" resultMap="EntitySixMap" />
+    </resultMap>
+
+    <resultMap id="EntitySixMap" type="br.com.process.integration.database.model.data.dto.example.EntitySixData">
+        <id column="id_entity_six" property="idEntitySix"/>
+        <result column="package_name" property="packageName"/>
+        <result column="start_date" property="startDate"/>
+        <result column="stop_date" property="stopDate"/>
     </resultMap>
 
     <select id="findById" resultMap="defaultResultMap" parameterType="br.com.process.integration.database.model.data.dto.example.EntityNineId">
-        SELECT * FROM entity_nine WHERE id_entity_eight = #{idEntityEight} AND id_entity_seven = #{idEntitySeven} AND id_entity_six = #{idEntitySix}
+        SELECT * FROM entity_nine WHERE id_entity_eight = #{id.idEntityEight} AND id_entity_seven = #{id.idEntitySeven} AND id_entity_six = #{id.idEntitySix}
     </select>
 
     <select id="findAll" resultMap="defaultResultMap">

@@ -1,14 +1,22 @@
--- DROPs para garantir ambiente limpo
+-- DROP das tabelas (ordem reversa para evitar erro de FK)
 DROP TABLE IF EXISTS entity_nine CASCADE;
 DROP TABLE IF EXISTS entity_eight CASCADE;
 DROP TABLE IF EXISTS entity_seven CASCADE;
 DROP TABLE IF EXISTS entity_six CASCADE;
-DROP TABLE IF EXISTS entity_one CASCADE;
-DROP TABLE IF EXISTS entity_two CASCADE;
-DROP TABLE IF EXISTS entity_tree CASCADE;
-DROP TABLE IF EXISTS entity_four CASCADE;
 DROP TABLE IF EXISTS entity_five CASCADE;
+DROP TABLE IF EXISTS entity_four CASCADE;
+DROP TABLE IF EXISTS entity_tree CASCADE;
+DROP TABLE IF EXISTS entity_two CASCADE;
+DROP TABLE IF EXISTS entity_one CASCADE;
 DROP TABLE IF EXISTS entity_status CASCADE;
+
+-- DROP de sequences
+DROP SEQUENCE IF EXISTS seq_entity_one_id;
+DROP SEQUENCE IF EXISTS seq_entity_status_id;
+
+-- Criação de sequences
+CREATE SEQUENCE seq_entity_one_id START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE seq_entity_status_id START WITH 1 INCREMENT BY 1;
 
 -- Criação das tabelas
 
@@ -82,7 +90,7 @@ ALTER TABLE entity_one
   ADD CONSTRAINT uq_entity_one_id_entity_two UNIQUE (id_entity_two);
 
 CREATE TABLE entity_six (
-    id_entity_six INT PRIMARY KEY,
+    id_entity_six INT AUTO_INCREMENT PRIMARY KEY,
     package_name VARCHAR(100) NOT NULL,
     start_date DATE NOT NULL,
     stop_date DATE NOT NULL

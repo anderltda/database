@@ -11,7 +11,7 @@ import jakarta.validation.constraints.Size;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EntityEightData extends RepresentationModel<EntityEightData> implements BeanData<EntityEightData> {
-
+	
 	/**
 	 * Coluna: id_entity_eight
 	 */

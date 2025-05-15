@@ -14,29 +14,29 @@ import br.com.process.integration.database.model.data.mapper.example.EntityEight
 @Service
 @Transactional
 public class EntityEightDataService extends AbstractDataService<EntityEightData> {
-	
-    @Autowired
-    private PagedResourcesAssembler<EntityEightData> pagedResourcesAssembler;
 
-    public EntityEightDataService(EntityEightDataMapper mapper) {
-        super(QueryMyBatisController.class, EntityEightData.class);
-        this.mapper = mapper;
-    }
+	@Autowired
+	private PagedResourcesAssembler<EntityEightData> pagedResourcesAssembler;
 
-    @Override
-    public EntityEightData toModel(EntityEightData data) {
-        EntityEightData model = new EntityEightData();
-        BeanUtils.copyProperties(data, model);
-        return model;
-    }
+	public EntityEightDataService(EntityEightDataMapper mapper) {
+		super(QueryMyBatisController.class, EntityEightData.class);
+		this.mapper = mapper;
+	}
 
-    @Override
-    public void setData(EntityEightData data) {
-        this.data = data;
-    }
+	@Override
+	public EntityEightData toModel(EntityEightData data) {
+		EntityEightData model = new EntityEightData();
+		BeanUtils.copyProperties(data, model);
+		return model;
+	}
 
-    @Override
-    public void setPagedModel() {
-        pagedModel = pagedResourcesAssembler.toModel(pages, this);
-    }
+	@Override
+	public void setData(EntityEightData data) {
+		this.data = data;
+	}
+
+	@Override
+	public void setPagedModel() {
+		pagedModel = pagedResourcesAssembler.toModel(pages, this);
+	}
 }

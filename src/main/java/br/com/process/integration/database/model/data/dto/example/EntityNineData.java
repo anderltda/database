@@ -15,11 +15,11 @@ public class EntityNineData extends RepresentationModel<EntityNineData> implemen
 	private EntityNineId id;
 
 	/**
-	 * Coluna: key
+	 * Coluna: key_nine
 	 */
 	@NotNull
 	@Size(max = 100)
-	private String key;
+	private String keyNine;
 
 	/**
 	 * Coluna: code
@@ -33,6 +33,10 @@ public class EntityNineData extends RepresentationModel<EntityNineData> implemen
 	@Size(max = 100)
 	private String variable;
 
+	private EntityEightData entityEightData;
+
+	private EntitySevenData entitySevenData;
+
 	public EntityNineId getId() {
 		return this.id;
 	}
@@ -41,12 +45,12 @@ public class EntityNineData extends RepresentationModel<EntityNineData> implemen
 		this.id = id;
 	}
 
-	public String getKey() {
-		return this.key;
+	public String getKeyNine() {
+		return this.keyNine;
 	}
 
-	public void setKey(String key) {
-		this.key = key;
+	public void setKeyNine(String keyNine) {
+		this.keyNine = keyNine;
 	}
 
 	public String getCode() {
@@ -65,6 +69,22 @@ public class EntityNineData extends RepresentationModel<EntityNineData> implemen
 		this.variable = variable;
 	}
 
+	public EntityEightData getEntityEightData() {
+		return this.entityEightData;
+	}
+
+	public void setEntityEightData(EntityEightData entityEightData) {
+		this.entityEightData = entityEightData;
+	}
+
+	public EntitySevenData getEntitySevenData() {
+		return this.entitySevenData;
+	}
+
+	public void setEntitySevenData(EntitySevenData entitySevenData) {
+		this.entitySevenData = entitySevenData;
+	}
+
 	@Override
 	@JsonIgnore
 	public EntityNineData getData() {
@@ -78,19 +98,24 @@ public class EntityNineData extends RepresentationModel<EntityNineData> implemen
 		if (o == null || getClass() != o.getClass())
 			return false;
 		EntityNineData other = (EntityNineData) o;
-		return java.util.Objects.equals(id, other.id) && java.util.Objects.equals(key, other.key)
-				&& java.util.Objects.equals(code, other.code) && java.util.Objects.equals(variable, other.variable);
+		return java.util.Objects.equals(id, other.id) && java.util.Objects.equals(keyNine, other.keyNine)
+				&& java.util.Objects.equals(code, other.code) && java.util.Objects.equals(variable, other.variable)
+				&& java.util.Objects.equals(entityEightData, other.entityEightData)
+				&& java.util.Objects.equals(entitySevenData, other.entitySevenData);
 	}
 
 	@Override
 	public int hashCode() {
-		return java.util.Objects.hash(id, key, code, variable);
+		return java.util.Objects.hash(id, keyNine, code, variable, entityEightData, entitySevenData);
 	}
 
 	@Override
 	public String toString() {
-		return "EntityNineData{" + "id=" + (id != null ? id.toString() : "null") + ", " + "key="
-				+ (key != null ? key.toString() : "null") + ", " + "code=" + (code != null ? code.toString() : "null")
-				+ ", " + "variable=" + (variable != null ? variable.toString() : "null") + '}';
+		return "EntityNineData{" + "id=" + (id != null ? id.toString() : "null") + ", " + "keyNine="
+				+ (keyNine != null ? keyNine.toString() : "null") + ", " + "code="
+				+ (code != null ? code.toString() : "null") + ", " + "variable="
+				+ (variable != null ? variable.toString() : "null") + ", " + "entityEightData="
+				+ (entityEightData != null ? entityEightData.toString() : "null") + ", " + "entitySevenData="
+				+ (entitySevenData != null ? entitySevenData.toString() : "null") + '}';
 	}
 }
