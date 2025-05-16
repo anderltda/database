@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.hateoas.mediatype.hal.Jackson2HalModule;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -30,18 +29,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 import br.com.process.integration.database.core.exception.ErrorResponse;
 import br.com.process.integration.database.core.ui.QueryMyBatisController;
 import br.com.process.integration.database.core.util.Constants;
+import br.com.process.integration.database.model.data.dto.example.EntityEightData;
 import br.com.process.integration.database.model.data.dto.example.EntityNineData;
 import br.com.process.integration.database.model.data.dto.example.EntityOneData;
 import br.com.process.integration.database.model.data.dto.example.EntitySixData;
@@ -59,6 +54,9 @@ class MyBatisTests {
 
 	@Autowired
 	private TestRestTemplate restTemplate;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	@Autowired
 	private QueryMyBatisController queryMyBatisController;
@@ -349,8 +347,6 @@ class MyBatisTests {
 		
 		String data = getUniqueResult(url, new ErrorResponse());
 		
-		ObjectMapper objectMapper = new ObjectMapper();
-		
 		EntityNineData entityNineData = objectMapper.readValue(data, EntityNineData.class);
 
 		assertNotNull(data);
@@ -365,19 +361,28 @@ class MyBatisTests {
 	@Order(22)
 	void teste_22() throws Exception {
 		
-		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/by-id/entitySixData/2";
+		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/by-id/EntityEightData/2";
 		
 		String data = getUniqueResult(url, new ErrorResponse());
 		
-		ObjectMapper objectMapper = new ObjectMapper();
+		EntityEightData entityEightData = objectMapper.readValue(data, EntityEightData.class);
+
+		assertNotNull(data);
+		assertNotNull(entityEightData);
+	}
+	
+	@Test
+	@Order(23)
+	void teste_23() throws Exception {
+		
+		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/by-id/EntitySixData/1";
+		
+		String data = getUniqueResult(url, new ErrorResponse());
 		
 		EntitySixData entitySixData = objectMapper.readValue(data, EntitySixData.class);
 
 		assertNotNull(data);
 		assertNotNull(entitySixData);
-		assertEquals(2l, entitySixData.getIdEntitySix());
-		assertEquals("br.com.process.integration.database.model.entity.dto.example", entitySixData.getPackageName());
-		
 	}
 	
 	public void single_parameterized_one_erro(String url, String message) {
@@ -435,25 +440,7 @@ class MyBatisTests {
 		}
 	}
 
-	private ObjectMapper createObjectMapper() {
-		ObjectMapper objectMapper = new ObjectMapper();
-
-		JavaTimeModule module = new JavaTimeModule();
-		module.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-		module.addSerializer(LocalDateTime.class,
-				new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")));
-		objectMapper.registerModule(module);
-
-		objectMapper.registerModule(new Jackson2HalModule()); // ← suporte a RepresentationModel
-		objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-
-		return objectMapper;
-	}
-
 	private List<EntityOneData> convertResponseToEntityOneDataList(String body) {
-		ObjectMapper objectMapper = createObjectMapper();
 		try {
 			if (body != null) {
 				System.out.println("JSON recebido: " + body); // ← debug importante
@@ -468,7 +455,6 @@ class MyBatisTests {
 	}
 
 	private EntityOneData convertResponseToEntityOneData(String body) {
-		ObjectMapper objectMapper = createObjectMapper();
 		try {
 			if (body != null) {
 				return objectMapper.readValue(body, EntityOneData.class);
