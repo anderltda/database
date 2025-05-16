@@ -306,7 +306,7 @@ class MyBatisTests {
 	@Order(18)
 	void teste_18() {
 
-		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/single/EntityOneData/findById?idEntityOne=" + SaveTests.id;
+		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/by-id/entityOneData/" + SaveTests.id;
 		
 		entityOneData = getSingleResult(url, new ErrorResponse());
 
@@ -319,7 +319,7 @@ class MyBatisTests {
 		
 		String id = entityOneData.getEntityTwoData().getIdEntityTwo().toString();
 
-		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/single/EntityTwoData/findById?idEntityTwo=" + id;
+		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/by-id/entityTwoData/" + id;
 		
 		String entity = getUniqueResult(url, new ErrorResponse());
 
@@ -332,7 +332,7 @@ class MyBatisTests {
 		
 		Long id = entityOneData.getEntityStatusData().getIdEntityStatus();
 
-		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/single/EntityStatusData/findById?idEntityStatus=" + id;
+		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/by-id/entityStatusData/" + id;
 		
 		String entityOneData = getUniqueResult(url, new ErrorResponse());
 
