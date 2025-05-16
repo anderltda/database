@@ -15,7 +15,10 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import br.com.process.integration.database.core.exception.CheckedException;
 import br.com.process.integration.database.core.exception.UncheckedException;
@@ -241,7 +244,7 @@ public class MethodReflection {
 		return "set".concat(firstUpper(value));
 	}
 
-	private static String firstUpper(String name) {
+	public static String firstUpper(String name) {
 		String returnValue = name.substring(0, 1).toUpperCase();
 		if (name.length() > 1)
 			returnValue += name.substring(1);
@@ -262,6 +265,34 @@ public class MethodReflection {
 		}
 	}
 
+	public static Object[] getKeyArgs(Class<?> clazz, String id) throws UncheckedException {
+		
+		Object[] args = new Object[1];
+		
+		try {
+			
+			Class<?> keyClass = getKeyClass(clazz);
+
+			if (keyClass == null) {
+				throw new UncheckedException(String.format("Erro: Esse mapper é um composite key, method: '%s'", Constants.METHOD_FIND_BY_ID));
+			}
+			
+			if (!keyClass.equals(UUID.class)) {
+			    ObjectMapper mapper = new ObjectMapper();
+			    mapper.registerModule(new JavaTimeModule());
+			    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+			    args[0] = mapper.readValue(id, keyClass);
+			} else {
+				args[0] = UUID.fromString(id);
+			}
+			
+		} catch (Exception ex) {
+			throw new UncheckedException(ex.getMessage(), ex);
+		}
+
+		return args;
+	}
+	
 	public static Object[] getCompositeKeyArgs(Class<?> clazz, Map<String, Object> filter) throws UncheckedException {
 		
 		Object[] args = new Object[1];
@@ -294,6 +325,15 @@ public class MethodReflection {
 		}
 
 		return args;
+	}
+	
+	private static Class<?> getKeyClass(Class<?> dtoClass) {
+		for (Field field : dtoClass.getDeclaredFields()) {
+			if (field.getName().equals("id") || field.getName().startsWith("id")) {
+				return field.getType();
+			}
+		}
+		return null;
 	}
 
 	private static Class<?> getCompositeKeyClass(Class<?> dtoClass) {

@@ -22,7 +22,7 @@ public class PackageScanner {
 	 */
 	public static Object findClassBySimpleName(String basePackage, String className) throws CheckedException {
 		try {
-			Class<?> clazz = findAllClasses(basePackage).stream().filter(c -> c.getSimpleName().equalsIgnoreCase(className)).findFirst().orElse(null);
+			Class<?> clazz = findByClass(basePackage, className);
 			if(clazz != null) {
 				return clazz.getDeclaredConstructor().newInstance();
 			}
@@ -38,7 +38,8 @@ public class PackageScanner {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String findClassPackageByName(String basePackage, String className) throws Exception {
+	@Deprecated
+	private static String findClassPackageByName(String basePackage, String className) throws Exception {
 		Set<Class<?>> classes = findAllClasses(basePackage);
 		for (Class<?> clazz : classes) {
 			if (clazz.getSimpleName().equalsIgnoreCase(className)) {
@@ -87,5 +88,45 @@ public class PackageScanner {
 			throw ex;
 		}
 		return classes;
+	}
+	
+	private static Class<?> findByClass(String basePackage, String classNameFound) throws Exception {
+		Class<?> clazz = null;
+		try {
+			String className = null;
+			String path = ClassUtils.convertClassNameToResourcePath(basePackage);
+			String classPattern = "classpath*:" + path + "/**/*.class";
+
+			PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+			Resource[] resources = resolver.getResources(classPattern);
+
+			for (Resource resource : resources) {
+				String resourcePath = resource.getURL().toString();
+				if (resourcePath.contains("/BOOT-INF/classes/")) {
+					className = resourcePath
+							.substring(resourcePath.indexOf("/BOOT-INF/classes/") + 18)
+							.replace("/", ".")
+							.replace(".class", "");
+				} else if (resourcePath.contains("/classes/")) {
+					className = resourcePath
+							.substring(resourcePath.indexOf("/classes/") + 9)
+							.replace("/", ".")
+							.replace(".class", "");
+				}
+				
+				clazz = Class.forName(className);
+				
+				if(clazz.getSimpleName().equals(MethodReflection.firstUpper(classNameFound))) {
+					clazz = Class.forName(clazz.getPackageName() + "." + MethodReflection.firstUpper(classNameFound));
+					return clazz;
+				}
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw ex;
+		}
+		
+		return null;
 	}
 }

@@ -37,9 +37,14 @@ import br.com.process.integration.database.core.exception.ErrorResponse;
 import br.com.process.integration.database.core.ui.QueryMyBatisController;
 import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.model.data.dto.example.EntityEightData;
+import br.com.process.integration.database.model.data.dto.example.EntityFiveData;
+import br.com.process.integration.database.model.data.dto.example.EntityFourData;
 import br.com.process.integration.database.model.data.dto.example.EntityNineData;
 import br.com.process.integration.database.model.data.dto.example.EntityOneData;
 import br.com.process.integration.database.model.data.dto.example.EntitySixData;
+import br.com.process.integration.database.model.data.dto.example.EntityStatusData;
+import br.com.process.integration.database.model.data.dto.example.EntityTreeData;
+import br.com.process.integration.database.model.data.dto.example.EntityTwoData;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -61,8 +66,6 @@ class MyBatisTests {
 	@Autowired
 	private QueryMyBatisController queryMyBatisController;
 	
-	private EntityOneData entityOneData;
-
 	@BeforeAll
 	void setupOnce() {
 	}
@@ -248,7 +251,7 @@ class MyBatisTests {
 
 		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityTwoData/findAll";
 
-		List<EntityOneData> list = getAll(url, new ErrorResponse());
+		List<EntityTwoData> list = getAllEntityTwoData(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -260,7 +263,7 @@ class MyBatisTests {
 
 		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityTreeData/findAll";
 
-		List<EntityOneData> list = getAll(url, new ErrorResponse());
+		List<EntityTreeData> list = getAllEntityTreeData(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -272,7 +275,7 @@ class MyBatisTests {
 
 		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityFourData/findAll";
 
-		List<EntityOneData> list = getAll(url, new ErrorResponse());
+		List<EntityFourData> list = getAllEntityFourData(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -284,7 +287,7 @@ class MyBatisTests {
 
 		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityFiveData/findAll";
 
-		List<EntityOneData> list = getAll(url, new ErrorResponse());
+		List<EntityFiveData> list = getAllEntityFiveData(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(10, list.size());
@@ -296,7 +299,7 @@ class MyBatisTests {
 
 		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/EntityStatusData/findAll";
 
-		List<EntityOneData> list = getAll(url, new ErrorResponse());
+		List<EntityStatusData> list = getAllEntityStatusData(url, new ErrorResponse());
 
 		assertNotNull(list);
 		assertEquals(5, list.size());
@@ -308,7 +311,7 @@ class MyBatisTests {
 
 		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/by-id/entityOneData/" + SaveTests.id;
 		
-		entityOneData = getSingleResult(url, new ErrorResponse());
+		EntityOneData entityOneData = getSingleResult(url, new ErrorResponse());
 
 		assertNotNull(entityOneData);
 	}
@@ -317,26 +320,46 @@ class MyBatisTests {
 	@Order(19)
 	void teste_19() {
 		
-		String id = entityOneData.getEntityTwoData().getIdEntityTwo().toString();
+		String id = null;
 
-		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/by-id/entityTwoData/" + id;
+		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/entityTwoData/findAll";
+
+		List<EntityTwoData> list = getAllEntityTwoData(url, new ErrorResponse());
+
+		assertNotNull(list);
 		
-		String entity = getUniqueResult(url, new ErrorResponse());
+		for (EntityTwoData entityTwoData : list) {
+			id = entityTwoData.getIdEntityTwo().toString();
+		}
+		
+		url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/by-id/entityTwoData/" + id;
+		
+		EntityTwoData entityTwoData = getSingleResultEntityTwoData(url, new ErrorResponse());
 
-		assertNotNull(entity);
+		assertNotNull(entityTwoData);
 	}
 	
 	@Test
 	@Order(20)
 	void teste_20() {
 		
-		Long id = entityOneData.getEntityStatusData().getIdEntityStatus();
+		Long id = null;
 
-		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/by-id/entityStatusData/" + id;
+		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/entityStatusData/findAll";
+
+		List<EntityStatusData> list = getAllEntityStatusData(url, new ErrorResponse());
+
+		assertNotNull(list);
 		
-		String entityOneData = getUniqueResult(url, new ErrorResponse());
+		for (EntityStatusData entityStatusData : list) {
+			id = entityStatusData.getIdEntityStatus();
+		}
+		
+		url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/by-id/entityStatusData/" + id;
+		
+		EntityStatusData entityStatusData = getSingleResultEntityStatusData(url, new ErrorResponse());
 
-		assertNotNull(entityOneData);
+		assertNotNull(entityStatusData);
 	}
 	
 	@Test
@@ -407,6 +430,85 @@ class MyBatisTests {
 					+ errorResponse.getMessage());
 		}
 	}
+	
+	public List<EntityTwoData> getAllEntityTwoData(String url, ErrorResponse compare) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", "application/json");
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+		if (response.getStatusCode().is2xxSuccessful()) {
+			return convertResponseToEntityTwoDataList(response.getBody());
+		} else {
+			ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
+			assertEquals(compare.getStatus(), errorResponse.getStatus());
+			assertTrue(errorResponse.getMessage().contains(compare.getMessage()));
+			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: " + errorResponse.getMessage());
+		}
+	}
+	
+	public List<EntityTreeData> getAllEntityTreeData(String url, ErrorResponse compare) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", "application/json");
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+		if (response.getStatusCode().is2xxSuccessful()) {
+			return convertResponseToEntityTreeDataList(response.getBody());
+		} else {
+			ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
+			assertEquals(compare.getStatus(), errorResponse.getStatus());
+			assertTrue(errorResponse.getMessage().contains(compare.getMessage()));
+			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: "
+					+ errorResponse.getMessage());
+		}
+	}	
+
+	public List<EntityFourData> getAllEntityFourData(String url, ErrorResponse compare) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", "application/json");
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+		if (response.getStatusCode().is2xxSuccessful()) {
+			return convertResponseToEntityFourDataList(response.getBody());
+		} else {
+			ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
+			assertEquals(compare.getStatus(), errorResponse.getStatus());
+			assertTrue(errorResponse.getMessage().contains(compare.getMessage()));
+			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: "
+					+ errorResponse.getMessage());
+		}
+	}
+	
+	public List<EntityFiveData> getAllEntityFiveData(String url, ErrorResponse compare) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", "application/json");
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+		if (response.getStatusCode().is2xxSuccessful()) {
+			return convertResponseToEntityFiveDataList(response.getBody());
+		} else {
+			ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
+			assertEquals(compare.getStatus(), errorResponse.getStatus());
+			assertTrue(errorResponse.getMessage().contains(compare.getMessage()));
+			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: "
+					+ errorResponse.getMessage());
+		}
+	}	
+	
+	public List<EntityStatusData> getAllEntityStatusData(String url, ErrorResponse compare) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", "application/json");
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+		if (response.getStatusCode().is2xxSuccessful()) {
+			return convertResponseToEntityStatusDataList(response.getBody());
+		} else {
+			ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
+			assertEquals(compare.getStatus(), errorResponse.getStatus());
+			assertTrue(errorResponse.getMessage().contains(compare.getMessage()));
+			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: "
+					+ errorResponse.getMessage());
+		}
+	}
 
 	public EntityOneData getSingleResult(String url, ErrorResponse compare) {
 		HttpHeaders headers = new HttpHeaders();
@@ -423,6 +525,86 @@ class MyBatisTests {
 					+ errorResponse.getMessage());
 		}
 	}
+	
+	public EntityTwoData getSingleResultEntityTwoData(String url, ErrorResponse compare) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", "application/json");
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+		if (response.getStatusCode().is2xxSuccessful()) {
+			return convertResponseToEntityTwoData(response.getBody());
+		} else {
+			ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
+			assertEquals(compare.getStatus(), errorResponse.getStatus());
+			assertTrue(errorResponse.getMessage().contains(compare.getMessage()));
+			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: "
+					+ errorResponse.getMessage());
+		}
+	}
+	
+	public EntityTreeData getSingleResultEntityTreeData(String url, ErrorResponse compare) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", "application/json");
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+		if (response.getStatusCode().is2xxSuccessful()) {
+			return convertResponseToEntityTreeData(response.getBody());
+		} else {
+			ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
+			assertEquals(compare.getStatus(), errorResponse.getStatus());
+			assertTrue(errorResponse.getMessage().contains(compare.getMessage()));
+			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: "
+					+ errorResponse.getMessage());
+		}
+	}
+	
+	public EntityFourData getSingleResultEntityFourData(String url, ErrorResponse compare) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", "application/json");
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+		if (response.getStatusCode().is2xxSuccessful()) {
+			return convertResponseToEntityFourData(response.getBody());
+		} else {
+			ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
+			assertEquals(compare.getStatus(), errorResponse.getStatus());
+			assertTrue(errorResponse.getMessage().contains(compare.getMessage()));
+			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: "
+					+ errorResponse.getMessage());
+		}
+	}	
+	
+	public EntityFiveData getSingleResultEntityFiveData(String url, ErrorResponse compare) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", "application/json");
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+		if (response.getStatusCode().is2xxSuccessful()) {
+			return convertResponseToEntityFiveData(response.getBody());
+		} else {
+			ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
+			assertEquals(compare.getStatus(), errorResponse.getStatus());
+			assertTrue(errorResponse.getMessage().contains(compare.getMessage()));
+			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: "
+					+ errorResponse.getMessage());
+		}
+	}	
+	
+	public EntityStatusData getSingleResultEntityStatusData(String url, ErrorResponse compare) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", "application/json");
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+		if (response.getStatusCode().is2xxSuccessful()) {
+			return convertResponseToEntityStatusData(response.getBody());
+		} else {
+			ErrorResponse errorResponse = convertResponseToErrorResponse(response.getBody());
+			assertEquals(compare.getStatus(), errorResponse.getStatus());
+			assertTrue(errorResponse.getMessage().contains(compare.getMessage()));
+			throw new RuntimeException("Failed to fetch user. Status code: " + response.getStatusCode() + ". Error: "
+					+ errorResponse.getMessage());
+		}
+	}	
 
 	private String getUniqueResult(String url, ErrorResponse compare) {
 		HttpHeaders headers = new HttpHeaders();
@@ -443,14 +625,81 @@ class MyBatisTests {
 	private List<EntityOneData> convertResponseToEntityOneDataList(String body) {
 		try {
 			if (body != null) {
-				System.out.println("JSON recebido: " + body); // ← debug importante
-				return objectMapper.readValue(body, new TypeReference<List<EntityOneData>>() {
-				});
+				System.out.println("JSON recebido: " + body);
+				return objectMapper.readValue(body, new TypeReference<List<EntityOneData>>(){});
 			} else {
 				return null;
 			}
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException("Error parsing EntityOneData list response", e);
+		}
+	}
+	
+	private List<EntityTwoData> convertResponseToEntityTwoDataList(String body) {
+		try {
+			if (body != null) {
+				System.out.println("JSON recebido: " + body);
+				return objectMapper.readValue(body, new TypeReference<List<EntityTwoData>>(){});
+			} else {
+				return null;
+			}
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException("Error parsing EntityTwoData list response", e);
+		}
+	}	
+	
+	private List<EntityTreeData> convertResponseToEntityTreeDataList(String body) {
+		try {
+			if (body != null) {
+				System.out.println("JSON recebido: " + body);
+				return objectMapper.readValue(body, new TypeReference<List<EntityTreeData>>(){});
+			} else {
+				return null;
+			}
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException("Error parsing EntityTreeData list response", e);
+		}
+	}
+	
+	private List<EntityFourData> convertResponseToEntityFourDataList(String body) {
+		try {
+			if (body != null) {
+				System.out.println("JSON recebido: " + body);
+				return objectMapper.readValue(body, new TypeReference<List<EntityFourData>>() {
+				});
+			} else {
+				return null;
+			}
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException("Error parsing EntityFourData list response", e);
+		}
+	}
+	
+	private List<EntityFiveData> convertResponseToEntityFiveDataList(String body) {
+		try {
+			if (body != null) {
+				System.out.println("JSON recebido: " + body);
+				return objectMapper.readValue(body, new TypeReference<List<EntityFiveData>>() {
+				});
+			} else {
+				return null;
+			}
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException("Error parsing EntityFiveData list response", e);
+		}
+	}
+	
+	private List<EntityStatusData> convertResponseToEntityStatusDataList(String body) {
+		try {
+			if (body != null) {
+				System.out.println("JSON recebido: " + body);
+				return objectMapper.readValue(body, new TypeReference<List<EntityStatusData>>() {
+				});
+			} else {
+				return null;
+			}
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException("Error parsing EntityFiveData list response", e);
 		}
 	}
 
@@ -465,7 +714,67 @@ class MyBatisTests {
 			throw new RuntimeException("Error parsing EntityOneData response", e);
 		}
 	}
+	
+	private EntityTwoData convertResponseToEntityTwoData(String body) {
+		try {
+			if (body != null) {
+				return objectMapper.readValue(body, EntityTwoData.class);
+			} else {
+				return null;
+			}
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException("Error parsing EntityTwoData response", e);
+		}
+	}
+	
+	private EntityTreeData convertResponseToEntityTreeData(String body) {
+		try {
+			if (body != null) {
+				return objectMapper.readValue(body, EntityTreeData.class);
+			} else {
+				return null;
+			}
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException("Error parsing EntityTreeData response", e);
+		}
+	}	
+	
+	private EntityFourData convertResponseToEntityFourData(String body) {
+		try {
+			if (body != null) {
+				return objectMapper.readValue(body, EntityFourData.class);
+			} else {
+				return null;
+			}
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException("Error parsing EntityFourData response", e);
+		}
+	}
+	
+	private EntityFiveData convertResponseToEntityFiveData(String body) {
+		try {
+			if (body != null) {
+				return objectMapper.readValue(body, EntityFiveData.class);
+			} else {
+				return null;
+			}
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException("Error parsing EntityFiveData response", e);
+		}
+	}	
 
+	private EntityStatusData convertResponseToEntityStatusData(String body) {
+		try {
+			if (body != null) {
+				return objectMapper.readValue(body, EntityStatusData.class);
+			} else {
+				return null;
+			}
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException("Error parsing EntityStatusData response", e);
+		}
+	}	
+	
 	private ErrorResponse convertResponseToErrorResponse(String body) {
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {

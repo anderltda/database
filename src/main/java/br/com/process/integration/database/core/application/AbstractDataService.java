@@ -66,8 +66,7 @@ public abstract class AbstractDataService<D extends RepresentationModel<D>> exte
 	@SuppressWarnings("unchecked")
 	public D findById(String id) throws UncheckedException {
 		try {
-			Map<String, Object> filter = Map.of("id", id);
-			Object[] args = MethodReflection.getMethodArgs(mapper.getClass(), Constants.METHOD_FIND_BY_ID, filter);
+			Object[] args = MethodReflection.getKeyArgs(data.getClass(), id);
 			return (D) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameMapper(data.getClass().getSimpleName()), Constants.METHOD_FIND_BY_ID, args);
 		} catch (Exception ex) {
 			throw new UncheckedException(ex.getMessage(), ex);
