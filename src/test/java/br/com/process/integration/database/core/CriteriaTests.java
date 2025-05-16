@@ -38,6 +38,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import br.com.process.integration.database.core.exception.ErrorResponse;
 import br.com.process.integration.database.core.ui.QueryJpaController;
 import br.com.process.integration.database.core.util.Constants;
+import br.com.process.integration.database.model.data.dto.example.EntityNineData;
 import br.com.process.integration.database.model.entity.dto.example.EntityOne;
 
 @ActiveProfiles("test")
@@ -53,6 +54,9 @@ class CriteriaTests {
 
 	@Autowired
 	private TestRestTemplate restTemplate;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	@Autowired
 	private QueryJpaController queryJpaController;
@@ -915,6 +919,26 @@ class CriteriaTests {
 	    assertFalse(value);
 	}
 	
+	@Test
+	void teste_51() throws Exception {
+		
+	    String url = PATH 
+	        + port 
+	        + Constants.API_NAME_REQUEST_MAPPING 
+	        + "/entityNine/ids?idEntityEight=1&idEntitySeven=1&idEntitySix=1";
+	    
+		String data = getUniqueResult(url, new ErrorResponse());
+		
+		EntityNineData entityNineData = objectMapper.readValue(data, EntityNineData.class);
+		
+		assertNotNull(data);
+		assertNotNull(entityNineData);
+		assertEquals(1l, entityNineData.getId().getIdEntityEight());
+		assertEquals(1l, entityNineData.getId().getIdEntitySeven());
+		assertEquals(1l, entityNineData.getId().getIdEntitySix());
+		assertEquals("10", entityNineData.getCode());
+	}
+	
 	void testes_single_parameterized_other(String url, String value, Integer size) {
 		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
@@ -991,15 +1015,7 @@ class CriteriaTests {
 		}
 	}
 	
-	private ObjectMapper createObjectMapper() {
-	    ObjectMapper objectMapper = new ObjectMapper();
-	    objectMapper.registerModule(new JavaTimeModule());
-	    objectMapper.findAndRegisterModules(); 
-	    return objectMapper;
-	}
-
 	private List<EntityOne> convertResponseToEntityOneList(String body) {
-	    ObjectMapper objectMapper = createObjectMapper();
 	    try {
 	    	if(body != null) {
 	    		return objectMapper.readValue(body, new TypeReference<List<EntityOne>>(){});
@@ -1012,7 +1028,6 @@ class CriteriaTests {
 	}
 
 	private EntityOne convertResponseToEntityOne(String body) {
-	    ObjectMapper objectMapper = createObjectMapper();
 	    try {
 	    	if(body != null) {
 	    		return objectMapper.readValue(body, EntityOne.class);
