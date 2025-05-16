@@ -11,12 +11,14 @@ import javax.sql.DataSource;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import br.com.process.integration.database.generator.GeneratorOrm;
+import jakarta.validation.Valid;
 
 /**
  * 
@@ -45,26 +47,39 @@ public class GeneratorController {
 	@GetMapping()
     public String index(Model model) throws Exception {
         model.addAttribute("title", "Gerador de Entidades ORM!");
-        model.addAttribute("tables", getTables()); // Adiciona a lista de tabelas no model
+        model.addAttribute("tables", getTables());
+        model.addAttribute("types", List.of("Jpa", "View", "Data"));
+        model.addAttribute("formData", new FormData());
         return "index";
     }
     
 	/**
 	 * @param formData
+	 * @param result
 	 * @param model
 	 * @return
 	 * @throws Exception
 	 */
 	@PostMapping("/generator")
-	public String save(@ModelAttribute FormData formData, Model model) throws Exception {
-
-		generator.generateAll(formData.getDomain(), new LinkedHashSet<>(formData.getTables()), formData.getTypes());
-
-		model.addAttribute("dados", formData);
+	public String save(@Valid @ModelAttribute("formData") FormData formData, BindingResult result, Model model) throws Exception {
 		
-		return "confirmacao";
+	    if (result.hasErrors()) {
+	        model.addAttribute("title", "Gerador de Entidades ORM!");
+	        model.addAttribute("tables", getTables());
+	        model.addAttribute("types", List.of("Jpa", "View", "Data"));
+	        return "index";
+	    }
+
+	    generator.generateAll(
+	        formData.getDomain(),
+	        new LinkedHashSet<>(formData.getTables()),
+	        formData.getTypes()
+	    );
+
+	    model.addAttribute("dados", formData);
+	    model.addAttribute("success", true);
+	    return "confirmacao";
 	}
-    
 	private List<String> getTables() throws Exception {
 		List<String> tableList = new ArrayList<>();
 		try (Connection conn = dataSource.getConnection()) {
