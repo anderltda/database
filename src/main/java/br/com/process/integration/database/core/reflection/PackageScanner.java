@@ -39,7 +39,7 @@ public class PackageScanner {
 	 * @throws Exception
 	 */
 	@Deprecated
-	private static String findClassPackageByName(String basePackage, String className) throws Exception {
+	public static String findClassPackageByName(String basePackage, String className) throws Exception {
 		Set<Class<?>> classes = findAllClasses(basePackage);
 		for (Class<?> clazz : classes) {
 			if (clazz.getSimpleName().equalsIgnoreCase(className)) {
