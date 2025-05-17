@@ -30,6 +30,8 @@ public class GeneratorController {
 	private final DataSource dataSource;
 	private final GeneratorOrm generator;
 	
+	private List<String> types = List.of("Jpa", "JDBC", "MyBatis");
+	
     /**
      * @param dataSource
      * @param mainGenerator
@@ -48,7 +50,7 @@ public class GeneratorController {
     public String index(Model model) throws Exception {
         model.addAttribute("title", "Gerador de Entidades ORM!");
         model.addAttribute("tables", getTables());
-        model.addAttribute("types", List.of("Jpa", "View", "Data"));
+        model.addAttribute("types", types);
         model.addAttribute("formData", new FormData());
         return "index";
     }
@@ -66,7 +68,7 @@ public class GeneratorController {
 	    if (result.hasErrors()) {
 	        model.addAttribute("title", "Gerador de Entidades ORM!");
 	        model.addAttribute("tables", getTables());
-	        model.addAttribute("types", List.of("Jpa", "View", "Data"));
+	        model.addAttribute("types", types);
 	        return "index";
 	    }
 

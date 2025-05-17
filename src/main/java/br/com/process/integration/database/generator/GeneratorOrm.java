@@ -51,11 +51,11 @@ public class GeneratorOrm {
 			extractedEntity(tables);
 		}
 		
-		if (types.contains("View")) {
+		if (types.contains("JDBC")) {
 			extractedView(tables);
 		}
 		
-		if (types.contains("Data")) {
+		if (types.contains("MyBatis")) {
 			extractedData(tables);
 		}
 	}
