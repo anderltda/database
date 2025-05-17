@@ -68,30 +68,40 @@ public class XmlGenerator {
         List<Class<?>> nestedTypesToGenerate = new ArrayList<>();
 
         try (FileWriter writer = new FileWriter(file)) {
+        	
             writer.write(VERSION_XML);
             writer.write(DOCTYPE);
             writer.write("<mapper namespace=\"" + namespace + "\">\n\n");
 
             resultMapBuffer.append("    <resultMap id=\"defaultResultMap\" type=\"" + clazz.getName() + "\">\n");
+            
             for (Field field : clazz.getDeclaredFields()) {
+            	
                 Class<?> fieldType = field.getType();
                 String propertyName = field.getName();
 
                 if (propertyName.equals("id") && fieldType.getSimpleName().endsWith("Id")) {
+                	
                     for (Field idField : fieldType.getDeclaredFields()) {
                         resultMapBuffer.append("        <result column=\"" + StringUtils.camelToSnake(idField.getName()) + "\" property=\"id." + idField.getName() + "\" />\n");
                     }
-                } else if (isPrimaryKeySimple(baseName, propertyName)) {
-                    resultMapBuffer.append("        <id column=\"" + StringUtils.camelToSnake(propertyName) + "\" property=\"" + propertyName + "\"/>\n");
+                    
+                } else if (propertyName.equals("id") && isSimple(fieldType)) {
+                	
+                    resultMapBuffer.append("        <id     column=\"" + getColumnPrimaryKey(baseName) + "\" property=\"" + propertyName + "\"/>\n");
+                    
                 } else if (isSimple(fieldType)) {
+                	
                     resultMapBuffer.append("        <result column=\"" + StringUtils.camelToSnake(propertyName) + "\" property=\"" + propertyName + "\"/>\n");
+                    
                 } else if (fieldType.getSimpleName().endsWith("Data")) {
+                	
                     String nestedMap = fieldType.getSimpleName().replace("Data", "") + "Map";
-                    resultMapBuffer.append("        <association property=\"" + propertyName + "\" javaType=\""
-                            + fieldType.getName() + "\" resultMap=\"" + nestedMap + "\" />\n");
+                    resultMapBuffer.append("        <association property=\"" + propertyName + "\" javaType=\"" + fieldType.getName() + "\" resultMap=\"" + nestedMap + "\" />\n");
                     nestedTypesToGenerate.add(fieldType);
                 }
             }
+            
             resultMapBuffer.append("    </resultMap>\n\n");
 
             writer.write(resultMapBuffer.toString());
@@ -99,34 +109,46 @@ public class XmlGenerator {
             for (Class<?> nested : nestedTypesToGenerate) {
                 generateNestedResultMap(nestedMapsBuffer, nested, generatedMaps);
             }
+            
             writer.write(nestedMapsBuffer.toString());
 
-            Class<?> type = null;
-            String fieldName = null;
-            for (Field field : clazz.getDeclaredFields()) {
-                if (isPrimaryKeySimple(baseName, field.getName())) {
-                    type = field.getType();
-                    fieldName = field.getName();
-                    break;
-                } else if (field.getName().equals("id") && field.getType().getSimpleName().endsWith("Id")) {
-                    type = field.getType();
-                    break;
-                }
-            }
+			Class<?> type = null;
+			String fieldName = null;
+			
+			for (Field field : clazz.getDeclaredFields()) {
+				if (field.getName().equals("id")) {
+					if (isSimple(field.getType())) {
+						type = field.getType();
+						fieldName = field.getName();
+						break;
+					} else if(field.getType().getSimpleName().endsWith("Id")){
+						type = field.getType();
+						break;
+					}
+				}
+			}
 
             writer.write("    <select id=\"findById\" resultMap=\"defaultResultMap\" parameterType=\"" + type.getName() + "\">\n");
             writer.write("        SELECT * FROM " + tableName + " WHERE ");
+            
             if (isSimple(type)) {
-                writer.write(StringUtils.camelToSnake(fieldName) + " = #{" + fieldName + "}\n");
+            	
+                writer.write(getColumnPrimaryKey(baseName) + " = #{" + fieldName + "}\n");
+                
             } else {
+            	
                 Field[] idFields = Class.forName(type.getName()).getDeclaredFields();
+                
                 for (int i = 0; i < idFields.length; i++) {
                     Field f = idFields[i];
                     writer.write(StringUtils.camelToSnake(f.getName()) + " = #{id." + f.getName() + "}");
                     if (i < idFields.length - 1) writer.write(" AND ");
                 }
+                
                 writer.write("\n");
+                
             }
+            
             writer.write("    </select>\n\n");
 
             writer.write("    <select id=\"findAll\" resultMap=\"defaultResultMap\">\n");
@@ -200,5 +222,15 @@ public class XmlGenerator {
         if (primaryKeys == null || primaryKeys.isEmpty()) return false;
         String fieldName = StringUtils.camelCase(primaryKeys.getFirst());
         return propertyName.equals(fieldName);
+    }
+    
+    /**
+     * @param baseName
+     * @return
+     */
+    private String getColumnPrimaryKey(String baseName) {
+        List<String> primaryKeys = mapPrimaryKeys.get(baseName);
+        if (primaryKeys == null || primaryKeys.isEmpty()) return null;
+        return primaryKeys.getFirst();
     }
 }

@@ -254,18 +254,19 @@ public class DataGenerator {
             if (primaryKeys.size() > 1 && primaryKeys.contains(column.name)) {
                 continue;
             }
+            
             if (foreignKeys.containsKey(column.name)) {
                 continue;
             }
 
-            String fieldName = StringUtils.camelCase(column.name);
+            String fieldName = primaryKeys.contains(column.name) ? "id" : StringUtils.camelCase(column.name);
             String javaTypeName = TypeMapper.toJavaType(column.sqlTypeName);
             ClassName typeClass = TypeMapper.resolveType(javaTypeName);
 
             FieldSpec.Builder fieldBuilder = FieldSpec.builder(typeClass, fieldName, Modifier.PRIVATE);
 
             // Comentário Javadoc com o nome original da coluna
-            fieldBuilder.addJavadoc("Coluna: $L\n", column.name);
+            //fieldBuilder.addJavadoc("Coluna: $L\n", column.name);
 
             // @NotNull se não for anulável
             if (!column.nullable) {
