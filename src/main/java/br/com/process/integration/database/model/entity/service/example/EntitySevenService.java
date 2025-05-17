@@ -14,33 +14,33 @@ import br.com.process.integration.database.model.entity.dto.example.EntitySevenI
 @Service
 @Transactional
 public class EntitySevenService extends AbstractJpaService<EntitySeven, EntitySeven, EntitySevenId> {
-	
-    @Autowired
-    private PagedResourcesAssembler<EntitySeven> pagedResourcesAssembler;
 
-    protected EntitySevenService() {
-        super(QueryJpaController.class, EntitySeven.class);
-    }
+	@Autowired
+	private PagedResourcesAssembler<EntitySeven> pagedResourcesAssembler;
 
-    @Override
-    public EntitySeven toModel(EntitySeven entity) {
-        EntitySeven model = new EntitySeven();
-        BeanUtils.copyProperties(entity, model);
-        return model;
-    }
+	protected EntitySevenService() {
+		super(QueryJpaController.class, EntitySeven.class);
+	}
 
-    @Override
-    public void setId(EntitySevenId id) {
-        this.id = id;
-    }
+	@Override
+	public EntitySeven toModel(EntitySeven entity) {
+		EntitySeven model = new EntitySeven();
+		BeanUtils.copyProperties(entity, model);
+		return model;
+	}
 
-    @Override
-    public void setEntity(EntitySeven entity) {
-        this.entity = entity;
-    }
+	@Override
+	public void setId(EntitySevenId id) {
+		this.id = id;
+	}
 
-    @Override
-    public void setPagedModel() {
-        pagedModel = pagedResourcesAssembler.toModel(pages, this);
-    }
+	@Override
+	public void setEntity(EntitySeven entity) {
+		this.entity = entity;
+	}
+
+	@Override
+	public void setPagedModel() {
+		pagedModel = pagedResourcesAssembler.toModel(pages, this);
+	}
 }

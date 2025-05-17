@@ -11,8 +11,8 @@ import br.com.process.integration.database.model.data.dto.example.EntityTreeData
 
 @Mapper
 public interface EntityTreeDataMapper extends DataMapper<EntityTreeData> {
-	
-    List<EntityTreeData> findAll();
 
-    EntityTreeData findById(@Param("idEntityTree") UUID idEntityTree);
+	List<EntityTreeData> findAll();
+
+	EntityTreeData findById(@Param("id") UUID id);
 }

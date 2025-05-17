@@ -14,7 +14,7 @@ import br.com.process.integration.database.model.data.mapper.example.EntityNineD
 @Service
 @Transactional
 public class EntityNineDataService extends AbstractDataService<EntityNineData> {
-	
+
 	@Autowired
 	private PagedResourcesAssembler<EntityNineData> pagedResourcesAssembler;
 

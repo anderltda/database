@@ -12,33 +12,24 @@ import jakarta.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EntityEightData extends RepresentationModel<EntityEightData> implements BeanData<EntityEightData> {
 	
-	/**
-	 * Coluna: id_entity_eight
-	 */
 	@NotNull
-	private Long idEntityEight;
+	private Long id;
 
-	/**
-	 * Coluna: position
-	 */
 	@NotNull
 	@Size(max = 100)
 	private String position;
 
-	/**
-	 * Coluna: properties
-	 */
 	@Size(max = 100)
 	private String properties;
 
 	private EntitySevenData entitySevenData;
 
-	public Long getIdEntityEight() {
-		return this.idEntityEight;
+	public Long getId() {
+		return this.id;
 	}
 
-	public void setIdEntityEight(Long idEntityEight) {
-		this.idEntityEight = idEntityEight;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getPosition() {
@@ -78,21 +69,20 @@ public class EntityEightData extends RepresentationModel<EntityEightData> implem
 		if (o == null || getClass() != o.getClass())
 			return false;
 		EntityEightData other = (EntityEightData) o;
-		return java.util.Objects.equals(idEntityEight, other.idEntityEight)
-				&& java.util.Objects.equals(position, other.position)
+		return java.util.Objects.equals(id, other.id) && java.util.Objects.equals(position, other.position)
 				&& java.util.Objects.equals(properties, other.properties)
 				&& java.util.Objects.equals(entitySevenData, other.entitySevenData);
 	}
 
 	@Override
 	public int hashCode() {
-		return java.util.Objects.hash(idEntityEight, position, properties, entitySevenData);
+		return java.util.Objects.hash(id, position, properties, entitySevenData);
 	}
 
 	@Override
 	public String toString() {
-		return "EntityEightData{" + "idEntityEight=" + (idEntityEight != null ? idEntityEight.toString() : "null")
-				+ ", " + "position=" + (position != null ? position.toString() : "null") + ", " + "properties="
+		return "EntityEightData{" + "id=" + (id != null ? id.toString() : "null") + ", " + "position="
+				+ (position != null ? position.toString() : "null") + ", " + "properties="
 				+ (properties != null ? properties.toString() : "null") + ", " + "entitySevenData="
 				+ (entitySevenData != null ? entitySevenData.toString() : "null") + '}';
 	}

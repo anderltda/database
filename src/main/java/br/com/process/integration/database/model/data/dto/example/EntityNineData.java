@@ -14,22 +14,13 @@ public class EntityNineData extends RepresentationModel<EntityNineData> implemen
 
 	private EntityNineId id;
 
-	/**
-	 * Coluna: key_nine
-	 */
 	@NotNull
 	@Size(max = 100)
 	private String keyNine;
 
-	/**
-	 * Coluna: code
-	 */
 	@Size(max = 100)
 	private String code;
 
-	/**
-	 * Coluna: variable
-	 */
 	@Size(max = 100)
 	private String variable;
 

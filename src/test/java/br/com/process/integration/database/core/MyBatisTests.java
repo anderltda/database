@@ -134,7 +134,7 @@ class MyBatisTests {
 
 		EntityOneData data = getSingleResult(url, new ErrorResponse());
 
-		assertNotNull(data.getIdEntityOne());
+		assertNotNull(data.getId());
 		assertEquals("Anderson", data.getName());
 		assertEquals(41, data.getAge());
 		assertEquals(1.93, data.getHeight());
@@ -329,7 +329,7 @@ class MyBatisTests {
 		assertNotNull(list);
 		
 		for (EntityTwoData entityTwoData : list) {
-			id = entityTwoData.getIdEntityTwo().toString();
+			id = entityTwoData.getId().toString();
 		}
 		
 		url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/by-id/entityTwoData/" + id;
@@ -352,7 +352,7 @@ class MyBatisTests {
 		assertNotNull(list);
 		
 		for (EntityStatusData entityStatusData : list) {
-			id = entityStatusData.getIdEntityStatus();
+			id = entityStatusData.getId();
 		}
 		
 		url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/by-id/entityStatusData/" + id;

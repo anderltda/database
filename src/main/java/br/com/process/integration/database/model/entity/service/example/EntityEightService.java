@@ -13,7 +13,7 @@ import br.com.process.integration.database.model.entity.dto.example.EntityEight;
 @Service
 @Transactional
 public class EntityEightService extends AbstractJpaService<EntityEight, EntityEight, Long> {
-	
+
 	@Autowired
 	private PagedResourcesAssembler<EntityEight> pagedResourcesAssembler;
 

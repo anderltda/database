@@ -11,8 +11,8 @@ import br.com.process.integration.database.model.data.dto.example.EntitySevenId;
 
 @Mapper
 public interface EntitySevenDataMapper extends DataMapper<EntitySevenData> {
-	
-    List<EntitySevenData> findAll();
 
-    EntitySevenData findById(@Param("id") EntitySevenId id);
+	List<EntitySevenData> findAll();
+
+	EntitySevenData findById(@Param("id") EntitySevenId id);
 }

@@ -29,7 +29,7 @@ import br.com.process.integration.database.core.util.Constants;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EntityOneView extends RepresentationModel<EntityOneView> implements BeanView<EntityOneView> {
-
+	
 	/**
 	 * from entity_one
 	 */

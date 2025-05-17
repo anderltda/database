@@ -13,5 +13,5 @@ public interface EntitySixDataMapper extends DataMapper<EntitySixData> {
 
 	List<EntitySixData> findAll();
 
-	EntitySixData findById(@Param("idEntitySix") Long idEntitySix);
+	EntitySixData findById(@Param("id") Long id);
 }

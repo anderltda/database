@@ -12,9 +12,6 @@ public class EntitySevenData extends RepresentationModel<EntitySevenData> implem
 
 	private EntitySevenId id;
 
-	/**
-	 * Coluna: dado
-	 */
 	private String dado;
 
 	private EntitySixData entitySixData;

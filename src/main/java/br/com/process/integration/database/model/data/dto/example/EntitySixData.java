@@ -16,39 +16,27 @@ import jakarta.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EntitySixData extends RepresentationModel<EntitySixData> implements BeanData<EntitySixData> {
 
-	/**
-	 * Coluna: id_entity_six
-	 */
 	@NotNull
-	private Long idEntitySix;
+	private Long id;
 
-	/**
-	 * Coluna: package_name
-	 */
 	@NotNull
 	@Size(max = 100)
 	private String packageName;
 
-	/**
-	 * Coluna: start_date
-	 */
 	@NotNull
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_FORMAT)
 	private LocalDate startDate;
 
-	/**
-	 * Coluna: stop_date
-	 */
 	@NotNull
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_FORMAT)
 	private LocalDate stopDate;
 
-	public Long getIdEntitySix() {
-		return this.idEntitySix;
+	public Long getId() {
+		return this.id;
 	}
 
-	public void setIdEntitySix(Long idEntitySix) {
-		this.idEntitySix = idEntitySix;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getPackageName() {
@@ -88,21 +76,20 @@ public class EntitySixData extends RepresentationModel<EntitySixData> implements
 		if (o == null || getClass() != o.getClass())
 			return false;
 		EntitySixData other = (EntitySixData) o;
-		return java.util.Objects.equals(idEntitySix, other.idEntitySix)
-				&& java.util.Objects.equals(packageName, other.packageName)
+		return java.util.Objects.equals(id, other.id) && java.util.Objects.equals(packageName, other.packageName)
 				&& java.util.Objects.equals(startDate, other.startDate)
 				&& java.util.Objects.equals(stopDate, other.stopDate);
 	}
 
 	@Override
 	public int hashCode() {
-		return java.util.Objects.hash(idEntitySix, packageName, startDate, stopDate);
+		return java.util.Objects.hash(id, packageName, startDate, stopDate);
 	}
 
 	@Override
 	public String toString() {
-		return "EntitySixData{" + "idEntitySix=" + (idEntitySix != null ? idEntitySix.toString() : "null") + ", "
-				+ "packageName=" + (packageName != null ? packageName.toString() : "null") + ", " + "startDate="
+		return "EntitySixData{" + "id=" + (id != null ? id.toString() : "null") + ", " + "packageName="
+				+ (packageName != null ? packageName.toString() : "null") + ", " + "startDate="
 				+ (startDate != null ? startDate.toString() : "null") + ", " + "stopDate="
 				+ (stopDate != null ? stopDate.toString() : "null") + '}';
 	}

@@ -17,94 +17,78 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@JsonIgnoreProperties(
-        ignoreUnknown = true
-)
-@Table(
-        name = "entity_five"
-)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Table(name = "entity_five")
 public class EntityFive extends RepresentationModel<EntityFive> implements BeanEntity<UUID> {
-    @Id
-    @GeneratedValue(
-            strategy = GenerationType.UUID
-    )
-    @Column(
-            name = "id_entity_five"
-    )
-    private UUID id;
 
-    @Column(
-            name = "factor",
-            nullable = false
-    )
-    private Integer factor;
+	@Id
+	@GeneratedValue(strategy = GenerationType.UUID)
+	@Column(name = "id_entity_five")
+	private UUID id;
 
-    @Column(
-            name = "reference",
-            nullable = false,
-            length = 255
-    )
-    private String reference;
+	@Column(name = "factor", nullable = false)
+	private Integer factor;
 
-    @ManyToOne
-    @JoinColumn(
-            name = "id_entity_status",
-            referencedColumnName = "id_entity_status"
-    )
-    private EntityStatus entityStatus;
+	@Column(name = "reference", nullable = false, length = 255)
+	private String reference;
 
-    @Override
-    public UUID getId() {
-        return this.id;
-    }
+	@ManyToOne
+	@JoinColumn(name = "id_entity_status", referencedColumnName = "id_entity_status")
+	private EntityStatus entityStatus;
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+	@Override
+	public UUID getId() {
+		return this.id;
+	}
 
-    public Integer getFactor() {
-        return this.factor;
-    }
+	public void setId(UUID id) {
+		this.id = id;
+	}
 
-    public void setFactor(Integer factor) {
-        this.factor = factor;
-    }
+	public Integer getFactor() {
+		return this.factor;
+	}
 
-    public String getReference() {
-        return this.reference;
-    }
+	public void setFactor(Integer factor) {
+		this.factor = factor;
+	}
 
-    public void setReference(String reference) {
-        this.reference = reference;
-    }
+	public String getReference() {
+		return this.reference;
+	}
 
-    public EntityStatus getEntityStatus() {
-        return this.entityStatus;
-    }
+	public void setReference(String reference) {
+		this.reference = reference;
+	}
 
-    public void setEntityStatus(EntityStatus entityStatus) {
-        this.entityStatus = entityStatus;
-    }
+	public EntityStatus getEntityStatus() {
+		return this.entityStatus;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        EntityFive that = (EntityFive) o;
-        return java.util.Objects.equals(id, that.id);
-    }
+	public void setEntityStatus(EntityStatus entityStatus) {
+		this.entityStatus = entityStatus;
+	}
 
-    @Override
-    public int hashCode() {
-        return java.util.Objects.hash(id);
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		EntityFive that = (EntityFive) o;
+		return java.util.Objects.equals(id, that.id);
+	}
 
-    @Override
-    public String toString() {
-        return "EntityFive{" +
-        "id=" + (id != null ? id.toString() : "null") + ", " +
-        "factor=" + (factor != null ? factor.toString() : "null") + ", " +
-        "reference=" + (reference != null ? reference.toString() : "null") + ", " +
-        "entityStatus=" + (entityStatus != null ? entityStatus.toString() : "null") + '}';
-    }
+	@Override
+	public int hashCode() {
+		return java.util.Objects.hash(id);
+	}
+
+	@Override
+	public String toString() {
+		return "EntityFive{" + "id=" + (id != null ? id.toString() : "null") + ", " + "factor="
+				+ (factor != null ? factor.toString() : "null") + ", " + "reference="
+				+ (reference != null ? reference.toString() : "null") + ", " + "entityStatus="
+				+ (entityStatus != null ? entityStatus.toString() : "null") + '}';
+	}
 }

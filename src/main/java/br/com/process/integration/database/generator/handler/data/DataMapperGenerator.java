@@ -63,6 +63,7 @@ public class DataMapperGenerator {
 	 * @throws Exception
 	 */
 	private String generateMapperClass(String table) throws Exception {
+		
 		String dataClassName = capitalizeCamel(table) + "Data";
 		String mapperClassName = dataClassName + Mapper.class.getSimpleName();
 
@@ -75,14 +76,13 @@ public class DataMapperGenerator {
 				.addAnnotation(mapperAnnotation)
 				.addSuperinterface(ParameterizedTypeName.get(dataMapper, dataClass));
 
-		// findAll
 		interfaceBuilder.addMethod(MethodSpec.methodBuilder("findAll")
 				.addModifiers(Modifier.PUBLIC, Modifier.ABSTRACT)
 				.returns(ParameterizedTypeName.get(ClassName.get(List.class), dataClass))
 				.build());
 
-		// findById
 		try {
+			
 			Class<?> dtoClass = Class.forName(packageDto + "." + dataClassName);
 			Field idField = dtoClass.getDeclaredFields()[0];
 			Class<?> idType = idField.getType();

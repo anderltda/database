@@ -17,46 +17,25 @@ import jakarta.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EntityOneData extends RepresentationModel<EntityOneData> implements BeanData<EntityOneData> {
 
-	/**
-	 * Coluna: id_entity_one
-	 */
 	@NotNull
-	private Long idEntityOne;
+	private Long id;
 
-	/**
-	 * Coluna: age
-	 */
 	private Integer age;
 
-	/**
-	 * Coluna: birth_date
-	 */
 	@NotNull
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_FORMAT)
 	private LocalDate birthDate;
 
-	/**
-	 * Coluna: code
-	 */
 	@NotNull
 	private Boolean code;
 
-	/**
-	 * Coluna: height
-	 */
 	@NotNull
 	private Double height;
 
-	/**
-	 * Coluna: name
-	 */
 	@NotNull
 	@Size(max = 255)
 	private String name;
 
-	/**
-	 * Coluna: prohibited_date_time
-	 */
 	@NotNull
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_TIME_FORMAT)
 	private LocalDateTime prohibitedDateTime;
@@ -65,12 +44,12 @@ public class EntityOneData extends RepresentationModel<EntityOneData> implements
 
 	private EntityTwoData entityTwoData;
 
-	public Long getIdEntityOne() {
-		return this.idEntityOne;
+	public Long getId() {
+		return this.id;
 	}
 
-	public void setIdEntityOne(Long idEntityOne) {
-		this.idEntityOne = idEntityOne;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public Integer getAge() {
@@ -150,7 +129,7 @@ public class EntityOneData extends RepresentationModel<EntityOneData> implements
 		if (o == null || getClass() != o.getClass())
 			return false;
 		EntityOneData other = (EntityOneData) o;
-		return java.util.Objects.equals(idEntityOne, other.idEntityOne) && java.util.Objects.equals(age, other.age)
+		return java.util.Objects.equals(id, other.id) && java.util.Objects.equals(age, other.age)
 				&& java.util.Objects.equals(birthDate, other.birthDate) && java.util.Objects.equals(code, other.code)
 				&& java.util.Objects.equals(height, other.height) && java.util.Objects.equals(name, other.name)
 				&& java.util.Objects.equals(prohibitedDateTime, other.prohibitedDateTime)
@@ -160,14 +139,14 @@ public class EntityOneData extends RepresentationModel<EntityOneData> implements
 
 	@Override
 	public int hashCode() {
-		return java.util.Objects.hash(idEntityOne, age, birthDate, code, height, name, prohibitedDateTime,
-				entityStatusData, entityTwoData);
+		return java.util.Objects.hash(id, age, birthDate, code, height, name, prohibitedDateTime, entityStatusData,
+				entityTwoData);
 	}
 
 	@Override
 	public String toString() {
-		return "EntityOneData{" + "idEntityOne=" + (idEntityOne != null ? idEntityOne.toString() : "null") + ", "
-				+ "age=" + (age != null ? age.toString() : "null") + ", " + "birthDate="
+		return "EntityOneData{" + "id=" + (id != null ? id.toString() : "null") + ", " + "age="
+				+ (age != null ? age.toString() : "null") + ", " + "birthDate="
 				+ (birthDate != null ? birthDate.toString() : "null") + ", " + "code="
 				+ (code != null ? code.toString() : "null") + ", " + "height="
 				+ (height != null ? height.toString() : "null") + ", " + "name="

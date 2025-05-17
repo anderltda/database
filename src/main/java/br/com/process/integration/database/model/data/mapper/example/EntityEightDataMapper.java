@@ -10,8 +10,8 @@ import br.com.process.integration.database.model.data.dto.example.EntityEightDat
 
 @Mapper
 public interface EntityEightDataMapper extends DataMapper<EntityEightData> {
-	
-    List<EntityEightData> findAll();
 
-    EntityEightData findById(@Param("idEntityEight") Long idEntityEight);
+	List<EntityEightData> findAll();
+
+	EntityEightData findById(@Param("id") Long id);
 }

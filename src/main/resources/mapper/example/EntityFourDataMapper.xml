@@ -3,7 +3,7 @@
 <mapper namespace="br.com.process.integration.database.model.data.mapper.example.EntityFourDataMapper">
 
     <resultMap id="defaultResultMap" type="br.com.process.integration.database.model.data.dto.example.EntityFourData">
-        <id column="id_entity_four" property="idEntityFour"/>
+        <id     column="id_entity_four" property="id"/>
         <result column="attribute" property="attribute"/>
         <result column="fruit" property="fruit"/>
         <result column="inclusion_date_time" property="inclusionDateTime"/>
@@ -12,14 +12,14 @@
     </resultMap>
 
     <resultMap id="EntityFiveMap" type="br.com.process.integration.database.model.data.dto.example.EntityFiveData">
-        <id column="id_entity_five" property="idEntityFive"/>
+        <id     column="id_entity_five" property="id"/>
         <result column="factor" property="factor"/>
         <result column="reference" property="reference"/>
         <association property="entityStatusData" javaType="br.com.process.integration.database.model.data.dto.example.EntityStatusData" resultMap="EntityStatusMap" />
     </resultMap>
 
     <resultMap id="EntityStatusMap" type="br.com.process.integration.database.model.data.dto.example.EntityStatusData">
-        <id column="id_entity_status" property="idEntityStatus"/>
+        <id     column="id_entity_status" property="id"/>
         <result column="ativo" property="ativo"/>
         <result column="name" property="name"/>
         <result column="start_date_time" property="startDateTime"/>
@@ -27,7 +27,7 @@
     </resultMap>
 
     <select id="findById" resultMap="defaultResultMap" parameterType="java.util.UUID">
-        SELECT * FROM entity_four WHERE id_entity_four = #{idEntityFour}
+        SELECT * FROM entity_four WHERE id_entity_four = #{id}
     </select>
 
     <select id="findAll" resultMap="defaultResultMap">

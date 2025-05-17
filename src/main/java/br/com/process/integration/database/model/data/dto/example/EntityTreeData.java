@@ -18,40 +18,22 @@ import jakarta.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EntityTreeData extends RepresentationModel<EntityTreeData> implements BeanData<EntityTreeData> {
 
-	/**
-	 * Coluna: id_entity_tree
-	 */
 	@NotNull
-	private UUID idEntityTree;
+	private UUID id;
 
-	/**
-	 * Coluna: amount
-	 */
 	@NotNull
 	private Double amount;
 
-	/**
-	 * Coluna: animal
-	 */
 	@NotNull
 	@Size(max = 255)
 	private String animal;
 
-	/**
-	 * Coluna: indicator
-	 */
 	private Integer indicator;
 
-	/**
-	 * Coluna: local_date
-	 */
 	@NotNull
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_FORMAT)
 	private LocalDate localDate;
 
-	/**
-	 * Coluna: local_date_time
-	 */
 	@NotNull
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_TIME_FORMAT)
 	private LocalDateTime localDateTime;
@@ -60,12 +42,12 @@ public class EntityTreeData extends RepresentationModel<EntityTreeData> implemen
 
 	private EntityStatusData entityStatusData;
 
-	public UUID getIdEntityTree() {
-		return this.idEntityTree;
+	public UUID getId() {
+		return this.id;
 	}
 
-	public void setIdEntityTree(UUID idEntityTree) {
-		this.idEntityTree = idEntityTree;
+	public void setId(UUID id) {
+		this.id = id;
 	}
 
 	public Double getAmount() {
@@ -137,8 +119,8 @@ public class EntityTreeData extends RepresentationModel<EntityTreeData> implemen
 		if (o == null || getClass() != o.getClass())
 			return false;
 		EntityTreeData other = (EntityTreeData) o;
-		return java.util.Objects.equals(idEntityTree, other.idEntityTree)
-				&& java.util.Objects.equals(amount, other.amount) && java.util.Objects.equals(animal, other.animal)
+		return java.util.Objects.equals(id, other.id) && java.util.Objects.equals(amount, other.amount)
+				&& java.util.Objects.equals(animal, other.animal)
 				&& java.util.Objects.equals(indicator, other.indicator)
 				&& java.util.Objects.equals(localDate, other.localDate)
 				&& java.util.Objects.equals(localDateTime, other.localDateTime)
@@ -148,14 +130,14 @@ public class EntityTreeData extends RepresentationModel<EntityTreeData> implemen
 
 	@Override
 	public int hashCode() {
-		return java.util.Objects.hash(idEntityTree, amount, animal, indicator, localDate, localDateTime, entityFourData,
+		return java.util.Objects.hash(id, amount, animal, indicator, localDate, localDateTime, entityFourData,
 				entityStatusData);
 	}
 
 	@Override
 	public String toString() {
-		return "EntityTreeData{" + "idEntityTree=" + (idEntityTree != null ? idEntityTree.toString() : "null") + ", "
-				+ "amount=" + (amount != null ? amount.toString() : "null") + ", " + "animal="
+		return "EntityTreeData{" + "id=" + (id != null ? id.toString() : "null") + ", " + "amount="
+				+ (amount != null ? amount.toString() : "null") + ", " + "animal="
 				+ (animal != null ? animal.toString() : "null") + ", " + "indicator="
 				+ (indicator != null ? indicator.toString() : "null") + ", " + "localDate="
 				+ (localDate != null ? localDate.toString() : "null") + ", " + "localDateTime="

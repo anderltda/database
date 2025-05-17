@@ -180,18 +180,25 @@ public class XmlGenerator {
             String propertyName = field.getName();
 
             if (propertyName.equals("id") && fieldType.getSimpleName().endsWith("Id")) {
+            	
                 for (Field idField : fieldType.getDeclaredFields()) {
                     buffer.append("        <result column=\"" + StringUtils.camelToSnake(idField.getName()) + "\" property=\"id." + idField.getName() + "\" />\n");
                 }
-            } else if (isPrimaryKeySimple(baseName, propertyName)) {
-                buffer.append("        <id column=\"" + StringUtils.camelToSnake(propertyName) + "\" property=\"" + propertyName + "\"/>\n");
+                
+            } else if (propertyName.equals("id") && isSimple(fieldType)) {
+            	
+                buffer.append("        <id     column=\"" + getColumnPrimaryKey(baseName) + "\" property=\"" + propertyName + "\"/>\n");
+                
             } else if (isSimple(fieldType)) {
+            	
                 buffer.append("        <result column=\"" + StringUtils.camelToSnake(propertyName) + "\" property=\"" + propertyName + "\"/>\n");
+                
             } else if (fieldType.getSimpleName().endsWith("Data")) {
+            	
                 String nestedMap = fieldType.getSimpleName().replace("Data", "") + "Map";
-                buffer.append("        <association property=\"" + propertyName + "\" javaType=\""
-                        + fieldType.getName() + "\" resultMap=\"" + nestedMap + "\" />\n");
+                buffer.append("        <association property=\"" + propertyName + "\" javaType=\"" + fieldType.getName() + "\" resultMap=\"" + nestedMap + "\" />\n");
                 innerNestedTypes.add(fieldType);
+                
             }
         }
         buffer.append("    </resultMap>\n\n");
@@ -212,18 +219,6 @@ public class XmlGenerator {
                 || type == java.util.UUID.class;
     }
 
-    /**
-     * @param baseName
-     * @param propertyName
-     * @return
-     */
-    private boolean isPrimaryKeySimple(String baseName, String propertyName) {
-        List<String> primaryKeys = mapPrimaryKeys.get(baseName);
-        if (primaryKeys == null || primaryKeys.isEmpty()) return false;
-        String fieldName = StringUtils.camelCase(primaryKeys.getFirst());
-        return propertyName.equals(fieldName);
-    }
-    
     /**
      * @param baseName
      * @return

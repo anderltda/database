@@ -17,33 +17,18 @@ import jakarta.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EntityTwoData extends RepresentationModel<EntityTwoData> implements BeanData<EntityTwoData> {
 
-	/**
-	 * Coluna: id_entity_two
-	 */
 	@NotNull
-	private UUID idEntityTwo;
+	private UUID id;
 
-	/**
-	 * Coluna: color
-	 */
 	@NotNull
 	@Size(max = 255)
 	private String color;
 
-	/**
-	 * Coluna: cost
-	 */
 	@NotNull
 	private Double cost;
 
-	/**
-	 * Coluna: hex
-	 */
 	private Integer hex;
 
-	/**
-	 * Coluna: inclusion_date
-	 */
 	@NotNull
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_FORMAT)
 	private LocalDate inclusionDate;
@@ -52,12 +37,12 @@ public class EntityTwoData extends RepresentationModel<EntityTwoData> implements
 
 	private EntityTreeData entityTreeData;
 
-	public UUID getIdEntityTwo() {
-		return this.idEntityTwo;
+	public UUID getId() {
+		return this.id;
 	}
 
-	public void setIdEntityTwo(UUID idEntityTwo) {
-		this.idEntityTwo = idEntityTwo;
+	public void setId(UUID id) {
+		this.id = id;
 	}
 
 	public String getColor() {
@@ -121,7 +106,7 @@ public class EntityTwoData extends RepresentationModel<EntityTwoData> implements
 		if (o == null || getClass() != o.getClass())
 			return false;
 		EntityTwoData other = (EntityTwoData) o;
-		return java.util.Objects.equals(idEntityTwo, other.idEntityTwo) && java.util.Objects.equals(color, other.color)
+		return java.util.Objects.equals(id, other.id) && java.util.Objects.equals(color, other.color)
 				&& java.util.Objects.equals(cost, other.cost) && java.util.Objects.equals(hex, other.hex)
 				&& java.util.Objects.equals(inclusionDate, other.inclusionDate)
 				&& java.util.Objects.equals(entityStatusData, other.entityStatusData)
@@ -130,13 +115,13 @@ public class EntityTwoData extends RepresentationModel<EntityTwoData> implements
 
 	@Override
 	public int hashCode() {
-		return java.util.Objects.hash(idEntityTwo, color, cost, hex, inclusionDate, entityStatusData, entityTreeData);
+		return java.util.Objects.hash(id, color, cost, hex, inclusionDate, entityStatusData, entityTreeData);
 	}
 
 	@Override
 	public String toString() {
-		return "EntityTwoData{" + "idEntityTwo=" + (idEntityTwo != null ? idEntityTwo.toString() : "null") + ", "
-				+ "color=" + (color != null ? color.toString() : "null") + ", " + "cost="
+		return "EntityTwoData{" + "id=" + (id != null ? id.toString() : "null") + ", " + "color="
+				+ (color != null ? color.toString() : "null") + ", " + "cost="
 				+ (cost != null ? cost.toString() : "null") + ", " + "hex=" + (hex != null ? hex.toString() : "null")
 				+ ", " + "inclusionDate=" + (inclusionDate != null ? inclusionDate.toString() : "null") + ", "
 				+ "entityStatusData=" + (entityStatusData != null ? entityStatusData.toString() : "null") + ", "

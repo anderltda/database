@@ -88,32 +88,56 @@ public class DataServiceGenerator {
 
 		ParameterizedTypeName superClass = ParameterizedTypeName.get(abstractService, dtoClass);
 
-		FieldSpec assemblerField = FieldSpec
-				.builder(ParameterizedTypeName.get(assemblerType, dtoClass), "pagedResourcesAssembler")
-				.addAnnotation(autowired).addModifiers(Modifier.PRIVATE).build();
-
-		MethodSpec constructor = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC)
-				.addParameter(mapperClass, "mapper").addStatement("super($T.class, $T.class)", controllerType, dtoClass)
-				.addStatement("this.mapper = mapper").build();
-
-		MethodSpec toModelMethod = MethodSpec.methodBuilder("toModel").addAnnotation(Override.class)
-				.addModifiers(Modifier.PUBLIC).returns(dtoClass).addParameter(dtoClass, "data")
-				.addStatement("$T model = new $T()", dtoClass, dtoClass)
-				.addStatement("$T.copyProperties(data, model)", beanUtils).addStatement("return model").build();
-
-		MethodSpec setDataMethod = MethodSpec.methodBuilder("setData").addAnnotation(Override.class)
-				.addModifiers(Modifier.PUBLIC).addParameter(dtoClass, "data").addStatement("this.data = data").build();
-
-		MethodSpec setPagedModelMethod = MethodSpec.methodBuilder("setPagedModel").addAnnotation(Override.class)
-				.addModifiers(Modifier.PUBLIC).addStatement("pagedModel = pagedResourcesAssembler.toModel(pages, this)")
+		FieldSpec assemblerField = FieldSpec.builder(ParameterizedTypeName.get(assemblerType, dtoClass), "pagedResourcesAssembler")
+				.addAnnotation(autowired)
+				.addModifiers(Modifier.PRIVATE)
 				.build();
 
-		TypeSpec serviceClass = TypeSpec.classBuilder(serviceClassName).addModifiers(Modifier.PUBLIC)
-				.superclass(superClass).addAnnotation(serviceAnnotation).addAnnotation(transactional)
-				.addField(assemblerField).addMethod(constructor).addMethod(toModelMethod).addMethod(setDataMethod)
+		MethodSpec constructor = MethodSpec.constructorBuilder()
+				.addModifiers(Modifier.PUBLIC)
+				.addParameter(mapperClass, "mapper")
+				.addStatement("super($T.class, $T.class)", controllerType, dtoClass)
+				.addStatement("this.mapper = mapper")
+				.build();
+
+		MethodSpec toModelMethod = MethodSpec.methodBuilder("toModel")
+				.addAnnotation(Override.class)
+				.addModifiers(Modifier.PUBLIC)
+				.returns(dtoClass)
+				.addParameter(dtoClass, "data")
+				.addStatement("$T model = new $T()", dtoClass, dtoClass)
+				.addStatement("$T.copyProperties(data, model)", beanUtils)
+				.addStatement("return model")
+				.build();
+
+		MethodSpec setDataMethod = MethodSpec.methodBuilder("setData")
+				.addAnnotation(Override.class)
+				.addModifiers(Modifier.PUBLIC)
+				.addParameter(dtoClass, "data")
+				.addStatement("this.data = data")
+				.build();
+
+		MethodSpec setPagedModelMethod = MethodSpec.methodBuilder("setPagedModel")
+				.addAnnotation(Override.class)
+				.addModifiers(Modifier.PUBLIC)
+				.addStatement("pagedModel = pagedResourcesAssembler.toModel(pages, this)")
+				.build();
+
+		TypeSpec serviceClass = TypeSpec.classBuilder(serviceClassName)
+				.addModifiers(Modifier.PUBLIC)
+				.superclass(superClass)
+				.addAnnotation(serviceAnnotation)
+				.addAnnotation(transactional)
+				.addField(assemblerField)
+				.addMethod(constructor)
+				.addMethod(toModelMethod)
+				.addMethod(setDataMethod)
 				.addMethod(setPagedModelMethod).build();
 
-		JavaFile javaFile = JavaFile.builder(packageName, serviceClass).skipJavaLangImports(true).indent("    ")
+		JavaFile javaFile = JavaFile
+				.builder(packageName, serviceClass)
+				.skipJavaLangImports(true)
+				.indent("    ")
 				.build();
 
 		javaFile.writeTo(Paths.get("src/main/java"));

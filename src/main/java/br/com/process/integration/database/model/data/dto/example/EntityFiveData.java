@@ -13,34 +13,25 @@ import jakarta.validation.constraints.Size;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EntityFiveData extends RepresentationModel<EntityFiveData> implements BeanData<EntityFiveData> {
-
-	/**
-	 * Coluna: id_entity_five
-	 */
+	
 	@NotNull
-	private UUID idEntityFive;
+	private UUID id;
 
-	/**
-	 * Coluna: factor
-	 */
 	@NotNull
 	private Integer factor;
 
-	/**
-	 * Coluna: reference
-	 */
 	@NotNull
 	@Size(max = 255)
 	private String reference;
 
 	private EntityStatusData entityStatusData;
 
-	public UUID getIdEntityFive() {
-		return this.idEntityFive;
+	public UUID getId() {
+		return this.id;
 	}
 
-	public void setIdEntityFive(UUID idEntityFive) {
-		this.idEntityFive = idEntityFive;
+	public void setId(UUID id) {
+		this.id = id;
 	}
 
 	public Integer getFactor() {
@@ -80,21 +71,20 @@ public class EntityFiveData extends RepresentationModel<EntityFiveData> implemen
 		if (o == null || getClass() != o.getClass())
 			return false;
 		EntityFiveData other = (EntityFiveData) o;
-		return java.util.Objects.equals(idEntityFive, other.idEntityFive)
-				&& java.util.Objects.equals(factor, other.factor)
+		return java.util.Objects.equals(id, other.id) && java.util.Objects.equals(factor, other.factor)
 				&& java.util.Objects.equals(reference, other.reference)
 				&& java.util.Objects.equals(entityStatusData, other.entityStatusData);
 	}
 
 	@Override
 	public int hashCode() {
-		return java.util.Objects.hash(idEntityFive, factor, reference, entityStatusData);
+		return java.util.Objects.hash(id, factor, reference, entityStatusData);
 	}
 
 	@Override
 	public String toString() {
-		return "EntityFiveData{" + "idEntityFive=" + (idEntityFive != null ? idEntityFive.toString() : "null") + ", "
-				+ "factor=" + (factor != null ? factor.toString() : "null") + ", " + "reference="
+		return "EntityFiveData{" + "id=" + (id != null ? id.toString() : "null") + ", " + "factor="
+				+ (factor != null ? factor.toString() : "null") + ", " + "reference="
 				+ (reference != null ? reference.toString() : "null") + ", " + "entityStatusData="
 				+ (entityStatusData != null ? entityStatusData.toString() : "null") + '}';
 	}

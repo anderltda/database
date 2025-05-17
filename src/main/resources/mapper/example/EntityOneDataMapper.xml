@@ -3,7 +3,7 @@
 <mapper namespace="br.com.process.integration.database.model.data.mapper.example.EntityOneDataMapper">
 
     <resultMap id="defaultResultMap" type="br.com.process.integration.database.model.data.dto.example.EntityOneData">
-        <id column="id_entity_one" property="idEntityOne"/>
+        <id     column="id_entity_one" property="id"/>
         <result column="age" property="age"/>
         <result column="birth_date" property="birthDate"/>
         <result column="code" property="code"/>
@@ -15,7 +15,7 @@
     </resultMap>
 
     <resultMap id="EntityStatusMap" type="br.com.process.integration.database.model.data.dto.example.EntityStatusData">
-        <id column="id_entity_status" property="idEntityStatus"/>
+        <id     column="id_entity_status" property="id"/>
         <result column="ativo" property="ativo"/>
         <result column="name" property="name"/>
         <result column="start_date_time" property="startDateTime"/>
@@ -23,7 +23,7 @@
     </resultMap>
 
     <resultMap id="EntityTwoMap" type="br.com.process.integration.database.model.data.dto.example.EntityTwoData">
-        <id column="id_entity_two" property="idEntityTwo"/>
+        <id     column="id_entity_two" property="id"/>
         <result column="color" property="color"/>
         <result column="cost" property="cost"/>
         <result column="hex" property="hex"/>
@@ -33,7 +33,7 @@
     </resultMap>
 
     <resultMap id="EntityTreeMap" type="br.com.process.integration.database.model.data.dto.example.EntityTreeData">
-        <id column="id_entity_tree" property="idEntityTree"/>
+        <id     column="id_entity_tree" property="id"/>
         <result column="amount" property="amount"/>
         <result column="animal" property="animal"/>
         <result column="indicator" property="indicator"/>
@@ -44,7 +44,7 @@
     </resultMap>
 
     <resultMap id="EntityFourMap" type="br.com.process.integration.database.model.data.dto.example.EntityFourData">
-        <id column="id_entity_four" property="idEntityFour"/>
+        <id     column="id_entity_four" property="id"/>
         <result column="attribute" property="attribute"/>
         <result column="fruit" property="fruit"/>
         <result column="inclusion_date_time" property="inclusionDateTime"/>
@@ -53,14 +53,14 @@
     </resultMap>
 
     <resultMap id="EntityFiveMap" type="br.com.process.integration.database.model.data.dto.example.EntityFiveData">
-        <id column="id_entity_five" property="idEntityFive"/>
+        <id     column="id_entity_five" property="id"/>
         <result column="factor" property="factor"/>
         <result column="reference" property="reference"/>
         <association property="entityStatusData" javaType="br.com.process.integration.database.model.data.dto.example.EntityStatusData" resultMap="EntityStatusMap" />
     </resultMap>
 
     <select id="findById" resultMap="defaultResultMap" parameterType="java.lang.Long">
-        SELECT * FROM entity_one WHERE id_entity_one = #{idEntityOne}
+        SELECT * FROM entity_one WHERE id_entity_one = #{id}
     </select>
 
     <select id="findAll" resultMap="defaultResultMap">

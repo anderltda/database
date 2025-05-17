@@ -16,40 +16,25 @@ import jakarta.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EntityStatusData extends RepresentationModel<EntityStatusData> implements BeanData<EntityStatusData> {
 
-	/**
-	 * Coluna: id_entity_status
-	 */
 	@NotNull
-	private Long idEntityStatus;
+	private Long id;
 
-	/**
-	 * Coluna: ativo
-	 */
 	private Boolean ativo;
 
-	/**
-	 * Coluna: name
-	 */
 	@Size(max = 255)
 	private String name;
 
-	/**
-	 * Coluna: start_date_time
-	 */
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_TIME_FORMAT)
 	private LocalDateTime startDateTime;
 
-	/**
-	 * Coluna: status
-	 */
 	private Integer status;
 
-	public Long getIdEntityStatus() {
-		return this.idEntityStatus;
+	public Long getId() {
+		return this.id;
 	}
 
-	public void setIdEntityStatus(Long idEntityStatus) {
-		this.idEntityStatus = idEntityStatus;
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public Boolean getAtivo() {
@@ -97,21 +82,21 @@ public class EntityStatusData extends RepresentationModel<EntityStatusData> impl
 		if (o == null || getClass() != o.getClass())
 			return false;
 		EntityStatusData other = (EntityStatusData) o;
-		return java.util.Objects.equals(idEntityStatus, other.idEntityStatus)
-				&& java.util.Objects.equals(ativo, other.ativo) && java.util.Objects.equals(name, other.name)
+		return java.util.Objects.equals(id, other.id) && java.util.Objects.equals(ativo, other.ativo)
+				&& java.util.Objects.equals(name, other.name)
 				&& java.util.Objects.equals(startDateTime, other.startDateTime)
 				&& java.util.Objects.equals(status, other.status);
 	}
 
 	@Override
 	public int hashCode() {
-		return java.util.Objects.hash(idEntityStatus, ativo, name, startDateTime, status);
+		return java.util.Objects.hash(id, ativo, name, startDateTime, status);
 	}
 
 	@Override
 	public String toString() {
-		return "EntityStatusData{" + "idEntityStatus=" + (idEntityStatus != null ? idEntityStatus.toString() : "null")
-				+ ", " + "ativo=" + (ativo != null ? ativo.toString() : "null") + ", " + "name="
+		return "EntityStatusData{" + "id=" + (id != null ? id.toString() : "null") + ", " + "ativo="
+				+ (ativo != null ? ativo.toString() : "null") + ", " + "name="
 				+ (name != null ? name.toString() : "null") + ", " + "startDateTime="
 				+ (startDateTime != null ? startDateTime.toString() : "null") + ", " + "status="
 				+ (status != null ? status.toString() : "null") + '}';

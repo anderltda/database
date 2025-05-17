@@ -10,7 +10,7 @@
     </resultMap>
 
     <resultMap id="EntitySixMap" type="br.com.process.integration.database.model.data.dto.example.EntitySixData">
-        <id column="id_entity_six" property="idEntitySix"/>
+        <id     column="id_entity_six" property="id"/>
         <result column="package_name" property="packageName"/>
         <result column="start_date" property="startDate"/>
         <result column="stop_date" property="stopDate"/>

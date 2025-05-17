@@ -1,14 +1,33 @@
 {
 	"name": "busca_entity_nine_com_joins",
-	"select": "SELECT t1.* FROM entity_nine t1",
-	"join": [],
+	"select": "SELECT t1.*, t2.*, t3.*, t4.*, t5.*, t6.*, t7.* FROM entity_nine t1",
+	"join": [
+		"INNER JOIN entity_eight t2 ON t2.id_entity_eight = t1.id_entity_eight",
+		"INNER JOIN entity_seven t3 ON t3.id_entity_seven = t1.id_entity_seven",
+		"INNER JOIN entity_seven t4 ON t4.id_entity_six = t1.id_entity_six",
+		"INNER JOIN entity_seven t5 ON t5.id_entity_seven = t2.id_entity_seven",
+		"INNER JOIN entity_seven t6 ON t6.id_entity_six = t2.id_entity_six",
+		"INNER JOIN entity_six t7 ON t7.id_entity_six = t6.id_entity_six"
+	],
 	"where": [
 		"AND t1.id_entity_eight {idEntityEight_op} :idEntityEight",
 		"AND t1.id_entity_seven {idEntitySeven_op} :idEntitySeven",
 		"AND t1.id_entity_six {idEntitySix_op} :idEntitySix",
-		"AND t1.key {key_op} :key",
+		"AND t1.key_nine {keyNine_op} :keyNine",
 		"AND t1.code {code_op} :code",
-		"AND t1.variable {variable_op} :variable"
+		"AND t1.variable {variable_op} :variable",
+		"AND t2.id_entity_eight {idEntityEight_op} :idEntityEight",
+		"AND t2.id_entity_seven {idEntitySeven_op} :idEntitySeven",
+		"AND t2.id_entity_six {idEntitySix_op} :idEntitySix",
+		"AND t2.position {position_op} :position",
+		"AND t2.properties {properties_op} :properties",
+		"AND t6.id_entity_seven {idEntitySeven_op} :idEntitySeven",
+		"AND t6.id_entity_six {idEntitySix_op} :idEntitySix",
+		"AND t6.dado {dado_op} :dado",
+		"AND t7.id_entity_six {idEntitySix_op} :idEntitySix",
+		"AND t7.package_name {packageName_op} :packageName",
+		"AND t7.start_date {startDate_op} :startDate",
+		"AND t7.stop_date {stopDate_op} :stopDate"
 	],
 	"orderby": ":sortList :sortOrders"
 }

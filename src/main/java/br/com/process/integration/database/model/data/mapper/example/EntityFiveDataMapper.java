@@ -14,5 +14,5 @@ public interface EntityFiveDataMapper extends DataMapper<EntityFiveData> {
 
 	List<EntityFiveData> findAll();
 
-	EntityFiveData findById(@Param("idEntityFive") UUID idEntityFive);
+	EntityFiveData findById(@Param("id") UUID id);
 }

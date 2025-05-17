@@ -13,33 +13,33 @@ import br.com.process.integration.database.model.entity.dto.example.EntityStatus
 @Service
 @Transactional
 public class EntityStatusService extends AbstractJpaService<EntityStatus, EntityStatus, Long> {
-	
-    @Autowired
-    private PagedResourcesAssembler<EntityStatus> pagedResourcesAssembler;
 
-    protected EntityStatusService() {
-        super(QueryJpaController.class, EntityStatus.class);
-    }
+	@Autowired
+	private PagedResourcesAssembler<EntityStatus> pagedResourcesAssembler;
 
-    @Override
-    public EntityStatus toModel(EntityStatus entity) {
-        EntityStatus model = new EntityStatus();
-        BeanUtils.copyProperties(entity, model);
-        return model;
-    }
+	protected EntityStatusService() {
+		super(QueryJpaController.class, EntityStatus.class);
+	}
 
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
+	@Override
+	public EntityStatus toModel(EntityStatus entity) {
+		EntityStatus model = new EntityStatus();
+		BeanUtils.copyProperties(entity, model);
+		return model;
+	}
 
-    @Override
-    public void setEntity(EntityStatus entity) {
-        this.entity = entity;
-    }
+	@Override
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    @Override
-    public void setPagedModel() {
-        pagedModel = pagedResourcesAssembler.toModel(pages, this);
-    }
+	@Override
+	public void setEntity(EntityStatus entity) {
+		this.entity = entity;
+	}
+
+	@Override
+	public void setPagedModel() {
+		pagedModel = pagedResourcesAssembler.toModel(pages, this);
+	}
 }
