@@ -15,7 +15,7 @@
 		<form id="form-generator" method="post" th:action="@{/v1/database/generator}" th:object="${formData}">
 			<div class="mb-3">
 				<label for="types" class="form-label">Types</label> 
-				<select multiple class="form-control form-select selectpicker" id="types" th:field="*{types}" data-live-search="true" th:classappend="${#fields.hasErrors('types')} ? 'is-invalid'" title="Selecione uma ou mais types">
+				<select class="form-control form-select selectpicker" id="types" th:field="*{types}" data-live-search="true" th:classappend="${#fields.hasErrors('types')} ? 'is-invalid'" title="Selecione uma ou mais types">
 					<option th:each="type : ${types}" th:value="${type}" th:text="${type}"></option>
 				</select>
 				<div class="invalid-feedback d-block" th:if="${#fields.hasErrors('types')}" th:errors="*{types}"></div>
