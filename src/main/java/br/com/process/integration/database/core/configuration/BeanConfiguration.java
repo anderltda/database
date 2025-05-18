@@ -22,6 +22,9 @@ import br.com.process.integration.database.core.configuration.deserializer.SafeL
 import br.com.process.integration.database.core.configuration.deserializer.SafeLocalDateTimeDeserializer;
 import br.com.process.integration.database.core.configuration.deserializer.SafeLocalTimeDeserializer;
 
+/**
+ * 
+ */
 @Configuration
 public class BeanConfiguration {
 
