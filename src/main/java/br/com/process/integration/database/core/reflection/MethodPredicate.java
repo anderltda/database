@@ -10,7 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.process.integration.database.core.exception.UncheckedException;
-import br.com.process.integration.database.core.util.DynamicFoundType;
+import br.com.process.integration.database.core.utils.DynamicFoundTypeUtils;
+import br.com.process.integration.database.core.utils.StringsUtils;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.From;
@@ -20,15 +21,29 @@ import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
+/**
+ * 
+ */
 @Service
 public class MethodPredicate {
 	
 	private String operatorJoin;
 	
+	/**
+	 * @param operatorJoin
+	 */
 	public void setOperatorJoin(String operatorJoin) {
 		this.operatorJoin = operatorJoin;
 	}
 	
+	/**
+	 * @param attributePath
+	 * @param criteriaBuilder
+	 * @param root
+	 * @param asc
+	 * @return
+	 * @throws UncheckedException
+	 */
 	public Order buildOrder(String attributePath, CriteriaBuilder criteriaBuilder, Path<?> root, boolean asc) throws UncheckedException {
 		
 		try {
@@ -55,6 +70,14 @@ public class MethodPredicate {
 		}
 	}
 
+	/**
+	 * @param criteriaBuilder
+	 * @param predicates
+	 * @param root
+	 * @param field
+	 * @param value
+	 * @throws UncheckedException
+	 */
 	@Transactional
 	public void joinCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, Object value) throws UncheckedException {
 
@@ -84,12 +107,22 @@ public class MethodPredicate {
 		}
 	}
 	
+	/**
+	 * @param criteriaBuilder
+	 * @param predicates
+	 * @param root
+	 * @param field
+	 * @param value
+	 * @throws NoSuchMethodException
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
 	@Transactional
 	public void equalCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, Object value) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 		
 		try {
 			
-	        Object object = DynamicFoundType.getTypeAttributeName(root.getJavaType().getName(), field, value, false);
+	        Object object = DynamicFoundTypeUtils.getTypeAttributeName(root.getJavaType().getName(), field, value, false);
 			Method invokeMethod = CriteriaBuilder.class.getMethod("equal", Expression.class, Object.class);
 			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), object);
 			predicates.add(predicate);
@@ -99,18 +132,26 @@ public class MethodPredicate {
 		}
 	}
 	
+	/**
+	 * @param criteriaBuilder
+	 * @param predicates
+	 * @param root
+	 * @param field
+	 * @param value
+	 * @throws UncheckedException
+	 */
 	@Transactional
 	public void betweenCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, Object value) throws UncheckedException {
 		
 		try {
 			
-			String[] split = Optional.ofNullable(processValuesForBetween(value))
+			String[] split = Optional.ofNullable(StringsUtils.processValuesForBetween(value))
                     .filter(str -> !str.isEmpty())
                     .map(str -> str.split(","))
                     .orElse(new String[1]); 
 			
-	        Object start = DynamicFoundType.getTypeAttributeName(root.getJavaType().getName(), field, split[0], false);
-	        Object end = DynamicFoundType.getTypeAttributeName(root.getJavaType().getName(), field, split[1], false);
+	        Object start = DynamicFoundTypeUtils.getTypeAttributeName(root.getJavaType().getName(), field, split[0], false);
+	        Object end = DynamicFoundTypeUtils.getTypeAttributeName(root.getJavaType().getName(), field, split[1], false);
 	        
 			Method invokeMethod = CriteriaBuilder.class.getMethod("between", Expression.class, Comparable.class, Comparable.class);
 			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), start, end);
@@ -121,33 +162,72 @@ public class MethodPredicate {
 		}
 	}
 	
-	
+	/**
+	 * @param criteriaBuilder
+	 * @param predicates
+	 * @param root
+	 * @param field
+	 * @param value
+	 * @throws UncheckedException
+	 */
 	@Transactional
 	public void greaterThanOrEqualToCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, Object value) throws UncheckedException {
 		greaterThan("greaterThanOrEqualTo", criteriaBuilder, predicates, root, field, value);
 	}
 	
+	/**
+	 * @param criteriaBuilder
+	 * @param predicates
+	 * @param root
+	 * @param field
+	 * @param value
+	 * @throws UncheckedException
+	 */
 	@Transactional
 	public void greaterThanCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, Object value) throws UncheckedException {
 		greaterThan("greaterThan", criteriaBuilder, predicates, root, field, value);
 	}
 
+	/**
+	 * @param criteriaBuilder
+	 * @param predicates
+	 * @param root
+	 * @param field
+	 * @param value
+	 * @throws UncheckedException
+	 */
 	@Transactional
 	public void lessThanOrEqualToCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, Object value) throws UncheckedException {
 		lessThan("lessThanOrEqualTo", criteriaBuilder, predicates, root, field, value);
 	}
 	
+	/**
+	 * @param criteriaBuilder
+	 * @param predicates
+	 * @param root
+	 * @param field
+	 * @param value
+	 * @throws UncheckedException
+	 */
 	@Transactional
 	public void lessThanCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, Object value) throws UncheckedException {
 		lessThan("lessThan", criteriaBuilder, predicates, root, field, value);
 	}
 	
+	/**
+	 * @param criteriaBuilder
+	 * @param predicates
+	 * @param root
+	 * @param field
+	 * @param value
+	 * @throws UncheckedException
+	 */
 	@Transactional
 	public void likeCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) throws UncheckedException {
 		
 		try {
 
-			Object object = DynamicFoundType.getTypeAttributeName(root.getJavaType().getName(), field, value.replace("*", "%"), false);
+			Object object = DynamicFoundTypeUtils.getTypeAttributeName(root.getJavaType().getName(), field, value.replace("*", "%"), false);
 			
 			Method invokeMethod = CriteriaBuilder.class.getMethod("like", Expression.class, String.class);
 			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), object);
@@ -158,12 +238,20 @@ public class MethodPredicate {
 		}
 	}
 	
+	/**
+	 * @param criteriaBuilder
+	 * @param predicates
+	 * @param root
+	 * @param field
+	 * @param value
+	 * @throws UncheckedException
+	 */
 	@Transactional
 	public void notEqualCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, Object value) throws UncheckedException {
 		
 		try {
 
-			Object object = DynamicFoundType.getTypeAttributeName(root.getJavaType().getName(), field, value, false);
+			Object object = DynamicFoundTypeUtils.getTypeAttributeName(root.getJavaType().getName(), field, value, false);
 			
 			Method invokeMethod = CriteriaBuilder.class.getMethod("notEqual", Expression.class, Object.class);
 			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), object);
@@ -174,6 +262,14 @@ public class MethodPredicate {
 		}
 	}
 	
+	/**
+	 * @param criteriaBuilder
+	 * @param predicates
+	 * @param root
+	 * @param field
+	 * @param value
+	 * @throws UncheckedException
+	 */
 	@Transactional
 	public void inCriteria(CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, String value) throws UncheckedException {
 		
@@ -183,7 +279,7 @@ public class MethodPredicate {
 			Object[] valuesObjects = new Object[values.length];
 	        
 			for (int i = 0; i < values.length; i++) {
-				valuesObjects[i] = DynamicFoundType.getTypeAttributeName(root.getJavaType().getName(), field, values[i], false);
+				valuesObjects[i] = DynamicFoundTypeUtils.getTypeAttributeName(root.getJavaType().getName(), field, values[i], false);
 			}
 			
 			Predicate predicate = root.get(field).in(valuesObjects);
@@ -194,9 +290,18 @@ public class MethodPredicate {
 		}
 	}
 	
+	/**
+	 * @param method
+	 * @param criteriaBuilder
+	 * @param predicates
+	 * @param root
+	 * @param field
+	 * @param value
+	 * @throws UncheckedException
+	 */
 	private void greaterThan(String method, CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, Object value) throws UncheckedException {
 		try {
-			Object object = DynamicFoundType.getTypeAttributeName(root.getJavaType().getName(), field, value, false);
+			Object object = DynamicFoundTypeUtils.getTypeAttributeName(root.getJavaType().getName(), field, value, false);
 			Method invokeMethod = CriteriaBuilder.class.getMethod(method, Expression.class, Comparable.class);
 			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), object);
 			predicates.add(predicate);
@@ -208,9 +313,18 @@ public class MethodPredicate {
 		}
 	}
 	
+	/**
+	 * @param method
+	 * @param criteriaBuilder
+	 * @param predicates
+	 * @param root
+	 * @param field
+	 * @param value
+	 * @throws UncheckedException
+	 */
 	public void lessThan(String method, CriteriaBuilder criteriaBuilder, List<Predicate> predicates, Path<?> root, String field, Object value) throws UncheckedException {
 		try {
-			Object object = DynamicFoundType.getTypeAttributeName(root.getJavaType().getName(), field, value, false);
+			Object object = DynamicFoundTypeUtils.getTypeAttributeName(root.getJavaType().getName(), field, value, false);
 			Method invokeMethod = CriteriaBuilder.class.getMethod(method, Expression.class, Comparable.class);
 			Predicate predicate = (Predicate) invokeMethod.invoke(criteriaBuilder, root.get(field), object);
 			predicates.add(predicate);
@@ -220,74 +334,5 @@ public class MethodPredicate {
 		} catch (Exception ex) {
 			throw new UncheckedException(ex.getMessage(), ex);
 		}
-	}
-
-	private String processValuesForBetween(Object object) {
-		if (object == null) {
-			return "";
-		}
-
-		String value = formatObjectToString(object);
-
-		if (value.isEmpty()) {
-			return value;
-		}
-
-		long count = countCommas(value);
-
-		if (count == 0) {
-			return replaceDotsWithCommas(value);
-		} else if (count >= 3) {
-			return processMultipleValues(value);
-		}
-
-		return value;
-	}
-
-	private String formatObjectToString(Object object) {
-		return Optional.ofNullable(object).map(obj -> obj.toString().replaceAll("[\\[\\]]", "")).orElse("");
-	}
-
-	private long countCommas(String value) {
-		return value.chars().filter(ch -> ch == ',').count();
-	}
-
-	private String replaceDotsWithCommas(String value) {
-		return value.replace(".", ",");
-	}
-
-	private String processMultipleValues(String value) {
-		value = value.replaceAll("(\\d{1,10}),(\\d{2})", "$1#$2");
-		String[] valoresArray = value.split(",\\s*");
-
-		double[] numeros = parseValues(valoresArray);
-
-		StringBuilder builder = new StringBuilder();
-		for (double numero : numeros) {
-			builder.append(numero).append(",");
-		}
-
-		if (builder.length() > 0) {
-			builder.deleteCharAt(builder.length() - 1);
-		}
-
-		return builder.toString();
-	}
-
-	private double[] parseValues(String[] valoresArray) {
-		double[] numeros = new double[valoresArray.length];
-		for (int i = 0; i < valoresArray.length; i++) {
-			String valorFormatado = formatNumber(valoresArray[i]);
-			try {
-				numeros[i] = Double.parseDouble(valorFormatado);
-			} catch (NumberFormatException ex) {
-				throw new UncheckedException("Invalid number format: " + valorFormatado, ex);
-			}
-		}
-		return numeros;
-	}
-
-	private String formatNumber(String value) {
-		return value.replace("#", ",").replace(".", "").replace(",", ".");
 	}
 }

@@ -36,7 +36,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.process.integration.database.core.exception.ErrorResponse;
 import br.com.process.integration.database.core.ui.QueryJpaController;
-import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.model.data.dto.example.EntityNineData;
 import br.com.process.integration.database.model.entity.dto.example.EntityOne;
 

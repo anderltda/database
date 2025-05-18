@@ -28,7 +28,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.process.integration.database.core.exception.ErrorResponse;
 import br.com.process.integration.database.core.ui.CrudJpaController;
-import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.util.PackageDeleter;
 import br.com.process.integration.database.util.ResourceFolderDeleter;
 

@@ -11,10 +11,17 @@ public class UncheckedException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * @param message
+	 */
 	public UncheckedException(String message) {
 		super(message);
 	}
 
+	/**
+	 * @param message
+	 * @param cause
+	 */
 	public UncheckedException(String message, Throwable cause) {
 		super(message, cause);
 	}

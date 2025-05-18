@@ -30,8 +30,8 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 
+import br.com.process.integration.database.core.Constants;
 import br.com.process.integration.database.core.domain.BeanEntity;
-import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.generator.metadata.ClassResolver;
 import br.com.process.integration.database.generator.metadata.ForeignKeyResolver;
 import br.com.process.integration.database.generator.model.ColumnInfo;

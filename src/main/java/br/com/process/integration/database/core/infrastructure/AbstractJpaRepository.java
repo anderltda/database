@@ -13,12 +13,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.stereotype.Repository;
 
+import br.com.process.integration.database.core.Constants;
 import br.com.process.integration.database.core.domain.BeanEntity;
 import br.com.process.integration.database.core.domain.EntityRepository;
 import br.com.process.integration.database.core.exception.UncheckedException;
 import br.com.process.integration.database.core.reflection.MethodPredicate;
 import br.com.process.integration.database.core.reflection.MethodReflection;
-import br.com.process.integration.database.core.util.Constants;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;

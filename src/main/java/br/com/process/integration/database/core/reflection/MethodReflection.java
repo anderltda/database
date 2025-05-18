@@ -20,10 +20,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import br.com.process.integration.database.core.Constants;
 import br.com.process.integration.database.core.exception.CheckedException;
 import br.com.process.integration.database.core.exception.UncheckedException;
-import br.com.process.integration.database.core.util.Constants;
-import br.com.process.integration.database.core.util.DynamicFoundType;
+import br.com.process.integration.database.core.utils.DynamicFoundTypeUtils;
+import br.com.process.integration.database.core.utils.PackageScannerUtils;
+import br.com.process.integration.database.core.utils.StringsUtils;
 import jakarta.persistence.JoinColumn;
 
 @Service
@@ -40,9 +42,9 @@ public class MethodReflection {
 					if (field.getAnnotation(JoinColumn.class) instanceof JoinColumn) {
 						objectTemp = identificarClasse(field.getType().getName());
 						transformsJsonModel(jsonNode.get(field.getName()), objectTemp);
-						executeMethod(object, setMethod(field.getName()), objectTemp);
+						executeMethod(object, StringsUtils.setMethod(field.getName()), objectTemp);
 					} else {
-						executeMethod(object, setMethod(field.getName()), DynamicFoundType.getTypeJsonValue(field, jsonNode));
+						executeMethod(object, StringsUtils.setMethod(field.getName()), DynamicFoundTypeUtils.getTypeJsonValue(field, jsonNode));
 					}
 				}
 			}
@@ -79,30 +81,6 @@ public class MethodReflection {
 		}
 	}
 	
-	public static String getNameMapper(String className) throws CheckedException {
-		try {
-			return className.substring(0, 1).toLowerCase() + className.substring(1) + "Mapper";
-		} catch (Exception ex) {
-			throw new CheckedException(ex.getMessage(), ex);
-		}
-	}
-
-	public static String getNameRepository(String className) throws CheckedException {
-		try {
-			return className.substring(0, 1).toLowerCase() + className.substring(1) + "Repository";
-		} catch (Exception ex) {
-			throw new CheckedException(ex.getMessage(), ex);
-		}
-	}
-
-	public static String getNameService(String className) throws CheckedException {
-		try {
-			return className.substring(0, 1).toLowerCase() + className.substring(1) + "Service";
-		} catch (Exception ex) {
-			throw new CheckedException(ex.getMessage(), ex);
-		}
-	}
-
 	public static Object findViewUsingClassLoader(String className) throws CheckedException {
 		try {
 			return findClassUsingClassLoader(className, Constants.PACKAGE_NAME_VIEW);
@@ -234,21 +212,10 @@ public class MethodReflection {
 
 	private static Object findClassUsingClassLoader(String className, String packagePath) throws UncheckedException {
 		try {
-			return PackageScanner.findClassBySimpleName(packagePath, className);
+			return PackageScannerUtils.findClassBySimpleName(packagePath, className);
 		} catch (Exception ex) {
 			throw new UncheckedException(ex.getMessage(), ex);
 		}
-	}
-
-	private static String setMethod(String value) {
-		return "set".concat(firstUpper(value));
-	}
-
-	public static String firstUpper(String name) {
-		String returnValue = name.substring(0, 1).toUpperCase();
-		if (name.length() > 1)
-			returnValue += name.substring(1);
-		return returnValue;
 	}
 
 	public static void queryParams(Object entity, Map<String, Object> params) throws UncheckedException {
@@ -256,8 +223,8 @@ public class MethodReflection {
 			List<Field> fields = MethodReflection.getFields(entity.getClass(), Object.class);
 			for (Field field : fields) {
 				if (params.get(field.getName()) != null) {
-					executeMethod(entity, setMethod(field.getName()),
-							DynamicFoundType.getTypeValue(field, params.get(field.getName())));
+					executeMethod(entity, StringsUtils.setMethod(field.getName()),
+							DynamicFoundTypeUtils.getTypeValue(field, params.get(field.getName())));
 				}
 			}
 		} catch (Exception ex) {
@@ -314,7 +281,7 @@ public class MethodReflection {
 				Field field = compositeKeyClass.getDeclaredField(fieldName);
 				field.setAccessible(true);
 
-				Object value = DynamicFoundType.getTypeValue(field.getType(), stringValue);
+				Object value = DynamicFoundTypeUtils.getTypeValue(field.getType(), stringValue);
 				field.set(instance, value);
 			}
 			
@@ -396,7 +363,7 @@ public class MethodReflection {
 			Object[] methodArgs = new Object[parameterTypes.length];
 			int index = 0;
 			for (Object value : param.values()) {
-				methodArgs[index] = DynamicFoundType.getTypeValue(parameterTypes[index], value);
+				methodArgs[index] = DynamicFoundTypeUtils.getTypeValue(parameterTypes[index], value);
 				index++;
 			}
 			return methodArgs;

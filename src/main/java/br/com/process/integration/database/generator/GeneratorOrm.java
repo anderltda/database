@@ -7,7 +7,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import br.com.process.integration.database.core.util.Constants;
+import br.com.process.integration.database.core.Constants;
 import br.com.process.integration.database.generator.handler.data.DataGenerator;
 import br.com.process.integration.database.generator.handler.data.DataMapperGenerator;
 import br.com.process.integration.database.generator.handler.data.DataServiceGenerator;

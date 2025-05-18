@@ -35,7 +35,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.process.integration.database.core.exception.ErrorResponse;
 import br.com.process.integration.database.core.ui.QueryMyBatisController;
-import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.model.data.dto.example.EntityEightData;
 import br.com.process.integration.database.model.data.dto.example.EntityFiveData;
 import br.com.process.integration.database.model.data.dto.example.EntityFourData;

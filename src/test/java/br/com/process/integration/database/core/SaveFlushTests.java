@@ -37,7 +37,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import br.com.process.integration.database.core.exception.ErrorResponse;
 import br.com.process.integration.database.core.ui.CrudJpaController;
-import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.model.entity.dto.example.EntityFive;
 import br.com.process.integration.database.model.entity.dto.example.EntityFour;
 import br.com.process.integration.database.model.entity.dto.example.EntityOne;

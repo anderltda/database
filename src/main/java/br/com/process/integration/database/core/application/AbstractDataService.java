@@ -13,12 +13,13 @@ import org.springframework.hateoas.RepresentationModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.process.integration.database.core.Constants;
 import br.com.process.integration.database.core.domain.DataMapper;
 import br.com.process.integration.database.core.exception.UncheckedException;
 import br.com.process.integration.database.core.infrastructure.AbstractAssembler;
 import br.com.process.integration.database.core.reflection.MethodInvoker;
 import br.com.process.integration.database.core.reflection.MethodReflection;
-import br.com.process.integration.database.core.util.Constants;
+import br.com.process.integration.database.core.utils.StringsUtils;
 
 /**
  * @param <D>
@@ -53,7 +54,7 @@ public abstract class AbstractDataService<D extends RepresentationModel<D>> exte
 	public Integer count(Map<String, Object> filter, String method) throws UncheckedException {
 		try {
 			Object[] args = MethodReflection.getMethodArgs(mapper.getClass(), method, filter);
-			return (int) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameMapper(data.getClass().getSimpleName()), method, args);
+			return (int) methodInvoker.invokeMethodReturnObjectWithParameters(StringsUtils.getNameMapper(data.getClass().getSimpleName()), method, args);
 		} catch (Exception ex) {
 			throw new UncheckedException(ex.getMessage(), ex);
 		}
@@ -67,7 +68,7 @@ public abstract class AbstractDataService<D extends RepresentationModel<D>> exte
 	public D findById(String id) throws UncheckedException {
 		try {
 			Object[] args = MethodReflection.getKeyArgs(data.getClass(), id);
-			return (D) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameMapper(data.getClass().getSimpleName()), Constants.METHOD_FIND_BY_ID, args);
+			return (D) methodInvoker.invokeMethodReturnObjectWithParameters(StringsUtils.getNameMapper(data.getClass().getSimpleName()), Constants.METHOD_FIND_BY_ID, args);
 		} catch (Exception ex) {
 			throw new UncheckedException(ex.getMessage(), ex);
 		}
@@ -81,7 +82,7 @@ public abstract class AbstractDataService<D extends RepresentationModel<D>> exte
 	public D findById(Map<String, Object> filter) throws UncheckedException {
 		try {
 			Object[] args = MethodReflection.getCompositeKeyArgs(data.getClass(), filter);
-			return (D) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameMapper(data.getClass().getSimpleName()), Constants.METHOD_FIND_BY_ID, args);
+			return (D) methodInvoker.invokeMethodReturnObjectWithParameters(StringsUtils.getNameMapper(data.getClass().getSimpleName()), Constants.METHOD_FIND_BY_ID, args);
 		} catch (Exception ex) {
 			throw new UncheckedException(ex.getMessage(), ex);
 		}
@@ -95,7 +96,7 @@ public abstract class AbstractDataService<D extends RepresentationModel<D>> exte
 	public D findBySingle(Map<String, Object> filter, String method) throws UncheckedException {
 		try {
 			Object[] args = MethodReflection.getMethodArgs(mapper.getClass(), method, filter);
-			return (D) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameMapper(data.getClass().getSimpleName()), method, args);
+			return (D) methodInvoker.invokeMethodReturnObjectWithParameters(StringsUtils.getNameMapper(data.getClass().getSimpleName()), method, args);
 		} catch (Exception ex) {
 			throw new UncheckedException(ex.getMessage(), ex);
 		}
@@ -115,7 +116,7 @@ public abstract class AbstractDataService<D extends RepresentationModel<D>> exte
 				throw new UncheckedException(String.format("Erro: Numero de parametros incorretos para o method: '%s'", method));
 			}
 			
-			return (List<D>) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameMapper(data.getClass().getSimpleName()), method, args);
+			return (List<D>) methodInvoker.invokeMethodReturnObjectWithParameters(StringsUtils.getNameMapper(data.getClass().getSimpleName()), method, args);
 			
 		} catch (Exception ex) {
 			throw new UncheckedException(ex.getMessage(), ex);

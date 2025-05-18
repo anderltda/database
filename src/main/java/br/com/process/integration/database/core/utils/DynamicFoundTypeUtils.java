@@ -1,4 +1,4 @@
-package br.com.process.integration.database.core.util;
+package br.com.process.integration.database.core.utils;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -19,10 +19,21 @@ import br.com.process.integration.database.core.domain.BeanEntity;
 import br.com.process.integration.database.core.exception.CheckedException;
 import br.com.process.integration.database.core.reflection.MethodReflection;
 
-public class DynamicFoundType {
+/**
+ * 
+ */
+public class DynamicFoundTypeUtils {
 
-	private DynamicFoundType() {}
+	/**
+	 * 
+	 */
+	private DynamicFoundTypeUtils() {}
 
+	/**
+	 * @param field
+	 * @param jsonNode
+	 * @return
+	 */
 	public static Object getTypeJsonValue(Field field, JsonNode jsonNode) {
 
 		Object object = jsonNode.get(field.getName()).asText();
@@ -69,34 +80,58 @@ public class DynamicFoundType {
 		return object;
 	}
 
+	/**
+	 * @param model
+	 * @param value
+	 * @return
+	 * @throws CheckedException
+	 */
 	public static Object getTypeValue(BeanEntity<?> model, Object value) throws CheckedException {
-
 		try {
-
 			Class<?> clazz = MethodReflection.getTypeById(model);
-			
 			return typeExtracted(clazz, value);
 
 		} catch (Exception ex) {
 			throw new CheckedException(ex.getMessage(), ex);
 		}
-
 	}
 
+	/**
+	 * @param field
+	 * @param value
+	 * @return
+	 */
 	public static Object getTypeValue(Field field, Object value) {
 		return typeExtracted(field.getType().getClass(), value);
 	}
 
+	/**
+	 * @param clazz
+	 * @param value
+	 * @return
+	 */
 	public static Object getTypeValue(Class<?> clazz, Object value) {
 		return typeExtracted(clazz, value);
 	}
 
+	/**
+	 * @param classPath
+	 * @param attributeName
+	 * @param value
+	 * @param notFound
+	 * @return
+	 */
 	public static Object getTypeAttributeName(String classPath, String attributeName, Object value, Boolean notFound) {
 	    Class<?> type = MethodReflection.getAttributeType(classPath, attributeName, notFound);
 	    return typeExtracted(type, value);
 		
 	}
 	
+	/**
+	 * @param type
+	 * @param value
+	 * @return
+	 */
 	private static Object typeExtracted(Class<?> type, Object value) {
 		
 		if (type.equals(Integer.class)) {
@@ -108,13 +143,13 @@ public class DynamicFoundType {
 	    } else if (type.equals(Long.class)) {
 	    	return Long.valueOf(value.toString());
 	    } else if (type.equals(Double.class)) {
-	    	return Double.valueOf(parseStringDouble(value.toString()));
+	    	return Double.valueOf(StringsUtils.parseStringDouble(value.toString()));
 	    } else if (type.equals(Byte.class)) {
 	    	return Byte.valueOf(value.toString());    
 	    } else if (type.equals(BigInteger.class)) {
 	    	return new BigInteger(value.toString());	        
 	    } else if (type.equals(BigDecimal.class)) {
-	    	return new BigDecimal(parseStringDouble(value.toString()));	
+	    	return new BigDecimal(StringsUtils.parseStringDouble(value.toString()));	
 	    } else if (type.equals(Boolean.class)) {
 	        return Boolean.valueOf(value.toString());
 	    } else if (type.equals(Date.class)) {
@@ -137,12 +172,4 @@ public class DynamicFoundType {
 	        return value.toString();
 	    }
 	}
-	
-	private static String parseStringDouble(String value) {
-		if(value.contains(",")) {
-			return value.toString().replace(".", "").replace(",", ".");
-		}
-		return value;
-	}
-	
 }

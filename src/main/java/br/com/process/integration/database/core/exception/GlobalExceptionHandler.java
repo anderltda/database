@@ -10,11 +10,18 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+/**
+ * 
+ */
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+	/**
+	 * @param ccex
+	 * @return
+	 */
 	@ExceptionHandler(CheckedException.class)
 	public ResponseEntity<ErrorResponse> handleCustomCheckedException(CheckedException ccex) {
 		ErrorResponse errorResponse = new ErrorResponse(ccex.getMessage(), ccex.getCustomMessage(), HttpStatus.BAD_REQUEST);
@@ -24,6 +31,11 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 	
+    /**
+     * @param ex
+     * @param request
+     * @return
+     */
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Object> handleDataIntegrityViolationException( DataIntegrityViolationException ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse("Integrity constraint violation: " + ex.getMostSpecificCause().getMessage(), HttpStatus.CONFLICT);
@@ -33,6 +45,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 	
+    /**
+     * @param ex
+     * @return
+     */
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ErrorResponse> handleNoResourceFound(NoResourceFoundException ex) {
 		ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
@@ -42,6 +58,10 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
     
+    /**
+     * @param ex
+     * @return
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
     	ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

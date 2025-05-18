@@ -2,6 +2,9 @@ package br.com.process.integration.database.core.exception;
 
 import org.springframework.http.HttpStatus;
 
+/**
+ * 
+ */
 public class ErrorResponse {
 	
 	private HttpStatus status;
@@ -10,11 +13,20 @@ public class ErrorResponse {
 
 	public ErrorResponse() { }
 
+	/**
+	 * @param message
+	 * @param status
+	 */
 	public ErrorResponse(String message, HttpStatus status) {
 		this.message = message;
 		this.status = status;
 	}
 
+	/**
+	 * @param message
+	 * @param customMessage
+	 * @param status
+	 */
 	public ErrorResponse(String message, String customMessage, HttpStatus status) {
 		this.message = message;
 		this.customMessage = customMessage;

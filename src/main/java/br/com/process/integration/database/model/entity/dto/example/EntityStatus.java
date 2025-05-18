@@ -7,8 +7,8 @@ import org.springframework.hateoas.RepresentationModel;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import br.com.process.integration.database.core.Constants;
 import br.com.process.integration.database.core.domain.BeanEntity;
-import br.com.process.integration.database.core.util.Constants;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

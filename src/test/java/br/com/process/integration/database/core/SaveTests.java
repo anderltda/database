@@ -30,7 +30,6 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.process.integration.database.core.ui.CrudJpaController;
-import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.model.entity.dto.example.EntityEight;
 import br.com.process.integration.database.model.entity.dto.example.EntityFive;
 import br.com.process.integration.database.model.entity.dto.example.EntityFour;

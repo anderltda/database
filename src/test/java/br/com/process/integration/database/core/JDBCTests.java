@@ -36,7 +36,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import br.com.process.integration.database.core.exception.ErrorResponse;
 import br.com.process.integration.database.core.ui.QueryNativeController;
-import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.model.view.dto.example.EntityOneView;
 
 @ActiveProfiles("test")

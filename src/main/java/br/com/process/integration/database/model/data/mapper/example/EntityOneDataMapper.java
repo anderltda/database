@@ -5,8 +5,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import br.com.process.integration.database.core.Constants;
 import br.com.process.integration.database.core.domain.DataMapper;
-import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.model.data.dto.example.EntityOneData;
 
 @Mapper

@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.process.integration.database.core.Constants;
 import br.com.process.integration.database.core.domain.BeanData;
 import br.com.process.integration.database.core.exception.CheckedException;
-import br.com.process.integration.database.core.reflection.MethodReflection;
-import br.com.process.integration.database.core.util.Constants;
+import br.com.process.integration.database.core.utils.StringsUtils;
 
 @RestController
 @RequestMapping("/v1/database")
@@ -27,7 +27,7 @@ public class QueryMyBatisController extends AbstractController {
 
 		setData(data);
 
-		Integer count = (Integer) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(data), Constants.METHOD_EXECUTE_MAPPER_COUNT, filter, method);
+		Integer count = (Integer) methodInvoker.invokeMethodReturnObjectWithParameters(StringsUtils.getNameService(data), Constants.METHOD_EXECUTE_MAPPER_COUNT, filter, method);
 
 		return new ResponseEntity<>(count, HttpStatus.OK);
 	}
@@ -37,7 +37,7 @@ public class QueryMyBatisController extends AbstractController {
 
 		setData(data);
 
-		BeanData<?> beanData = (BeanData<?>) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(data), Constants.METHOD_FIND_BY_ID, id);
+		BeanData<?> beanData = (BeanData<?>) methodInvoker.invokeMethodReturnObjectWithParameters(StringsUtils.getNameService(data), Constants.METHOD_FIND_BY_ID, id);
 
 		if (beanData != null) {
 			return new ResponseEntity<>(beanData, HttpStatus.OK);
@@ -51,7 +51,7 @@ public class QueryMyBatisController extends AbstractController {
 
 		setData(data);
 
-		BeanData<?> beanData = (BeanData<?>) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(data), Constants.METHOD_FIND_BY_ID, ids);
+		BeanData<?> beanData = (BeanData<?>) methodInvoker.invokeMethodReturnObjectWithParameters(StringsUtils.getNameService(data), Constants.METHOD_FIND_BY_ID, ids);
 
 		if (beanData != null) {
 			return new ResponseEntity<>(beanData, HttpStatus.OK);
@@ -65,7 +65,7 @@ public class QueryMyBatisController extends AbstractController {
 
 		setData(data);
 
-		BeanData<?> beanData = (BeanData<?>) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(data), Constants.METHOD_EXECUTE_MAPPER_SINGLE, filter, method);
+		BeanData<?> beanData = (BeanData<?>) methodInvoker.invokeMethodReturnObjectWithParameters(StringsUtils.getNameService(data), Constants.METHOD_EXECUTE_MAPPER_SINGLE, filter, method);
 
 		if (beanData != null) {
 			return new ResponseEntity<>(beanData, HttpStatus.OK);
@@ -82,7 +82,7 @@ public class QueryMyBatisController extends AbstractController {
 		
 		setData(data);
 		
-		List<BeanData<?>> list = (List<BeanData<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(data), Constants.METHOD_EXECUTE_MAPPER_ALL, filter, method);
+		List<BeanData<?>> list = (List<BeanData<?>>) methodInvoker.invokeMethodReturnObjectWithParameters(StringsUtils.getNameService(data), Constants.METHOD_EXECUTE_MAPPER_ALL, filter, method);
 
 		if (!list.isEmpty()) {
 			return new ResponseEntity<>(list, HttpStatus.OK);
@@ -100,7 +100,7 @@ public class QueryMyBatisController extends AbstractController {
 		
 		setData(data);
 		
-		PagedModel pagedModel = (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(MethodReflection.getNameService(data), Constants.METHOD_EXECUTE_PAGINATOR, filter, method);
+		PagedModel pagedModel = (PagedModel) methodInvoker.invokeMethodReturnObjectWithParameters(StringsUtils.getNameService(data), Constants.METHOD_EXECUTE_PAGINATOR, filter, method);
 		
 		if (!pagedModel.getContent().isEmpty()) {
 			return ResponseEntity.ok(pagedModel);

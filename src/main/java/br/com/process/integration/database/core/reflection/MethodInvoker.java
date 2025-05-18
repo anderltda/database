@@ -10,12 +10,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.process.integration.database.core.exception.CheckedException;
 
+/**
+ * 
+ */
 @Service
 public class MethodInvoker {
 
 	@Autowired
 	private ApplicationContext applicationContext;
 
+	/**
+	 * @param beanName
+	 * @param methodName
+	 * @param params
+	 * @throws CheckedException
+	 */
 	@Transactional
 	public void invokeMethodWithParameters(String beanName, String methodName, Object... params) throws CheckedException {
 
@@ -37,6 +46,13 @@ public class MethodInvoker {
 		}
 	}
 
+	/**
+	 * @param beanName
+	 * @param methodName
+	 * @param params
+	 * @return
+	 * @throws CheckedException
+	 */
 	@Transactional
 	public Object invokeMethodReturnObjectWithParameters(String beanName, String methodName, Object... params) throws CheckedException {
 

@@ -12,7 +12,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.generator.handler.view.ViewGenerator;
 import br.com.process.integration.database.generator.handler.view.ViewServiceGenerator;
 

@@ -2,14 +2,23 @@ package br.com.process.integration.database.core.ui;
 
 import java.util.List;
 
+/**
+ * @param <T>
+ */
 public class PageResult<T> {
 
 	private PageMetadata page;
 	private List<T> content;
 
-	public PageResult() {
-	}
+	/**
+	 * 
+	 */
+	public PageResult() { }
 
+	/**
+	 * @param content
+	 * @param page
+	 */
 	public PageResult(List<T> content, PageMetadata page) {
 		this.content = content;
 		this.page = page;
@@ -31,15 +40,27 @@ public class PageResult<T> {
 		this.content = content;
 	}
 
+	/**
+	 * 
+	 */
 	public static class PageMetadata {
+		
 		private int size;
 		private long totalElements;
 		private int totalPages;
 		private int number;
 
-		public PageMetadata() {
-		}
+		/**
+		 * 
+		 */
+		public PageMetadata() { }
 
+		/**
+		 * @param size
+		 * @param totalElements
+		 * @param totalPages
+		 * @param number
+		 */
 		public PageMetadata(int size, long totalElements, int totalPages, int number) {
 			this.size = size;
 			this.totalElements = totalElements;

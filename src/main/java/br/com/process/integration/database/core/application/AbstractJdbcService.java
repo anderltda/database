@@ -12,10 +12,10 @@ import org.springframework.hateoas.RepresentationModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.process.integration.database.core.Constants;
 import br.com.process.integration.database.core.exception.CheckedException;
 import br.com.process.integration.database.core.exception.UncheckedException;
 import br.com.process.integration.database.core.infrastructure.AbstractJdbcRepository;
-import br.com.process.integration.database.core.util.Constants;
 
 /**
  * @param <V>

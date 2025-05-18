@@ -1,4 +1,4 @@
-package br.com.process.integration.database.core.reflection;
+package br.com.process.integration.database.core.utils;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,7 +12,7 @@ import br.com.process.integration.database.core.exception.CheckedException;
 /**
  * PACKAGE SCANNER
  */
-public class PackageScanner {
+public class PackageScannerUtils {
 
 	/**
 	 * @param basePackage
@@ -116,8 +116,8 @@ public class PackageScanner {
 				
 				clazz = Class.forName(className);
 				
-				if(clazz.getSimpleName().equals(MethodReflection.firstUpper(classNameFound))) {
-					clazz = Class.forName(clazz.getPackageName() + "." + MethodReflection.firstUpper(classNameFound));
+				if(clazz.getSimpleName().equals(StringsUtils.firstUpper(classNameFound))) {
+					clazz = Class.forName(clazz.getPackageName() + "." + StringsUtils.firstUpper(classNameFound));
 					return clazz;
 				}
 			}

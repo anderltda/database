@@ -1,4 +1,4 @@
-package br.com.process.integration.database.core.util;
+package br.com.process.integration.database.core;
 
 public class Constants {
 	

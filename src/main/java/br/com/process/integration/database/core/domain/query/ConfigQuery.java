@@ -27,9 +27,9 @@ import org.stringtemplate.v4.ST;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import br.com.process.integration.database.core.Constants;
 import br.com.process.integration.database.core.exception.UncheckedException;
 import br.com.process.integration.database.core.reflection.MethodReflection;
-import br.com.process.integration.database.core.util.Constants;
 
 /**
  * 

@@ -13,11 +13,11 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import br.com.process.integration.database.core.Constants;
 import br.com.process.integration.database.core.domain.ViewRepository;
 import br.com.process.integration.database.core.domain.query.ConfigQuery;
 import br.com.process.integration.database.core.domain.query.DynamicRowMapper;
 import br.com.process.integration.database.core.exception.UncheckedException;
-import br.com.process.integration.database.core.util.Constants;
 
 /**
  * @param <M>

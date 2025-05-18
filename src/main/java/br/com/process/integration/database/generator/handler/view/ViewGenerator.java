@@ -17,8 +17,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.javapoet.*;
 
+import br.com.process.integration.database.core.Constants;
 import br.com.process.integration.database.core.domain.BeanView;
-import br.com.process.integration.database.core.util.Constants;
 import br.com.process.integration.database.generator.model.ColumnInfo;
 import br.com.process.integration.database.generator.util.StringUtils;
 import br.com.process.integration.database.generator.util.TypeMapper;

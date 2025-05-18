@@ -16,13 +16,14 @@ import org.springframework.hateoas.RepresentationModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.process.integration.database.core.Constants;
 import br.com.process.integration.database.core.domain.BeanEntity;
 import br.com.process.integration.database.core.exception.CheckedException;
 import br.com.process.integration.database.core.exception.UncheckedException;
 import br.com.process.integration.database.core.infrastructure.AbstractJpaRepository;
 import br.com.process.integration.database.core.reflection.MethodInvoker;
 import br.com.process.integration.database.core.reflection.MethodReflection;
-import br.com.process.integration.database.core.util.Constants;
+import br.com.process.integration.database.core.utils.StringsUtils;
 
 @Service
 @Transactional
@@ -99,8 +100,7 @@ public abstract class AbstractJpaService<E extends BeanEntity<?>, M extends Repr
 		
 		try {
 			Object[] methodArgs = MethodReflection.getMethodArgs(repository.getClass(), methodQueryJPQL, filter);
-			return (int) methodInvoker.invokeMethodReturnObjectWithParameters(
-					MethodReflection.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
+			return (int) methodInvoker.invokeMethodReturnObjectWithParameters(StringsUtils.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
 		} catch (Exception ex) {
 			throw new CheckedException(ex.getMessage(), ex);
 		}
@@ -111,8 +111,7 @@ public abstract class AbstractJpaService<E extends BeanEntity<?>, M extends Repr
 	public E findBySingle(Map<String, Object> filter, String methodQueryJPQL) throws CheckedException {
 		try {
 			Object[] methodArgs = MethodReflection.getMethodArgs(repository.getClass(), methodQueryJPQL, filter);
-			return (E) methodInvoker.invokeMethodReturnObjectWithParameters(
-					MethodReflection.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
+			return (E) methodInvoker.invokeMethodReturnObjectWithParameters(StringsUtils.getNameRepository(entity.getClass().getSimpleName()), methodQueryJPQL, methodArgs);
 		} catch (Exception ex) {
 			throw new CheckedException(ex.getMessage(), ex);
 		}
@@ -132,8 +131,7 @@ public abstract class AbstractJpaService<E extends BeanEntity<?>, M extends Repr
 				throw new UncheckedException(String.format("Erro: Number or Type de parametros incorretos  para o method: '%s'", method));
 			}
 			
-			return (List<E>) methodInvoker.invokeMethodReturnObjectWithParameters(
-					MethodReflection.getNameRepository(entity.getClass().getSimpleName()), method, args);
+			return (List<E>) methodInvoker.invokeMethodReturnObjectWithParameters(StringsUtils.getNameRepository(entity.getClass().getSimpleName()), method, args);
 		
 		} catch (Exception ex) {
 			throw new CheckedException(ex.getMessage(), ex);
@@ -154,8 +152,7 @@ public abstract class AbstractJpaService<E extends BeanEntity<?>, M extends Repr
 				throw new UncheckedException(String.format("Erro: Number or Type de parametros incorretos  para o method: '%s'", method));
 			}
 			
-			pages = (Page<E>) methodInvoker.invokeMethodReturnObjectWithParameters(
-					MethodReflection.getNameRepository(entity.getClass().getSimpleName()), method, args);
+			pages = (Page<E>) methodInvoker.invokeMethodReturnObjectWithParameters(StringsUtils.getNameRepository(entity.getClass().getSimpleName()), method, args);
 			
 			setPagedModel();
 			
