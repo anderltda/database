@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * 
@@ -12,6 +13,9 @@ public class FormData {
 
 	@NotBlank(message = "O domínio é obrigatório.")
 	private String domain;
+	
+	@NotNull(message = "Selecione o formato de caixa.")
+	private Boolean isUpperCase;
 	
 	@NotEmpty(message = "Selecione ao menos uma tabela.")
 	private List<String> tables;
@@ -43,4 +47,11 @@ public class FormData {
 		this.types = types;
 	}
 
+	public Boolean getIsUpperCase() {
+		return isUpperCase;
+	}
+
+	public void setIsUpperCase(Boolean isUpperCase) {
+		this.isUpperCase = isUpperCase;
+	}
 }

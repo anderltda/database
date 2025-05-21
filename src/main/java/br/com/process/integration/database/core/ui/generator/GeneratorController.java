@@ -50,6 +50,7 @@ public class GeneratorController {
     public String index(Model model) throws Exception {
         model.addAttribute("title", "Gerador de Entidades ORM!");
         model.addAttribute("tables", getTables());
+        model.addAttribute("isUpperCase", true);
         model.addAttribute("types", types);
         model.addAttribute("formData", new FormData());
         return "index";
@@ -67,6 +68,7 @@ public class GeneratorController {
 		
 	    if (result.hasErrors()) {
 	        model.addAttribute("title", "Gerador de Entidades ORM!");
+	        model.addAttribute("isUpperCase", true);
 	        model.addAttribute("tables", getTables());
 	        model.addAttribute("types", types);
 	        return "index";
@@ -74,6 +76,7 @@ public class GeneratorController {
 
 	    generator.generateAll(
 	        formData.getDomain(),
+	        formData.getIsUpperCase(),
 	        new LinkedHashSet<>(formData.getTables()),
 	        formData.getTypes()
 	    );

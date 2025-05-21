@@ -36,6 +36,8 @@ public class GeneratorOrm {
 
 	@Value("${spring.datasource.password}")
 	private String pass;
+	
+	private boolean isUpperCase = true;
 
 	/**
 	 * @param domain
@@ -43,9 +45,10 @@ public class GeneratorOrm {
 	 * @param types
 	 * @throws Exception
 	 */
-	public void generateAll(String domain, Set<String> tables, List<String> types) throws Exception {
+	public void generateAll(String domain, boolean isUpperCase, Set<String> tables, List<String> types) throws Exception {
 
 		this.domain = domain;
+		this.isUpperCase = isUpperCase;
 
 		if (types.contains("Jpa")) {
 			extractedEntity(tables);
@@ -69,6 +72,10 @@ public class GeneratorOrm {
 		String packageEntity = Constants.JPA_ENTITY + domain;
 
 		EntityGenerator entityGenerator = new EntityGenerator(url, user, pass, packageEntity, tables);
+		
+		if(isUpperCase) {
+			entityGenerator.setTables(tables);
+		}
 
 		List<ClassResolver> classResolverList = entityGenerator.run();
 
@@ -104,9 +111,9 @@ public class GeneratorOrm {
 
 				ViewGenerator viewGenerator = new ViewGenerator(url, user, pass, packageView, domain);
 
-				String classView = viewGenerator.run(table);
+				String classView = viewGenerator.run(isUpperCase ? table.toUpperCase(): table);
 
-				viewGenerator.generateQueryDefinition(table);
+				viewGenerator.generateQueryDefinition(isUpperCase ? table.toUpperCase(): table);
 
 				String packageService = Constants.JDBC_SERVICE + domain;
 
@@ -127,6 +134,10 @@ public class GeneratorOrm {
 		String packageData = Constants.MYBATIS_DATA + domain;
 
 		DataGenerator dataGenerator = new DataGenerator(url, user, pass, packageData, tables);
+		
+		if(isUpperCase) {
+			dataGenerator.setTables(tables);
+		}
 
 		List<String> classList = dataGenerator.run();
 
