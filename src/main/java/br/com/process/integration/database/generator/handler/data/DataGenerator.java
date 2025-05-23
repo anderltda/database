@@ -164,7 +164,7 @@ public class DataGenerator {
      */
     private String gerarClasseCompostaId(String tableName, List<ColumnInfo> columns, List<String> primaryKeys) throws Exception {
     	
-        String className = StringUtils.capitalize(StringUtils.camelCase(tableName)) + "Id";
+        String className = StringUtils.capitalize(StringUtils.camelCase(tableName)) + "DataId";
         
         TypeSpec.Builder classBuilder = TypeSpec.classBuilder(className)
             .addModifiers(Modifier.PUBLIC);
@@ -233,7 +233,7 @@ public class DataGenerator {
         Set<String> handledForeignTables = new HashSet<>();
         
         if (primaryKeys.size() > 1) {
-            String idClassName = StringUtils.capitalize(StringUtils.camelCase(tableName)) + "Id";
+            String idClassName = StringUtils.capitalize(StringUtils.camelCase(tableName)) + "DataId";
             ClassName idClass = ClassName.get(packageName, idClassName);
             classBuilder.addField(FieldSpec.builder(idClass, "id", Modifier.PRIVATE).build());
 
