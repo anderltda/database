@@ -16,7 +16,7 @@ import jakarta.validation.constraints.Size;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EntityFourData extends RepresentationModel<EntityFourData> implements BeanData<EntityFourData> {
-	
+
 	@NotNull
 	private UUID id;
 

@@ -12,7 +12,7 @@ import jakarta.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EntityNineData extends RepresentationModel<EntityNineData> implements BeanData<EntityNineData> {
 
-	private EntityNineId id;
+	private EntityNineDataId id;
 
 	@NotNull
 	@Size(max = 100)
@@ -28,11 +28,11 @@ public class EntityNineData extends RepresentationModel<EntityNineData> implemen
 
 	private EntitySevenData entitySevenData;
 
-	public EntityNineId getId() {
+	public EntityNineDataId getId() {
 		return this.id;
 	}
 
-	public void setId(EntityNineId id) {
+	public void setId(EntityNineDataId id) {
 		this.id = id;
 	}
 

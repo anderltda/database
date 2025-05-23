@@ -16,7 +16,7 @@
         <result column="stop_date" property="stopDate"/>
     </resultMap>
 
-    <select id="findById" resultMap="defaultResultMap" parameterType="br.com.process.integration.database.model.data.dto.example.EntitySevenId">
+    <select id="findById" resultMap="defaultResultMap" parameterType="br.com.process.integration.database.model.data.dto.example.EntitySevenDataId">
         SELECT * FROM entity_seven WHERE id_entity_seven = #{id.idEntitySeven} AND id_entity_six = #{id.idEntitySix}
     </select>
 

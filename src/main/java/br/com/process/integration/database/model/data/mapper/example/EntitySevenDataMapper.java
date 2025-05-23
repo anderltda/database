@@ -7,12 +7,12 @@ import org.apache.ibatis.annotations.Param;
 
 import br.com.process.integration.database.core.domain.DataMapper;
 import br.com.process.integration.database.model.data.dto.example.EntitySevenData;
-import br.com.process.integration.database.model.data.dto.example.EntitySevenId;
+import br.com.process.integration.database.model.data.dto.example.EntitySevenDataId;
 
 @Mapper
 public interface EntitySevenDataMapper extends DataMapper<EntitySevenData> {
 
 	List<EntitySevenData> findAll();
 
-	EntitySevenData findById(@Param("id") EntitySevenId id);
+	EntitySevenData findById(@Param("id") EntitySevenDataId id);
 }

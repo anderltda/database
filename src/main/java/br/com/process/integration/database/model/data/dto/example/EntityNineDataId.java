@@ -2,7 +2,7 @@ package br.com.process.integration.database.model.data.dto.example;
 
 import jakarta.validation.constraints.NotNull;
 
-public class EntityNineId {
+public class EntityNineDataId {
 
 	/**
 	 * Coluna: id_entity_eight

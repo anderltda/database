@@ -10,17 +10,17 @@ import br.com.process.integration.database.core.domain.BeanData;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EntitySevenData extends RepresentationModel<EntitySevenData> implements BeanData<EntitySevenData> {
 
-	private EntitySevenId id;
+	private EntitySevenDataId id;
 
 	private String dado;
 
 	private EntitySixData entitySixData;
 
-	public EntitySevenId getId() {
+	public EntitySevenDataId getId() {
 		return this.id;
 	}
 
-	public void setId(EntitySevenId id) {
+	public void setId(EntitySevenDataId id) {
 		this.id = id;
 	}
 
