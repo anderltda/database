@@ -8,12 +8,14 @@ import org.springframework.hateoas.RepresentationModel;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import br.com.process.integration.database.core.Constants;
 import br.com.process.integration.database.core.domain.BeanEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -49,13 +51,29 @@ public class EntityTree extends RepresentationModel<EntityTree> implements BeanE
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_TIME_FORMAT)
 	private LocalDateTime localDateTime;
 
-	@ManyToOne
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_entity_status", referencedColumnName = "id_entity_status")
 	private EntityStatus entityStatus;
+	
+	@Column(name = "id_entity_status", insertable = false, updatable = false)
+	private Long entityStatusId;
 
-	@OneToOne(cascade = CascadeType.ALL)
+	public Long getEntityStatusId() {
+		return entityStatusId;
+	}
+
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@OneToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinColumn(name = "id_entity_four", referencedColumnName = "id_entity_four", unique = true)
 	private EntityFour entityFour;
+
+	@Column(name = "id_entity_four", insertable = false, updatable = false)
+    private UUID entityFourId;
+
+	public UUID getEntityFourId() {
+		return entityFourId;
+	}
 
 	@Override
 	public UUID getId() {

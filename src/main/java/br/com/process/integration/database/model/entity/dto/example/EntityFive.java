@@ -5,10 +5,12 @@ import java.util.UUID;
 import org.springframework.hateoas.RepresentationModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import br.com.process.integration.database.core.domain.BeanEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,9 +34,17 @@ public class EntityFive extends RepresentationModel<EntityFive> implements BeanE
 	@Column(name = "reference", nullable = false, length = 255)
 	private String reference;
 
-	@ManyToOne
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_entity_status", referencedColumnName = "id_entity_status")
 	private EntityStatus entityStatus;
+	
+	@Column(name = "id_entity_status", insertable = false, updatable = false)
+	private Long entityStatusId;
+
+	public Long getEntityStatusId() {
+		return entityStatusId;
+	}
 
 	@Override
 	public UUID getId() {
