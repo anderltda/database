@@ -124,3 +124,13 @@ CREATE TABLE entity_nine (
 	FOREIGN KEY (id_entity_eight) REFERENCES entity_eight(id_entity_eight),
     FOREIGN KEY (id_entity_seven, id_entity_six) REFERENCES entity_seven(id_entity_seven, id_entity_six)
 );
+
+-- Adiciona colunas como NULLABLE
+ALTER TABLE entity_one ADD COLUMN id_entity_eight BIGINT;
+ALTER TABLE entity_one ADD COLUMN id_entity_seven BIGINT;
+ALTER TABLE entity_one ADD COLUMN id_entity_six BIGINT;
+
+ALTER TABLE entity_one
+ADD CONSTRAINT fk_entity_one_entity_nine FOREIGN KEY (id_entity_eight, id_entity_seven, id_entity_six)
+REFERENCES entity_nine(id_entity_eight, id_entity_seven, id_entity_six)
+ON DELETE NO ACTION;
