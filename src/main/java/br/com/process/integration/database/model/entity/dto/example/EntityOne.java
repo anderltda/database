@@ -21,6 +21,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinColumns;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -70,6 +71,22 @@ public class EntityOne extends RepresentationModel<EntityOne> implements BeanEnt
 
 	@Column(name = "id_entity_two", insertable = false, updatable = false)
 	private UUID idEntityTwo;
+
+	@JsonProperty(access = Access.WRITE_ONLY)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumns({ @JoinColumn(name = "id_entity_eight", referencedColumnName = "id_entity_eight"),
+			@JoinColumn(name = "id_entity_seven", referencedColumnName = "id_entity_seven"),
+			@JoinColumn(name = "id_entity_six", referencedColumnName = "id_entity_six") })
+	private EntityNine entityNine;
+
+	@Column(name = "id_entity_eight", insertable = false, updatable = false)
+	private Long idEntityEight;
+
+	@Column(name = "id_entity_seven", insertable = false, updatable = false)
+	private Long idEntitySeven;
+
+	@Column(name = "id_entity_six", insertable = false, updatable = false)
+	private Long idEntitySix;
 
 	@Override
 	public Long getId() {
@@ -160,6 +177,38 @@ public class EntityOne extends RepresentationModel<EntityOne> implements BeanEnt
 		this.idEntityTwo = idEntityTwo;
 	}
 
+	public EntityNine getEntityNine() {
+		return this.entityNine;
+	}
+
+	public void setEntityNine(EntityNine entityNine) {
+		this.entityNine = entityNine;
+	}
+
+	public Long getIdEntityEight() {
+		return this.idEntityEight;
+	}
+
+	public void setIdEntityEight(Long idEntityEight) {
+		this.idEntityEight = idEntityEight;
+	}
+
+	public Long getIdEntitySeven() {
+		return this.idEntitySeven;
+	}
+
+	public void setIdEntitySeven(Long idEntitySeven) {
+		this.idEntitySeven = idEntitySeven;
+	}
+
+	public Long getIdEntitySix() {
+		return this.idEntitySix;
+	}
+
+	public void setIdEntitySix(Long idEntitySix) {
+		this.idEntitySix = idEntitySix;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
@@ -187,6 +236,10 @@ public class EntityOne extends RepresentationModel<EntityOne> implements BeanEnt
 				+ (entityStatus != null ? entityStatus.toString() : "null") + ", " + "entityStatus="
 				+ (idEntityStatus != null ? idEntityStatus.toString() : "null") + ", " + "entityTwo="
 				+ (entityTwo != null ? entityTwo.toString() : "null") + ", " + "entityTwo="
-				+ (idEntityTwo != null ? idEntityTwo.toString() : "null") + '}';
+				+ (idEntityTwo != null ? idEntityTwo.toString() : "null") + ", " + "entityNine="
+				+ (entityNine != null ? entityNine.toString() : "null") + ", " + "entityEight="
+				+ (idEntityEight != null ? idEntityEight.toString() : "null") + ", " + "entitySeven="
+				+ (idEntitySeven != null ? idEntitySeven.toString() : "null") + ", " + "entitySix="
+				+ (idEntitySix != null ? idEntitySix.toString() : "null") + '}';
 	}
 }

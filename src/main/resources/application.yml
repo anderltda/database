@@ -19,6 +19,18 @@ spring:
     username: anderson
     password: admin
     driver-class-name: org.postgresql.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      pool-name: ProductionHikariPool
+      maximum-pool-size: 20           # Número máximo de conexões no pool
+      minimum-idle: 5                 # Número mínimo de conexões ociosas
+      idle-timeout: 60000             # Tempo que uma conexão pode ficar ociosa (ms)
+      max-lifetime: 1800000           # Tempo de vida máximo de uma conexão (30 min)
+      connection-timeout: 30000       # Tempo máximo para obter uma conexão (ms)
+      auto-commit: false              # Usar auto-commit como padrão
+      leak-detection-threshold: 30000 # Detecta conexões não fechadas após 30s
+      validation-timeout: 5000        # Timeout de validação de conexão
+      initialization-fail-timeout: 0  # Não falhar se o banco estiver fora no início
   jpa:
     generate-ddl: false
     hibernate:
@@ -28,6 +40,9 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc.lob.non_contextual_creation: true
+        connection.provider_disables_autocommit: true
 mybatis:
   mapper-locations: classpath:mapper/**/*.xml
   type-handlers-package: br.com.process.integration.database.generator.handler.data.type

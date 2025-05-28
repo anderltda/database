@@ -13,18 +13,31 @@ import br.com.process.integration.database.core.Constants;
 public class EntityOneVo {
 	
 	private Long id;
+
 	private Integer age;
+	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_FORMAT)
 	private LocalDate birthDate;
+	
 	private Boolean code;
+	
 	private Double height;
+	
 	private String name;
+	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_TIME_FORMAT)
 	private LocalDateTime prohibitedDateTime;
+	
 	private EntityStatusVo entityStatus;
 	private Long idEntityStatus;
+	
 	private EntityTwoVo entityTwo;
 	private UUID idEntityTwo;
+	
+	private EntityNineVo entityNine;
+	private Long idEntityEight;
+	private Long idEntitySeven;
+	private Long idEntitySix;
 
 	public Long getId() {
 		return this.id;
@@ -112,6 +125,38 @@ public class EntityOneVo {
 
 	public void setIdEntityTwo(UUID idEntityTwo) {
 		this.idEntityTwo = idEntityTwo;
+	}
+	
+	public EntityNineVo getEntityNine() {
+		return entityNine;
+	}
+
+	public void setEntityNine(EntityNineVo entityNine) {
+		this.entityNine = entityNine;
+	}
+
+	public Long getIdEntityEight() {
+		return idEntityEight;
+	}
+
+	public void setIdEntityEight(Long idEntityEight) {
+		this.idEntityEight = idEntityEight;
+	}
+
+	public Long getIdEntitySeven() {
+		return idEntitySeven;
+	}
+
+	public void setIdEntitySeven(Long idEntitySeven) {
+		this.idEntitySeven = idEntitySeven;
+	}
+
+	public Long getIdEntitySix() {
+		return idEntitySix;
+	}
+
+	public void setIdEntitySix(Long idEntitySix) {
+		this.idEntitySix = idEntitySix;
 	}
 
 	@Override

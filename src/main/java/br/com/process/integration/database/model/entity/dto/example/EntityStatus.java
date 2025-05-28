@@ -20,7 +20,7 @@ import jakarta.persistence.Table;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "entity_status")
 public class EntityStatus extends RepresentationModel<EntityStatus> implements BeanEntity<Long> {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_entity_status")

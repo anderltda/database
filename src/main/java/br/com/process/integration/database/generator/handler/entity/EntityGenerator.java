@@ -68,7 +68,7 @@ public class EntityGenerator {
 	private final String packageName;
 	private boolean isUpperCase;
 	private Set<String> tables;
-
+	
 	/**
 	 * @param jdbcUrl
 	 * @param username
@@ -176,8 +176,10 @@ public class EntityGenerator {
 
 		boolean isCompositeKey = primaryKeys.size() > 1;
 		
+		List<ColumnInfo> fksMapeadas = new ArrayList<>();
+		
 		if (isCompositeKey) {
-			gerarClasseEmbeddableId(packageName, className + "Id", columns, primaryKeys);
+			gerarClasseEmbeddableId(packageName, className + "Id", columns, primaryKeys, fksMapeadas);
 		}
 
 		// Detecta índices únicos compostos
@@ -243,7 +245,7 @@ public class EntityGenerator {
 			classBuilder.addMethod(MethodSpec.methodBuilder("getId").addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).returns(idClass).addStatement("return this.id").build());
 			classBuilder.addMethod(MethodSpec.methodBuilder("setId").addModifiers(Modifier.PUBLIC).addParameter(idClass, "id").addStatement("this.id = id").build());
 		}
-
+		
 		for (ColumnInfo column : columns) {
 
 			if (isCompositeKey && primaryKeys.contains(column.name)) {
@@ -392,6 +394,8 @@ public class EntityGenerator {
 			        .addParameter(typeFkClass, primitiveFieldName)
 			        .addStatement("this.$N = $N", primitiveFieldName, primitiveFieldName)
 			        .build());
+			    
+			    fksMapeadas.add(column);
 
 			    continue; // Evita duplicação
 			    
@@ -454,9 +458,8 @@ public class EntityGenerator {
 
 		    String referencedTable = entry.getKey();
 		    List<String> fkColumns = entry.getValue();
-
-		    boolean alreadyMapped = fkColumns.stream().anyMatch(fkCol -> 
-		    foreignKeys.getOrDefault(tableName, Map.of()).containsKey(fkCol));
+		    
+		    boolean alreadyMapped = fkColumns.stream().anyMatch(col -> fksMapeadas.stream().anyMatch(c -> c.name.equals(col) && foreignKeys.containsKey(tableName)));
 
 		    if (alreadyMapped)
 		        continue;
@@ -656,9 +659,10 @@ public class EntityGenerator {
 	 * @param className
 	 * @param columns
 	 * @param primaryKeys
+	 * @param fksMapeadas
 	 * @throws IOException
 	 */
-	private void gerarClasseEmbeddableId(String packageName, String className, List<ColumnInfo> columns, Set<String> primaryKeys) throws IOException {
+	private void gerarClasseEmbeddableId(String packageName, String className, List<ColumnInfo> columns, Set<String> primaryKeys, List<ColumnInfo> fksMapeadas) throws IOException {
 
 		TypeSpec.Builder classBuilder = TypeSpec.classBuilder(className).addModifiers(Modifier.PUBLIC)
 				.addAnnotation(Embeddable.class);
@@ -671,6 +675,8 @@ public class EntityGenerator {
 			System.out.println(" Field Name --->> " + column.name + " - Type Name --->> " + column.sqlTypeName + " - Type Java --->> " + javaType);
 			String fieldName = StringUtils.camelCase(column.name);
 			ClassName typeClass = ClassName.bestGuess(javaType);
+			
+			
 
 			FieldSpec field = FieldSpec.builder(typeClass, fieldName, Modifier.PRIVATE)
 					.addAnnotation(AnnotationSpec.builder(Column.class).addMember("name", "$S", column.name).build())
@@ -684,6 +690,8 @@ public class EntityGenerator {
 			classBuilder.addMethod(MethodSpec.methodBuilder("set" + StringUtils.capitalize(fieldName))
 					.addModifiers(Modifier.PUBLIC).addParameter(typeClass, fieldName)
 					.addStatement("this.$N = $N", fieldName, fieldName).build());
+			
+			fksMapeadas.add(column);
 		}
 
 		// equals/hashCode
