@@ -455,8 +455,8 @@ public class EntityGenerator {
 		    String referencedTable = entry.getKey();
 		    List<String> fkColumns = entry.getValue();
 
-		    boolean alreadyMapped = fkColumns.stream().anyMatch(col ->
-		        columns.stream().anyMatch(c -> c.name.equals(col) && foreignKeys.containsKey(tableName)));
+		    boolean alreadyMapped = fkColumns.stream().anyMatch(fkCol -> 
+		    foreignKeys.getOrDefault(tableName, Map.of()).containsKey(fkCol));
 
 		    if (alreadyMapped)
 		        continue;
