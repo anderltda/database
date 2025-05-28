@@ -365,7 +365,7 @@ class MyBatisTests {
 	@Order(21)
 	void teste_21() throws Exception {
 		
-		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/by-ids/entityNineData?idEntityEight=1&idEntitySeven=1&idEntitySix=1";
+		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/mapper/by-ids/entityNineData?idEntityEight=2&idEntitySeven=3&idEntitySix=2";
 		
 		String data = getUniqueResult(url, new ErrorResponse());
 		
@@ -373,9 +373,9 @@ class MyBatisTests {
 
 		assertNotNull(data);
 		assertNotNull(entityNineData);
-		assertEquals(1l, entityNineData.getId().getIdEntityEight());
-		assertEquals(1l, entityNineData.getId().getIdEntitySeven());
-		assertEquals(1l, entityNineData.getId().getIdEntitySix());
+		assertEquals(2l, entityNineData.getId().getIdEntityEight());
+		assertEquals(3l, entityNineData.getId().getIdEntitySeven());
+		assertEquals(2l, entityNineData.getId().getIdEntitySix());
 		assertEquals("10", entityNineData.getCode());
 	}
 	
