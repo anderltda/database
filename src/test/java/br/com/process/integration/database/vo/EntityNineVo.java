@@ -1,39 +1,20 @@
-package br.com.process.integration.database.model.entity.dto.example;
-
-import org.springframework.hateoas.RepresentationModel;
+package br.com.process.integration.database.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import br.com.process.integration.database.core.domain.BeanEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
-
-@Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Table(name = "entity_nine", uniqueConstraints = @UniqueConstraint(columnNames = { "id_entity_seven", "id_entity_six", "id_entity_eight" }))
-public class EntityNine extends RepresentationModel<EntityNine> implements BeanEntity<EntityNineId> {
+public class EntityNineVo {
 	
-	@EmbeddedId
-	private EntityNineId id;
-
-	@Column(name = "key_nine", nullable = false, length = 100)
+	private EntityNineIdVo id;
 	private String keyNine;
-
-	@Column(name = "code", length = 100)
 	private String code;
-
-	@Column(name = "variable", length = 100)
 	private String variable;
 
-	@Override
-	public EntityNineId getId() {
+	public EntityNineIdVo getId() {
 		return this.id;
 	}
 
-	public void setId(EntityNineId id) {
+	public void setId(EntityNineIdVo id) {
 		this.id = id;
 	}
 

@@ -7,6 +7,8 @@ import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,6 +23,8 @@ import org.springframework.hateoas.RepresentationModel;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -296,55 +300,106 @@ public class EntityGenerator {
 
 			} else if (isForeignKey) {
 
-				String referencedTable = foreignKeys.get(tableName).get(column.name);
-				String referencedProperty = StringUtils.camelCase(referencedTable);
-				String referencedClass = StringUtils.capitalize(referencedProperty);
+			    String referencedTable = foreignKeys.get(tableName).get(column.name);
+			    String referencedProperty = StringUtils.camelCase(referencedTable);
+			    String referencedClass = StringUtils.capitalize(referencedProperty);
 
-				String referencedColumnName = getReferencedColumnName(metaData, tableName, column.name);
+			    String referencedColumnName = getReferencedColumnName(metaData, tableName, column.name);
 
-				AnnotationSpec.Builder joinColumn = AnnotationSpec.builder(JoinColumn.class).addMember("name", "$S", column.name).addMember("referencedColumnName", "$S", referencedColumnName);
+			    AnnotationSpec.Builder joinColumn = AnnotationSpec.builder(JoinColumn.class)
+			        .addMember("name", "$S", column.name)
+			        .addMember("referencedColumnName", "$S", referencedColumnName);
 
-				if (!column.nullable) {
-					joinColumn.addMember("nullable", "$L", false);
-				}
-				if (column.unique) {
-					joinColumn.addMember("unique", "$L", true);
-				}
+			    if (!column.nullable) {
+			        joinColumn.addMember("nullable", "$L", false);
+			    }
+			    if (column.unique) {
+			        joinColumn.addMember("unique", "$L", true);
+			    }
 
-				ClassName relationAnnotation = null;
-				AnnotationSpec.Builder relationBuilder = null;
+			    ClassName relationAnnotation;
+			    AnnotationSpec.Builder relationBuilder;
 
-				if (column.unique) {
-					relationAnnotation = ClassName.get(OneToOne.class.getPackageName(), OneToOne.class.getSimpleName());
-					ClassName cascadeType = ClassName.get(CascadeType.class.getPackageName(), CascadeType.class.getSimpleName());
-					relationBuilder = AnnotationSpec.builder(relationAnnotation).addMember("cascade", "$T.ALL", cascadeType);
-				} else {
-					relationAnnotation = ClassName.get(ManyToOne.class.getPackageName(), ManyToOne.class.getSimpleName());
-					//ClassName fetchType = ClassName.get(FetchType.class.getPackageName(), FetchType.class.getSimpleName()); //
-					// Ativa LAZY
-					relationBuilder = AnnotationSpec.builder(relationAnnotation);
-					// .addMember("fetch", "$T.LAZY", fetchType); // Ativa LAZY
-				}
+			    if (column.unique) {
+			        relationAnnotation = ClassName.get(OneToOne.class.getPackageName(), OneToOne.class.getSimpleName());
+			        ClassName cascadeType = ClassName.get(CascadeType.class.getPackageName(), CascadeType.class.getSimpleName());
+			        ClassName fetchType = ClassName.get(FetchType.class.getPackageName(), FetchType.class.getSimpleName());
 
-				FieldSpec field = FieldSpec
-						.builder(ClassName.get(packageName, referencedClass), referencedProperty, Modifier.PRIVATE)
-						.addAnnotation(relationBuilder.build()).addAnnotation(joinColumn.build()).build();
+			        relationBuilder = AnnotationSpec.builder(relationAnnotation)
+			                .addMember("fetch", "$T.LAZY", fetchType)
+			                .addMember("cascade", "{$T.PERSIST, $T.MERGE, $T.REMOVE}", cascadeType, cascadeType, cascadeType);
+			        
+			    } else {
+			        relationAnnotation = ClassName.get(ManyToOne.class.getPackageName(), ManyToOne.class.getSimpleName());
+			        ClassName fetchType = ClassName.get(FetchType.class.getPackageName(), FetchType.class.getSimpleName());
+			        relationBuilder = AnnotationSpec.builder(relationAnnotation)
+			            .addMember("fetch", "$T.LAZY", fetchType);
+			    }
 
-				classBuilder.addField(field);
+			    ClassName jsonProperty = ClassName.get(JsonProperty.class.getPackageName(), JsonProperty.class.getSimpleName());
+			    ClassName accessEnum = ClassName.get(JsonProperty.class.getPackageName() + "." + JsonProperty.class.getSimpleName() , Access.class.getSimpleName());
 
-				classBuilder.addMethod(MethodSpec.methodBuilder("get" + referencedClass).addModifiers(Modifier.PUBLIC)
-						.returns(ClassName.get(packageName, referencedClass))
-						.addStatement("return this.$N", referencedProperty).build());
+			    AnnotationSpec writeOnly = AnnotationSpec.builder(jsonProperty)
+			        .addMember("access", "$T.WRITE_ONLY", accessEnum)
+			        .build();
 
-				classBuilder.addMethod(MethodSpec.methodBuilder("set" + referencedClass).addModifiers(Modifier.PUBLIC)
-						.addParameter(ClassName.get(packageName, referencedClass), referencedProperty)
-						.addStatement("this.$N = $N", referencedProperty, referencedProperty).build());
+			    // Campo do tipo objeto (referenciado)
+			    FieldSpec relationField = FieldSpec.builder(ClassName.get(packageName, referencedClass), referencedProperty, Modifier.PRIVATE)
+			        .addAnnotation(writeOnly)
+			        .addAnnotation(relationBuilder.build())
+			        .addAnnotation(joinColumn.build())
+			        .build();
 
-				continue; // Evita duplicação
+			    classBuilder.addField(relationField);
 
+			    classBuilder.addMethod(MethodSpec.methodBuilder("get" + referencedClass)
+			        .addModifiers(Modifier.PUBLIC)
+			        .returns(ClassName.get(packageName, referencedClass))
+			        .addStatement("return this.$N", referencedProperty)
+			        .build());
+
+			    classBuilder.addMethod(MethodSpec.methodBuilder("set" + referencedClass)
+			        .addModifiers(Modifier.PUBLIC)
+			        .addParameter(ClassName.get(packageName, referencedClass), referencedProperty)
+			        .addStatement("this.$N = $N", referencedProperty, referencedProperty)
+			        .build());
+
+			    // Campo primitivo da FK (id)
+			    String primitiveFieldName = StringUtils.camelCase(column.name);
+			    String javaTypeName = TypeMapper.toJavaType(column.sqlTypeName);
+			    ClassName typeFkClass = TypeMapper.resolveType(javaTypeName);
+
+			    AnnotationSpec columnAnnotation = AnnotationSpec.builder(ClassName.get(Column.class.getPackageName(), Column.class.getSimpleName()))
+			        .addMember("name", "$S", column.name)
+			        .addMember("insertable", "$L", false)
+			        .addMember("updatable", "$L", false)
+			        .build();
+
+			    FieldSpec fkPrimitiveField = FieldSpec.builder(typeFkClass, primitiveFieldName, Modifier.PRIVATE)
+			        .addAnnotation(columnAnnotation)
+			        .build();
+
+			    classBuilder.addField(fkPrimitiveField);
+
+			    classBuilder.addMethod(MethodSpec.methodBuilder("get" + StringUtils.capitalize(primitiveFieldName))
+			        .addModifiers(Modifier.PUBLIC)
+			        .returns(typeFkClass)
+			        .addStatement("return this.$N", primitiveFieldName)
+			        .build());
+
+			    classBuilder.addMethod(MethodSpec.methodBuilder("set" + StringUtils.capitalize(primitiveFieldName))
+			        .addModifiers(Modifier.PUBLIC)
+			        .addParameter(typeFkClass, primitiveFieldName)
+			        .addStatement("this.$N = $N", primitiveFieldName, primitiveFieldName)
+			        .build());
+
+			    continue; // Evita duplicação
+			    
 			} else {
 
-				AnnotationSpec.Builder columnAnnotation = AnnotationSpec.builder(Column.class).addMember("name", "$S",
+				AnnotationSpec.Builder columnAnnotation = AnnotationSpec
+						.builder(Column.class)
+						.addMember("name", "$S",
 						column.name);
 
 				if (!column.nullable) {
@@ -374,9 +429,9 @@ public class EntityGenerator {
 						.addAnnotation(columnAnnotation.build());
 
 				// Adiciona @JsonFormat se for LocalDate ou LocalDateTime
-				if (javaType.equals("java.time.LocalDate")) {
+				if (javaType.equals(LocalDate.class.getName())) {
 					fieldBuilder.addAnnotation(AnnotationSpec.builder(jsonFormat).addMember("shape", "$T.STRING", jsonFormat.nestedClass("Shape")).addMember("pattern", "$T.DATE_FORMAT", constants).build());
-				} else if (javaType.equals("java.time.LocalDateTime")) {
+				} else if (javaType.equals(LocalDateTime.class.getName())) {
 					fieldBuilder.addAnnotation(AnnotationSpec.builder(jsonFormat).addMember("shape", "$T.STRING", jsonFormat.nestedClass("Shape")).addMember("pattern", "$T.DATE_TIME_FORMAT", constants).build());
 				}
 
@@ -397,47 +452,94 @@ public class EntityGenerator {
 
 		for (Map.Entry<String, List<String>> entry : compositeForeignKeys.getOrDefault(tableName, Map.of()).entrySet()) {
 
-			String referencedTable = entry.getKey();
+		    String referencedTable = entry.getKey();
+		    List<String> fkColumns = entry.getValue();
 
-			List<String> fkColumns = entry.getValue();
+		    boolean alreadyMapped = fkColumns.stream().anyMatch(col ->
+		        columns.stream().anyMatch(c -> c.name.equals(col) && foreignKeys.containsKey(tableName)));
 
-			boolean alreadyMapped = fkColumns.stream().anyMatch(col -> columns.stream().anyMatch(c -> c.name.equals(col) && foreignKeys.containsKey(tableName)));
+		    if (alreadyMapped)
+		        continue;
 
-			if (alreadyMapped)
-				continue;
+		    String referencedProperty = StringUtils.camelCase(referencedTable);
+		    String referencedClass = StringUtils.capitalize(referencedProperty);
 
-			String referencedProperty = StringUtils.camelCase(referencedTable);
+		    List<CodeBlock> joinColumnsBlocks = new ArrayList<>();
+		    for (String fkColumn : fkColumns) {
+		        String referencedColumnName = getReferencedColumnName(metaData, tableName, fkColumn);
+		        CodeBlock join = CodeBlock.of("@$T(name = $S, referencedColumnName = $S)",
+		                JoinColumn.class, fkColumn, referencedColumnName);
+		        joinColumnsBlocks.add(join);
+		    }
 
-			String referencedClass = StringUtils.capitalize(referencedProperty);
+		    AnnotationSpec joinColumnsAnnotation = AnnotationSpec.builder(JoinColumns.class)
+		            .addMember("value", "{$L}", CodeBlock.join(joinColumnsBlocks, ", "))
+		            .build();
 
-			List<CodeBlock> joinColumnsBlocks = new ArrayList<>();
+		    // @ManyToOne composto
+		    ClassName jsonProperty = ClassName.get(JsonProperty.class.getPackageName(), JsonProperty.class.getSimpleName());
+		    ClassName accessEnum = ClassName.get(JsonProperty.class.getPackageName() + "." + JsonProperty.class.getSimpleName() , Access.class.getSimpleName());
 
-			for (String fkColumn : fkColumns) {
-				String referencedColumnName = getReferencedColumnName(metaData, tableName, fkColumn);
-				CodeBlock join = CodeBlock.of("@$T(name = $S, referencedColumnName = $S)", JoinColumn.class, fkColumn, referencedColumnName);
-				joinColumnsBlocks.add(join);
-			}
+		    AnnotationSpec writeOnly = AnnotationSpec.builder(jsonProperty)
+		    	    .addMember("access", "$T.WRITE_ONLY", accessEnum)
+		    	    .build();
 
-			AnnotationSpec joinColumnsAnnotation = AnnotationSpec.builder(ClassName.get(JoinColumns.class.getPackageName(), JoinColumns.class.getSimpleName()))
-					.addMember("value", "{$L}", CodeBlock.join(joinColumnsBlocks, ", ")).build();
+		    	FieldSpec field = FieldSpec
+		    	        .builder(ClassName.get(packageName, referencedClass), referencedProperty, Modifier.PRIVATE)
+		    	        .addAnnotation(writeOnly)
+		    	        .addAnnotation(AnnotationSpec.builder(ManyToOne.class)
+		    	                .addMember("fetch", "$T.LAZY", ClassName.get(FetchType.class.getPackageName(), FetchType.class.getSimpleName()))
+		    	                .build())
+		    	        .addAnnotation(joinColumnsAnnotation)
+		    	        .build();
 
-			FieldSpec field = FieldSpec
-					.builder(ClassName.get(packageName, referencedClass), referencedProperty, Modifier.PRIVATE)
-					.addAnnotation(AnnotationSpec.builder(ManyToOne.class)
-							.addMember("fetch", "$T.LAZY", ClassName.get(FetchType.class.getPackageName(), FetchType.class.getSimpleName())).build())
-					.addAnnotation(joinColumnsAnnotation).build();
+		    classBuilder.addField(field);
 
-			classBuilder.addField(field);
+		    classBuilder.addMethod(MethodSpec.methodBuilder("get" + referencedClass)
+		            .addModifiers(Modifier.PUBLIC)
+		            .returns(ClassName.get(packageName, referencedClass))
+		            .addStatement("return this.$N", referencedProperty)
+		            .build());
 
-			// getter
-			classBuilder.addMethod(MethodSpec.methodBuilder("get" + referencedClass).addModifiers(Modifier.PUBLIC)
-					.returns(ClassName.get(packageName, referencedClass))
-					.addStatement("return this.$N", referencedProperty).build());
+		    classBuilder.addMethod(MethodSpec.methodBuilder("set" + referencedClass)
+		            .addModifiers(Modifier.PUBLIC)
+		            .addParameter(ClassName.get(packageName, referencedClass), referencedProperty)
+		            .addStatement("this.$N = $N", referencedProperty, referencedProperty)
+		            .build());
 
-			// setter
-			classBuilder.addMethod(MethodSpec.methodBuilder("set" + referencedClass).addModifiers(Modifier.PUBLIC)
-					.addParameter(ClassName.get(packageName, referencedClass), referencedProperty)
-					.addStatement("this.$N = $N", referencedProperty, referencedProperty).build());
+		    // Campos primitivos da FK composta
+		    for (String fkColumn : fkColumns) {
+		        String primitiveField = StringUtils.camelCase(fkColumn);
+		        String fkType = columns.stream()
+		            .filter(c -> c.name.equals(fkColumn))
+		            .findFirst()
+		            .map(c -> TypeMapper.toJavaType(c.sqlTypeName))
+		            .orElse("Long");
+
+		        ClassName typeClass = ClassName.bestGuess(fkType);
+
+		        FieldSpec fkPrimitiveField = FieldSpec.builder(typeClass, primitiveField, Modifier.PRIVATE)
+		            .addAnnotation(AnnotationSpec.builder(Column.class)
+		                .addMember("name", "$S", fkColumn)
+		                .addMember("insertable", "$L", false)
+		                .addMember("updatable", "$L", false)
+		                .build())
+		            .build();
+
+		        classBuilder.addField(fkPrimitiveField);
+
+		        classBuilder.addMethod(MethodSpec.methodBuilder("get" + StringUtils.capitalize(primitiveField))
+		            .addModifiers(Modifier.PUBLIC)
+		            .returns(typeClass)
+		            .addStatement("return this.$N", primitiveField)
+		            .build());
+
+		        classBuilder.addMethod(MethodSpec.methodBuilder("set" + StringUtils.capitalize(primitiveField))
+		            .addModifiers(Modifier.PUBLIC)
+		            .addParameter(typeClass, primitiveField)
+		            .addStatement("this.$N = $N", primitiveField, primitiveField)
+		            .build());
+		    }
 		}
 
 		// equals/hashCode

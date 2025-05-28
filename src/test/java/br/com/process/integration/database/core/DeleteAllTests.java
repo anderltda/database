@@ -35,6 +35,8 @@ class DeleteAllTests {
 
 	@LocalServerPort
 	private int port;
+	
+	private static final String PATH = "http://localhost:";
 
 	@Autowired
 	private TestRestTemplate restTemplate;
@@ -55,7 +57,7 @@ class DeleteAllTests {
 	@Order(1)
 	void teste_01() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne";
+		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityOne";
 
 		String statusCode = delete(url, new ErrorResponse());
 
@@ -66,7 +68,7 @@ class DeleteAllTests {
 	@Order(2)
 	void teste_02() {
 
-		String url = "http://localhost:" + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityStatus";
+		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/EntityStatus";
 
 		String statusCode = delete(url, new ErrorResponse());
 

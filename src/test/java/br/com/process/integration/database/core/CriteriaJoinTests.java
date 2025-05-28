@@ -24,12 +24,17 @@ import org.springframework.test.context.ActiveProfiles;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import br.com.process.integration.database.core.exception.ErrorResponse;
 import br.com.process.integration.database.core.ui.QueryJpaController;
+import br.com.process.integration.database.model.entity.dto.example.EntityFive;
+import br.com.process.integration.database.model.entity.dto.example.EntityFour;
 import br.com.process.integration.database.model.entity.dto.example.EntityOne;
+import br.com.process.integration.database.model.entity.dto.example.EntityTree;
+import br.com.process.integration.database.model.entity.dto.example.EntityTwo;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -48,6 +53,9 @@ class CriteriaJoinTests {
 	@Autowired
 	private QueryJpaController queryJpaController;
 	
+	@Autowired
+	private ObjectMapper objectMapper;
+	
 	@BeforeAll
 	void setupOnce() { }
 
@@ -58,7 +66,7 @@ class CriteriaJoinTests {
 	};
 
 	@Test
-	void teste_01() {
+	void teste_01() throws Exception {
 
 	    String url = PATH
 	            + port 
@@ -75,12 +83,15 @@ class CriteriaJoinTests {
 	    assertEquals(2, list.size());
 	    assertEquals("Carlos Alberto", list.get(0).getName());
 	    assertEquals("Carlos", list.get(1).getName());
-	    assertEquals(10, list.get(0).getEntityTwo().getHex());
-	    assertEquals(144, list.get(1).getEntityTwo().getHex());
+	    
+	    EntityTwo entityTwo = objectMapper.readValue(findById("entityTwo", list.get(0).getIdEntityTwo()), EntityTwo.class);
+	    assertEquals(10, entityTwo.getHex());
+	    entityTwo = objectMapper.readValue(findById("entityTwo", list.get(1).getIdEntityTwo()), EntityTwo.class);
+	    assertEquals(144, entityTwo.getHex());
 	}
 
 	@Test
-	void teste_02() {
+	void teste_02() throws Exception {
 
 	    String url = PATH 
 	            + port 
@@ -94,6 +105,9 @@ class CriteriaJoinTests {
 	            + "sortOrders=desc,asc";
 
 	    List<EntityOne> list = getAll(url, new ErrorResponse());
+	    
+	    EntityTwo entityTwo = null;
+		EntityTree entityTree = null;
 
 	    assertNotNull(list);
 	    assertEquals(5, list.size());
@@ -104,17 +118,30 @@ class CriteriaJoinTests {
 	    assertEquals("Renato", list.get(3).getName());
 	    assertEquals("Ariovaldo", list.get(4).getName());
 	    
-	    assertEquals("Verde", list.get(0).getEntityTwo().getColor());
-	    assertEquals("Verde", list.get(1).getEntityTwo().getColor());
-	    assertEquals("Roxo", list.get(2).getEntityTwo().getColor());
-	    assertEquals("Laranja", list.get(3).getEntityTwo().getColor());
-	    assertEquals("Cinza", list.get(4).getEntityTwo().getColor());
+	    entityTwo = objectMapper.readValue(findById("entityTwo", list.get(0).getIdEntityTwo()), EntityTwo.class);
+	    assertEquals("Verde", entityTwo.getColor());
+	    entityTree = objectMapper.readValue(findById("entityTree", entityTwo.getIdEntityTree()), EntityTree.class);
+	    assertEquals("Cavalo", entityTree.getAnimal());
+
+	    entityTwo = objectMapper.readValue(findById("entityTwo", list.get(1).getIdEntityTwo()), EntityTwo.class);
+	    assertEquals("Verde", entityTwo.getColor());
+	    entityTree = objectMapper.readValue(findById("entityTree", entityTwo.getIdEntityTree()), EntityTree.class);
+	    assertEquals("Gato", entityTree.getAnimal());
 	    
-	    assertEquals("Cavalo", list.get(0).getEntityTwo().getEntityTree().getAnimal());
-	    assertEquals("Gato", list.get(1).getEntityTwo().getEntityTree().getAnimal());
-	    assertEquals("Cavalo", list.get(2).getEntityTwo().getEntityTree().getAnimal());
-	    assertEquals("Papagaio", list.get(3).getEntityTwo().getEntityTree().getAnimal());
-	    assertEquals("Gato", list.get(4).getEntityTwo().getEntityTree().getAnimal());
+	    entityTwo = objectMapper.readValue(findById("entityTwo", list.get(2).getIdEntityTwo()), EntityTwo.class);
+	    assertEquals("Roxo", entityTwo.getColor());
+	    entityTree = objectMapper.readValue(findById("entityTree", entityTwo.getIdEntityTree()), EntityTree.class);
+	    assertEquals("Cavalo", entityTree.getAnimal());
+	    
+	    entityTwo = objectMapper.readValue(findById("entityTwo", list.get(3).getIdEntityTwo()), EntityTwo.class);
+	    assertEquals("Laranja", entityTwo.getColor());
+	    entityTree = objectMapper.readValue(findById("entityTree", entityTwo.getIdEntityTree()), EntityTree.class);
+	    assertEquals("Papagaio", entityTree.getAnimal());
+	    
+	    entityTwo = objectMapper.readValue(findById("entityTwo", list.get(4).getIdEntityTwo()), EntityTwo.class);
+	    assertEquals("Cinza", entityTwo.getColor());
+		entityTree = objectMapper.readValue(findById("entityTree", entityTwo.getIdEntityTree()), EntityTree.class);
+	    assertEquals("Gato", entityTree.getAnimal());
 	}
 
 	@Test
@@ -154,7 +181,7 @@ class CriteriaJoinTests {
 	}
 
 	@Test
-	void teste_05() {
+	void teste_05() throws Exception {
 
 	    String url = PATH 
 	            + port 
@@ -165,12 +192,17 @@ class CriteriaJoinTests {
 
 	    List<EntityOne> list = getAll(url, new ErrorResponse());
 
-	    list.forEach(entity -> {
-	        assertEquals("Cama", entity.getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getReference());
-	    });
-
 	    assertNotNull(list);
 	    assertEquals(1, list.size());
+
+	    for (EntityOne entity : list) {
+			EntityTwo entityTwo = objectMapper.readValue(findById("entityTwo", entity.getIdEntityTwo()), EntityTwo.class);
+			EntityTree entityTree = objectMapper.readValue(findById("entityTree", entityTwo.getIdEntityTree()), EntityTree.class);
+			EntityFour entityFour = objectMapper.readValue(findById("entityFour", entityTree.getIdEntityFour()), EntityFour.class);
+			EntityFive entityFive = objectMapper.readValue(findById("entityFive", entityFour.getIdEntityFive()), EntityFive.class);
+	        assertEquals("Cama", entityFive.getReference());
+	    };
+
 	}
 
 	@Test
@@ -259,5 +291,17 @@ class CriteriaJoinTests {
 	    } catch (JsonProcessingException e) {
 	        throw new RuntimeException("Error parsing ErrorResponse", e);
 	    }
+	}
+	
+	public String findById(String clazz, Object id) {
+		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/" + clazz + "/" + id;
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+		if (response.getStatusCode().is2xxSuccessful()) {
+			return response.getBody();
+		} 
+		return null;
 	}
 }

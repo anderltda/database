@@ -1,49 +1,18 @@
-package br.com.process.integration.database.model.entity.dto.example;
+package br.com.process.integration.database.vo;
 
 import java.util.UUID;
 
-import org.springframework.hateoas.RepresentationModel;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
-import br.com.process.integration.database.core.domain.BeanEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-
-@Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Table(name = "entity_five")
-public class EntityFive extends RepresentationModel<EntityFive> implements BeanEntity<UUID> {
+public class EntityFiveVo {
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.UUID)
-	@Column(name = "id_entity_five")
 	private UUID id;
-
-	@Column(name = "factor", nullable = false)
 	private Integer factor;
-
-	@Column(name = "reference", nullable = false, length = 255)
 	private String reference;
-
-	@JsonProperty(access = Access.WRITE_ONLY)
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_entity_status", referencedColumnName = "id_entity_status")
-	private EntityStatus entityStatus;
-
-	@Column(name = "id_entity_status", insertable = false, updatable = false)
+	private EntityStatusVo entityStatus;
 	private Long idEntityStatus;
 
-	@Override
 	public UUID getId() {
 		return this.id;
 	}
@@ -68,11 +37,11 @@ public class EntityFive extends RepresentationModel<EntityFive> implements BeanE
 		this.reference = reference;
 	}
 
-	public EntityStatus getEntityStatus() {
+	public EntityStatusVo getEntityStatus() {
 		return this.entityStatus;
 	}
 
-	public void setEntityStatus(EntityStatus entityStatus) {
+	public void setEntityStatus(EntityStatusVo entityStatus) {
 		this.entityStatus = entityStatus;
 	}
 
@@ -90,7 +59,7 @@ public class EntityFive extends RepresentationModel<EntityFive> implements BeanE
 			return true;
 		if (o == null || getClass() != o.getClass())
 			return false;
-		EntityFive that = (EntityFive) o;
+		EntityFiveVo that = (EntityFiveVo) o;
 		return java.util.Objects.equals(id, that.id);
 	}
 

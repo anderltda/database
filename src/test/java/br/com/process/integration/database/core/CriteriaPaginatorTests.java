@@ -97,6 +97,9 @@ class CriteriaPaginatorTests {
 
 	    List<EntityOne> list = getAll(url, new ErrorResponse());
 
+	    assertNotNull(list);
+	    assertEquals(1, list.size());
+
 	    list.forEach(entity -> {
 	        assertNotNull(entity.getId());
 	        assertEquals("Anderson", entity.getName());
@@ -105,11 +108,9 @@ class CriteriaPaginatorTests {
 	        assertEquals(LocalDate.parse("1983-03-29", DateTimeFormatter.ISO_LOCAL_DATE), entity.getBirthDate());
 	        assertEquals(LocalDateTime.parse("2024-02-01T02:52:54", DateTimeFormatter.ISO_LOCAL_DATE_TIME), entity.getProhibitedDateTime());
 	        assertNotEquals(0, entity.hashCode());
-	        assertNotNull(entity.getEntityTwo());
+	        assertNotNull(entity.getIdEntityTwo());
 	    });
 
-	    assertNotNull(list);
-	    assertEquals(1, list.size());
 	}
 
 	@Test

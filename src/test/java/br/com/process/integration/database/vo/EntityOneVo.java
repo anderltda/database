@@ -1,77 +1,31 @@
-package br.com.process.integration.database.model.entity.dto.example;
+package br.com.process.integration.database.vo;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.springframework.hateoas.RepresentationModel;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import br.com.process.integration.database.core.Constants;
-import br.com.process.integration.database.core.domain.BeanEntity;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 
-@Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Table(name = "entity_one")
-public class EntityOne extends RepresentationModel<EntityOne> implements BeanEntity<Long> {
+public class EntityOneVo {
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_entity_one")
 	private Long id;
-
-	@Column(name = "age")
 	private Integer age;
-
-	@Column(name = "birth_date", nullable = false)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_FORMAT)
 	private LocalDate birthDate;
-
-	@Column(name = "code", nullable = false)
 	private Boolean code;
-
-	@Column(name = "height", nullable = false)
 	private Double height;
-
-	@Column(name = "name", nullable = false, length = 255)
 	private String name;
-
-	@Column(name = "prohibited_date_time", nullable = false)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_TIME_FORMAT)
 	private LocalDateTime prohibitedDateTime;
-
-	@JsonProperty(access = Access.WRITE_ONLY)
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_entity_status", referencedColumnName = "id_entity_status")
-	private EntityStatus entityStatus;
-
-	@Column(name = "id_entity_status", insertable = false, updatable = false)
+	private EntityStatusVo entityStatus;
 	private Long idEntityStatus;
-
-	@JsonProperty(access = Access.WRITE_ONLY)
-	@OneToOne(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
-	@JoinColumn(name = "id_entity_two", referencedColumnName = "id_entity_two", unique = true)
-	private EntityTwo entityTwo;
-
-	@Column(name = "id_entity_two", insertable = false, updatable = false)
+	private EntityTwoVo entityTwo;
 	private UUID idEntityTwo;
 
-	@Override
 	public Long getId() {
 		return this.id;
 	}
@@ -128,11 +82,11 @@ public class EntityOne extends RepresentationModel<EntityOne> implements BeanEnt
 		this.prohibitedDateTime = prohibitedDateTime;
 	}
 
-	public EntityStatus getEntityStatus() {
+	public EntityStatusVo getEntityStatus() {
 		return this.entityStatus;
 	}
 
-	public void setEntityStatus(EntityStatus entityStatus) {
+	public void setEntityStatus(EntityStatusVo entityStatus) {
 		this.entityStatus = entityStatus;
 	}
 
@@ -144,11 +98,11 @@ public class EntityOne extends RepresentationModel<EntityOne> implements BeanEnt
 		this.idEntityStatus = idEntityStatus;
 	}
 
-	public EntityTwo getEntityTwo() {
+	public EntityTwoVo getEntityTwo() {
 		return this.entityTwo;
 	}
 
-	public void setEntityTwo(EntityTwo entityTwo) {
+	public void setEntityTwo(EntityTwoVo entityTwo) {
 		this.entityTwo = entityTwo;
 	}
 
@@ -166,7 +120,7 @@ public class EntityOne extends RepresentationModel<EntityOne> implements BeanEnt
 			return true;
 		if (o == null || getClass() != o.getClass())
 			return false;
-		EntityOne that = (EntityOne) o;
+		EntityOneVo that = (EntityOneVo) o;
 		return java.util.Objects.equals(id, that.id);
 	}
 

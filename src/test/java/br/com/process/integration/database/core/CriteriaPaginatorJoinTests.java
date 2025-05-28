@@ -32,7 +32,12 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import br.com.process.integration.database.core.exception.ErrorResponse;
 import br.com.process.integration.database.core.ui.QueryJpaController;
+import br.com.process.integration.database.model.entity.dto.example.EntityFive;
+import br.com.process.integration.database.model.entity.dto.example.EntityFour;
 import br.com.process.integration.database.model.entity.dto.example.EntityOne;
+import br.com.process.integration.database.model.entity.dto.example.EntityTree;
+import br.com.process.integration.database.model.entity.dto.example.EntityTwo;
+import br.com.process.integration.database.vo.EntityTwoVo;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -50,6 +55,9 @@ class CriteriaPaginatorJoinTests {
 
 	@Autowired
 	private QueryJpaController queryJpaController;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	@BeforeAll
 	void setupOnce() {
@@ -168,10 +176,9 @@ class CriteriaPaginatorJoinTests {
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
-		assertEquals(3, list.size());
+		assertEquals(2, list.size());
 		assertEquals("Paulo", list.get(0).getName());
 		assertEquals("Joana", list.get(1).getName());
-		assertEquals("Anderson", list.get(2).getName());
 	}
 
 	@Test
@@ -228,10 +235,10 @@ class CriteriaPaginatorJoinTests {
 
 		assertNotNull(list);
 		assertEquals(4, list.size());
-		assertEquals("Ricardo", list.get(0).getName());
-		assertEquals("Paulo", list.get(1).getName());
-		assertEquals("Anderson", list.get(2).getName());
-		assertEquals("Joana", list.get(3).getName());
+		assertEquals("Paulo", list.get(0).getName());
+		assertEquals("Joana", list.get(1).getName());
+		assertEquals("Ricardo", list.get(2).getName());
+		assertEquals("Anderson", list.get(3).getName());
 	}
 
 	@Test
@@ -258,11 +265,9 @@ class CriteriaPaginatorJoinTests {
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
-		assertEquals(4, list.size());
-		assertEquals("Ricardo", list.get(0).getName());
-		assertEquals("Paulo", list.get(1).getName());
-		assertEquals("Anderson", list.get(2).getName());
-		assertEquals("Joana", list.get(3).getName());
+		assertEquals(2, list.size());
+		assertEquals("Paulo", list.get(0).getName());
+		assertEquals("Joana", list.get(1).getName());
 	}
 
 	@Test
@@ -291,11 +296,9 @@ class CriteriaPaginatorJoinTests {
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
-		assertEquals(4, list.size());
-		assertEquals("Ricardo", list.get(0).getName());
-		assertEquals("Paulo", list.get(1).getName());
-		assertEquals("Anderson", list.get(2).getName());
-		assertEquals("Joana", list.get(3).getName());
+		assertEquals(2, list.size());
+		assertEquals("Paulo", list.get(0).getName());
+		assertEquals("Joana", list.get(1).getName());
 	}
 
 	@Test
@@ -313,7 +316,7 @@ class CriteriaPaginatorJoinTests {
 		        + "entityTwo.color_op=in&"
 		        + "entityTwo.color=Roxo,Amarelo,Verde,Azul,Preto,Laranja&"
 		        + "entityTwo.hex_op=bt&"
-		        + "entityTwo.hex=523,12345&"
+		        + "entityTwo.hex=23,3131&"
 		        + "entityTwo.cost_op=ge&"
 		        + "entityTwo.cost=12,00&"
 		        + "entityTwo.inclusionDate_op=ge&"
@@ -327,10 +330,10 @@ class CriteriaPaginatorJoinTests {
 
 		assertNotNull(list);
 		assertEquals(4, list.size());
-		assertEquals("Ricardo", list.get(0).getName());
-		assertEquals("Paulo", list.get(1).getName());
-		assertEquals("Anderson", list.get(2).getName());
-		assertEquals("Joana", list.get(3).getName());
+		assertEquals("Paulo", list.get(0).getName());
+		assertEquals("Joana", list.get(1).getName());
+		assertEquals("Ricardo", list.get(2).getName());
+		assertEquals("Anderson", list.get(3).getName());
 	}
 
 	@Test
@@ -347,7 +350,7 @@ class CriteriaPaginatorJoinTests {
 		        + "entityTwo.color_op=in&"
 		        + "entityTwo.color=Roxo,Amarelo,Verde,Azul,Preto,Laranja&"
 		        + "entityTwo.hex_op=bt&"
-		        + "entityTwo.hex=523,12345&"
+		        + "entityTwo.hex=23,3131&"
 		        + "entityTwo.cost_op=ge&"
 		        + "entityTwo.cost=12,00&"
 		        + "entityTwo.inclusionDate_op=ge&"
@@ -384,7 +387,7 @@ class CriteriaPaginatorJoinTests {
 		        + "entityTwo.color_op=in&"
 		        + "entityTwo.color=Roxo,Amarelo,Verde,Azul,Preto,Laranja&"
 		        + "entityTwo.hex_op=bt&"
-		        + "entityTwo.hex=523,12345&"
+		        + "entityTwo.hex=24,3130&"
 		        + "entityTwo.cost_op=ge&"
 		        + "entityTwo.cost=12,00&"
 		        + "entityTwo.inclusionDate_op=ge&"
@@ -401,11 +404,10 @@ class CriteriaPaginatorJoinTests {
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
-		assertEquals(4, list.size());
-		assertEquals("Paulo", list.get(0).getName());
-		assertEquals("Ricardo", list.get(1).getName());
-		assertEquals("Joana", list.get(2).getName());
-		assertEquals("Anderson", list.get(3).getName());
+		assertEquals(3, list.size());
+		assertEquals("Ricardo", list.get(0).getName());
+		assertEquals("Joana", list.get(1).getName());
+		assertEquals("Anderson", list.get(2).getName());
 	}
 
 	@Test
@@ -421,7 +423,7 @@ class CriteriaPaginatorJoinTests {
 				+ "entityTwo.color_op=in&"
 				+ "entityTwo.color=Roxo,Amarelo,Verde,Azul,Preto,Laranja&"
 				+ "entityTwo.hex_op=bt&"
-				+ "entityTwo.hex=523,12345&"
+				+ "entityTwo.hex=23,3132&"
 				+ "entityTwo.cost_op=ge&"
 				+ "entityTwo.cost=12,00&"
 				+ "entityTwo.inclusionDate_op=ge&"
@@ -478,7 +480,7 @@ class CriteriaPaginatorJoinTests {
 	}
 
 	@Test
-	void teste_14() {
+	void teste_14() throws Exception {
 
 		String url = PATH 
 		        + port 
@@ -497,12 +499,18 @@ class CriteriaPaginatorJoinTests {
 		assertEquals(2, list.size());
 		assertEquals("Carlos Alberto", list.get(0).getName());
 		assertEquals("Carlos", list.get(1).getName());
-		assertEquals(10, list.get(0).getEntityTwo().getHex());
-		assertEquals(144, list.get(1).getEntityTwo().getHex());
+		
+		EntityTwoVo entityTwo = objectMapper.readValue(findById("entityTwo", list.get(0).getIdEntityTwo()), EntityTwoVo.class);
+		assertEquals("Preto", entityTwo.getColor());
+		assertEquals(10, entityTwo.getHex());
+
+		entityTwo = objectMapper.readValue(findById("entityTwo", list.get(1).getIdEntityTwo()), EntityTwoVo.class);
+		assertEquals("Preto", entityTwo.getColor());
+		assertEquals(144, entityTwo.getHex());
 	}
 
 	@Test
-	void teste_15() {
+	void teste_15() throws Exception {
 
 		String url = PATH 
 		        + port 
@@ -520,12 +528,16 @@ class CriteriaPaginatorJoinTests {
 		assertNotNull(list);
 		assertEquals(8, list.size());
 		assertEquals("Carlos Alberto", list.get(0).getName());
-		assertEquals(10, list.get(0).getEntityTwo().getHex());
-		assertEquals(8876, list.get(1).getEntityTwo().getHex());
+		
+		EntityTwoVo entityTwo = objectMapper.readValue(findById("entityTwo", list.get(0).getIdEntityTwo()), EntityTwoVo.class);
+		assertEquals(10, entityTwo.getHex());
+
+		entityTwo = objectMapper.readValue(findById("entityTwo", list.get(1).getIdEntityTwo()), EntityTwoVo.class);
+		assertEquals(8876, entityTwo.getHex());
 	}
 
 	@Test
-	void teste_16() {
+	void teste_16() throws Exception {
 
 		String url = PATH 
 		        + port 
@@ -542,24 +554,46 @@ class CriteriaPaginatorJoinTests {
 
 		assertNotNull(list);
 		assertEquals(5, list.size());
+		
+		EntityOne entityOne = null;
+		EntityTwo entityTwo = null;
+		EntityTree entityTree = null;
+		
+		entityOne = objectMapper.readValue(findById("entityOne", list.get(0).getId()), EntityOne.class);
+		assertEquals("Paulo Henrique", entityOne.getName());
+		entityTwo = objectMapper.readValue(findById("entityTwo", entityOne.getIdEntityTwo()), EntityTwo.class);
+		assertEquals("Verde", entityTwo.getColor());
+		entityTree = objectMapper.readValue(findById("entityTree", entityTwo.getIdEntityTree()), EntityTree.class);
+		assertEquals("Cavalo", entityTree.getAnimal());
 
-		assertEquals("Paulo Henrique", list.get(0).getName());
-		assertEquals("Ricardo", list.get(1).getName());
-		assertEquals("Paulo", list.get(2).getName());
-		assertEquals("Renato", list.get(3).getName());
-		assertEquals("Ariovaldo", list.get(4).getName());
+		entityOne = objectMapper.readValue(findById("entityOne", list.get(1).getId()), EntityOne.class);
+		assertEquals("Ricardo", entityOne.getName());
+		entityTwo = objectMapper.readValue(findById("entityTwo", entityOne.getIdEntityTwo()), EntityTwo.class);
+		assertEquals("Verde", entityTwo.getColor());
+		entityTree = objectMapper.readValue(findById("entityTree", entityTwo.getIdEntityTree()), EntityTree.class);
+		assertEquals("Gato", entityTree.getAnimal());
 
-		assertEquals("Verde", list.get(0).getEntityTwo().getColor());
-		assertEquals("Verde", list.get(1).getEntityTwo().getColor());
-		assertEquals("Roxo", list.get(2).getEntityTwo().getColor());
-		assertEquals("Laranja", list.get(3).getEntityTwo().getColor());
-		assertEquals("Cinza", list.get(4).getEntityTwo().getColor());
+		entityOne = objectMapper.readValue(findById("entityOne", list.get(2).getId()), EntityOne.class);
+		assertEquals("Paulo", entityOne.getName());
+		entityTwo = objectMapper.readValue(findById("entityTwo", entityOne.getIdEntityTwo()), EntityTwo.class);
+		assertEquals("Roxo", entityTwo.getColor());
+		entityTree = objectMapper.readValue(findById("entityTree", entityTwo.getIdEntityTree()), EntityTree.class);
+		assertEquals("Cavalo", entityTree.getAnimal());
+		
+		entityOne = objectMapper.readValue(findById("entityOne", list.get(3).getId()), EntityOne.class);
+		assertEquals("Renato", entityOne.getName());
+		entityTwo = objectMapper.readValue(findById("entityTwo", entityOne.getIdEntityTwo()), EntityTwo.class);
+		assertEquals("Laranja", entityTwo.getColor());
+		entityTree = objectMapper.readValue(findById("entityTree", entityTwo.getIdEntityTree()), EntityTree.class);
+		assertEquals("Papagaio", entityTree.getAnimal());
 
-		assertEquals("Cavalo", list.get(0).getEntityTwo().getEntityTree().getAnimal());
-		assertEquals("Gato", list.get(1).getEntityTwo().getEntityTree().getAnimal());
-		assertEquals("Cavalo", list.get(2).getEntityTwo().getEntityTree().getAnimal());
-		assertEquals("Papagaio", list.get(3).getEntityTwo().getEntityTree().getAnimal());
-		assertEquals("Gato", list.get(4).getEntityTwo().getEntityTree().getAnimal());
+		entityOne = objectMapper.readValue(findById("entityOne", list.get(4).getId()), EntityOne.class);
+		assertEquals("Ariovaldo", entityOne.getName());
+		entityTwo = objectMapper.readValue(findById("entityTwo", entityOne.getIdEntityTwo()), EntityTwo.class);
+		assertEquals("Cinza", entityTwo.getColor());
+		entityTree = objectMapper.readValue(findById("entityTree", entityTwo.getIdEntityTree()), EntityTree.class);
+		assertEquals("Gato", entityTree.getAnimal());
+		
 	}
 
 	@Test
@@ -601,7 +635,7 @@ class CriteriaPaginatorJoinTests {
 	}
 
 	@Test
-	void teste_19() {
+	void teste_19() throws Exception {
 
 		String url = PATH 
 		        + port 
@@ -616,12 +650,21 @@ class CriteriaPaginatorJoinTests {
 		
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
-		list.forEach(entity -> {
-			assertEquals("Cama", entity.getEntityTwo().getEntityTree().getEntityFour().getEntityFive().getReference());
-		});
-
 		assertNotNull(list);
 		assertEquals(1, list.size());
+
+		EntityOne entityOne = objectMapper.readValue(findById("entityOne", list.get(0).getId()), EntityOne.class);
+
+		EntityTwo entityTwo = objectMapper.readValue(findById("entityTwo", entityOne.getIdEntityTwo()), EntityTwo.class);
+
+		EntityTree entityTree = objectMapper.readValue(findById("entityTree", entityTwo.getIdEntityTree()), EntityTree.class);
+		
+		EntityFour entityFour = objectMapper.readValue(findById("entityFour", entityTree.getIdEntityFour()), EntityFour.class);
+		
+		EntityFive entityFive = objectMapper.readValue(findById("entityFive", entityFour.getIdEntityFive()), EntityFive.class);
+		
+		assertEquals("Cama", entityFive.getReference());
+
 	}
 
 	@Test
@@ -641,7 +684,8 @@ class CriteriaPaginatorJoinTests {
 		List<EntityOne> list = getAll(url, new ErrorResponse());
 
 		assertNotNull(list);
-		assertEquals(2, list.size());
+		assertEquals(1, list.size());
+		assertEquals("Ricardo", list.get(0).getName());
 	}
 
 	@Test
@@ -662,7 +706,7 @@ class CriteriaPaginatorJoinTests {
 				+ "entityTwo.color_op=in&"
 				+ "entityTwo.color=Roxo,Amarelo,Verde,azul,Preto,Laranja&"
 				+ "entityTwo.hex_op=bt&"
-				+ "entityTwo.hex=523,12345&"
+				+ "entityTwo.hex=23,3131&"
 				+ "entityTwo.cost_op=ge&"
 				+ "entityTwo.cost=12,00&"
 				+ "entityTwo.inclusionDate_op=ge&"
@@ -1280,5 +1324,18 @@ class CriteriaPaginatorJoinTests {
 
 	private EntityOne convertToEntityOne(EntityOne element) {
 		return element;
+	}
+	
+	public String findById(String clazz, Object id) {
+		String url = PATH + port + Constants.API_NAME_REQUEST_MAPPING + "/" + clazz + "/" + id;
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
+		HttpEntity<String> entity = new HttpEntity<>(headers);
+		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+		if (response.getStatusCode().is2xxSuccessful()) {
+			return response.getBody();
+		} 
+		
+		return null;
 	}
 }

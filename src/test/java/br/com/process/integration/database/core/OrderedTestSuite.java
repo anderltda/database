@@ -8,8 +8,6 @@ import org.junit.platform.suite.api.Suite;
 	InitTests.class,
 	SaveInsertsFlushTests.class,
 	DeleteAllTests.class, 
-	SaveFlushTests.class, 
-	DeleteTests.class, 
 	SaveTests.class,
 	CriteriaTests.class,
 	CriteriaJoinTests.class,

@@ -1,51 +1,17 @@
-package br.com.process.integration.database.model.entity.dto.example;
-
-import org.springframework.hateoas.RepresentationModel;
+package br.com.process.integration.database.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
-import br.com.process.integration.database.core.domain.BeanEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinColumns;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-
-@Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Table(name = "entity_eight")
-public class EntityEight extends RepresentationModel<EntityEight> implements BeanEntity<Long> {
+public class EntityEightVo {
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_entity_eight")
 	private Long id;
-
-	@Column(name = "position", nullable = false, length = 100)
 	private String position;
-
-	@Column(name = "properties", length = 100)
 	private String properties;
-
-	@JsonProperty(access = Access.WRITE_ONLY)
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumns({ @JoinColumn(name = "id_entity_seven", referencedColumnName = "id_entity_seven"), @JoinColumn(name = "id_entity_six", referencedColumnName = "id_entity_six") })
-	private EntitySeven entitySeven;
-
-	@Column(name = "id_entity_seven", insertable = false, updatable = false)
+	private EntitySevenVo entitySeven;
 	private Long idEntitySeven;
-
-	@Column(name = "id_entity_six", insertable = false, updatable = false)
 	private Long idEntitySix;
 
-	@Override
 	public Long getId() {
 		return this.id;
 	}
@@ -70,11 +36,11 @@ public class EntityEight extends RepresentationModel<EntityEight> implements Bea
 		this.properties = properties;
 	}
 
-	public EntitySeven getEntitySeven() {
+	public EntitySevenVo getEntitySeven() {
 		return this.entitySeven;
 	}
 
-	public void setEntitySeven(EntitySeven entitySeven) {
+	public void setEntitySeven(EntitySevenVo entitySeven) {
 		this.entitySeven = entitySeven;
 	}
 
@@ -100,7 +66,7 @@ public class EntityEight extends RepresentationModel<EntityEight> implements Bea
 			return true;
 		if (o == null || getClass() != o.getClass())
 			return false;
-		EntityEight that = (EntityEight) o;
+		EntityEightVo that = (EntityEightVo) o;
 		return java.util.Objects.equals(id, that.id);
 	}
 
