@@ -24,7 +24,7 @@ import jakarta.persistence.Table;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "entity_eight")
 public class EntityEight extends RepresentationModel<EntityEight> implements BeanEntity<Long> {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_entity_eight")

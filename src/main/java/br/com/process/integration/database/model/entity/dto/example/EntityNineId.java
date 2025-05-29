@@ -2,12 +2,15 @@ package br.com.process.integration.database.model.entity.dto.example;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Embeddable
 public class EntityNineId {
-	
+
 	@Column(name = "id_entity_eight")
 	private Long idEntityEight;
 

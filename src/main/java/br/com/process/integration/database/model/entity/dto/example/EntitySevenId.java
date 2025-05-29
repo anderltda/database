@@ -1,13 +1,14 @@
 package br.com.process.integration.database.model.entity.dto.example;
 
-import java.util.UUID;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import java.util.UUID;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Embeddable
 public class EntitySevenId {
-	
+
 	@Column(name = "id_entity_seven")
 	private UUID idEntitySeven;
 
@@ -15,7 +16,7 @@ public class EntitySevenId {
 	private Long idEntitySix;
 
 	public UUID getIdEntitySeven() {
-		return idEntitySeven;
+		return this.idEntitySeven;
 	}
 
 	public void setIdEntitySeven(UUID idEntitySeven) {

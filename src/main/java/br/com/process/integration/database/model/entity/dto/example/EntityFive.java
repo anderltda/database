@@ -23,7 +23,7 @@ import jakarta.persistence.Table;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "entity_five")
 public class EntityFive extends RepresentationModel<EntityFive> implements BeanEntity<UUID> {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	@Column(name = "id_entity_five")

@@ -13,7 +13,8 @@ import com.squareup.javapoet.ClassName;
 public class TypeMapper {
 	
 	/**
-	 * @param sqlTypeName
+	 * De -> Para: Identifica o tipo no banco e retorna o tipo utilizado em Java
+	 * @param sqlTypeName - Tipo de como está no banco
 	 * @return
 	 */
 	public static String toJavaType(String sqlTypeName) {
@@ -23,7 +24,7 @@ public class TypeMapper {
 		case "BOOLEAN", "BIT", "BOOL" -> "Boolean";
 		case "DATE" -> "java.time.LocalDate";
 		case "TIMESTAMP", "DATETIME" -> "java.time.LocalDateTime";
-		case "BIGDECIMAL", "DECIMAL", "NUMERIC", "FLOAT8" -> "BigDecimal";
+		case "BIGDECIMAL", "DECIMAL", "NUMERIC", "FLOAT8" -> "Double";
 		case "DOUBLE PRECISION", "DOUBLE" -> "Double";
 		case "REAL", "FLOAT" -> "Float";
 		case "JSON", "JSONB", "VARCHAR", "TEXT", "CHAR" -> "String";
@@ -33,7 +34,8 @@ public class TypeMapper {
 	}
 
 	/**
-	 * @param javaTypeName
+	 * Converte o nome da classe e, ClassName
+	 * @param javaTypeName - Nome da classe
 	 * @return
 	 */
 	public static ClassName resolveType(String javaTypeName) {
