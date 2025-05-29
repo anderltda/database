@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.lang.model.element.Modifier;
@@ -148,6 +149,8 @@ public class EntityGenerator {
 	private ClassResolver gerarClasseEntity(DatabaseMetaData metaData, String packageName, String tableName, Map<String, Map<String, String>> foreignKeys) throws Exception {
 
 		String className = StringUtils.capitalize(StringUtils.camelCase(tableName));
+		
+		ClassName typeIdClass = null;
 
 		List<ColumnInfo> columns = new ArrayList<>();
 
@@ -205,12 +208,13 @@ public class EntityGenerator {
 		// Obtém tipo da chave primária
 		String idColumn = primaryKeys.stream().findFirst().orElse(null);
 		String javaType = null;
+		ClassName typeClass = null;
 
 		if (idColumn != null) {
 			for (ColumnInfo column : columns) {
 				if (column.name.equals(idColumn)) {
 					javaType = TypeMapper.toJavaType(column.sqlTypeName);
-					System.out.println(" Field Name --->> " + column.name + " - Type Name --->> " + column.sqlTypeName + " - Type Java --->> " + javaType);
+					//System.out.println(" Field Name --->> " + column.name + " - Type Name --->> " + column.sqlTypeName + " - Type Java --->> " + javaType);
 					break;
 				}
 			}
@@ -223,17 +227,16 @@ public class EntityGenerator {
 				.addAnnotation(tableAnnotation.build())
 				.superclass(ParameterizedTypeName.get(representationModel, ClassName.get(packageName, className)));
 
-		ClassName idTypeClass = null;
-
 		if (isCompositeKey) {
-			idTypeClass = ClassName.get(packageName, className + "Id");
+			typeClass = ClassName.get(packageName, className + "Id");
+			typeIdClass = typeClass;
 		} else if (javaType != null) {
-			idTypeClass = ClassName.bestGuess(javaType);
+			typeClass = ClassName.bestGuess(javaType);
 		} else {
-			idTypeClass = ClassName.get(Object.class); // fallback
+			typeClass = ClassName.get(Object.class); // fallback
 		}
 
-		classBuilder.addSuperinterface(ParameterizedTypeName.get(beanEntity, idTypeClass));
+		classBuilder.addSuperinterface(ParameterizedTypeName.get(beanEntity, typeClass));
 
 		// Importa Jackson + Constants
 		ClassName jsonFormat = ClassName.get(JsonFormat.class.getPackageName(), JsonFormat.class.getSimpleName());
@@ -253,10 +256,10 @@ public class EntityGenerator {
 			}
 
 			javaType = TypeMapper.toJavaType(column.sqlTypeName);
-			
-			System.out.println(" Field Name --->> " + column.name + " - Type Name --->> " + column.sqlTypeName + " - Type Java --->> " + javaType);
 
-			ClassName typeClass = ClassName.bestGuess(javaType);
+			typeClass = TypeMapper.resolveType(javaType);
+			
+			//System.out.println(" Field Name --->> " + column.name + " - Type Name --->> " + column.sqlTypeName + " - Type Java --->> " + javaType);
 
 			boolean isPrimaryKey = primaryKeys.contains(column.name);
 
@@ -272,33 +275,33 @@ public class EntityGenerator {
 
 			if (isPrimaryKey && !isCompositeKey) {
 
-				boolean isUUID = "UUID".equalsIgnoreCase(column.sqlTypeName);
-				boolean isBigInt = "BIGINT".equalsIgnoreCase(column.sqlTypeName);
-
-				// Define o tipo corretamente (UUID ou Long)
-				if (isUUID) {
-					typeClass = ClassName.get("java.util", "UUID");
-				} else if (isBigInt) {
-					typeClass = ClassName.get(Long.class);
-				}
-
 				AnnotationSpec.Builder generatedValue = AnnotationSpec.builder(GeneratedValue.class);
 
-				if (isUUID) {
+				if (typeClass.simpleName().equals(UUID.class.getSimpleName())) {
 					generatedValue.addMember("strategy", "$T.UUID", GenerationType.class);
 				} else {
 					generatedValue.addMember("strategy", "$T.IDENTITY", GenerationType.class);
 				}
 
-				FieldSpec field = FieldSpec.builder(typeClass, "id", Modifier.PRIVATE).addAnnotation(Id.class).addAnnotation(generatedValue.build())
+				FieldSpec field = FieldSpec.builder(typeClass, "id", Modifier.PRIVATE)
+						.addAnnotation(Id.class).addAnnotation(generatedValue.build())
 						.addAnnotation(AnnotationSpec.builder(Column.class).addMember("name", "$S", column.name).build())
 						.build();
 
 				classBuilder.addField(field);
 
-				classBuilder.addMethod(MethodSpec.methodBuilder("getId").addAnnotation(Override.class).addModifiers(Modifier.PUBLIC).returns(typeClass).addStatement("return this.id").build());
+				classBuilder.addMethod(MethodSpec.methodBuilder("getId")
+							.addAnnotation(Override.class).addModifiers(Modifier.PUBLIC)
+							.returns(typeClass).addStatement("return this.id")
+							.build());
 
-				classBuilder.addMethod(MethodSpec.methodBuilder("setId").addModifiers(Modifier.PUBLIC).addParameter(typeClass, "id").addStatement("this.id = id").build());
+				classBuilder.addMethod(MethodSpec.methodBuilder("setId")
+							.addModifiers(Modifier.PUBLIC)
+							.addParameter(typeClass, "id")
+							.addStatement("this.id = id")
+							.build());
+				
+				typeIdClass = typeClass;
 
 			} else if (isForeignKey) {
 
@@ -368,8 +371,6 @@ public class EntityGenerator {
 
 			    // Campo primitivo da FK (id)
 			    String primitiveFieldName = StringUtils.camelCase(column.name);
-			    String javaTypeName = TypeMapper.toJavaType(column.sqlTypeName);
-			    ClassName typeFkClass = TypeMapper.resolveType(javaTypeName);
 
 			    AnnotationSpec columnAnnotation = AnnotationSpec.builder(ClassName.get(Column.class.getPackageName(), Column.class.getSimpleName()))
 			        .addMember("name", "$S", column.name)
@@ -377,7 +378,7 @@ public class EntityGenerator {
 			        .addMember("updatable", "$L", false)
 			        .build();
 
-			    FieldSpec fkPrimitiveField = FieldSpec.builder(typeFkClass, primitiveFieldName, Modifier.PRIVATE)
+			    FieldSpec fkPrimitiveField = FieldSpec.builder(typeClass, primitiveFieldName, Modifier.PRIVATE)
 			        .addAnnotation(columnAnnotation)
 			        .build();
 
@@ -385,13 +386,13 @@ public class EntityGenerator {
 
 			    classBuilder.addMethod(MethodSpec.methodBuilder("get" + StringUtils.capitalize(primitiveFieldName))
 			        .addModifiers(Modifier.PUBLIC)
-			        .returns(typeFkClass)
+			        .returns(typeClass)
 			        .addStatement("return this.$N", primitiveFieldName)
 			        .build());
 
 			    classBuilder.addMethod(MethodSpec.methodBuilder("set" + StringUtils.capitalize(primitiveFieldName))
 			        .addModifiers(Modifier.PUBLIC)
-			        .addParameter(typeFkClass, primitiveFieldName)
+			        .addParameter(typeClass, primitiveFieldName)
 			        .addStatement("this.$N = $N", primitiveFieldName, primitiveFieldName)
 			        .build());
 			    
@@ -416,7 +417,7 @@ public class EntityGenerator {
 				if ((sqlType.contains("CHAR") || sqlType.contains("VARCHAR")) && column.size > 0) {
 					columnAnnotation.addMember("length", "$L", column.size);
 				}
-
+				
 				// Adiciona precision e scale se for numérico
 				if ((sqlType.contains("DECIMAL") || sqlType.contains("NUMERIC")) && column.size > 0) {
 					columnAnnotation.addMember("precision", "$L", column.size);
@@ -519,7 +520,7 @@ public class EntityGenerator {
 		            .map(c -> TypeMapper.toJavaType(c.sqlTypeName))
 		            .orElse("Long");
 
-		        ClassName typeClass = ClassName.bestGuess(fkType);
+		        typeClass = TypeMapper.resolveType(fkType);
 
 		        FieldSpec fkPrimitiveField = FieldSpec.builder(typeClass, primitiveField, Modifier.PRIVATE)
 		            .addAnnotation(AnnotationSpec.builder(Column.class)
@@ -590,7 +591,7 @@ public class EntityGenerator {
 		
 		javaFile.writeTo(Paths.get("src/main/java"));
 
-		return new ClassResolver(className, idTypeClass);
+		return new ClassResolver(className, typeIdClass);
 	}
 
 	/**
@@ -664,20 +665,27 @@ public class EntityGenerator {
 	 */
 	private void gerarClasseEmbeddableId(String packageName, String className, List<ColumnInfo> columns, Set<String> primaryKeys, List<ColumnInfo> fksMapeadas) throws IOException {
 
+		ClassName jsonIgnoreProperties = ClassName.get(JsonIgnoreProperties.class.getPackageName(), JsonIgnoreProperties.class.getSimpleName());
+		
+		String javaType = null;
+		ClassName typeClass = null;
+		
 		TypeSpec.Builder classBuilder = TypeSpec.classBuilder(className).addModifiers(Modifier.PUBLIC)
+				.addAnnotation(AnnotationSpec.builder(jsonIgnoreProperties).addMember("ignoreUnknown", "$L", true).build())
 				.addAnnotation(Embeddable.class);
 
 		for (ColumnInfo column : columns) {
+			
 			if (!primaryKeys.contains(column.name))
 				continue;
-
-			String javaType = TypeMapper.toJavaType(column.sqlTypeName);
-			System.out.println(" Field Name --->> " + column.name + " - Type Name --->> " + column.sqlTypeName + " - Type Java --->> " + javaType);
+			
+			javaType = TypeMapper.toJavaType(column.sqlTypeName);
+			typeClass = TypeMapper.resolveType(javaType);
+			
+			//System.out.println(" Field Name --->> " + column.name + " - Type Name --->> " + column.sqlTypeName + " - Type Java --->> " + javaType);
+			
 			String fieldName = StringUtils.camelCase(column.name);
-			ClassName typeClass = ClassName.bestGuess(javaType);
 			
-			
-
 			FieldSpec field = FieldSpec.builder(typeClass, fieldName, Modifier.PRIVATE)
 					.addAnnotation(AnnotationSpec.builder(Column.class).addMember("name", "$S", column.name).build())
 					.build();
@@ -720,5 +728,6 @@ public class EntityGenerator {
 				.build();
 
 		javaFile.writeTo(Paths.get("src/main/java"));
+		
 	}
 }
