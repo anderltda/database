@@ -36,7 +36,7 @@ public class EntityOneVo {
 	
 	private EntityNineVo entityNine;
 	private Long idEntityEight;
-	private Long idEntitySeven;
+	private UUID idEntitySeven;
 	private Long idEntitySix;
 
 	public Long getId() {
@@ -143,11 +143,11 @@ public class EntityOneVo {
 		this.idEntityEight = idEntityEight;
 	}
 
-	public Long getIdEntitySeven() {
+	public UUID getIdEntitySeven() {
 		return idEntitySeven;
 	}
 
-	public void setIdEntitySeven(Long idEntitySeven) {
+	public void setIdEntitySeven(UUID idEntitySeven) {
 		this.idEntitySeven = idEntitySeven;
 	}
 

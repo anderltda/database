@@ -1,5 +1,7 @@
 package br.com.process.integration.database.vo;
 
+import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -9,7 +11,7 @@ public class EntityEightVo {
 	private String position;
 	private String properties;
 	private EntitySevenVo entitySeven;
-	private Long idEntitySeven;
+	private UUID idEntitySeven;
 	private Long idEntitySix;
 
 	public Long getId() {
@@ -44,11 +46,11 @@ public class EntityEightVo {
 		this.entitySeven = entitySeven;
 	}
 
-	public Long getIdEntitySeven() {
+	public UUID getIdEntitySeven() {
 		return this.idEntitySeven;
 	}
 
-	public void setIdEntitySeven(Long idEntitySeven) {
+	public void setIdEntitySeven(UUID idEntitySeven) {
 		this.idEntitySeven = idEntitySeven;
 	}
 

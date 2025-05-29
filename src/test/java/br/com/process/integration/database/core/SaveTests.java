@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
@@ -75,6 +76,10 @@ class SaveTests {
 	public EntityNineVo entityNineOne;
 	public EntityNineVo entityNineTwo;
 	public EntityNineVo entityNineTree;
+	
+	public static EntitySevenIdVo entitySevenIdVo1;
+	public static EntitySevenIdVo entitySevenIdVo2;
+	public static EntitySevenIdVo entitySevenIdVo3;
 
 	@BeforeAll
 	void setupOnce() {
@@ -148,10 +153,10 @@ class SaveTests {
 		assertNotNull(entitySix.getId());
 
 		EntitySevenVo entitySeven = new EntitySevenVo();
-		EntitySevenIdVo entitySevenId = new EntitySevenIdVo();
-		entitySevenId.setIdEntitySix(entitySix.getId());
-		entitySevenId.setIdEntitySeven(2l);
-		entitySeven.setId(entitySevenId);
+		entitySevenIdVo1 = new EntitySevenIdVo();
+		entitySevenIdVo1.setIdEntitySix(entitySix.getId());
+		entitySevenIdVo1.setIdEntitySeven(UUID.randomUUID());
+		entitySeven.setId(entitySevenIdVo1);
 		entitySeven.setDado(String.class.getSimpleName());
 		
 		json = objectMapper.writeValueAsString(entitySeven);
@@ -208,10 +213,10 @@ class SaveTests {
 		assertNotNull(entitySix.getId());
 
 		EntitySevenVo entitySeven = new EntitySevenVo();
-		EntitySevenIdVo entitySevenId = new EntitySevenIdVo();
-		entitySevenId.setIdEntitySix(entitySix.getId());
-		entitySevenId.setIdEntitySeven(3l);
-		entitySeven.setId(entitySevenId);
+		entitySevenIdVo2 = new EntitySevenIdVo();
+		entitySevenIdVo2.setIdEntitySix(entitySix.getId());
+		entitySevenIdVo2.setIdEntitySeven(UUID.randomUUID());
+		entitySeven.setId(entitySevenIdVo2);
 		entitySeven.setDado(Byte.class.getSimpleName());
 		
 		json = objectMapper.writeValueAsString(entitySeven);
@@ -268,10 +273,10 @@ class SaveTests {
 		assertNotNull(entitySix.getId());
 
 		EntitySevenVo entitySeven = new EntitySevenVo();
-		EntitySevenIdVo entitySevenId = new EntitySevenIdVo();
-		entitySevenId.setIdEntitySix(entitySix.getId());
-		entitySevenId.setIdEntitySeven(4l);
-		entitySeven.setId(entitySevenId);
+		entitySevenIdVo3 = new EntitySevenIdVo();
+		entitySevenIdVo3.setIdEntitySix(entitySix.getId());
+		entitySevenIdVo3.setIdEntitySeven(UUID.randomUUID());
+		entitySeven.setId(entitySevenIdVo3);
 		entitySeven.setDado(Byte.class.getSimpleName());
 		
 		json = objectMapper.writeValueAsString(entitySeven);

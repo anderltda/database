@@ -1,5 +1,7 @@
 package br.com.process.integration.database.model.entity.dto.example;
 
+import java.util.UUID;
+
 import org.springframework.hateoas.RepresentationModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -40,7 +42,7 @@ public class EntityEight extends RepresentationModel<EntityEight> implements Bea
 	private EntitySeven entitySeven;
 
 	@Column(name = "id_entity_seven", insertable = false, updatable = false)
-	private Long idEntitySeven;
+	private UUID idEntitySeven;
 
 	@Column(name = "id_entity_six", insertable = false, updatable = false)
 	private Long idEntitySix;
@@ -78,11 +80,11 @@ public class EntityEight extends RepresentationModel<EntityEight> implements Bea
 		this.entitySeven = entitySeven;
 	}
 
-	public Long getIdEntitySeven() {
+	public UUID getIdEntitySeven() {
 		return this.idEntitySeven;
 	}
 
-	public void setIdEntitySeven(Long idEntitySeven) {
+	public void setIdEntitySeven(UUID idEntitySeven) {
 		this.idEntitySeven = idEntitySeven;
 	}
 

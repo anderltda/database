@@ -1,15 +1,17 @@
 package br.com.process.integration.database.vo;
 
+import java.util.UUID;
+
 public class EntitySevenIdVo {
 	
-	private Long idEntitySeven;
+	private UUID idEntitySeven;
 	private Long idEntitySix;
 
-	public Long getIdEntitySeven() {
+	public UUID getIdEntitySeven() {
 		return this.idEntitySeven;
 	}
 
-	public void setIdEntitySeven(Long idEntitySeven) {
+	public void setIdEntitySeven(UUID idEntitySeven) {
 		this.idEntitySeven = idEntitySeven;
 	}
 

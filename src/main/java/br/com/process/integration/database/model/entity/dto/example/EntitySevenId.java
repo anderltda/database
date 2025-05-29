@@ -1,5 +1,7 @@
 package br.com.process.integration.database.model.entity.dto.example;
 
+import java.util.UUID;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
@@ -7,16 +9,16 @@ import jakarta.persistence.Embeddable;
 public class EntitySevenId {
 	
 	@Column(name = "id_entity_seven")
-	private Long idEntitySeven;
+	private UUID idEntitySeven;
 
 	@Column(name = "id_entity_six")
 	private Long idEntitySix;
 
-	public Long getIdEntitySeven() {
-		return this.idEntitySeven;
+	public UUID getIdEntitySeven() {
+		return idEntitySeven;
 	}
 
-	public void setIdEntitySeven(Long idEntitySeven) {
+	public void setIdEntitySeven(UUID idEntitySeven) {
 		this.idEntitySeven = idEntitySeven;
 	}
 

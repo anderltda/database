@@ -1,9 +1,11 @@
 package br.com.process.integration.database.vo;
 
+import java.util.UUID;
+
 public class EntityNineIdVo {
 	
 	private Long idEntityEight;
-	private Long idEntitySeven;
+	private UUID idEntitySeven;
 	private Long idEntitySix;
 
 	public Long getIdEntityEight() {
@@ -14,11 +16,11 @@ public class EntityNineIdVo {
 		this.idEntityEight = idEntityEight;
 	}
 
-	public Long getIdEntitySeven() {
+	public UUID getIdEntitySeven() {
 		return this.idEntitySeven;
 	}
 
-	public void setIdEntitySeven(Long idEntitySeven) {
+	public void setIdEntitySeven(UUID idEntitySeven) {
 		this.idEntitySeven = idEntitySeven;
 	}
 

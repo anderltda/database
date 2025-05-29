@@ -921,10 +921,12 @@ class CriteriaTests {
 	@Test
 	void teste_51() throws Exception {
 		
-	    String url = PATH 
+		String entitySevenId = SaveTests.entitySevenIdVo1.getIdEntitySeven().toString();
+
+		String url = PATH 
 	        + port 
 	        + Constants.API_NAME_REQUEST_MAPPING 
-	        + "/entityNine/ids?idEntityEight=1&idEntitySeven=2&idEntitySix=1";
+	        + "/entityNine/ids?idEntityEight=1&idEntitySeven="+entitySevenId+"&idEntitySix=1";
 	    
 		String data = getUniqueResult(url, new ErrorResponse());
 		
@@ -933,7 +935,7 @@ class CriteriaTests {
 		assertNotNull(data);
 		assertNotNull(entityNineData);
 		assertEquals(1l, entityNineData.getId().getIdEntityEight());
-		assertEquals(2l, entityNineData.getId().getIdEntitySeven());
+		assertEquals(entitySevenId, entityNineData.getId().getIdEntitySeven().toString());
 		assertEquals(1l, entityNineData.getId().getIdEntitySix());
 		assertEquals("11", entityNineData.getCode());
 	}
@@ -941,10 +943,12 @@ class CriteriaTests {
 	@Test
 	void teste_52() throws Exception {
 		
+		String entitySevenId = SaveTests.entitySevenIdVo3.getIdEntitySeven().toString();
+		
 	    String url = PATH 
 	        + port 
 	        + Constants.API_NAME_REQUEST_MAPPING 
-	        + "/entityNine/ids?idEntityEight=3&idEntitySeven=4&idEntitySix=3";
+	        + "/entityNine/ids?idEntityEight=3&idEntitySeven="+entitySevenId+"&idEntitySix=3";
 	    
 		String data = getUniqueResult(url, new ErrorResponse());
 		
@@ -953,7 +957,7 @@ class CriteriaTests {
 		assertNotNull(data);
 		assertNotNull(entityNineData);
 		assertEquals(3l, entityNineData.getId().getIdEntityEight());
-		assertEquals(4l, entityNineData.getId().getIdEntitySeven());
+		assertEquals(entitySevenId, entityNineData.getId().getIdEntitySeven().toString());
 		assertEquals(3l, entityNineData.getId().getIdEntitySix());
 		assertEquals("22", entityNineData.getCode());
 	}

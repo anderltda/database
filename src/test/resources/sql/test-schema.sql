@@ -97,7 +97,7 @@ CREATE TABLE entity_six (
 );
 
 CREATE TABLE entity_seven (
-    id_entity_seven INT NOT NULL,
+    id_entity_seven UUID NOT NULL,
     id_entity_six INT NOT NULL,
     dado TEXT,
     PRIMARY KEY (id_entity_seven, id_entity_six),
@@ -106,7 +106,7 @@ CREATE TABLE entity_seven (
 
 CREATE TABLE entity_eight (
     id_entity_eight INT AUTO_INCREMENT PRIMARY KEY,
-    id_entity_seven INT NOT NULL,
+    id_entity_seven UUID NOT NULL,
     id_entity_six INT NOT NULL,
     position VARCHAR(100) NOT NULL,
     properties VARCHAR(100),
@@ -115,7 +115,7 @@ CREATE TABLE entity_eight (
 
 CREATE TABLE entity_nine (
     id_entity_eight BIGINT NOT NULL,
-    id_entity_seven BIGINT NOT NULL,
+    id_entity_seven UUID NOT NULL,
     id_entity_six BIGINT NOT NULL,
  	key_nine VARCHAR(100) NOT NULL,
 	code VARCHAR(100),
@@ -127,7 +127,7 @@ CREATE TABLE entity_nine (
 
 -- Adiciona colunas como NULLABLE
 ALTER TABLE entity_one ADD COLUMN id_entity_eight BIGINT;
-ALTER TABLE entity_one ADD COLUMN id_entity_seven BIGINT;
+ALTER TABLE entity_one ADD COLUMN id_entity_seven UUID;
 ALTER TABLE entity_one ADD COLUMN id_entity_six BIGINT;
 
 ALTER TABLE entity_one

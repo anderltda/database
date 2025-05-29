@@ -1,5 +1,7 @@
 package br.com.process.integration.database.model.data.dto.example;
 
+import java.util.UUID;
+
 import jakarta.validation.constraints.NotNull;
 
 public class EntityNineDataId {
@@ -14,7 +16,7 @@ public class EntityNineDataId {
 	 * Coluna: id_entity_seven
 	 */
 	@NotNull
-	private Long idEntitySeven;
+	private UUID idEntitySeven;
 
 	/**
 	 * Coluna: id_entity_six
@@ -30,11 +32,11 @@ public class EntityNineDataId {
 		this.idEntityEight = idEntityEight;
 	}
 
-	public Long getIdEntitySeven() {
+	public UUID getIdEntitySeven() {
 		return this.idEntitySeven;
 	}
 
-	public void setIdEntitySeven(Long idEntitySeven) {
+	public void setIdEntitySeven(UUID idEntitySeven) {
 		this.idEntitySeven = idEntitySeven;
 	}
 

@@ -83,7 +83,7 @@ public class EntityOne extends RepresentationModel<EntityOne> implements BeanEnt
 	private Long idEntityEight;
 
 	@Column(name = "id_entity_seven", insertable = false, updatable = false)
-	private Long idEntitySeven;
+	private UUID idEntitySeven;
 
 	@Column(name = "id_entity_six", insertable = false, updatable = false)
 	private Long idEntitySix;
@@ -193,11 +193,11 @@ public class EntityOne extends RepresentationModel<EntityOne> implements BeanEnt
 		this.idEntityEight = idEntityEight;
 	}
 
-	public Long getIdEntitySeven() {
+	public UUID getIdEntitySeven() {
 		return this.idEntitySeven;
 	}
 
-	public void setIdEntitySeven(Long idEntitySeven) {
+	public void setIdEntitySeven(UUID idEntitySeven) {
 		this.idEntitySeven = idEntitySeven;
 	}
 
