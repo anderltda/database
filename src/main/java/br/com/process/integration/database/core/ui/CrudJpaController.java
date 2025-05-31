@@ -3,6 +3,7 @@ package br.com.process.integration.database.core.ui;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -73,6 +74,22 @@ public class CrudJpaController extends AbstractController {
 
 		return new ResponseEntity<>(HttpStatus.OK);
 
+	}
+	
+	/**
+	 * @param entity
+	 * @param ids
+	 * @return
+	 * @throws CheckedException
+	 */
+	@DeleteMapping(value = "/{entity}/ids", produces = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<String> deleteById(@PathVariable String entity, @RequestParam(defaultValue = "") Map<String, Object> ids) throws CheckedException {
+
+		setId(entity, ids);
+
+		methodInvoker.invokeMethodWithParameters(StringsUtils.getNameService(entity), Constants.METHOD_DELETE_BY_ID);
+
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	/**
