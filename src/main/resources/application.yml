@@ -41,8 +41,6 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
-        jdbc.lob.non_contextual_creation: true
-        connection.provider_disables_autocommit: true
 mybatis:
   mapper-locations: classpath:mapper/**/*.xml
   type-handlers-package: br.com.process.integration.database.generator.handler.data.type
