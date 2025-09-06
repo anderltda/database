@@ -37,7 +37,8 @@ import jakarta.persistence.criteria.Root;
  * @param <R>
  */
 @Repository
-public abstract class AbstractJpaRepository<E extends BeanEntity<?>, I, M extends RepresentationModel<M>, R extends JpaRepository<E, I>> extends AbstractAssembler<M> implements EntityRepository<E> {
+public abstract class AbstractJpaRepository<E extends BeanEntity<?>, I, M extends RepresentationModel<M>, R extends JpaRepository<E, I>>
+		extends AbstractAssembler<M> implements EntityRepository<E> {
 
 	protected static final Map<String, String> OPERADORES = new HashMap<>();
 
@@ -63,7 +64,7 @@ public abstract class AbstractJpaRepository<E extends BeanEntity<?>, I, M extend
 
 	@PersistenceContext
 	private EntityManager entityManager;
-	
+
 	/**
 	 * @param controllerClass
 	 * @param resourceType
@@ -73,7 +74,11 @@ public abstract class AbstractJpaRepository<E extends BeanEntity<?>, I, M extend
 	}
 
 	/**
-	 *
+	 * @param filter
+	 * @param sortList
+	 * @param sortOrders
+	 * @return
+	 * @throws UncheckedException
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
@@ -89,7 +94,8 @@ public abstract class AbstractJpaRepository<E extends BeanEntity<?>, I, M extend
 				List<Order> orders = new ArrayList<>();
 				for (int i = 0; i < sortList.size(); i++) {
 					String sortField = sortList.get(i);
-					boolean isAscending = sortOrders.size() > i ? sortOrders.get(i).equalsIgnoreCase("asc") : sortOrders.get(0).equalsIgnoreCase("asc");
+					boolean isAscending = sortOrders.size() > i ? sortOrders.get(i).equalsIgnoreCase("asc")
+							: sortOrders.get(0).equalsIgnoreCase("asc");
 					orders.add(methodPredicate.buildOrder(sortField, criteriaBuilder, root, isAscending));
 				}
 				query.orderBy(orders);
@@ -102,7 +108,10 @@ public abstract class AbstractJpaRepository<E extends BeanEntity<?>, I, M extend
 	}
 
 	/**
-	 *
+	 * @param filter
+	 * @param pageable
+	 * @return
+	 * @throws UncheckedException
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
@@ -136,11 +145,13 @@ public abstract class AbstractJpaRepository<E extends BeanEntity<?>, I, M extend
 	}
 
 	/**
-	 *
+	 * @param filter
+	 * @return
+	 * @throws UncheckedException
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public Long countable(Map<String, Object> filter) {
+	public Long countable(Map<String, Object> filter) throws UncheckedException {
 		try {
 			CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 			CriteriaQuery<Long> query = criteriaBuilder.createQuery(Long.class);
@@ -154,7 +165,7 @@ public abstract class AbstractJpaRepository<E extends BeanEntity<?>, I, M extend
 	}
 
 	/**
-	 *
+	 * @param filter
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
@@ -193,7 +204,9 @@ public abstract class AbstractJpaRepository<E extends BeanEntity<?>, I, M extend
 					MethodReflection.executeMethod(methodPredicate, "setOperatorJoin", method + "Criteria");
 					method = "join";
 				}
-				MethodReflection.executeMethod(methodPredicate, method + "Criteria", criteriaBuilder, predicates, path, key, value);
+				MethodReflection.executeMethod(methodPredicate, "setEntityManager", entityManager);
+				MethodReflection.executeMethod(methodPredicate, method + "Criteria", criteriaBuilder, predicates, path,
+						key, value);
 
 			} catch (Exception ex) {
 				throw new UncheckedException(ex.getCause().getLocalizedMessage(), ex);
