@@ -4,11 +4,16 @@ import br.com.process.integration.database.core.Constants;
 import br.com.process.integration.database.core.domain.BeanEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import org.springframework.hateoas.RepresentationModel;
@@ -22,6 +27,14 @@ public class EntityRow extends RepresentationModel<EntityRow> implements BeanEnt
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_entity_row")
 	private Long id;
+
+	@JsonProperty(access = Access.WRITE_ONLY)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_entity_ten", referencedColumnName = "id_entity_ten", nullable = false)
+	private EntityTen entityTen;
+
+	@Column(name = "id_entity_ten", insertable = false, updatable = false)
+	private Long idEntityTen;
 
 	@Column(name = "line_a", nullable = false, length = 200)
 	private String lineA;
@@ -50,6 +63,22 @@ public class EntityRow extends RepresentationModel<EntityRow> implements BeanEnt
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public EntityTen getEntityTen() {
+		return this.entityTen;
+	}
+
+	public void setEntityTen(EntityTen entityTen) {
+		this.entityTen = entityTen;
+	}
+
+	public Long getIdEntityTen() {
+		return this.idEntityTen;
+	}
+
+	public void setIdEntityTen(Long idEntityTen) {
+		this.idEntityTen = idEntityTen;
 	}
 
 	public String getLineA() {
@@ -117,7 +146,9 @@ public class EntityRow extends RepresentationModel<EntityRow> implements BeanEnt
 
 	@Override
 	public String toString() {
-		return "EntityRow{" + "id=" + (id != null ? id.toString() : "null") + ", " + "lineA="
+		return "EntityRow{" + "id=" + (id != null ? id.toString() : "null") + ", " + "entityTen="
+				+ (entityTen != null ? entityTen.toString() : "null") + ", " + "entityTen="
+				+ (idEntityTen != null ? idEntityTen.toString() : "null") + ", " + "lineA="
 				+ (lineA != null ? lineA.toString() : "null") + ", " + "lineB="
 				+ (lineB != null ? lineB.toString() : "null") + ", " + "lineC="
 				+ (lineC != null ? lineC.toString() : "null") + ", " + "lineD="
