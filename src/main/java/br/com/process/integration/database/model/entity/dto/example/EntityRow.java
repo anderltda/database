@@ -15,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.springframework.hateoas.RepresentationModel;
 
@@ -36,25 +37,28 @@ public class EntityRow extends RepresentationModel<EntityRow> implements BeanEnt
 	@Column(name = "id_entity_ten", insertable = false, updatable = false)
 	private Long idEntityTen;
 
-	@Column(name = "line_a", nullable = false, length = 200)
-	private String lineA;
+	@Column(name = "line_string", nullable = false, length = 200)
+	private String lineString;
 
-	@Column(name = "line_b", nullable = false, length = 200)
-	private String lineB;
+	@Column(name = "line_integer", nullable = false)
+	private Integer lineInteger;
 
-	@Column(name = "line_c", nullable = false, length = 200)
-	private String lineC;
+	@Column(name = "line_double", nullable = false)
+	private Double lineDouble;
 
-	@Column(name = "line_d", nullable = false, length = 200)
-	private String lineD;
+	@Column(name = "line_long", nullable = false)
+	private Long lineLong;
 
-	@Column(name = "date_create", nullable = false)
+	@Column(name = "line_boolean", nullable = false)
+	private Boolean lineBoolean;
+
+	@Column(name = "line_date", nullable = false)
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_FORMAT)
+	private LocalDate lineDate;
+
+	@Column(name = "line_date_time", nullable = false)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_TIME_FORMAT)
-	private LocalDateTime dateCreate;
-
-	@Column(name = "date_update")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = Constants.DATE_TIME_FORMAT)
-	private LocalDateTime dateUpdate;
+	private LocalDateTime lineDateTime;
 
 	@Override
 	public Long getId() {
@@ -81,52 +85,60 @@ public class EntityRow extends RepresentationModel<EntityRow> implements BeanEnt
 		this.idEntityTen = idEntityTen;
 	}
 
-	public String getLineA() {
-		return this.lineA;
+	public String getLineString() {
+		return this.lineString;
 	}
 
-	public void setLineA(String lineA) {
-		this.lineA = lineA;
+	public void setLineString(String lineString) {
+		this.lineString = lineString;
 	}
 
-	public String getLineB() {
-		return this.lineB;
+	public Integer getLineInteger() {
+		return this.lineInteger;
 	}
 
-	public void setLineB(String lineB) {
-		this.lineB = lineB;
+	public void setLineInteger(Integer lineInteger) {
+		this.lineInteger = lineInteger;
 	}
 
-	public String getLineC() {
-		return this.lineC;
+	public Double getLineDouble() {
+		return this.lineDouble;
 	}
 
-	public void setLineC(String lineC) {
-		this.lineC = lineC;
+	public void setLineDouble(Double lineDouble) {
+		this.lineDouble = lineDouble;
 	}
 
-	public String getLineD() {
-		return this.lineD;
+	public Long getLineLong() {
+		return this.lineLong;
 	}
 
-	public void setLineD(String lineD) {
-		this.lineD = lineD;
+	public void setLineLong(Long lineLong) {
+		this.lineLong = lineLong;
 	}
 
-	public LocalDateTime getDateCreate() {
-		return this.dateCreate;
+	public Boolean getLineBoolean() {
+		return this.lineBoolean;
 	}
 
-	public void setDateCreate(LocalDateTime dateCreate) {
-		this.dateCreate = dateCreate;
+	public void setLineBoolean(Boolean lineBoolean) {
+		this.lineBoolean = lineBoolean;
 	}
 
-	public LocalDateTime getDateUpdate() {
-		return this.dateUpdate;
+	public LocalDate getLineDate() {
+		return this.lineDate;
 	}
 
-	public void setDateUpdate(LocalDateTime dateUpdate) {
-		this.dateUpdate = dateUpdate;
+	public void setLineDate(LocalDate lineDate) {
+		this.lineDate = lineDate;
+	}
+
+	public LocalDateTime getLineDateTime() {
+		return this.lineDateTime;
+	}
+
+	public void setLineDateTime(LocalDateTime lineDateTime) {
+		this.lineDateTime = lineDateTime;
 	}
 
 	@Override
@@ -148,12 +160,13 @@ public class EntityRow extends RepresentationModel<EntityRow> implements BeanEnt
 	public String toString() {
 		return "EntityRow{" + "id=" + (id != null ? id.toString() : "null") + ", " + "entityTen="
 				+ (entityTen != null ? entityTen.toString() : "null") + ", " + "entityTen="
-				+ (idEntityTen != null ? idEntityTen.toString() : "null") + ", " + "lineA="
-				+ (lineA != null ? lineA.toString() : "null") + ", " + "lineB="
-				+ (lineB != null ? lineB.toString() : "null") + ", " + "lineC="
-				+ (lineC != null ? lineC.toString() : "null") + ", " + "lineD="
-				+ (lineD != null ? lineD.toString() : "null") + ", " + "dateCreate="
-				+ (dateCreate != null ? dateCreate.toString() : "null") + ", " + "dateUpdate="
-				+ (dateUpdate != null ? dateUpdate.toString() : "null") + '}';
+				+ (idEntityTen != null ? idEntityTen.toString() : "null") + ", " + "lineString="
+				+ (lineString != null ? lineString.toString() : "null") + ", " + "lineInteger="
+				+ (lineInteger != null ? lineInteger.toString() : "null") + ", " + "lineDouble="
+				+ (lineDouble != null ? lineDouble.toString() : "null") + ", " + "lineLong="
+				+ (lineLong != null ? lineLong.toString() : "null") + ", " + "lineBoolean="
+				+ (lineBoolean != null ? lineBoolean.toString() : "null") + ", " + "lineDate="
+				+ (lineDate != null ? lineDate.toString() : "null") + ", " + "lineDateTime="
+				+ (lineDateTime != null ? lineDateTime.toString() : "null") + '}';
 	}
 }
